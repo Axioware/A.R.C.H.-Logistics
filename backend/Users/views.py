@@ -37,7 +37,7 @@ def users(request):
         billing_type = request.query_params.get('billing_type')
         search = request.query_params.get('search')
         active = request.query_params.get('is_active')
-        
+        warehouse = request.query_params.get('warehouse')
         # Access control
         try:
             queryset = User.objects.all().select_related('extended')  # Efficiently join with UsersExtended
@@ -47,6 +47,8 @@ def users(request):
             if billing_type:
                 print(billing_type)
                 queryset = queryset.filter(extended__billing_type=billing_type)
+            if warehouse:
+                queryset = queryset.filter(extended__warehouse=warehouse)
             if active:
                 queryset = queryset.filter(is_active=active)
             if search:
@@ -75,6 +77,7 @@ def users(request):
                     'address': user.extended.address if hasattr(user, 'extended') else None,
                     'llc_name': user.extended.llc_name if hasattr(user, 'extended') else None,
                     'billing_type': user.extended.billing_type if hasattr(user, 'extended') else None
+                    'warehouse': user.extended.warehouse if hasattr(user, 'extended') else None
                 }
                 result.append(user_data)
 
@@ -109,7 +112,11 @@ def users(request):
 
         #------------------------------------------------------------ Validation ---------------------------------------------------------
         errors = {}
-    
+        warehouse = data.get('warehouse')
+
+        if role == "Client" and not warehouse:
+            errors['warehouse'] = "Warehouse is required for clients."
+            
         username = data.get('username', '')
         if not username:
             errors['username'] = "Username is required.')"
@@ -195,6 +202,7 @@ def users(request):
                 target_extended.tax_id = data.get('tax_id', target_extended.tax_id)
                 target_extended.email2 = data.get('email2', target_extended.email2)
                 target_extended.role = data.get('role', target_extended.role)
+                target_extended.warehouse = warehouse
                 target_extended.save()
                 return Response({"success": "New user created successfully"}, status=status.HTTP_201_CREATED)
             # If anything goes wrong in the transaction block, this will be executed
@@ -238,6 +246,7 @@ def user_by_id(request, id):
             'state': get_extended_field(main_user, 'state'),
             'zip': get_extended_field(main_user, 'zip'),
             'phone': get_extended_field(main_user, 'phone')
+            'warehouse': get_extended_field(main_user, 'warehouse')
         }
 
         return Response({'user_data': user_data}, status=status.HTTP_200_OK)
@@ -311,6 +320,7 @@ def user_by_id(request, id):
         try:
             target_user = User.objects.get(pk=id)
             target_extended = target_user.extended
+            target_extended.warehouse = data.get('warehouse', target_extended.warehouse)
             if data.get('password'):
                 target_user.set_password(data.get('password'))
             # Data from request
@@ -345,6 +355,8 @@ def user_by_id(request, id):
                     target_extended.tax_id = data.get('tax_id')
                 if data.get('email2') is not None:
                     target_extended.email2 = data.get('email2')
+                if data.get('warehouse') is not None:
+                    target_extended.warehouse = data.get('warehouse')
                 return Response({"success": "User updated successfully"}, status=status.HTTP_202_ACCEPTED)
             return Response({"error": "failed"}, status=status.HTTP_400_BAD_REQUEST)
 
