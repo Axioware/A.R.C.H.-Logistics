@@ -108,15 +108,12 @@ WSGI_APPLICATION = 'Prep_Prime.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'prep_db',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST':'localhost',
-        'PORT':'3306',
-        'OPTIONS': {
-            'unix_socket': '/var/run/mysqld/mysqld.sock',  # Update with the actual socket path
-        },
+        'ENGINE': 'django.db.backends.postgresql',  
+        'NAME': 'prep_db',                          
+        'USER': 'postgres',                         
+        'PASSWORD': 'your_password',                
+        'HOST': 'localhost',                        
+        'PORT': '5432',                             
     }
 }
 
