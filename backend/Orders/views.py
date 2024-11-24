@@ -37,7 +37,7 @@ from rest_framework import status
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def orders(request):
-    user = request.userUserExtended_FieldUpdate UserExtended_FieldUpdate 
+    user = request.userUserExtended_FieldUpdate
 
     if request.method == "GET":
         try:

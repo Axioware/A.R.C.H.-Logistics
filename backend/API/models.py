@@ -27,7 +27,7 @@ def dynamic_upload_path(instance, filename):
     return os.path.join(path, filename)
 
 
-def Warehouse(models.Model):
+class Warehouse(models.Model):
     warehouse_id = models.AutoField(primary_key=True)
     warehouse_name = models.CharField(max_length=50, default=None)
     address = models.CharField(max_length=100, default=None)
