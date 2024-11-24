@@ -27,7 +27,19 @@ def dynamic_upload_path(instance, filename):
     return os.path.join(path, filename)
 
 
+def Warehouse(models.Model):
+    warehouse_id = models.AutoField(primary_key=True)
+    warehouse_name = models.CharField(max_length=50, default=None)
+    address = models.CharField(max_length=100, default=None)
+    city = models.CharField(max_length=50, default=None)
+    state = models.CharField(max_length=50, default=None)
+    country = models.CharField(max_length=50, default=None)
+    zip_code = models.CharField(max_length=10, default=None)
+    phone = models.CharField(max_length=15, default=None)
+    email = models.EmailField(max_length=100, default=None)
 
+    def __str__(self):
+        return f"{self.warehouse_name}"
 
 class UsersExtended(models.Model):
     class RoleChoices(models.TextChoices):
@@ -56,6 +68,7 @@ class UsersExtended(models.Model):
     zip = models.CharField(max_length=20, blank=True, null=True, verbose_name="Zip Code")
     date_created = models.DateField(default=timezone.now, null=True)
     last_logout = models.DateTimeField(null=True, blank=True)
+    warehouses = models.ManyToManyField(Warehouse, related_name="users", blank=True)
 
     def save(self, *args, **kwargs):
         if self.username.is_superuser:
