@@ -27,13 +27,15 @@ import pytz
 @permission_classes([IsAuthenticated])
 def users(request):
     user = request.user
-    if authenticate_prep(user) or authenticate_client(user):
+    
+    clearance_level = request.query_params.get('clearance_level') 
+    
+    if clearance_level and int(clearance_level) in [3, 4]:
         return Response({'errors': "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "GET":
         # Filter and search parameters
         all_data = request.query_params.get('all', 'false').lower() == 'true'
-        role = request.query_params.get('role')
         billing_type = request.query_params.get('billing_type')
         search = request.query_params.get('search')
         active = request.query_params.get('is_active')
@@ -42,8 +44,8 @@ def users(request):
         try:
             queryset = User.objects.all().select_related('extended')  # Efficiently join with UsersExtended
 
-            if role:
-                queryset = queryset.filter(extended__role=role)
+            if clearance_level:
+                queryset = queryset.filter(extended__clearance_level__level=clearance_level)
             if billing_type:
                 print(billing_type)
                 queryset = queryset.filter(extended__billing_type=billing_type)
@@ -72,7 +74,7 @@ def users(request):
                     'state': user.extended.state if hasattr(user, 'extended') else None,
                     'city': user.extended.city if hasattr(user, 'extended') else None,
                     'zip': user.extended.zip if hasattr(user, 'extended') else None,
-                    'role': user.extended.role if hasattr(user, 'extended') else None,
+                    'clearance_level': user.extended.clearance_level.name if hasattr(user, 'extended') else None,
                     'email2': user.extended.email2 if hasattr(user, 'extended') else None,
                     'address': user.extended.address if hasattr(user, 'extended') else None,
                     'llc_name': user.extended.llc_name if hasattr(user, 'extended') else None,
@@ -98,23 +100,18 @@ def users(request):
         
     if request.method == "POST":
         data = request.data
-        role = data.get('role')
+        clearance_level = data.get('clearance_level')
 
-        if authenticate_VA(user) and (role == "Owner" or role == "Manager"):
+        if clearance_level and int(clearance_level) in [3, 4]:
             return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-        if authenticate_manager(user) and role == "Owner":
-            return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-        if authenticate_client(user):
-            return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-        if authenticate_prep(user):
-            return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+
             
 
         #------------------------------------------------------------ Validation ---------------------------------------------------------
         errors = {}
         warehouses = data.get('warehouses')
 
-        if role == "Client" and not warehouses:
+        if clearance_level == 4 and not warehouses:
             errors['warehouses'] = "warehouses is required for clients."
             
         username = data.get('username', '')
@@ -161,7 +158,7 @@ def users(request):
         if tax_id:
             if not tax_id.isdigit() or len(tax_id) < 8:
                 errors['tax_id'] = "Tax ID must be 8 digits long."
-        elif role == "Client":
+        elif clearance_level == 4:
             errors['tax_id'] = "Tax ID is required."
         # Secondary email validation
         if email2:
@@ -201,7 +198,7 @@ def users(request):
                 target_extended.zip = data.get('zip', target_extended.zip)
                 target_extended.tax_id = data.get('tax_id', target_extended.tax_id)
                 target_extended.email2 = data.get('email2', target_extended.email2)
-                target_extended.role = data.get('role', target_extended.role)
+                target_extended.clearance_level = ClearanceLevel.objects.get(id=clearance_level)
                 if warehouses:
                     target_extended.warehouses.set(warehouses)
                 target_extended.save()

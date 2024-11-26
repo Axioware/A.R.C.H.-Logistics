@@ -30,25 +30,36 @@ def dynamic_upload_path(instance, filename):
 class Warehouse(models.Model):
     warehouse_id = models.AutoField(primary_key=True)
     warehouse_name = models.CharField(max_length=50, default=None)
-    address = models.CharField(max_length=100, default=None)
-    city = models.CharField(max_length=50, default=None)
-    state = models.CharField(max_length=50, default=None)
-    country = models.CharField(max_length=50, default=None)
-    zip_code = models.CharField(max_length=10, default=None)
-    phone = models.CharField(max_length=15, default=None)
-    email = models.EmailField(max_length=100, default=None)
+    address = models.CharField(max_length=100, default=None, blank=True)
+    city = models.CharField(max_length=50, default=None, blank=True)
+    state = models.CharField(max_length=50, default=None, blank=True)
+    country = models.CharField(max_length=50, default=None, blank=True)
+    zip_code = models.CharField(max_length=10, default=None, blank=True)
+    phone = models.CharField(max_length=15, default=None, blank=True)
+    email = models.EmailField(max_length=100, default=None, blank=True)
 
     def __str__(self):
         return f"{self.warehouse_name}"
 
+class ClearanceLevel(models.Model):
+    level = models.PositiveIntegerField(
+        unique=True,
+        verbose_name="Clearance Level",
+        choices=[(1, 'Level 1'), (2, 'Level 2'), (3, 'Level 3'), (4, 'Level 4')],
+    )
+    name = models.CharField(max_length=50, verbose_name="Clearance Name")
+
+    def __str__(self):
+        return f"Level {self.level} - {self.name}"
+
 class UsersExtended(models.Model):
-    class RoleChoices(models.TextChoices):
-        OWNER = 'Owner', 'Owner'
-        MANAGER = 'Manager', 'Manager'
-        VIRTUAL_ASSISTANT = 'Virtual Assistant', 'Virtual Assistant'
-        PREP_TEAM = 'Prep Team', 'Prep Team'
-        LOWER_STAFF = 'Lower Staff', 'Lower Staff'
-        CLIENT = 'Client', 'Client'
+    # class RoleChoices(models.TextChoices):
+    #     OWNER = 'Owner', 'Owner'
+    #     MANAGER = 'Manager', 'Manager'
+    #     VIRTUAL_ASSISTANT = 'Virtual Assistant', 'Virtual Assistant'
+    #     PREP_TEAM = 'Prep Team', 'Prep Team'
+    #     LOWER_STAFF = 'Lower Staff', 'Lower Staff'
+    #     CLIENT = 'Client', 'Client'
 
     class BillingTypeChoices(models.TextChoices):
         DAILY = 'Daily', 'Daily'
@@ -58,7 +69,10 @@ class UsersExtended(models.Model):
     username = models.OneToOneField(User, on_delete=models.CASCADE, related_name="extended", verbose_name="Username")
     phone = models.CharField(max_length=15, blank=True, null=True)
     email2 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Secondary Email")
-    role = models.CharField(max_length=50, choices=RoleChoices.choices, default=RoleChoices.CLIENT, verbose_name="Role")
+    clearance_level = models.ForeignKey(
+        ClearanceLevel, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Clearance Level"
+    )
+    # role = models.CharField(max_length=50, choices=RoleChoices.choices, default=RoleChoices.CLIENT, verbose_name="Role")
     tax_id = models.CharField(max_length=15, blank=True, null=True, verbose_name="Tax ID")
     address = models.CharField(max_length=255, default=None, verbose_name="Address", blank=True, null=True)
     billing_type = models.CharField(max_length=10, choices=BillingTypeChoices.choices, default=BillingTypeChoices.MONTHLY, verbose_name="Billing Type", blank=True, null=True)
@@ -72,8 +86,10 @@ class UsersExtended(models.Model):
 
     def save(self, *args, **kwargs):
         if self.username.is_superuser:
-            self.role = self.RoleChoices.OWNER
+            level_1, created = ClearanceLevel.objects.get_or_create(level=1, defaults={'name': 'Owner'})
+            self.clearance_level = level_1
         super().save(*args, **kwargs)
+
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
