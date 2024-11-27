@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import GeneralField from '../General/GeneralField'
+import GeneralButton from '../General/GeneralButton'
 import PrepPrimeLogo from '../../Assets/Images/Login/PrepPrimeLogo.jpg';
+import { saturate } from 'polished';
 
 
 
@@ -83,7 +85,7 @@ const LoginForm = () => {
               {errorMessage}
             </p>
           )}
-          <LoginButton text="Login" text_color={[255, 255, 255]} button_color={[0, 123, 255]} />
+          <LoginButton text="Login" text_color={[255, 255, 255]} button_color={[44, 91, 151]} />
         </form>
 
         <div className="footer">
@@ -114,7 +116,6 @@ const LoginForm = () => {
 
           body {
             background-color: #e0e0e0;
-            
             background-size: cover;
             background-position: center;
             display: flex;
@@ -122,6 +123,7 @@ const LoginForm = () => {
             align-items: center;
             height: 100vh;
             filter: saturate(0.8); /* Low saturation */
+          
           }
 
           .container {
@@ -132,6 +134,13 @@ const LoginForm = () => {
             border-radius: 10px;
             overflow: hidden;
           }
+         
+  .content {
+  position: relative;
+  z-index: 2; /* Content will be above the overlay */
+  color: white; /* Make sure your content is visible */
+}
+
 
           .logo-container {
             background-color: #000;
@@ -149,7 +158,8 @@ const LoginForm = () => {
           }
 
           .login-container {
-            width: 40%; /* 40% of the width */
+            width: 48%; /* 40% of the width */
+            
             padding: 40px;
             display: flex;
             flex-direction: column;

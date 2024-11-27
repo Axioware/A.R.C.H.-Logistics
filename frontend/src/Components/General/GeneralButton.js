@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LoginButton = ({ text, text_color, button_color }) => {
+const GeneralButton = ({ text, text_color, button_color }) => {
   const buttonStyle = {
     backgroundColor: `rgb(${button_color.join(', ')})`,
     color: `rgb(${text_color.join(', ')})`,
@@ -19,4 +19,4 @@ const LoginButton = ({ text, text_color, button_color }) => {
   );
 };
 
-export default GeneralButton;
+export default GeneralButton;  // Keep the export as GeneralButton

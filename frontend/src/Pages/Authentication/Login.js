@@ -54,35 +54,62 @@ const Login = () => {
 
   return (
     <div
-        style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            height: '100vh',
-            width: '100vw',
-            margin: '0',
-            padding: '0',
-            display: 'flex', // Use Flexbox
-            justifyContent: 'center', // Center horizontally
-            alignItems: 'center', // Center vertically
-        }}
+      style={{
+        position: 'relative',
+        height: '100vh',
+        width: '100vw',
+        display: 'flex', // Use Flexbox
+        justifyContent: 'center', // Center horizontally
+        alignItems: 'center', // Center vertically
+        margin: 0,
+        padding: 0,
+      }}
     >
+      {/* Background image with color overlay */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          zIndex: -1, // Ensure it's behind the content
+        }}
+      >
+        {/* Semi-transparent overlay to dim the background */}
         <div
-            className="container"
-            style={{
-                background: 'white', // Optional background for the container
-              
-                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)', // Optional shadow for visual effect
-                borderRadius: '8px', // Optional rounded corners
-                width: '50%', // Adjust width as needed
-                //maxWidth: '400px', // Optional: Restrict max width for smaller screens
-            }}
-        >
-            <LoginForm />
-        </div>
-    </div>
-)};
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent black overlay
+            zIndex: -1, // Ensure it overlays the background image
+          }}
+        />
+      </div>
 
+      {/* Container for LoginForm */}
+      <div
+        className="container"
+        style={{
+          background: 'white', // Optional background for the container
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.8)', // Optional shadow for visual effect
+          borderRadius: '8px', // Optional rounded corners
+          width: '60%', // Increased width (adjust as needed)
+          height: '80%', // Increased height (adjust as needed)
+        
+        }}
+      >
+        <LoginForm />
+      </div>
+    </div>
+  );
+};
 
 export default Login;
