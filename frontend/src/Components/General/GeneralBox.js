@@ -64,10 +64,6 @@ export default function Box({
       id={id}
       className={`custom-box ${className}`}
       onClick={handleClick} // Add click event for navigation
-      style={{
-        width: width,
-        height: height,
-      }}
     >
       {loadingState ? (
         <div className="bouncing-dots">
@@ -138,7 +134,7 @@ export default function Box({
             position: relative;
             top: 0%;
             right: 0%;
-            background-color: ${colors || '#1E3D59'};
+            background-color: ${colors || '#FFFFF'};
             color: ${text_color || '#FFFFF'};
             border: none;
             border-radius: 3px;
@@ -147,7 +143,7 @@ export default function Box({
           }
 
           .refresh-button:hover {
-            background-color: #4caf50;
+            // background-color: #4caf50;
           }
 
           .bouncing-dots {
