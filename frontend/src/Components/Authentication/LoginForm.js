@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import GeneralField from '../General/GeneralField'
+import PrepPrimeLogo from '../../Assets/Images/Login/PrepPrimeLogo.jpg';
+
+
+
 
 // Reusable Comp1 Component (Input Field)
 const a = ({ type, id, placeholder, value, onChange }) => {
@@ -47,7 +51,8 @@ const LoginForm = () => {
   return (
     <div className="container">
       <div className="logo-container">
-      <img src="/Images/login/PrepPrimeLogo.jpg" alt="Logo" />
+      <img src={PrepPrimeLogo} alt="Logo" />
+
       </div>
       <div className="login-container">
         <h2>Login to Your Account</h2>
@@ -109,8 +114,7 @@ const LoginForm = () => {
 
           body {
             background-color: #e0e0e0;
-            background-image: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
-                        url(/Images/login/Background.jpg);
+            
             background-size: cover;
             background-position: center;
             display: flex;
