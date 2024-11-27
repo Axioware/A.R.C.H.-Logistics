@@ -48,4 +48,4 @@ function omer() {
   );
 }
 
-export default omer();
+export default omer;
