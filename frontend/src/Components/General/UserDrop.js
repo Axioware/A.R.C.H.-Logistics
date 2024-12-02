@@ -13,8 +13,8 @@ const UserDrop = ({ userName }) => {
       display: 'flex',
       alignItems: 'center',
       position: 'absolute',
-      top: '10px',
-      right: '20px',
+      top: '-8px',
+      right: '18px',
     },
     img: {
       width: '28px',

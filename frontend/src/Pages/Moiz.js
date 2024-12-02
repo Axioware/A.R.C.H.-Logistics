@@ -4,7 +4,7 @@ import TopNavBar from '../Components/General/TopNavBar';
 function App() {
   // Define sample data for the parameters
   const parameters = {
-    background_color: [240, 240, 240],
+    background_color: [255, 255, 255],
     text_color: [0, 0, 0],
     logo: '/path/to/logo.png',
     company_name: 'A.R.C.H Labs',
