@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import profileIcon from '../../Images/Profile Icon.avif'; // Ensure the path to your image is correct
+import profileIcon from '../../Assets/Images/Login/Profile Icon.avif'; // Ensure the path to your image is correct
 
 const UserDrop = ({ userName }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
