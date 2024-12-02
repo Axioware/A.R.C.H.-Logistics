@@ -16,12 +16,16 @@ export default function HyperLink({
   path,
   text_color,  // Accept color prop (array of RGB values)
   width,
+  background_color, // Background color prop
+  hover_background_color, // Hover background color prop
   height
 }) {
   const navigate = useNavigate();  // Use the useNavigate hook for navigation
 
   // Convert the RGB array to the proper CSS string for text color
   const color = rgbArrayToString(text_color);
+  const bgColor = rgbArrayToString(background_color); // Convert background_color to string
+  const hoverBgColor = rgbArrayToString(hover_background_color); // Convert hover_background_color to string
 
   // Handle the click event for navigation
   const handleClick = () => {
@@ -33,13 +37,17 @@ export default function HyperLink({
       className="hyperlink"
       onClick={handleClick}
       style={{
-        width: width,
-        height: height,
+        width: width || 'auto',  // Use provided width or default to auto
+        height: height || 'auto',  // Use provided height or default to auto
+        minHeight: height || 'auto', // Ensure min-height is set
+        display: 'flex', // Make sure the div is a flex container
+        justifyContent: 'center', // Center the text horizontally
+        alignItems: 'center', // Center the text vertically
       }}
     >
       <span
         style={{
-          color: color, // Dynamically set color using the converted RGB value
+          color: color, // Dynamically set text color using the converted RGB value
         }}
       >
         {text}
@@ -48,22 +56,26 @@ export default function HyperLink({
       <style>
         {`
           .hyperlink {
-            display: inline-block;
-            background-color: #f0f0f0;
+            background-color: ${bgColor || '#1E3D59'};  /* Use the passed background color */
             border-radius: 5px;
             padding: 10px;
             text-decoration: none;
             cursor: pointer;
             text-align: center;
+            width: ${width || 'auto'};
+            height: ${height || 'auto'};
+            min-height: ${height || 'auto'};  /* Ensure the min-height is also applied */
+            position: absolute;
           }
 
           .hyperlink:hover {
-            background-color: #dcdcdc;
+            background-color: ${hoverBgColor || '#4CAF50'};  /* Use the passed hover background color */
           }
 
           .hyperlink span {
             font-size: 16px;
             font-weight: bold;
+            position: absolute;
           }
         `}
       </style>
