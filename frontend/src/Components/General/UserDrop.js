@@ -83,7 +83,7 @@ const UserDrop = ({ userName }) => {
             onMouseEnter={(e) => (e.target.style.backgroundColor = '#f0f0f0')} // Hover effect for items
             onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')} // Reset hover effect
           >
-            <a href="/" style={styles.dropdownLink}>
+            <a href="/edit-profile" style={styles.dropdownLink}>
               Edit Profile
             </a>
           </li>
@@ -92,7 +92,7 @@ const UserDrop = ({ userName }) => {
             onMouseEnter={(e) => (e.target.style.backgroundColor = '#f0f0f0')}
             onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
           >
-            <a href="/" style={styles.dropdownLink}>
+            <a href="/user-reset-password" style={styles.dropdownLink}>
               Reset Password
             </a>
           </li>

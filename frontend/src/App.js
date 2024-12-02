@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Omer from './Pages/Omer';
 import Moiz from './Pages/Moiz';
 import Asad from './Pages/Asad';
+import Rauf from './Pages/Rauf';
 import Login from './Pages/Authentication/Login';
 import ForgotPassword from './Pages/Authentication/ForgotPassword';
 
@@ -14,7 +15,8 @@ function App() {
       <Routes>
         <Route path="/moiz" element={<Moiz />} />
         <Route path="/asad" element={<Asad />} />
-        <Route path="/omer" element={<Omer />} /> 
+        <Route path="/omer" element={<Omer />} />
+        <Route path="/rauf" element={<Rauf />} /> 
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} /> 
       </Routes>
