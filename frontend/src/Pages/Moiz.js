@@ -1,22 +1,19 @@
 import React from 'react';
-import HyperLink from '../Components/General/HyperLink';  // Adjust the path if necessary
+import NavPath from '../Components/General/NavPath';  // Adjust the path if necessary
 
 function App() {
   return (
     <div>
-    <HyperLink
-  text="Home"
-  path="/all_users"
-  text_color={[255, 255, 255]}  // RGB for text color
-  background_color={[19, 53, 98]}  // RGB for background color
-  hover_background_color={[40, 150, 180]}  // RGB for hover background color
-  width="25%"  // Width of the link
-  height="5%"  // Increased height (change this to any desired value)
- />
-
-
-    </div>
+    <NavPath
+    text={['Home', 'User Management', 'All Users']}
+  paths={['/home', '/user_management', '/all_users']}
+  text_color={[255, 255, 255]}  // RGB values for text color
+  background_color={[56, 21, 90]}  // RGB values for background color
+  hyperlink_size={[['2%', '3%'], ['2%', '3%'], ['2%', '4%']]} 
+  width="30%"  
+  height="20%" 
+/>
+</div>
   );
 }
-
 export default App;

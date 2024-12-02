@@ -40,7 +40,8 @@ export default function HyperLink({
         width: width || 'auto',  // Use provided width or default to auto
         height: height || 'auto',  // Use provided height or default to auto
         minHeight: height || 'auto', // Ensure min-height is set
-        display: 'flex', // Make sure the div is a flex container
+        display: 'flex',
+        flexDirection: 'row', // Make sure the div is a flex container
         justifyContent: 'center', // Center the text horizontally
         alignItems: 'center', // Center the text vertically
       }}
