@@ -1,51 +1,40 @@
-import React from 'react';
-import GeneralField from '../Components/General/GeneralField';
+import React from "react";
+import NavBarSidebar from "../Components/General/NavBarSidebar";
 
-function omer() {
-  const styles = `
-    .input-style {
-      background-color: #f0f0f0;
-      border-color: blue;
-      border: 2px solid green;
-    }
-    .label-style {
-      color: red;
-      font-size: 16px;
-      border: 2px solid green;
-    }
-  `;
-
+const Omer = () => {
   return (
-    <div style={{ maxWidth: '500px', margin: '0 auto' }}>
-      <style>{styles}</style>
-      <h1 style={{ textAlign: 'left', marginBottom: '2rem' }}>Form Components</h1>
-    
-        <h2>Welcome to Prep-Prime</h2>
-      <GeneralField
-        label="Username"
-        label_position="top"
-        hint="Enter your username"
-        field_type="text"
-        name="username"
-        width="100%"
-        height="40px"
-        className_Input="input-style" 
-        className_Label="label-style" 
+    <div style={{ fontSize: "16px", fontFamily: "'Roboto', sans-serif" }}>
+      <NavBarSidebar
+        icons={[
+          "https://via.placeholder.com/20", // Icon for Inventory
+          "https://via.placeholder.com/20", // Icon for Users
+        ]}
+        names={[
+          ["Inventory", "Active Orders", "Completed Orders"],
+          ["Users", "Add User", "View Users"],
+        ]}
+        expanded={[false, false]} // Initial state for menus
+        background_color={[30, 61, 89]} // Sidebar background
+        text_color={[255, 255, 255]} // Text color
+        logo="https://via.placeholder.com/120" // Placeholder logo
+        username="John Doe"
+        selected_color={[56, 21, 90]} // Highlight color
+        toggle={true} // Sidebar expanded
+        width="240px"
+        height="100vh"
       />
-
-      <GeneralField
-        label="Password"
-        label_position="top"
-        hint="Enter your password"
-        field_type="password"
-        name="password"
-        width="100%"
-        height="40px"
-        className_Input="input-style" 
-        className_Label="label-style" 
-      />
+      <div
+        style={{
+          marginLeft: "240px",
+          padding: "20px",
+          fontSize: "1rem", // Use rem to scale font size based on root font size
+        }}
+      >
+        <h1>Welcome to the Dashboard</h1>
+        <p>Main content goes here.</p>
+      </div>
     </div>
   );
-}
+};
 
-export default omer();
+export default Omer;
