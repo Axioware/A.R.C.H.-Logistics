@@ -92,6 +92,7 @@ const LoginForm = () => {
               type="text"
               id="username"
               placeholder="Username"
+              hint='Enter Username'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -101,6 +102,7 @@ const LoginForm = () => {
             <GeneralField
               type="password"
               id="password"
+              hint='Enter Password'
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

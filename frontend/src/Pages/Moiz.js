@@ -1,29 +1,20 @@
 import React from 'react';
-import TopNavBar from '../Components/General/TopNavBar';
+import HyperLink from '../Components/General/HyperLink';  // Adjust the path if necessary
 
 function App() {
-  // Define sample data for the parameters
-  const parameters = {
-    background_color: [240, 240, 240],
-    text_color: [0, 0, 0],
-    logo: '/path/to/logo.png',
-    company_name: 'A.R.C.H Labs',
-    company_name_color: [0, 0, 255], // Blue color for the company name
-    username: 'Owner',
-    username_color: [255, 0, 0], // Red color for the username
-  };
-
   return (
     <div>
-      <TopNavBar
-        background_color={parameters.background_color}
-        text_color={parameters.text_color}
-        logo={parameters.logo}
-        company_name={parameters.company_name}
-        company_name_color={parameters.company_name_color}
-        username={parameters.username}
-        username_color={parameters.username_color}
-      />
+    <HyperLink
+  text="Home"
+  path="/all_users"
+  text_color={[255, 255, 255]}  // RGB for text color
+  background_color={[19, 53, 98]}  // RGB for background color
+  hover_background_color={[40, 150, 180]}  // RGB for hover background color
+  width="25%"  // Width of the link
+  height="5%"  // Increased height (change this to any desired value)
+ />
+
+
     </div>
   );
 }

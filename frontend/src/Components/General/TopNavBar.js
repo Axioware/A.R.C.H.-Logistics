@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import UserDrop from './UserDrop';
+// import archLabs from '../../Assets/Images/A.R.C.H Labs.jpg';
 
 const TopNavBar = ({
   background_color,
@@ -25,27 +27,34 @@ const TopNavBar = ({
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px;
+            padding: 10px 20px; /* Add padding for better spacing */
             background-color: ${backgroundColor};
             color: ${defaultTextColor};
           }
-          .logo {
-            height: 30px;
+          .center-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
           }
           .company-name {
             margin: 0;
             color: ${companyNameColor};
+            font-size: 25px; /* Adjust font size as needed */
+            font-weight: bold; /* Make the text bold */
           }
-          .username {
-            margin: 0;
-            color: ${usernameColor};
+          .logo {
+            height: 30px;
+            margin-right: 20px; /* Space between logo and company name */
           }
         `}
       </style>
       <nav className="top-nav-bar">
-        <img src={logo} alt={`${company_name} logo`} className="logo" />
-        <h1 className="company-name">{company_name}</h1>
-        <p className="username">{username}</p>
+        {/* Uncomment this line if a logo is needed */}
+        {/* <img src={archLabs} alt={`${company_name} logo`} className="logo" /> */}
+        <div className="center-container">
+          <h1 className="company-name">{company_name}</h1>
+        </div>
+        <UserDrop userName={username} />
       </nav>
     </>
   );
