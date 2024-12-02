@@ -1,22 +1,18 @@
 import React from 'react';
-import Box from '../Components/General/GeneralBox';
+import HyperLink from '../Components/General/HyperLink';  // Adjust the path if necessary
 
-function Moiz() {
-    return (
-        <div className="App">
-          {/* Default Box */}
-          <Box
-            loading={false}
-            success={false}
-            color={[30, 61, 89]}
-            text="Task Pending"
-            number={743}
-            id="uniqueBoxId1"
-            width="28%"
-            height="120px"
-          />
-        </div>
-      );
+function App() {
+  return (
+    <div>
+      <HyperLink
+        text="User Management"
+        path="/all_users"
+        text_color={[56, 90, 87]}
+        width="20%"
+        height="12%"
+      />
+    </div>
+  );
 }
 
-export default Moiz;
+export default App;
