@@ -5,7 +5,7 @@ function App() {
   return (
     <div>
     <HyperLink
-  text="User Management"
+  text="Home"
   path="/all_users"
   text_color={[255, 255, 255]}  // RGB for text color
   background_color={[19, 53, 98]}  // RGB for background color
