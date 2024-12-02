@@ -5,13 +5,13 @@ function App() {
   return (
     <div>
     <NavPath
-    text={['Home', 'User Management', 'All Users']}
+    text={['Home', 'Utest', 'Users']}
   paths={['/home', '/user_management', '/all_users']}
   text_color={[255, 255, 255]}  // RGB values for text color
-  background_color={[56, 21, 90]}  // RGB values for background color
-  hyperlink_size={[['2%', '3%'], ['2%', '3%'], ['2%', '4%']]} 
-  width="30%"  
-  height="20%" 
+  background_color={[200, 21, 90]}  // RGB values for background color
+  hyperlink_size={[['10%', '55%'], ['4%', '5%'], ['4%', '4%']]} 
+  width="80%"  
+  height="100px" 
 />
 </div>
   );

@@ -12,7 +12,7 @@ function App() {
   background_color={[19, 53, 98]}  // RGB for background color
   hover_background_color={[40, 150, 180]}  // RGB for hover background color
   width="5%"  // Width of the link
-  height="5%"  // Increased height (change this to any desired value)
+  height="3%"  // Increased height (change this to any desired value)
  />
 {/* <UserDrop userName={'abc'} /> */}
 
