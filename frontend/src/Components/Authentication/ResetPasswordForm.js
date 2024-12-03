@@ -1,10 +1,8 @@
 import React from "react";
-import GeneralField from '../../Components/General/GeneralField';
-import GeneralButton from '../../Components/General/GeneralButton';
-import PrepPrimeLogo from '../../Assets/Images/Login/PrepPrimeLogo.jpg';
-import BackgroundImage from '../../Assets/Images/Login/background.jpg';
+import GeneralField from '../General/GeneralField';
+import GeneralButton from '../General/GeneralButton';
 
-const ResetPassword = () => {
+const ResetPasswordForm = () => {
   return (
     <div style={{ 
       display: "flex", 
@@ -12,7 +10,7 @@ const ResetPassword = () => {
       alignItems: "center", 
       height: "100vh", 
       backgroundColor: "#e0e0e0", 
-      backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${BackgroundImage})`, 
+      backgroundImage: "linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/frontend/Assets/Images/Authentication/Login/background.jpg')", 
       backgroundSize: "cover", 
       filter: "saturate(0.8)" 
     }}>
@@ -34,7 +32,7 @@ const ResetPassword = () => {
           alignItems: "center"
         }}>
           <img 
-            src={PrepPrimeLogo} 
+            src="/frontend/Assets/Images/Authentication/Forgot Password/Prep Prime Logo.jpg" 
             alt="PREPPRIME Logo" 
             style={{ maxWidth: "80%", height: "auto" }} 
           />
@@ -56,15 +54,12 @@ const ResetPassword = () => {
           }}>←</a>
           <h2 style={{ 
             fontSize: "28px", 
-            marginBottom: "16%", 
-            color: "#333", 
-            marginLeft: "13%",
-            fontWeight: "bold",
+            marginBottom: "15px", 
+            color: "#333" 
           }}>Reset Password</h2>
           <form method="POST">
             <div style={{ marginBottom: "20px" }}>
               <GeneralField
-                hint={"New Password"}
                 type="password"
                 id="password"
                 placeholder="New Password"
@@ -74,8 +69,6 @@ const ResetPassword = () => {
             </div>
             <div style={{ marginBottom: "20px" }}>
               <GeneralField
-                hint={"Confirm Password"}
-                width={"95%"}
                 type="password"
                 id="confirmPassword"
                 placeholder="Confirm Password"
@@ -84,15 +77,17 @@ const ResetPassword = () => {
               />
             </div>
             <p id="red"></p>
-            <GeneralButton label="Reset" className="login-btn" 
-                text="Reset"
-                width="95%"
-            
-            
-            
-            
-              
-           />
+            <GeneralButton label="Reset" className="login-btn" style={{ 
+              width: "100%", 
+              maxWidth: "400px", 
+              padding: "15px", 
+              backgroundColor: "#2c5b97", 
+              color: "white", 
+              border: "none", 
+              borderRadius: "10px", 
+              fontSize: "16px", 
+              cursor: "pointer" 
+            }} />
           </form>
         </div>
       </div>
@@ -100,4 +95,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ResetPasswordForm;

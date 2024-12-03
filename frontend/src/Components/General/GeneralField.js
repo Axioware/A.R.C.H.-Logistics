@@ -21,7 +21,7 @@ const GeneralField = ({
       margin-bottom: 16px;
     }
     .field-label {
-      font-weight: bold;
+      font-weight: light;
       text-align: ${label_position === 'left' ? 'right' : 'left'};
       white-space: ${label_position === 'left' ? 'nowrap' : 'normal'};
       min-width: ${label_position === 'left' ? '20%' : 'auto'};
