@@ -53,148 +53,171 @@ const Forgotpassword = () => {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: '#e0e0e0',
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${bg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        filter: 'saturate(0.8)',
-      }}
-    >
+    <>
+      {/* Add font-face styles */}
+      <style>
+        {`
+          @font-face {
+            font-family: 'Konkhmer Sleokchher';
+            src: url('../../Assets/Fonts/Konkhmer Sleokchher.ttf') format('truetype');
+          }
+          body, div, p, a, label, h2 {
+            font-family: 'Konkhmer Sleokchher', sans-serif;
+          }
+        `}
+      </style>
       <div
         style={{
+          backgroundColor: '#e0e0e0',
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${bg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
           display: 'flex',
-          width: '900px',
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          borderRadius: '10px',
-          overflow: 'hidden',
-          position: 'relative',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          filter: 'saturate(0.8)',
         }}
       >
-        {/* Logo Section */}
         <div
           style={{
-            backgroundColor: '#000',
-            color: '#fff',
-            width: '60%',
-            padding: '20px',
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <img
-            src={PrepPrimeLogo}
-            alt="PREPPRIME Logo"
-            style={{ maxWidth: '80%', height: 'auto' }}
-          />
-        </div>
-
-        {/* Form Section */}
-        <div
-          style={{
-            width: '40%',
-            padding: '40px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
+            width: '900px',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            borderRadius: '10px',
+            overflow: 'hidden',
             position: 'relative',
           }}
         >
-          {/* Back Button */}
-          <a
-            href="/login"
+          {/* Logo Section */}
+          <div
             style={{
-              position: 'absolute',
-              top: '10px',
-              left: '10px',
-              fontSize: '28px',
-              color: '#2c5b97',
-              textDecoration: 'none',
+              backgroundColor: '#000',
+              color: '#fff',
+              width: '60%',
+              padding: '20px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            ←
-          </a>
+            <img
+              src={PrepPrimeLogo}
+              alt="PREPPRIME Logo"
+              style={{ maxWidth: '80%', height: 'auto' }}
+            />
+          </div>
 
-          <h2 style={{ fontSize: '28px', marginBottom: '15px', color: '#333' }}>
-            Forgot Password
-          </h2>
-          <p
+          {/* Form Section */}
+          <div
             style={{
-              fontSize: '14px',
-              marginBottom: '30px',
-              color: '#666',
+              width: '40%',
+              padding: '40px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              position: 'relative',
             }}
           >
-            Enter the email address associated with your account and we’ll send
-            you an OTP to reset your password.
-          </p>
+            {/* Back Button */}
+            <a
+              href="/login"
+              style={{
+                position: 'absolute',
+                top: '10px',
+                left: '10px',
+                fontSize: '28px',
+                color: '#2c5b97',
+                textDecoration: 'none',
+              }}
+            >
+              ←
+            </a>
 
-          {/* Form */}
-          <form onSubmit={handleFormSubmit}>
-            <div style={{ marginBottom: '20px' }}>
-              <label
-                htmlFor="email"
-                style={{
-                  display: 'block',
-                  fontSize: '14px',
-                  color: '#333',
-                  marginBottom: '5px',
-                  marginLeft: '10px',
-                }}
-              >
-                Email
-              </label>
-              <GeneralField
-                type="email"
-                id="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                width={'94%'}
+            <h2
+              style={{
+                fontSize: '28px',
+                marginBottom: '15px',
+                color: '#333',
+                fontWeight: 'bold',
+                marginLeft: '12%',
+              }}
+            >
+              Forgot Password
+            </h2>
+            <p
+              style={{
+                fontSize: '14px',
+                marginBottom: '30px',
+                color: '#666',
+              }}
+            >
+              Enter the email address associated with your account and we’ll
+              send you an OTP to reset your password.
+            </p>
+
+            {/* Form */}
+            <form onSubmit={handleFormSubmit}>
+              <div style={{ marginBottom: '20px' }}>
+                <label
+                  htmlFor="email"
+                  style={{
+                    display: 'block',
+                    fontSize: '14px',
+                    color: '#333',
+                    marginBottom: '5px',
+                    marginLeft: '10px',
+                  }}
+                >
+                  Email
+                </label>
+                <GeneralField
+                  type="email"
+                  id="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  width={'94%'}
+                  disabled={isSubmitting}
+                  hint={"Email"}
+                />
+              </div>
+              {errorMessage && (
+                <p style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</p>
+              )}
+              <GeneralButton
+                text={isSubmitting ? 'Submitting...' : 'Continue'}
+                text_color={[255, 255, 255]}
+                button_color={[44, 91, 151]}
+                width="94%"
+                height="50%"
                 disabled={isSubmitting}
               />
-            </div>
-            {errorMessage && (
-              <p style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</p>
-            )}
-            <GeneralButton
-              text={isSubmitting ? 'Submitting...' : 'Continue'}
-              text_color={[255, 255, 255]}
-              button_color={[44, 91, 151]}
-              width="94%"
-              height="50%"
-              disabled={isSubmitting}
-            />
-          </form>
+            </form>
 
-          {/* Footer */}
-          <div style={{ textAlign: 'center', marginTop: '30px' }}>
-            <p style={{ fontSize: '12px', color: '#555' }}>
-              Prepprime © Copyright 2024
-            </p>
-            <div>
-              <a
-                href="https://prepprime.com/contact-us-2/"
-                style={{
-                  color: '#2c5b97',
-                  textDecoration: 'none',
-                  fontSize: '12px',
-                }}
-              >
-                Contact Us
-              </a>
+            {/* Footer */}
+            <div style={{ textAlign: 'center', marginTop: '18%' }}>
+              <p style={{ fontSize: '12px', color: '#555' }}>
+                Prepprime © Copyright 2024
+              </p>
+              <div>
+                <a
+                  href="https://prepprime.com/contact-us-2/"
+                  style={{
+                    color: '#2c5b97',
+                    textDecoration: 'none',
+                    fontSize: '12px',
+                  }}
+                >
+                  Contact Us
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
