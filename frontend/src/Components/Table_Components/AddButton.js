@@ -11,14 +11,6 @@ function rgbArrayToString(rgbArray) {
 }
 
 export default function AddButton({
-  // text,
-  // text_color,
-  // path,
-  // background_color,
-  // class_name = '',
-  // width = 'auto',
-  // height = 'auto',
-
   text,
   text_color,
   path,
