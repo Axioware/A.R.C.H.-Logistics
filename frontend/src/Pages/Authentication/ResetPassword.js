@@ -5,6 +5,56 @@ import PrepPrimeLogo from '../../Assets/Images/Login/PrepPrimeLogo.jpg';
 import BackgroundImage from '../../Assets/Images/Login/background.jpg';
 
 const ResetPassword = () => {
+  
+    const [formData, setFormData] = useState({ newPassword: "", confirmPassword: "" });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate();
+  
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({ ...formData, [name]: value });
+    };
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+  
+      // Validate fields
+      if (!formData.newPassword || !formData.confirmPassword) {
+        setErrorMessage("All fields are required.");
+        return;
+      }
+      if (formData.newPassword !== formData.confirmPassword) {
+        setErrorMessage("Passwords do not match.");
+        return;
+      }
+  
+      // Disable fields and button
+      setIsSubmitting(true);
+      setErrorMessage("");
+  
+      try {
+        // Sample API call
+        const response = await fetch("/api/reset-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: formData.newPassword }),
+        });
+  
+        if (response.status === 200) {
+          localStorage.setItem("token", null);
+          navigate("/login");
+        } else if (response.status === 400) {
+          setErrorMessage("Please choose a different password.");
+        } else if (response.status >= 500) {
+          setErrorMessage("Server error. Please try again.");
+        }
+      } catch (error) {
+        setErrorMessage("An unexpected error occurred. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
   return (
     <div style={{ 
       display: "flex", 
