@@ -1,0 +1,112 @@
+import React, { useState } from 'react';
+import SearchIcon from '../../Assets/Images/SearchIcon.png'
+
+// Function to convert RGB array to 'rgb(r, g, b)' string
+function rgbArrayToString(rgbArray) {
+  if (Array.isArray(rgbArray) && rgbArray.length === 3) {
+    const [r, g, b] = rgbArray;
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+  return 'rgb(0, 0, 0)'; // Default color if input is invalid
+}
+
+export default function SearchBar({
+  hint,
+  field_color,
+  class_name = '',
+  function: handleSearch,
+  width = 'auto',
+  height = 'auto',
+  icon
+}) {
+  const [searchText, setSearchText] = useState('');
+  const fieldColor = rgbArrayToString(field_color);
+
+  // Handle input change
+  const handleChange = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  // Handle search button click
+  const handleButtonClick = () => {
+    handleSearch(searchText); // Call the passed function with search text
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(searchText); // Call the search function on Enter key press
+    }
+  };
+
+  return (
+    <div
+      className={`search-bar-container ${class_name}`}
+      style={{ width, height }}  // Apply width and height as props
+    >
+        <div className="search-icon-container">
+        {icon && <img src={SearchBar} alt="Search Icon" className="search-icon" />}
+      </div>
+      <input
+        type="text"
+        placeholder={hint}
+        className="search-bar-input"
+        value={searchText}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        style={{ backgroundColor: fieldColor }} // Input background color
+      />
+      <style>
+        {`
+          .app-container {
+            height: 100vh; /* Ensure the app's height is 100% of the viewport */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .search-bar-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: ${width}; /* Apply percentage width */
+            height: ${height}; /* Apply percentage height */
+          }
+
+          .search-bar-input {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            outline: none;
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+          }
+
+          .search-bar-input:focus {
+            border-color: #007bff; /* Focused input border color */
+          }
+
+          .search-bar-button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            padding: 10px;
+            margin-left: 10px;
+            font-size: 1.2rem;
+            color: #007bff;
+          }
+
+          .search-bar-button:hover {
+            color: #0056b3; /* Change color on hover */
+          }
+
+          .search-icon {
+            font-size: 1.2rem;
+          }
+        `}
+      </style>
+    </div>
+  );
+}

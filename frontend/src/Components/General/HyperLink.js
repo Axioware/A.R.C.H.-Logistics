@@ -24,8 +24,9 @@ export default function HyperLink({
 
   // Convert the RGB array to the proper CSS string for text color
   const color = rgbArrayToString(text_color);
-  const bgColor = rgbArrayToString(background_color); // Convert background_color to string
+  // const bgColor = rgbArrayToString(background_color); // Convert background_color to string
   const hoverBgColor = rgbArrayToString(hover_background_color); // Convert hover_background_color to string
+  const bcolor = rgbArrayToString(background_color);
 
   // Handle the click event for navigation
   const handleClick = () => {
@@ -40,7 +41,8 @@ export default function HyperLink({
         width: width || 'auto',  // Use provided width or default to auto
         height: height || 'auto',  // Use provided height or default to auto
         minHeight: height || 'auto', // Ensure min-height is set
-        display: 'flex', // Make sure the div is a flex container
+        display: 'flex',
+        flexDirection: 'row', // Make sure the div is a flex container
         justifyContent: 'center', // Center the text horizontally
         alignItems: 'center', // Center the text vertically
       }}
@@ -50,13 +52,12 @@ export default function HyperLink({
           color: color, // Dynamically set text color using the converted RGB value
         }}
       >
-        {text}
+        {text} 
       </span>
 
       <style>
         {`
           .hyperlink {
-            background-color: ${bgColor || '#1E3D59'};  /* Use the passed background color */
             border-radius: 5px;
             padding: 10px;
             text-decoration: none;
@@ -64,8 +65,7 @@ export default function HyperLink({
             text-align: center;
             width: ${width || 'auto'};
             height: ${height || 'auto'};
-            min-height: ${height || 'auto'};  /* Ensure the min-height is also applied */
-            position: absolute;
+            
           }
 
           .hyperlink:hover {
