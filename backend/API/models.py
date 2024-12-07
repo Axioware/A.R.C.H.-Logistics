@@ -11,163 +11,163 @@ import random
 import string
 from datetime import date
 
-def dynamic_upload_path(instance, filename):
-    # Get the file extension
-    ext = filename.split('.')[-1]
+# def dynamic_upload_path(instance, filename):
+#     # Get the file extension
+#     ext = filename.split('.')[-1]
 
-    # Example: Using instance attributes to determine the path
-    # You can access any field of the instance, like instance.title
-    # This example saves PDFs under a folder named after the current year/month
-    path = f'pdfs/{instance.category}/{datetime.now().strftime("%Y/%m/%d")}'
+#     # Example: Using instance attributes to determine the path
+#     # You can access any field of the instance, like instance.title
+#     # This example saves PDFs under a folder named after the current year/month
+#     path = f'pdfs/{instance.category}/{datetime.now().strftime("%Y/%m/%d")}'
     
-    # Optionally, change the filename to a unique one if needed
-    filename = f"{instance.title}_{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
+#     # Optionally, change the filename to a unique one if needed
+#     filename = f"{instance.title}_{datetime.now().strftime('%Y%m%d%H%M%S')}.{ext}"
     
-    # Return the full path
-    return os.path.join(path, filename)
+#     # Return the full path
+#     return os.path.join(path, filename)
 
 
-class Warehouse(models.Model):
-    warehouse_id = models.AutoField(primary_key=True)
-    warehouse_name = models.CharField(max_length=50, default=None)
-    address = models.CharField(max_length=100, default=None, blank=True)
-    city = models.CharField(max_length=50, default=None, blank=True)
-    state = models.CharField(max_length=50, default=None, blank=True)
-    country = models.CharField(max_length=50, default=None, blank=True)
-    zip_code = models.CharField(max_length=10, default=None, blank=True)
-    phone = models.CharField(max_length=15, default=None, blank=True)
-    email = models.EmailField(max_length=100, default=None, blank=True)
+# class Warehouse(models.Model):
+#     warehouse_id = models.AutoField(primary_key=True)
+#     warehouse_name = models.CharField(max_length=50, default=None)
+#     address = models.CharField(max_length=100, default=None, blank=True)
+#     city = models.CharField(max_length=50, default=None, blank=True)
+#     state = models.CharField(max_length=50, default=None, blank=True)
+#     country = models.CharField(max_length=50, default=None, blank=True)
+#     zip_code = models.CharField(max_length=10, default=None, blank=True)
+#     phone = models.CharField(max_length=15, default=None, blank=True)
+#     email = models.EmailField(max_length=100, default=None, blank=True)
 
-    def __str__(self):
-        return f"{self.warehouse_name}"
+#     def __str__(self):
+#         return f"{self.warehouse_name}"
 
-class ClearanceLevel(models.Model):
-    level = models.PositiveIntegerField(
-        unique=True,
-        verbose_name="Clearance Level",
-        choices=[(1, 'Level 1'), (2, 'Level 2'), (3, 'Level 3'), (4, 'Level 4')],
-    )
-    name = models.CharField(max_length=50, verbose_name="Clearance Name")
+# class ClearanceLevel(models.Model):
+#     level = models.PositiveIntegerField(
+#         unique=True,
+#         verbose_name="Clearance Level",
+#         choices=[(1, 'Level 1'), (2, 'Level 2'), (3, 'Level 3'), (4, 'Level 4')],
+#     )
+#     name = models.CharField(max_length=50, verbose_name="Clearance Name")
 
-    def __str__(self):
-        return f"Level {self.level} - {self.name}"
+#     def __str__(self):
+#         return f"Level {self.level} - {self.name}"
 
-class UsersExtended(models.Model):
-    # class RoleChoices(models.TextChoices):
-    #     OWNER = 'Owner', 'Owner'
-    #     MANAGER = 'Manager', 'Manager'
-    #     VIRTUAL_ASSISTANT = 'Virtual Assistant', 'Virtual Assistant'
-    #     PREP_TEAM = 'Prep Team', 'Prep Team'
-    #     LOWER_STAFF = 'Lower Staff', 'Lower Staff'
-    #     CLIENT = 'Client', 'Client'
+# class UsersExtended(models.Model):
+#     # class RoleChoices(models.TextChoices):
+#     #     OWNER = 'Owner', 'Owner'
+#     #     MANAGER = 'Manager', 'Manager'
+#     #     VIRTUAL_ASSISTANT = 'Virtual Assistant', 'Virtual Assistant'
+#     #     PREP_TEAM = 'Prep Team', 'Prep Team'
+#     #     LOWER_STAFF = 'Lower Staff', 'Lower Staff'
+#     #     CLIENT = 'Client', 'Client'
 
-    class BillingTypeChoices(models.TextChoices):
-        DAILY = 'Daily', 'Daily'
-        MONTHLY = 'Monthly', 'Monthly'
-        BIMONTHLY = 'Bimonthly', 'Bimonthly'
+#     class BillingTypeChoices(models.TextChoices):
+#         DAILY = 'Daily', 'Daily'
+#         MONTHLY = 'Monthly', 'Monthly'
+#         BIMONTHLY = 'Bimonthly', 'Bimonthly'
 
-    username = models.OneToOneField(User, on_delete=models.CASCADE, related_name="extended", verbose_name="Username")
-    phone = models.CharField(max_length=15, blank=True, null=True)
-    email2 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Secondary Email")
-    clearance_level = models.ForeignKey(
-        ClearanceLevel, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Clearance Level"
-    )
-    # role = models.CharField(max_length=50, choices=RoleChoices.choices, default=RoleChoices.CLIENT, verbose_name="Role")
-    tax_id = models.CharField(max_length=15, blank=True, null=True, verbose_name="Tax ID")
-    address = models.CharField(max_length=255, default=None, verbose_name="Address", blank=True, null=True)
-    billing_type = models.CharField(max_length=10, choices=BillingTypeChoices.choices, default=BillingTypeChoices.MONTHLY, verbose_name="Billing Type", blank=True, null=True)
-    llc_name = models.CharField(max_length=50, default=None, verbose_name="LLC Name", blank=True, null=True)
-    state = models.CharField(max_length=30, default=None, verbose_name="State", blank=True, null=True)
-    city = models.CharField(max_length=30, default=None, verbose_name="City", blank=True, null=True)
-    zip = models.CharField(max_length=20, blank=True, null=True, verbose_name="Zip Code")
-    date_created = models.DateField(default=timezone.now, null=True)
-    last_logout = models.DateTimeField(null=True, blank=True)
-    warehouses = models.ManyToManyField(Warehouse, related_name="users", blank=True)
+#     username = models.OneToOneField(User, on_delete=models.CASCADE, related_name="extended", verbose_name="Username")
+#     phone = models.CharField(max_length=15, blank=True, null=True)
+#     email2 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Secondary Email")
+#     clearance_level = models.ForeignKey(
+#         ClearanceLevel, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Clearance Level"
+#     )
+#     # role = models.CharField(max_length=50, choices=RoleChoices.choices, default=RoleChoices.CLIENT, verbose_name="Role")
+#     tax_id = models.CharField(max_length=15, blank=True, null=True, verbose_name="Tax ID")
+#     address = models.CharField(max_length=255, default=None, verbose_name="Address", blank=True, null=True)
+#     billing_type = models.CharField(max_length=10, choices=BillingTypeChoices.choices, default=BillingTypeChoices.MONTHLY, verbose_name="Billing Type", blank=True, null=True)
+#     llc_name = models.CharField(max_length=50, default=None, verbose_name="LLC Name", blank=True, null=True)
+#     state = models.CharField(max_length=30, default=None, verbose_name="State", blank=True, null=True)
+#     city = models.CharField(max_length=30, default=None, verbose_name="City", blank=True, null=True)
+#     zip = models.CharField(max_length=20, blank=True, null=True, verbose_name="Zip Code")
+#     date_created = models.DateField(default=timezone.now, null=True)
+#     last_logout = models.DateTimeField(null=True, blank=True)
+#     warehouses = models.ManyToManyField(Warehouse, related_name="users", blank=True)
 
-    def save(self, *args, **kwargs):
-        if self.username.is_superuser:
-            level_1, created = ClearanceLevel.objects.get_or_create(level=1, defaults={'name': 'Owner'})
-            self.clearance_level = level_1
-        super().save(*args, **kwargs)
-
-
-    @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-            UsersExtended.objects.create(username=instance)
-        else:
-            instance.extended.save()
-
-    def __str__(self):
-        return f"{self.username.username} - {self.role}"
+#     def save(self, *args, **kwargs):
+#         if self.username.is_superuser:
+#             level_1, created = ClearanceLevel.objects.get_or_create(level=1, defaults={'name': 'Owner'})
+#             self.clearance_level = level_1
+#         super().save(*args, **kwargs)
 
 
-# Received Table
-class Received(models.Model):
-    tracking_id = models.CharField(max_length=32, primary_key=True)
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='service_category_category_id')
-    tracking_type = models.CharField(max_length=20, null=True, blank=True)
-    date_received = models.DateTimeField(null=True) # null if not received
-    completed = models.BooleanField(default=False) # if this box has 0 quantity left
-    assigned = models.BooleanField(default=False) # assigned to service
+#     @receiver(post_save, sender=User)
+#     def create_user_profile(sender, instance, created, **kwargs):
+#         if created:
+#             UsersExtended.objects.create(username=instance)
+#         else:
+#             instance.extended.save()
+
+#     def __str__(self):
+#         return f"{self.username.username} - {self.role}"
+
+
+# # Received Table
+# class Received(models.Model):
+#     tracking_id = models.CharField(max_length=32, primary_key=True)
+#     client_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='service_category_category_id')
+#     tracking_type = models.CharField(max_length=20, null=True, blank=True)
+#     date_received = models.DateTimeField(null=True) # null if not received
+#     completed = models.BooleanField(default=False) # if this box has 0 quantity left
+#     assigned = models.BooleanField(default=False) # assigned to service
     
 
 
-    def __str__(self):
-        return f"{self.tracking_id}"
+#     def __str__(self):
+#         return f"{self.tracking_id}"
 
-# ReceivedImage Table for storing multiple images
-class ReceivedImage(models.Model):
-    def path_to_image(self, name):
-        return 'trackings/{0}_{1}'.format(self.received.tracking_id, name)
+# # ReceivedImage Table for storing multiple images
+# class ReceivedImage(models.Model):
+#     def path_to_image(self, name):
+#         return 'trackings/{0}_{1}'.format(self.received.tracking_id, name)
 
-    received = models.ForeignKey(Received, on_delete=models.CASCADE, related_name='images')  # Establish a one-to-many relationship
-    image = models.ImageField(upload_to=path_to_image)  # You can customize the path as per your requirements
+#     received = models.ForeignKey(Received, on_delete=models.CASCADE, related_name='images')  # Establish a one-to-many relationship
+#     image = models.ImageField(upload_to=path_to_image)  # You can customize the path as per your requirements
     
-    def __str__(self):
-        return f"Image for {self.received.tracking_id}"
+#     def __str__(self):
+#         return f"Image for {self.received.tracking_id}"
 
-#many to many table
-#Received-Service Table
-class Received_Service(models.Model):
-    id = models.AutoField(primary_key=True)
-    tracking_id = models.ForeignKey(Received, on_delete=models.SET_NULL, related_name='received_received_service', null=True)
-    service_id = models.CharField(max_length=20)
-    item_id = models.CharField(max_length=20, null=True, blank=True, default=True)
+# #many to many table
+# #Received-Service Table
+# class Received_Service(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     tracking_id = models.ForeignKey(Received, on_delete=models.SET_NULL, related_name='received_received_service', null=True)
+#     service_id = models.CharField(max_length=20)
+#     item_id = models.CharField(max_length=20, null=True, blank=True, default=True)
  
 # Item Table
-class Item(models.Model):
-    item_id = models.CharField(max_length=20, primary_key=True)
-    item_name = models.CharField(max_length=100)
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='item_client_id')
-    description = models.TextField(blank=True, null=True)
+# class Item(models.Model):
+#     item_id = models.CharField(max_length=20, primary_key=True)
+#     item_name = models.CharField(max_length=100)
+#     client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='item_client_id')
+#     description = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return f"{self.item_id}"
+#     def __str__(self):
+#         return f"{self.item_id}"
     
-    class Meta:
-        unique_together = ('client_id', 'item_id')
+#     class Meta:
+#         unique_together = ('client_id', 'item_id')
 
 # Category Table
-class OrderCategory(models.Model):
-    category_id = models.AutoField(primary_key=True)
-    category_name = models.CharField(max_length=20)
+# class OrderCategory(models.Model):
+#     category_id = models.AutoField(primary_key=True)
+#     category_name = models.CharField(max_length=20)
 
-    def __str__(self):
-        return f"{self.category_name}"
+#     def __str__(self):
+#         return f"{self.category_name}"
 
 # Service Type Table
-class ServiceCategory(models.Model):
-    service_code = models.AutoField(primary_key=True)
-    category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name='service_category_category_id')
-    name = models.CharField(max_length=10)
-    charges = models.DecimalField(max_digits=10, decimal_places=2)
+# class ServiceCategory(models.Model):
+#     service_code = models.AutoField(primary_key=True)
+#     category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name='service_category_category_id')
+#     name = models.CharField(max_length=10)
+#     charges = models.DecimalField(max_digits=10, decimal_places=2)
 
-    class Meta:
-        unique_together = ('service_code', 'category_id')
+#     class Meta:
+#         unique_together = ('service_code', 'category_id')
 
-    def __str__(self):
-        return f"{self.name}"
+#     def __str__(self):
+#         return f"{self.name}"
     
 # class CombinedOrder(models.Model):
 #     id = models.AutoField(primary_key=True)
@@ -175,58 +175,58 @@ class ServiceCategory(models.Model):
 #     quantity_from_recent_recieved = models.IntegerField()
 #     quantity_from_new_shipment = models.IntegerField()
 
-class Bin(models.Model):
-    bin_id = models.AutoField(primary_key=True)
-    bin_name = models.CharField(max_length=50)
+# class Bin(models.Model):
+#     bin_id = models.AutoField(primary_key=True)
+#     bin_name = models.CharField(max_length=50)
 
 # Service Details Table
-class ServiceDetail(models.Model):
+# class ServiceDetail(models.Model):
     
-    def pdf_directory_path_fnksu(self, name):
-        return 'fnsku/{0}_{1}_{2}_{3}_{4}'.format(self.service_id, self.item_id, self.service_code, self.category_id, name)
+#     def pdf_directory_path_fnksu(self, name):
+#         return 'fnsku/{0}_{1}_{2}_{3}_{4}'.format(self.service_id, self.item_id, self.service_code, self.category_id, name)
     
-    def pdf_directory_path_additional(self):
-        return 'fnsku/{0}_{1}_{2}_{3}_additional'.format(self.service_id, self.item_id, self.service_code, self.category_id)
+#     def pdf_directory_path_additional(self):
+#         return 'fnsku/{0}_{1}_{2}_{3}_additional'.format(self.service_id, self.item_id, self.service_code, self.category_id)
     
-    def pdf_directory_path_fba(self):
-        return 'fba/{0}_{1}_{2}_{3}'.format(self.service_id, self.item_id, self.service_code, self.category_id)
+#     def pdf_directory_path_fba(self):
+#         return 'fba/{0}_{1}_{2}_{3}'.format(self.service_id, self.item_id, self.service_code, self.category_id)
 
-    # service_detail_id = models.AutoField(primary_key=True)
-    service_id = models.CharField(max_length=50)
-    item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="Service_detail_item_id", blank=True, null=True, default=None)
-    service_code = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="Service_detail_service_code", blank=True, null=True, default=None)
-    category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="Service_detail_category_id", blank=True, null=True, default=None)
-    bin_id = models.ForeignKey(Bin, on_delete=models.SET_NULL, null=True, blank=True)
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Service_detail_client_id")
-    no_bundles = models.IntegerField(default=None, null=True, blank=True)
-    bundle_quantity = models.IntegerField(default=None, null=True, blank=True)
-    additional_service = models.CharField(max_length=40, blank=True, null=True)
-    additional_format = models.CharField(max_length=40, blank=True, null=True)
-    additional_format_text = models.CharField(max_length=100, blank=True, null=True, default=None)
-    additional_format_file = models.FileField(upload_to=pdf_directory_path_additional, blank=True, null=True, default=None)
-    active = models.BooleanField(default=False, null=True, blank=True)
-    quantity_from_inventory = models.IntegerField(blank=True, null=True)
-    quantity_from_recent_received = models.IntegerField(blank=True, null=True)
-    quantity_from_new_shipment = models.IntegerField(blank=True, null=True)
-    fnsku = models.FileField(upload_to=pdf_directory_path_fnksu, blank=True, null=True, default=None)
-    box_label = models.FileField(upload_to=pdf_directory_path_fba, blank=True, null=True, default=None)
-    placed_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
-    active_service_start_date = models.DateTimeField(blank=True, null=True)
-    state = models.CharField(max_length=50, null=True, blank=True)
-    # from_inventory = models.BooleanField(default=False, blank=True, null=True)
-    # combined = models.ForeignKey(CombinedOrder, null=True, blank=True, related_name="CombinedOrder_id", on_delete=models.CASCADE)
-    dispute = models.BooleanField(default=False, blank=True, null=True)
-    dispute_note = models.CharField(max_length=100, null=True, blank=True)
-    bundle = models.BooleanField(default=False, null=True, blank=True)
-    packing_instructions = models.CharField(max_length=100, null=True, blank=True)
-    pallet = models.BooleanField(default=False, null=True, blank=True)
+#     # service_detail_id = models.AutoField(primary_key=True)
+#     service_id = models.CharField(max_length=50)
+#     item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="Service_detail_item_id", blank=True, null=True, default=None)
+#     service_code = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="Service_detail_service_code", blank=True, null=True, default=None)
+#     category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="Service_detail_category_id", blank=True, null=True, default=None)
+#     bin_id = models.ForeignKey(Bin, on_delete=models.SET_NULL, null=True, blank=True)
+#     client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Service_detail_client_id")
+#     no_bundles = models.IntegerField(default=None, null=True, blank=True)
+#     bundle_quantity = models.IntegerField(default=None, null=True, blank=True)
+#     additional_service = models.CharField(max_length=40, blank=True, null=True)
+#     additional_format = models.CharField(max_length=40, blank=True, null=True)
+#     additional_format_text = models.CharField(max_length=100, blank=True, null=True, default=None)
+#     additional_format_file = models.FileField(upload_to=pdf_directory_path_additional, blank=True, null=True, default=None)
+#     active = models.BooleanField(default=False, null=True, blank=True)
+#     quantity_from_inventory = models.IntegerField(blank=True, null=True)
+#     quantity_from_recent_received = models.IntegerField(blank=True, null=True)
+#     quantity_from_new_shipment = models.IntegerField(blank=True, null=True)
+#     fnsku = models.FileField(upload_to=pdf_directory_path_fnksu, blank=True, null=True, default=None)
+#     box_label = models.FileField(upload_to=pdf_directory_path_fba, blank=True, null=True, default=None)
+#     placed_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+#     active_service_start_date = models.DateTimeField(blank=True, null=True)
+#     state = models.CharField(max_length=50, null=True, blank=True)
+#     # from_inventory = models.BooleanField(default=False, blank=True, null=True)
+#     # combined = models.ForeignKey(CombinedOrder, null=True, blank=True, related_name="CombinedOrder_id", on_delete=models.CASCADE)
+#     dispute = models.BooleanField(default=False, blank=True, null=True)
+#     dispute_note = models.CharField(max_length=100, null=True, blank=True)
+#     bundle = models.BooleanField(default=False, null=True, blank=True)
+#     packing_instructions = models.CharField(max_length=100, null=True, blank=True)
+#     pallet = models.BooleanField(default=False, null=True, blank=True)
 
 
-    class Meta:
-        unique_together = ('service_id', 'service_code', 'item_id', 'category_id')
+#     class Meta:
+#         unique_together = ('service_id', 'service_code', 'item_id', 'category_id')
 
-    def __str__(self):
-        return f"Service_id {self.service_id} - item {self.item_id} - category {self.category_id} - service code {self.service_code}"
+#     def __str__(self):
+#         return f"Service_id {self.service_id} - item {self.item_id} - category {self.category_id} - service code {self.service_code}"
     
 class UngatingImage(models.Model):
     

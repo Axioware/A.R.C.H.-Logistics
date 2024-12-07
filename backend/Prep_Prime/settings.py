@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_tenants',
     'API',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -73,6 +74,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django_tenants.middleware.main.TenantMainMiddleware',
 ]
 
 ROOT_URLCONF = 'Prep_Prime.urls'
@@ -88,10 +90,34 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
 ]
+
+
+SHARED_APPS = (
+    'django_tenants',  # mandatory
+    # 'Users', # you must list the app where your tenant model resides in
+
+    'django.contrib.contenttypes',
+
+    # everything below here is optional
+    'django.contrib.auth',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.admin',
+)
+
+TENANT_APPS = (
+    # your tenant-specific apps
+    'Users',
+    # 'myapp.houses',
+)
+
+INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
 WSGI_APPLICATION = 'Prep_Prime.wsgi.application'
 
@@ -108,14 +134,18 @@ WSGI_APPLICATION = 'Prep_Prime.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',  
-        'NAME': 'prep_db',                          
-        'USER': 'hassan',                         
-        'PASSWORD': '664300',                
+        'ENGINE': 'django_tenants.postgresql_backend',  
+        'NAME': 'arch_db',                          
+        'USER': 'postgres',                         
+        'PASSWORD': 'uncharted3',                
         'HOST': 'localhost',                        
         'PORT': '5432',                             
     }
 }
+
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
 
 
 # Password validation
