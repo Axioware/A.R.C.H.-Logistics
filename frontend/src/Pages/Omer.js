@@ -1,37 +1,47 @@
 import React from "react";
 import NavBarSidebar from "../Components/General/NavBarSidebar";
+import archlogo from "../Assets/Images/archlabs.jpg";
 
 const Omer = () => {
+  const icons = [
+    "https://via.placeholder.com/20",  // Example Icon 1
+    "https://via.placeholder.com/20",  // Example Icon 2
+    "https://via.placeholder.com/20",  // Example Icon 3
+  ];
+
+  const names = [
+    ["User Management", "All User", "Add User"],
+    ["Management", "Add Order", "Delete Order"],
+    ["Inventory", "Add Item", "Delete Item"],
+  ];
+
+  const background_color = [42, 77, 107]; 
+  const text_color = [255, 255, 255];
+  const selected_color = [56, 21, 90];
+  const logo = archlogo;
+  const username = "Omer Butt";
+
   return (
-    <div style={{ fontSize: "16px", fontFamily: "'Roboto', sans-serif" }}>
+    <div style={{ display: "flex", height: "100vh" }}>
+      {/* Sidebar */}
       <NavBarSidebar
-        icons={[
-          "https://via.placeholder.com/20", // Icon for Inventory
-          "https://via.placeholder.com/20", // Icon for Users
-        ]}
-        names={[
-          ["Inventory", "Active Orders", "Completed Orders"],
-          ["Users", "Add User", "View Users"],
-        ]}
-        expanded={[false, false]} // Initial state for menus
-        background_color={[30, 61, 89]} // Sidebar background
-        text_color={[255, 255, 255]} // Text color
-        logo="https://via.placeholder.com/120" // Placeholder logo
-        username="John Doe"
-        selected_color={[56, 21, 90]} // Highlight color
-        toggle={true} // Sidebar expanded
-        width="240px"
-        height="100vh"
+        icons={icons}
+        names={names}
+        expanded={[false, false, false]} 
+        background_color={background_color} 
+        text_color={text_color}
+        logo={logo}
+        username={username}
+        selected_color={selected_color}
+        toggle={true}  
+        width="12%" 
+        height="100%" 
       />
-      <div
-        style={{
-          marginLeft: "240px",
-          padding: "20px",
-          fontSize: "1rem", // Use rem to scale font size based on root font size
-        }}
-      >
-        <h1>Welcome to the Dashboard</h1>
-        <p>Main content goes here.</p>
+
+      {/* Main Content */}
+      <div style={{ marginLeft: "12%", padding: "10px", width: "80%" }}>
+        <h1>Welcome to Omer's Dashboard</h1>
+        {/* Here, we can add more content or components for the main page */}
       </div>
     </div>
   );

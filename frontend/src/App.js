@@ -14,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/moiz" element={<Moiz />} />
         <Route path="/asad" element={<Asad />} />
-        <Route path="/omer" element={<Omer />} /> 
+        <Route path="/omer" element={<Omer />} />  
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} /> 
       </Routes>

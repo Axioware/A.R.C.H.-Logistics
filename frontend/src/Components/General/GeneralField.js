@@ -8,8 +8,8 @@ const GeneralField = ({
   name,
   width,
   height,
-  className_Input = '', // Class name for input
-  className_Label = ''  // Class name for label
+  className_Input = '', 
+  className_Label = ''  
 }) => {
   const styles = `
     .field-container {
@@ -29,7 +29,7 @@ const GeneralField = ({
     .field-input {
       padding: 8px;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 6px;
       box-sizing: border-box;
       width: ${width};
       height: ${height};
