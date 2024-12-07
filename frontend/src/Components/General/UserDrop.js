@@ -13,13 +13,14 @@ const UserDrop = ({ userName }) => {
       display: 'flex',
       alignItems: 'center',
       position: 'absolute',
-      top: '-8px',
-      right: '18px',
+      top: '-10px',
+      right: '17px',
     },
     img: {
-      width: '28px',
+      width: '40px',
+      // height: '30px',
       cursor: 'pointer',
-      padding: '20px 20px 20px 4px',
+      padding: '30px 20px 30px 0px',
       borderRadius: '50%', // Circle effect for profile icon
       transition: '0.3s ease', // Smooth transition for hover effect
     },
@@ -41,7 +42,7 @@ const UserDrop = ({ userName }) => {
     },
     dropdownItem: {
       padding: '10px 20px',
-      fontSize: '16px',
+      fontSize: '14px',
       fontWeight: '500',
       cursor: 'pointer',
       transition: '0.2s ease', // Smooth transition on hover
@@ -58,12 +59,14 @@ const UserDrop = ({ userName }) => {
     imgHover: {
       transform: 'scale(1.1)', // Slight zoom effect on hover
     },
+    
+    
   };
 
   return (
     <div style={styles.container}>
       {/* Username */}
-      <p style={{ marginRight: '10px', fontSize: '20px', fontWeight: '600' }}>{userName}</p>
+      <p style={{ marginRight: '10px', fontSize: '20px', fontWeight: '500' }}>{userName}</p>
 
       {/* Profile Icon */}
       <img
