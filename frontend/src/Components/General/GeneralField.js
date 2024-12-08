@@ -32,7 +32,7 @@ const GeneralField = ({
     .field-input {
       padding: 8px;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 6px;
       box-sizing: border-box;
       width: ${width};
       height: ${height};

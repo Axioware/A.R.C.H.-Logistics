@@ -1,19 +1,36 @@
-import React from 'react';
-import PageHeading from '../Components/Table_Components/PageHeading'; // Adjust the path as needed
+import React from "react";
+import NavBarWithSidebar from "../Components/General/TopSideNavBar";
+import archlogo from "../Assets/Images/logo1.png";
 
 function App() {
   return (
-    <div>
-      <PageHeading 
-  text="All Users" 
-  text_color={[8, 70, 127]}  // Blue text color
-  sidebar_color={[25, 106, 172]} // Green sidebar color
-  width="20%" 
-  height="50px"
-  font_size="1.7rem"
-/>
-
-    </div>
+    <NavBarWithSidebar
+      background_color={[42, 77, 107]}
+      text_color={[255, 255, 255]}
+      logo={archlogo}
+      company_name="A.R.C.H Labs"
+      company_name_color={[255, 255, 255]}
+      username="Owner"
+      username_color={[255, 255, 255]}
+      icons={[
+        "https://via.placeholder.com/20",
+        "https://via.placeholder.com/20",
+        "https://via.placeholder.com/20",
+      ]}
+      names={[
+        ["User Management", "All User", "Add User"],
+        ["Management", "Add Order", "Delete Order"],
+        ["Inventory", "Add Item", "Delete Item"],
+      ]}
+      sidebar_background_color={[42, 77, 107]}
+      sidebar_text_color={[255, 255, 255]}
+      selected_color={[56, 21, 90]}
+      hover_color={[70, 100, 150]}
+      expanded={[false, false, false]}
+      sidebar_width="250px"
+      sidebar_height="100vh"
+      hamburger_color={[255, 255, 255]}
+    />
   );
 }
 

@@ -1,39 +1,33 @@
 import React from "react";
-import NavBarSidebar from "../Components/General/NavBarSidebar";
+import SessionExpired from "../Components/General/SessionExpired";
+import exclan from "../Assets/Images/exclamation-mark.png"
+
+const handleButtonClick = () => {
+  console.log("Button Clicked! Closing modal...");
+};
+
+const icon = exclan
 
 const Omer = () => {
   return (
-    <div style={{ fontSize: "16px", fontFamily: "'Roboto', sans-serif" }}>
-      <NavBarSidebar
-        icons={[
-          "https://via.placeholder.com/20", // Icon for Inventory
-          "https://via.placeholder.com/20", // Icon for Users
-        ]}
-        names={[
-          ["Inventory", "Active Orders", "Completed Orders"],
-          ["Users", "Add User", "View Users"],
-        ]}
-        expanded={[false, false]} // Initial state for menus
-        background_color={[30, 61, 89]} // Sidebar background
-        text_color={[255, 255, 255]} // Text color
-        logo="https://via.placeholder.com/120" // Placeholder logo
-        username="John Doe"
-        selected_color={[56, 21, 90]} // Highlight color
-        toggle={true} // Sidebar expanded
-        width="240px"
-        height="100vh"
-      />
-      <div
-        style={{
-          marginLeft: "240px",
-          padding: "20px",
-          fontSize: "1rem", // Use rem to scale font size based on root font size
-        }}
-      >
-        <h1>Welcome to the Dashboard</h1>
-        <p>Main content goes here.</p>
-      </div>
-    </div>
+    <SessionExpired
+      icon={icon}
+      heading_text="Session Expired"
+      heading_text_color={[255, 255, 255]}
+      heading_background={[42,77,107]}
+      body_text={`Your session has expired.\nPlease log in again.`}
+      body_text_color={[50, 50, 50]}
+      background_color={[255, 255, 255]}
+      click_outside={true}
+      button_text="Redirect to Login"
+      button_color={[42,77,107]}
+      button_hover_color={[0, 100, 200]}
+      button_width="150px"
+      button_height="50px"
+      button_function={handleButtonClick}
+      width="450px"
+      height="330px"
+    />
   );
 };
 
