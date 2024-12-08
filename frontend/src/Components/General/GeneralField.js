@@ -9,8 +9,10 @@ const GeneralField = ({
   width,
   height,
   className_Input = '', // Class name for input
-  className_Label = ''  // Class name for label
- 
+  className_Label = '', // Class name for label
+  func,
+  id,
+  maxLength, // New prop for max length
 }) => {
   const styles = `
     .field-container {
@@ -48,12 +50,26 @@ const GeneralField = ({
       <input
         type={field_type}
         name={name}
-        id={name}
+        id={id}
         placeholder={hint}
         className={`field-input ${className_Input}`} // Apply modified class name for input
+        onChange={(e) => func(e.target.value, id)} 
+        maxLength={maxLength} // Set the max length
       />
     </div>
   );
 };
 
 export default GeneralField;
+
+
+
+
+
+
+
+
+
+
+
+

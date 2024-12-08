@@ -9,6 +9,8 @@ const GeneralButton = ({
   submit = false, // Default button type (false for a standard button)
   width = "150px", // Default button width
   height = "45px", // Default button height
+  max_length,
+  func
 }) => {
   const buttonStyle = {
     backgroundColor: `rgb(${button_color.join(', ')})`,
