@@ -22,7 +22,7 @@ function App() {
         ["Management", "Add Order", "Delete Order"],
         ["Inventory", "Add Item", "Delete Item"],
       ]}
-      routes={[['/ahsan', '/app3'], ['/top1', '/top2']]
+      routes={[['/app2', '/app3'], ['/top1', '/top2']]
       }
       sidebar_background_color={[42, 77, 107]}
       sidebar_text_color={[255, 255, 255]}

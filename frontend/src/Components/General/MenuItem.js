@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const MenuItem = ({
   icon,
@@ -13,41 +15,33 @@ const MenuItem = ({
   width,
   height,
   onToggle,
-  onSubItemSelect,
-  abc,
+  selectedSubItem,
+  func,
 }) => {
   const [isExpanded, setIsExpanded] = useState(expanded);
-  const [selectedItem, setSelectedItem] = useState(null); // Track selected main item
-  const [selectedSubItem, setSelectedSubItem] = useState(null); // Track selected sub-item
+  // const [selectedItem, setSelectedItem] = useState(null); // Track selected main item
+  // const [selectedSubItem, setSelectedSubItem] = useState(null); // Track selected sub-item
+  const navigate = useNavigate();
 
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
     if (onToggle) onToggle();
   };
 
-  const handleMainItemClick = () => {
-    if (selectedItem === text) {
-      setSelectedItem(null);
-      setSelectedSubItem(null);
-    } else {
-      setSelectedItem(text);
-      setSelectedSubItem(null);
-    }
-    handleToggle();
-  };
+  // const handleMainItemClick = () => {
+  //   if (selectedItem === text) {
+  //     setSelectedItem(null);
+  //     setSelectedSubItem(null);
+  //   } else {
+  //     setSelectedItem(text);
+  //     setSelectedSubItem(null);
+  //   }
+  //   handleToggle();
+  // };
 
-  const handleSubItemClick = (subItem, route, idx) => {
-    if (selectedSubItem === subItem) {
-      setSelectedSubItem(null);
-    } else {
-      setSelectedItem(text);
-      setSelectedSubItem(subItem);
-    }
-
-    if (onSubItemSelect) onSubItemSelect(subItem, idx);
-    if (route) {
-      window.location.href = route;
-    }
+  const handleSubItemClick = (subItem, index) => {
+    navigate(routes[index])
+    func(subItem); // Update parent's selected sub-item state
   };
 
   return (
@@ -119,33 +113,23 @@ const MenuItem = ({
       </style>
 
       {/* Main Menu Item */}
-      <button
-        className={`menu-item ${
-          selectedItem === text || isExpanded ? "selected menu-item-expanded" : ""
-        }`}
-        onClick={handleMainItemClick}
-      >
+      <button className="menu-item" onClick={handleToggle}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <img src={icon} alt="Menu Icon" style={{ width: "20px" }} />
           <span>{text}</span>
         </div>
-        {sub_items && <span className="expand-icon">▼</span>}
       </button>
 
       {/* Submenu Items */}
-      {isExpanded && sub_items && (
+      {isExpanded && (
         <ul className="submenu">
           {sub_items.map((subItem, idx) => (
             <li
               key={idx}
               className={`submenu-item ${
-                selectedSubItem === subItem || idx === abc ? "selected bold" : ""
+                selectedSubItem === subItem ? "selected" : ""
               }`}
-              onClick={() => handleSubItemClick(subItem, routes && routes[idx], idx)}
-              style={{
-                fontWeight: idx === abc ? "bold" : "normal", // Add inline bold style
-                backgroundColor: `rgb(${background_color?.join(",") || "42, 77, 107"})`, // Inline background color
-              }}
+              onClick={() => handleSubItemClick(subItem, idx)}
             >
               {subItem}
             </li>

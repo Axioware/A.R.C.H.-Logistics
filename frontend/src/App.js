@@ -5,6 +5,7 @@ import Omer from './Pages/Omer';
 import Moiz from './Pages/Moiz';
 import Asad from './Pages/Asad';
 import Rauf from './Pages/Rauf';
+import Ahsan from './Pages/Ahsan';
 import Login from './Pages/Authentication/Login';
 import ForgotPassword from './Pages/Authentication/ForgotPassword';
 import ResetPassword from './Pages/Authentication/ResetPassword';
@@ -20,6 +21,7 @@ function App() {
         <Route path="/asad" element={<Asad />} />
         <Route path="/omer" element={<Omer />} />
         <Route path="/rauf" element={<Rauf />} /> 
+        <Route path="/ahsan" element={<Ahsan />} /> 
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/otp" element={<Otp />} />

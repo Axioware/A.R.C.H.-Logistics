@@ -7,6 +7,7 @@ const NavBarWithSidebar = ({
     background_color,
     text_color,
     logo,
+    routes,
     company_name,
     company_name_color,
     username,
@@ -22,12 +23,11 @@ const NavBarWithSidebar = ({
     sidebar_height,
     hamburger_color, // Added prop
   }) => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [expandedStates, setExpandedStates] = useState(expanded);
+    const [selectedSubItem, setSelectedSubItem] = useState(null);
     
-    // Reference for sidebar to detect clicks outside
-    const sidebarRef = useRef(null);
-  
+    
     // Toggle the expansion of submenu items
     const toggleExpand = (index) => {
       setExpandedStates((prev) =>
@@ -39,25 +39,6 @@ const NavBarWithSidebar = ({
     const toggleSidebar = () => {
       setIsSidebarOpen((prev) => !prev);
     };
-  
-    // Close sidebar when clicked outside
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-          setIsSidebarOpen(false); // Close sidebar
-        }
-      };
-  
-      if (isSidebarOpen) {
-        document.addEventListener("mousedown", handleClickOutside);
-      } else {
-        document.removeEventListener("mousedown", handleClickOutside);
-      }
-  
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [isSidebarOpen]);
   
     return (
       <>
@@ -139,39 +120,35 @@ const NavBarWithSidebar = ({
             
 
             .hamburger {
-  cursor: pointer;
-  width: 25px;
-  height: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: absolute;
-  left: 20px; /* Initial position */
-  transition: transform 0.3s ease, left 0.3s ease; /* Smooth transition for left position */
-}
+              cursor: pointer;
+              width: 25px;
+              height: 20px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              position: absolute;
+              left: 20px; /* Initial position */
+              transition: transform 0.3s ease, left 0.3s ease; /* Smooth transition for left position */
+            }
 
-.hamburger.open {
-  transform: translateX(250px); /* Moves the hamburger icon to the right by the sidebar width */
-}
+            .hamburger.open {
+              transform: translateX(250px); /* Moves the hamburger icon to the right by the sidebar width */
+            }
 
-.hamburger-line {
-  width: 100%;
-  height: 3px;
-  background-color: rgb(${hamburger_color.join(",")}); /* Dynamic color */
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
+            .hamburger-line {
+              width: 100%;
+              height: 3px;
+              background-color: rgb(${hamburger_color.join(",")}); /* Dynamic color */
+              transition: transform 0.3s ease, opacity 0.3s ease;
+            }
 
-.hamburger.open .line1,
-.hamburger.open .line2,
-.hamburger.open .line3 {
-  /* Keep the lines straight and do not apply any transformation */
-  transform: none;
-  opacity: 1;
-}
-
-
-          
-
+            .hamburger.open .line1,
+            .hamburger.open .line2,
+            .hamburger.open .line3 {
+              /* Keep the lines straight and do not apply any transformation */
+              transform: none;
+              opacity: 1;
+            }
           `}
         </style>
   
@@ -192,29 +169,38 @@ const NavBarWithSidebar = ({
         </nav>
   
         {/* Sidebar */}
-        <div className="sidebar" ref={sidebarRef}>
+        <div className="sidebar">
           <div className="logo">
             <img src={logo} alt="Logo" />
           </div>
-          {/* Close button inside sidebar */}
-          {isSidebarOpen && (
-            <div className="close-btn" onClick={() => setIsSidebarOpen(false)}>
-              &#10005;
-            </div>
-          )}
           <div>
             {names.map((menuItems, index) => (
+              // <MenuItem
+              //   key={index}
+              //   icon={icons[index]}
+              //   text={menuItems[0]}
+              //   expanded={expandedStates[index]}
+              //   text_color={sidebar_text_color}
+              //   sub_items={menuItems.slice(1)}
+              //   selected_color={selected_color}
+              //   hover_color={hover_color}
+              //   onToggle={() => toggleExpand(index)}
+              // />
               <MenuItem
                 key={index}
                 icon={icons[index]}
                 text={menuItems[0]}
+                routes={routes[index]}
                 expanded={expandedStates[index]}
                 text_color={sidebar_text_color}
                 sub_items={menuItems.slice(1)}
                 selected_color={selected_color}
                 hover_color={hover_color}
+                background_color={sidebar_background_color}
                 onToggle={() => toggleExpand(index)}
-              />
+                func={setSelectedSubItem} // Pass function to update parent state
+                selectedSubItem={selectedSubItem} // Pass current selected sub-item
+            />
             ))}
           </div>
           <div className="user-section">{isSidebarOpen && <p>{username}</p>}</div>
