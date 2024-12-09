@@ -1,5 +1,5 @@
 import React from "react";
-import SessionExpired from "../Components/General/SessionExpired";
+import SessionExpired from "../Components/Modals/SessionExpired";
 import exclan from "../Assets/Images/exclamation-mark.png"
 
 const handleButtonClick = () => {
