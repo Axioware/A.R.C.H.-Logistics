@@ -10,6 +10,7 @@ import Login from './Pages/Authentication/Login';
 import ForgotPassword from './Pages/Authentication/ForgotPassword';
 import ResetPassword from './Pages/Authentication/ResetPassword';
 import Otp from './Pages/Authentication/Otp';
+import AllUsers from './Pages/User_Management/AllUsers';
 
 
 
@@ -26,6 +27,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/users" element={<AllUsers />} />
       </Routes>
     </Router>
   );

@@ -23,9 +23,27 @@ const NavBarWithSidebar = ({
     sidebar_height,
     hamburger_color, // Added prop
   }) => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    const [expandedStates, setExpandedStates] = useState(expanded);
-    const [selectedSubItem, setSelectedSubItem] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+      const savedSidebarState = localStorage.getItem("isSidebarOpen");
+      return savedSidebarState !== null ? JSON.parse(savedSidebarState) : true;
+    });
+  
+    const [expandedStates, setExpandedStates] = useState(() => {
+      const savedExpandedStates = localStorage.getItem("expandedStates");
+      return savedExpandedStates ? JSON.parse(savedExpandedStates) : expanded;
+    });
+  
+    const [selectedSubItem, setSelectedSubItem] = useState(() => {
+      const savedSelectedSubItem = localStorage.getItem("selectedSubItem");
+      return savedSelectedSubItem ? JSON.parse(savedSelectedSubItem) : null;
+    });
+  
+    // Save states to localStorage whenever they change
+    useEffect(() => {
+      localStorage.setItem("isSidebarOpen", JSON.stringify(isSidebarOpen));
+      localStorage.setItem("expandedStates", JSON.stringify(expandedStates));
+      localStorage.setItem("selectedSubItem", JSON.stringify(selectedSubItem));
+    }, [isSidebarOpen, expandedStates, selectedSubItem]);
     
     
     // Toggle the expansion of submenu items
