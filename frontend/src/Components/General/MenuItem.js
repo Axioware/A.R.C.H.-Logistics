@@ -67,7 +67,7 @@ const MenuItem = ({
           }
 
           .menu-item.selected {
-            background-color: rgba(${selected_color.join(",")}, 0.2);
+            background-color: rgba(${selected_color.join(",")});
             color: white;
           }
 

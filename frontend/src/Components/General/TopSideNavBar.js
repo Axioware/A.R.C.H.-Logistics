@@ -4,24 +4,24 @@ import MenuItem from "../General/MenuItem"; // Correct import path
 import UserDrop from "./UserDrop";
 
 const NavBarWithSidebar = ({
-    background_color,
-    text_color,
+    background_color = [235, 232, 232],
+    text_color = [0, 0, 0],
     logo,
     routes,
     company_name,
-    company_name_color,
+    company_name_color = [0, 0, 0],
     username,
     username_color,
     icons,
     names,
-    sidebar_background_color,
-    sidebar_text_color,
-    selected_color,
-    hover_color,
+    sidebar_background_color = [26, 24, 24],
+    sidebar_text_color = [235, 232, 232],
+    selected_color = [235, 232, 232],
+    hover_color = [235, 232, 232],
     expanded,
     sidebar_width,
     sidebar_height,
-    hamburger_color, // Added prop
+    hamburger_color = [0, 0, 0], // Added prop
   }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
       const savedSidebarState = localStorage.getItem("isSidebarOpen");
@@ -70,7 +70,7 @@ const NavBarWithSidebar = ({
               justify-content: space-between;
               padding: 10px 30px;
               background-color: rgb(${background_color.join(",")});
-              color: rgb(${text_color.join(",")});
+              text-color: rgb(${text_color.join(",")});
             }
             .center-container {
               flex-grow: 1;
@@ -79,7 +79,7 @@ const NavBarWithSidebar = ({
             }
             .company-name {
               margin: 0;
-              color: rgb(${company_name_color.join(",")});
+              text-color: rgb(${company_name_color.join(",")});
               font-size: 23px;
               font-weight: 500;
             }
@@ -90,6 +90,7 @@ const NavBarWithSidebar = ({
               display: flex;
               flex-direction: column;
               justify-content: space-between;
+              text-color: rgb(${hamburger_color.join(",")});
             }
             .hamburger-line {
               width: 100%;
