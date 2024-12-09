@@ -441,22 +441,22 @@ class BundleOrder(models.Model):
 
 
 # Inventory Table
-class Inventory(models.Model):
+# class Inventory(models.Model):
     
-    class ChargeChoices(models.TextChoices):
-        BOX = 'Box', 'Box'
-        UNIT = 'Unit', 'Unit'
+#     class ChargeChoices(models.TextChoices):
+#         BOX = 'Box', 'Box'
+#         UNIT = 'Unit', 'Unit'
 
-    item_id = models.ForeignKey(Item, on_delete=models.PROTECT, related_name="Inventory_item_id")
-    bin_id = models.ForeignKey(Bin, blank=True, null=True, on_delete=models.PROTECT, related_name="Inventory_bin_id")
-    quantity = models.IntegerField()
-    category_id = models.ForeignKey(OrderCategory, on_delete=models.PROTECT, related_name="Inventory_category_id")
-    pack_size = models.IntegerField()
-    no_bundles = models.IntegerField()
-    date_added = models.DateTimeField(default=timezone.now)
-    boxes = models.IntegerField(default=0)
-    charge_by = models.CharField(max_length=10, choices=ChargeChoices.choices, default=ChargeChoices.UNIT, verbose_name="Charge By")
-    pallet = models.BooleanField(default=False)
+#     item_id = models.ForeignKey(Item, on_delete=models.PROTECT, related_name="Inventory_item_id")
+#     bin_id = models.ForeignKey(Bin, blank=True, null=True, on_delete=models.PROTECT, related_name="Inventory_bin_id")
+#     quantity = models.IntegerField()
+#     category_id = models.ForeignKey(OrderCategory, on_delete=models.PROTECT, related_name="Inventory_category_id")
+#     pack_size = models.IntegerField()
+#     no_bundles = models.IntegerField()
+#     date_added = models.DateTimeField(default=timezone.now)
+#     boxes = models.IntegerField(default=0)
+#     charge_by = models.CharField(max_length=10, choices=ChargeChoices.choices, default=ChargeChoices.UNIT, verbose_name="Charge By")
+#     pallet = models.BooleanField(default=False)
 
 
 class PalletDimension(models.Model):
@@ -800,138 +800,138 @@ class BundleInventory(models.Model):
     inventory_id = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name="Inventory_bundle_inventory") 
 
 # Shipment Details Table
-class ShipmentDetails(models.Model):
+# class ShipmentDetails(models.Model):
 
-    def path_to_file_fnsku(self):
-        return 'fnsku/{0}_{1}_{2}_{3}'.format(self.service_id, self.item_id, self.service_code, self.category_id)
+#     def path_to_file_fnsku(self):
+#         return 'fnsku/{0}_{1}_{2}_{3}'.format(self.service_id, self.item_id, self.service_code, self.category_id)
     
-    def pdf_directory_path_additional(self):
-        return 'fnsku/{0}_{1}_{2}_{3}_additional'.format(self.service_id, self.item_id, self.service_code, self.category_id)
+#     def pdf_directory_path_additional(self):
+#         return 'fnsku/{0}_{1}_{2}_{3}_additional'.format(self.service_id, self.item_id, self.service_code, self.category_id)
     
-    def path_to_file_fba(self):
-        return 'fba/{0}_{1}_{2}_{3}'.format(self.service_id, self.item_id, self.service_code, self.category_id)
+#     def path_to_file_fba(self):
+#         return 'fba/{0}_{1}_{2}_{3}'.format(self.service_id, self.item_id, self.service_code, self.category_id)
 
 
-    # shipment_detail_id = models.AutoField(primary_key=True)
-    service_id = models.CharField(max_length=50)
-    item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="Shipment_detail_item_id", blank=True, null=True, default=None)
-    service_code = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="Shipment_detail_service_code", blank=True, null=True, default=None)
-    category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="Shipment_detail_category_id", blank=True, null=True, default=None)
-    bin_id = models.ForeignKey(Bin, on_delete=models.SET_NULL, null=True, blank=True)
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Shipment_detail_client_id")
-    no_bundles = models.IntegerField(default=None, null=True, blank=True)
-    bundle_quantity = models.IntegerField(default=None, null=True, blank=True)
-    additional_service = models.CharField(max_length=40, blank=True, null=True)
-    additional_format = models.CharField(max_length=40, blank=True, null=True)
-    additional_format_text = models.CharField(max_length=100, blank=True, null=True, default=None)
-    additional_format_file = models.FileField(upload_to=pdf_directory_path_additional, blank=True, null=True, default=None)
-    active = models.BooleanField(default=False, null=True, blank=True)
-    quantity_from_inventory = models.IntegerField(blank=True, null=True)
-    quantity_from_recent_received = models.IntegerField(blank=True, null=True)
-    quantity_from_new_shipment = models.IntegerField(blank=True, null=True)
-    fnsku = models.FileField(upload_to=path_to_file_fnsku, blank=True, null=True, default=None)
-    box_label = models.FileField(upload_to=path_to_file_fba, blank=True, null=True, default=None)
-    placed_date = models.DateTimeField(null=True, blank=True)
-    active_service_start_date = models.DateTimeField(blank=True, null=True)
-    service_provided_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
-    state = models.CharField(max_length=50, null=True, blank=True)
-    # from_inventory = models.BooleanField(default=False)
-    # combined = models.ForeignKey(CombinedOrder, null=True, blank=True, related_name="Shipment_CombinedOrder_id", on_delete=models.CASCADE)
-    dispute = models.BooleanField(default=False)
-    dispute_note = models.CharField(max_length=100, null=True)
-    bundle = models.BooleanField(default=False, null=True)
-    packing_instructions = models.CharField(max_length=100, null=True)
-    pallet = models.BooleanField(default=False, null=True)
+#     # shipment_detail_id = models.AutoField(primary_key=True)
+#     service_id = models.CharField(max_length=50)
+#     item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="Shipment_detail_item_id", blank=True, null=True, default=None)
+#     service_code = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="Shipment_detail_service_code", blank=True, null=True, default=None)
+#     category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="Shipment_detail_category_id", blank=True, null=True, default=None)
+#     bin_id = models.ForeignKey(Bin, on_delete=models.SET_NULL, null=True, blank=True)
+#     client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Shipment_detail_client_id")
+#     no_bundles = models.IntegerField(default=None, null=True, blank=True)
+#     bundle_quantity = models.IntegerField(default=None, null=True, blank=True)
+#     additional_service = models.CharField(max_length=40, blank=True, null=True)
+#     additional_format = models.CharField(max_length=40, blank=True, null=True)
+#     additional_format_text = models.CharField(max_length=100, blank=True, null=True, default=None)
+#     additional_format_file = models.FileField(upload_to=pdf_directory_path_additional, blank=True, null=True, default=None)
+#     active = models.BooleanField(default=False, null=True, blank=True)
+#     quantity_from_inventory = models.IntegerField(blank=True, null=True)
+#     quantity_from_recent_received = models.IntegerField(blank=True, null=True)
+#     quantity_from_new_shipment = models.IntegerField(blank=True, null=True)
+#     fnsku = models.FileField(upload_to=path_to_file_fnsku, blank=True, null=True, default=None)
+#     box_label = models.FileField(upload_to=path_to_file_fba, blank=True, null=True, default=None)
+#     placed_date = models.DateTimeField(null=True, blank=True)
+#     active_service_start_date = models.DateTimeField(blank=True, null=True)
+#     service_provided_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+#     state = models.CharField(max_length=50, null=True, blank=True)
+#     # from_inventory = models.BooleanField(default=False)
+#     # combined = models.ForeignKey(CombinedOrder, null=True, blank=True, related_name="Shipment_CombinedOrder_id", on_delete=models.CASCADE)
+#     dispute = models.BooleanField(default=False)
+#     dispute_note = models.CharField(max_length=100, null=True)
+#     bundle = models.BooleanField(default=False, null=True)
+#     packing_instructions = models.CharField(max_length=100, null=True)
+#     pallet = models.BooleanField(default=False, null=True)
 
-    def delete(self, *args, **kwargs):
-        # Delete the associated files before deleting the record
-        if self.fnsku:
-            self.fnsku.delete(save=False)
-        if self.inventory_label:
-            self.inventory_label.delete(save=False)
+#     def delete(self, *args, **kwargs):
+#         # Delete the associated files before deleting the record
+#         if self.fnsku:
+#             self.fnsku.delete(save=False)
+#         if self.inventory_label:
+#             self.inventory_label.delete(save=False)
         
-        # Call the parent class delete method
-        super().delete(*args, **kwargs)
+#         # Call the parent class delete method
+#         super().delete(*args, **kwargs)
 
-    class Meta:
-        unique_together = ('service_id', 'service_code', 'item_id', 'category_id')
+#     class Meta:
+#         unique_together = ('service_id', 'service_code', 'item_id', 'category_id')
 
-    def __str__(self):
-        return f"{self.service_id} - {self.service_code} - {self.category_id} - {self.client_id}"
+#     def __str__(self):
+#         return f"{self.service_id} - {self.service_code} - {self.category_id} - {self.client_id}"
 
 # Service Details History Table
-class ServiceDetailHistory(models.Model):
+# class ServiceDetailHistory(models.Model):
 
-    def path_to_file_fnsku(self):
-        return 'fnsku/{0}_{1}_{2}_{3}'.format(self.service_id, self.item_id, self.service_code, self.category_id)
+#     def path_to_file_fnsku(self):
+#         return 'fnsku/{0}_{1}_{2}_{3}'.format(self.service_id, self.item_id, self.service_code, self.category_id)
     
-    def pdf_directory_path_additional(self):
-        return 'fnsku/{0}_{1}_{2}_{3}_additional'.format(self.service_id, self.item_id, self.service_code, self.category_id)
+#     def pdf_directory_path_additional(self):
+#         return 'fnsku/{0}_{1}_{2}_{3}_additional'.format(self.service_id, self.item_id, self.service_code, self.category_id)
     
-    def path_to_file_fba(self):
-        return 'fba/{0}_{1}_{2}_{3}'.format(self.service_id, self.item_id, self.service_code, self.category_id)
+#     def path_to_file_fba(self):
+#         return 'fba/{0}_{1}_{2}_{3}'.format(self.service_id, self.item_id, self.service_code, self.category_id)
 
-    # service_detail_history_id = models.AutoField(primary_key=True)
-    service_id = models.CharField(max_length=50)
-    item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="Service_detail_history_item_id", blank=True, null=True, default=None)
-    service_code = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="Service_detail_history_service_code", blank=True, null=True, default=None)
-    category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="Service_detail_history_category_id", blank=True, null=True, default=None)
-    bin_id = models.ForeignKey(Bin, on_delete=models.SET_NULL, null=True, blank=True)
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Service_detail_history_client_id")
-    no_bundles = models.IntegerField(default=None, null=True, blank=True)
-    bundle_quantity = models.IntegerField(default=None, null=True, blank=True)
-    additional_service = models.CharField(max_length=40, blank=True, null=True)
-    additional_format = models.CharField(max_length=40, blank=True, null=True)
-    additional_format_text = models.CharField(max_length=100, blank=True, null=True, default=None)
-    additional_format_file = models.FileField(upload_to=pdf_directory_path_additional, blank=True, null=True, default=None)
-    active = models.BooleanField(default=False, null=True, blank=True)
-    quantity_from_inventory = models.IntegerField(blank=True, null=True)
-    quantity_from_recent_received = models.IntegerField(blank=True, null=True)
-    quantity_from_new_shipment = models.IntegerField(blank=True, null=True)
-    fnsku = models.FileField(upload_to=path_to_file_fnsku, blank=True, null=True, default=None)
-    box_label = models.FileField(upload_to=path_to_file_fba, blank=True, null=True, default=None)
-    placed_date = models.DateTimeField(null=True, blank=True)
-    active_service_start_date = models.DateTimeField(blank=True, null=True)
-    service_provided_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
-    state = models.CharField(max_length=50, null=True, blank=True)
-    # from_inventory = models.BooleanField(default=False)
-    # combined = models.ForeignKey(CombinedOrder, null=True, blank=True, related_name="Shipment_CombinedOrder_id", on_delete=models.CASCADE)
-    dispute = models.BooleanField(default=False)
-    dispute_note = models.CharField(max_length=100, null=True)
-    bundle = models.BooleanField(default=False, null=True)
-    packing_instructions = models.CharField(max_length=100, null=True)
-    pallet = models.BooleanField(default=False, null=True)
+#     # service_detail_history_id = models.AutoField(primary_key=True)
+#     service_id = models.CharField(max_length=50)
+#     item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="Service_detail_history_item_id", blank=True, null=True, default=None)
+#     service_code = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="Service_detail_history_service_code", blank=True, null=True, default=None)
+#     category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="Service_detail_history_category_id", blank=True, null=True, default=None)
+#     bin_id = models.ForeignKey(Bin, on_delete=models.SET_NULL, null=True, blank=True)
+#     client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Service_detail_history_client_id")
+#     no_bundles = models.IntegerField(default=None, null=True, blank=True)
+#     bundle_quantity = models.IntegerField(default=None, null=True, blank=True)
+#     additional_service = models.CharField(max_length=40, blank=True, null=True)
+#     additional_format = models.CharField(max_length=40, blank=True, null=True)
+#     additional_format_text = models.CharField(max_length=100, blank=True, null=True, default=None)
+#     additional_format_file = models.FileField(upload_to=pdf_directory_path_additional, blank=True, null=True, default=None)
+#     active = models.BooleanField(default=False, null=True, blank=True)
+#     quantity_from_inventory = models.IntegerField(blank=True, null=True)
+#     quantity_from_recent_received = models.IntegerField(blank=True, null=True)
+#     quantity_from_new_shipment = models.IntegerField(blank=True, null=True)
+#     fnsku = models.FileField(upload_to=path_to_file_fnsku, blank=True, null=True, default=None)
+#     box_label = models.FileField(upload_to=path_to_file_fba, blank=True, null=True, default=None)
+#     placed_date = models.DateTimeField(null=True, blank=True)
+#     active_service_start_date = models.DateTimeField(blank=True, null=True)
+#     service_provided_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+#     state = models.CharField(max_length=50, null=True, blank=True)
+#     # from_inventory = models.BooleanField(default=False)
+#     # combined = models.ForeignKey(CombinedOrder, null=True, blank=True, related_name="Shipment_CombinedOrder_id", on_delete=models.CASCADE)
+#     dispute = models.BooleanField(default=False)
+#     dispute_note = models.CharField(max_length=100, null=True)
+#     bundle = models.BooleanField(default=False, null=True)
+#     packing_instructions = models.CharField(max_length=100, null=True)
+#     pallet = models.BooleanField(default=False, null=True)
 
 
-    class Meta:
-        unique_together = ('service_id', 'service_code', 'item_id', 'category_id')
+#     class Meta:
+#         unique_together = ('service_id', 'service_code', 'item_id', 'category_id')
 
-    def __str__(self):
-        return f"{self.service_id} - {self.service_code} - {self.category_id} - {self.client_id}"
+#     def __str__(self):
+#         return f"{self.service_id} - {self.service_code} - {self.category_id} - {self.client_id}"
     
 
 # Invoice Table
-class Invoice(models.Model):
-    invoice_id = models.AutoField(primary_key=True)
-    invoice_pdf = models.FileField(upload_to=dynamic_upload_path, blank=True, null=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    paid = models.BooleanField(default=False)
-    date_created = models.DateField(default=timezone.now, blank=True, null=True)
-    date_paid = models.DateField(blank=True, null=True)
-    due_date = models.DateField(blank=True, null=True)
+# class Invoice(models.Model):
+#     invoice_id = models.AutoField(primary_key=True)
+#     invoice_pdf = models.FileField(upload_to=dynamic_upload_path, blank=True, null=True)
+#     amount = models.DecimalField(max_digits=10, decimal_places=2)
+#     paid = models.BooleanField(default=False)
+#     date_created = models.DateField(default=timezone.now, blank=True, null=True)
+#     date_paid = models.DateField(blank=True, null=True)
+#     due_date = models.DateField(blank=True, null=True)
 
 # Charges Table
-class Charges(models.Model):
-    charge_id = models.AutoField(primary_key=True)
-    client_id = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='charges_client')
-    service_id = models.ForeignKey(ShipmentDetails, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_service_id')
-    item_id = models.ForeignKey(Item, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_item_id')
-    service_code = models.ForeignKey(ServiceCategory, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_service_code')  
-    category_id = models.ForeignKey(OrderCategory, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_category_id')
-    invoice_id = models.ForeignKey(Invoice, on_delete=models.DO_NOTHING, null=True, related_name='charges_invoice_id')
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    date_charged = models.DateTimeField(default=timezone.now)
-    note = models.CharField(max_length=100, null=True, blank=True)
+# class Charges(models.Model):
+#     charge_id = models.AutoField(primary_key=True)
+#     client_id = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='charges_client')
+#     service_id = models.ForeignKey(ShipmentDetails, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_service_id')
+#     item_id = models.ForeignKey(Item, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_item_id')
+#     service_code = models.ForeignKey(ServiceCategory, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_service_code')  
+#     category_id = models.ForeignKey(OrderCategory, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_category_id')
+#     invoice_id = models.ForeignKey(Invoice, on_delete=models.DO_NOTHING, null=True, related_name='charges_invoice_id')
+#     amount = models.DecimalField(max_digits=10, decimal_places=2)
+#     date_charged = models.DateTimeField(default=timezone.now)
+#     note = models.CharField(max_length=100, null=True, blank=True)
 
 
 
@@ -960,35 +960,35 @@ class CompletedTasks(models.Model):
     completed_date = models.DateTimeField(default=timezone.now)
 
 # Balances Table
-class Balance(models.Model):
-    balance_id = models.AutoField(primary_key=True)
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="balance_client_id")
-    balance = models.DecimalField(max_digits=10, decimal_places=2)
+# class Balance(models.Model):
+#     balance_id = models.AutoField(primary_key=True)
+#     client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="balance_client_id")
+#     balance = models.DecimalField(max_digits=10, decimal_places=2)
 
 # Removal Table
-class Removal(models.Model):
-    removal_id = models.AutoField(primary_key=True)
-    item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="removal_item_id")
-    date = models.DateTimeField(default=timezone.now)
-    quantity = models.IntegerField(null=True)
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="removal_client_id", null=True)
-    bin_id = models.ForeignKey(Bin, on_delete=models.CASCADE, blank=True, null=True, related_name="removal_bin_id")
-    category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, blank=True, null=True, related_name="removal_category_id")
-    dimension_id = models.IntegerField(null=True)
-    boxes = models.IntegerField(default=0)
+# class Removal(models.Model):
+#     removal_id = models.AutoField(primary_key=True)
+#     item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="removal_item_id")
+#     date = models.DateTimeField(default=timezone.now)
+#     quantity = models.IntegerField(null=True)
+#     client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="removal_client_id", null=True)
+#     bin_id = models.ForeignKey(Bin, on_delete=models.CASCADE, blank=True, null=True, related_name="removal_bin_id")
+#     category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, blank=True, null=True, related_name="removal_category_id")
+#     dimension_id = models.IntegerField(null=True)
+#     boxes = models.IntegerField(default=0)
 
 # Discard Table
-class Discard(models.Model):
-    discard_id = models.AutoField(primary_key=True)
-    item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="discard_item_id")
-    date_added = models.DateTimeField()
-    date_discarded = models.DateTimeField(default=timezone.now)
-    quantity = models.IntegerField()
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="discard_client_id")
-    bin_id = models.ForeignKey(Bin, on_delete=models.CASCADE, blank=True, null=True, related_name="discard_bin_id")
-    category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="discard_category_id")
-    dimension_id = models.IntegerField(null=True)
-    boxes = models.IntegerField(default=0)
+# class Discard(models.Model):
+#     discard_id = models.AutoField(primary_key=True)
+#     item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="discard_item_id")
+#     date_added = models.DateTimeField()
+#     date_discarded = models.DateTimeField(default=timezone.now)
+#     quantity = models.IntegerField()
+#     client_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="discard_client_id")
+#     bin_id = models.ForeignKey(Bin, on_delete=models.CASCADE, blank=True, null=True, related_name="discard_bin_id")
+#     category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="discard_category_id")
+#     dimension_id = models.IntegerField(null=True)
+#     boxes = models.IntegerField(default=0)
 
 # Check-in Table
 class LogRecord(models.Model):
@@ -999,17 +999,17 @@ class LogRecord(models.Model):
 
 
 # Transaction Table
-class Transaction(models.Model):
-    transaction_id = models.AutoField(primary_key=True)
-    client_id = models.IntegerField()
-    invoice_id = models.ForeignKey(Invoice, on_delete=models.PROTECT)
-    date = models.DateTimeField(default=timezone.now)
+# class Transaction(models.Model):
+#     transaction_id = models.AutoField(primary_key=True)
+#     client_id = models.IntegerField()
+#     invoice_id = models.ForeignKey(Invoice, on_delete=models.PROTECT)
+#     date = models.DateTimeField(default=timezone.now)
 
-class CustomRates(models.Model):
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="custom_rates_client_id")
-    service_code = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="custom_rates_service_code")
-    category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="custom_rates_category_id")
-    charges = models.DecimalField(max_digits=10, decimal_places=2)
+# class CustomRates(models.Model):
+#     client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="custom_rates_client_id")
+#     service_code = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="custom_rates_service_code")
+#     category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="custom_rates_category_id")
+#     charges = models.DecimalField(max_digits=10, decimal_places=2)
 
 class Courier(models.Model):
     courier_id = models.AutoField(primary_key=True)
@@ -1029,18 +1029,18 @@ class client_courier_credentials:
     password = models.TextField()
     courier = models.ForeignKey(Courier, on_delete=models.CASCADE)
 
-class OTP(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='OTP_user_id')
-    otp = models.CharField(max_length=6)
-    created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField()
+# class OTP(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='OTP_user_id')
+#     otp = models.CharField(max_length=6)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     expires_at = models.DateTimeField()
 
-    def is_expired(self):
-        return timezone.now() > self.expires_at
+#     def is_expired(self):
+#         return timezone.now() > self.expires_at
 
-    @staticmethod
-    def generate_otp():
-        return ''.join(random.choices(string.digits, k=5))
+#     @staticmethod
+#     def generate_otp():
+#         return ''.join(random.choices(string.digits, k=5))
 
 
 
