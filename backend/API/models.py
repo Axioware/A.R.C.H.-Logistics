@@ -1,15 +1,15 @@
-from django.db import models
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.db import models
-from django.contrib.auth.models import User
-import os
-from datetime import datetime
-from django.utils import timezone
-import random
-import string
-from datetime import date
+# from django.db import models
+# from django.contrib.auth.models import User
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
+# from django.db import models
+# from django.contrib.auth.models import User
+# import os
+# from datetime import datetime
+# from django.utils import timezone
+# import random
+# import string
+# from datetime import date
 
 # def dynamic_upload_path(instance, filename):
 #     # Get the file extension
@@ -228,216 +228,216 @@ from datetime import date
 #     def __str__(self):
 #         return f"Service_id {self.service_id} - item {self.item_id} - category {self.category_id} - service code {self.service_code}"
     
-class UngatingImage(models.Model):
+# class UngatingImage(models.Model):
     
-    def path_to_image(self):
-        return 'ungating/{0}'.format(self.id)
+#     def path_to_image(self):
+#         return 'ungating/{0}'.format(self.id)
 
-    service_id = models.CharField(max_length=20)
-    item_id = models.CharField(max_length=20)
-    service_code = models.IntegerField()
-    category_id = models.IntegerField()
-    image = models.ImageField(upload_to=path_to_image)  
+#     service_id = models.CharField(max_length=20)
+#     item_id = models.CharField(max_length=20)
+#     service_code = models.IntegerField()
+#     category_id = models.IntegerField()
+#     image = models.ImageField(upload_to=path_to_image)  
 
-    def __str__(self):
-        return f"Image for {self.received.tracking_id}"
+#     def __str__(self):
+#         return f"Image for {self.received.tracking_id}"
     
-    def get_composite_key_model(self):
-    # Check in ServiceDetail first
-        service_detail_exists = ServiceDetail.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#     def get_composite_key_model(self):
+#     # Check in ServiceDetail first
+#         service_detail_exists = ServiceDetail.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_exists:
-            return ServiceDetail.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
+#         if service_detail_exists:
+#             return ServiceDetail.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
 
-        # If not found in ServiceDetail, check in ShipmentDetails
-        shipment_detail_exists = ShipmentDetails.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ServiceDetail, check in ShipmentDetails
+#         shipment_detail_exists = ShipmentDetails.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if shipment_detail_exists:
-            return ShipmentDetails.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
+#         if shipment_detail_exists:
+#             return ShipmentDetails.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
         
-        service_detail_history_exists = ServiceDetailHistory.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         service_detail_history_exists = ServiceDetailHistory.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_history_exists:
-            return ServiceDetailHistory.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
-        # If neither exists, return None or raise an error if needed
-        return None
+#         if service_detail_history_exists:
+#             return ServiceDetailHistory.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
+#         # If neither exists, return None or raise an error if needed
+#         return None
 
-    def save(self, *args, **kwargs):
-        # Check if the composite key exists in ServiceDetail first
-        service_detail_exists = ServiceDetail.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#     def save(self, *args, **kwargs):
+#         # Check if the composite key exists in ServiceDetail first
+#         service_detail_exists = ServiceDetail.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_exists:
-            # If found, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if service_detail_exists:
+#             # If found, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If not found in ServiceDetail, check ShipmentDetails
-        shipment_detail_exists = ShipmentDetails.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ServiceDetail, check ShipmentDetails
+#         shipment_detail_exists = ShipmentDetails.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if shipment_detail_exists:
-            # If found in ShipmentDetails, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if shipment_detail_exists:
+#             # If found in ShipmentDetails, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If not found in ShipmentDetails, check ServiceDetailHistory
-        service_detail_history_exists = ServiceDetailHistory.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ShipmentDetails, check ServiceDetailHistory
+#         service_detail_history_exists = ServiceDetailHistory.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_history_exists:
-            # If found in ServiceDetailHistory, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if service_detail_history_exists:
+#             # If found in ServiceDetailHistory, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If the composite key is not found in any of the models, raise an error
-        raise ValueError("Composite key does not exist in ServiceDetail, ShipmentDetails, or ServiceDetailHistory")
+#         # If the composite key is not found in any of the models, raise an error
+#         raise ValueError("Composite key does not exist in ServiceDetail, ShipmentDetails, or ServiceDetailHistory")
 
 
-class BundleOrder(models.Model):
-    service_id = models.CharField(max_length=50)
-    item_id = models.CharField(max_length=20)
-    service_code = models.IntegerField()
-    category_id = models.IntegerField()
-    other_item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name="second_item")
-    quantity_from_inventory = models.IntegerField(blank=True, null=True)
-    quantity_from_recent_received = models.IntegerField(blank=True, null=True)
-    quantity_from_new_shipment = models.IntegerField(blank=True, null=True)
+# class BundleOrder(models.Model):
+#     service_id = models.CharField(max_length=50)
+#     item_id = models.CharField(max_length=20)
+#     service_code = models.IntegerField()
+#     category_id = models.IntegerField()
+#     other_item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name="second_item")
+#     quantity_from_inventory = models.IntegerField(blank=True, null=True)
+#     quantity_from_recent_received = models.IntegerField(blank=True, null=True)
+#     quantity_from_new_shipment = models.IntegerField(blank=True, null=True)
 
-    def get_composite_key_model(self):
-    # Check in ServiceDetail first
-        service_detail_exists = ServiceDetail.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#     def get_composite_key_model(self):
+#     # Check in ServiceDetail first
+#         service_detail_exists = ServiceDetail.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_exists:
-            return ServiceDetail.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
+#         if service_detail_exists:
+#             return ServiceDetail.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
 
-        # If not found in ServiceDetail, check in ShipmentDetails
-        shipment_detail_exists = ShipmentDetails.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ServiceDetail, check in ShipmentDetails
+#         shipment_detail_exists = ShipmentDetails.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if shipment_detail_exists:
-            return ShipmentDetails.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
+#         if shipment_detail_exists:
+#             return ShipmentDetails.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
         
-        service_detail_history_exists = ServiceDetailHistory.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         service_detail_history_exists = ServiceDetailHistory.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_history_exists:
-            return ServiceDetailHistory.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
-        # If neither exists, return None or raise an error if needed
-        return None
+#         if service_detail_history_exists:
+#             return ServiceDetailHistory.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
+#         # If neither exists, return None or raise an error if needed
+#         return None
 
-    def save(self, *args, **kwargs):
-        # Check if the composite key exists in ServiceDetail first
-        service_detail_exists = ServiceDetail.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#     def save(self, *args, **kwargs):
+#         # Check if the composite key exists in ServiceDetail first
+#         service_detail_exists = ServiceDetail.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_exists:
-            # If found, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if service_detail_exists:
+#             # If found, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If not found in ServiceDetail, check ShipmentDetails
-        shipment_detail_exists = ShipmentDetails.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ServiceDetail, check ShipmentDetails
+#         shipment_detail_exists = ShipmentDetails.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if shipment_detail_exists:
-            # If found in ShipmentDetails, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if shipment_detail_exists:
+#             # If found in ShipmentDetails, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If not found in ShipmentDetails, check ServiceDetailHistory
-        service_detail_history_exists = ServiceDetailHistory.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ShipmentDetails, check ServiceDetailHistory
+#         service_detail_history_exists = ServiceDetailHistory.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_history_exists:
-            # If found in ServiceDetailHistory, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if service_detail_history_exists:
+#             # If found in ServiceDetailHistory, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If the composite key is not found in any of the models, raise an error
-        raise ValueError("Composite key does not exist in ServiceDetail, ShipmentDetails, or ServiceDetailHistory")
+#         # If the composite key is not found in any of the models, raise an error
+#         raise ValueError("Composite key does not exist in ServiceDetail, ShipmentDetails, or ServiceDetailHistory")
 
 
 # Inventory Table
@@ -459,345 +459,345 @@ class BundleOrder(models.Model):
 #     pallet = models.BooleanField(default=False)
 
 
-class PalletDimension(models.Model):
+# class PalletDimension(models.Model):
 
-    def path_to_image(self):
-        return 'pallet/{0}_{1}_{2}_{3}_{4}'.format(self.service_id, self.item_id, self.service_code, self.category_id, self.id)
+#     def path_to_image(self):
+#         return 'pallet/{0}_{1}_{2}_{3}_{4}'.format(self.service_id, self.item_id, self.service_code, self.category_id, self.id)
 
-    service_id = models.CharField(max_length=50, null=True, blank=True)
-    item_id = models.CharField(max_length=20, null=True, blank=True)
-    service_code = models.IntegerField(null=True, blank=True)
-    category_id = models.IntegerField(null=True, blank=True)
-    length = models.IntegerField()
-    width = models.IntegerField()
-    height = models.IntegerField()
-    weight = models.DecimalField(max_digits=6, decimal_places=2)
-    shipped = models.BooleanField(default=False, null=True, blank=True)
-    shipped_date = models.DateTimeField(default=None, null=True, blank=True)
-    pallet_label = models.FileField(null=True, blank=True)
-    inventory_id = models.ForeignKey(Inventory, on_delete=models.SET_NULL, null=True, blank=True)
+#     service_id = models.CharField(max_length=50, null=True, blank=True)
+#     item_id = models.CharField(max_length=20, null=True, blank=True)
+#     service_code = models.IntegerField(null=True, blank=True)
+#     category_id = models.IntegerField(null=True, blank=True)
+#     length = models.IntegerField()
+#     width = models.IntegerField()
+#     height = models.IntegerField()
+#     weight = models.DecimalField(max_digits=6, decimal_places=2)
+#     shipped = models.BooleanField(default=False, null=True, blank=True)
+#     shipped_date = models.DateTimeField(default=None, null=True, blank=True)
+#     pallet_label = models.FileField(null=True, blank=True)
+#     inventory_id = models.ForeignKey(Inventory, on_delete=models.SET_NULL, null=True, blank=True)
 
-    def get_composite_key_model(self):
-    # Check in ServiceDetail first
-        service_detail_exists = ServiceDetail.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#     def get_composite_key_model(self):
+#     # Check in ServiceDetail first
+#         service_detail_exists = ServiceDetail.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_exists:
-            return ServiceDetail.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
+#         if service_detail_exists:
+#             return ServiceDetail.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
 
-        # If not found in ServiceDetail, check in ShipmentDetails
-        shipment_detail_exists = ShipmentDetails.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ServiceDetail, check in ShipmentDetails
+#         shipment_detail_exists = ShipmentDetails.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if shipment_detail_exists:
-            return ShipmentDetails.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
+#         if shipment_detail_exists:
+#             return ShipmentDetails.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
         
-        service_detail_history_exists = ServiceDetailHistory.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         service_detail_history_exists = ServiceDetailHistory.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_history_exists:
-            return ServiceDetailHistory.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
-        # If neither exists, return None or raise an error if needed
-        return None
+#         if service_detail_history_exists:
+#             return ServiceDetailHistory.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
+#         # If neither exists, return None or raise an error if needed
+#         return None
 
-    def save(self, *args, **kwargs):
-        # Check if the composite key exists in ServiceDetail first
-        if self.service_id == None and self.service_code == None and self.category_id == None:
-            super().save(*args, **kwargs)
-            return
-        service_detail_exists = ServiceDetail.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#     def save(self, *args, **kwargs):
+#         # Check if the composite key exists in ServiceDetail first
+#         if self.service_id == None and self.service_code == None and self.category_id == None:
+#             super().save(*args, **kwargs)
+#             return
+#         service_detail_exists = ServiceDetail.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_exists:
-            # If found, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if service_detail_exists:
+#             # If found, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If not found in ServiceDetail, check ShipmentDetails
-        shipment_detail_exists = ShipmentDetails.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ServiceDetail, check ShipmentDetails
+#         shipment_detail_exists = ShipmentDetails.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if shipment_detail_exists:
-            # If found in ShipmentDetails, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if shipment_detail_exists:
+#             # If found in ShipmentDetails, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If not found in ShipmentDetails, check ServiceDetailHistory
-        service_detail_history_exists = ServiceDetailHistory.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ShipmentDetails, check ServiceDetailHistory
+#         service_detail_history_exists = ServiceDetailHistory.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_history_exists:
-            # If found in ServiceDetailHistory, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if service_detail_history_exists:
+#             # If found in ServiceDetailHistory, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If the composite key is not found in any of the models, raise an error
-        raise ValueError("Composite key does not exist in ServiceDetail, ShipmentDetails, or ServiceDetailHistory")
+#         # If the composite key is not found in any of the models, raise an error
+#         raise ValueError("Composite key does not exist in ServiceDetail, ShipmentDetails, or ServiceDetailHistory")
 
-class Dimension(models.Model):
+# class Dimension(models.Model):
 
-    def path_to_image(self):
-        return 'box/{0}_{1}_{2}_{3}_{4}'.format(self.service_id, self.item_id, self.service_code, self.category_id, self.id)
+#     def path_to_image(self):
+#         return 'box/{0}_{1}_{2}_{3}_{4}'.format(self.service_id, self.item_id, self.service_code, self.category_id, self.id)
 
-    service_id = models.CharField(max_length=20, null=True, blank=True)
-    item_id = models.CharField(max_length=20, null=True, blank=True)
-    service_code = models.IntegerField(null=True, blank=True)
-    category_id = models.IntegerField(null=True, blank=True)
-    length = models.IntegerField()
-    width = models.IntegerField()
-    height = models.IntegerField()
-    weight = models.DecimalField(max_digits=6, decimal_places=2)
-    quantity = models.IntegerField(null=True, blank=True)
-    shipped = models.BooleanField(default=False, null=True, blank=True)
-    shipped_date = models.DateTimeField(default=None, null=True, blank=True)
-    box_label = models.FileField(null=True, blank=True)
-    pallet = models.ForeignKey(PalletDimension, null=True, blank=True, default=None, on_delete=models.SET_NULL)
-    inventory_id = models.ForeignKey(Inventory, null=True, blank=True, on_delete=models.SET_NULL)
+#     service_id = models.CharField(max_length=20, null=True, blank=True)
+#     item_id = models.CharField(max_length=20, null=True, blank=True)
+#     service_code = models.IntegerField(null=True, blank=True)
+#     category_id = models.IntegerField(null=True, blank=True)
+#     length = models.IntegerField()
+#     width = models.IntegerField()
+#     height = models.IntegerField()
+#     weight = models.DecimalField(max_digits=6, decimal_places=2)
+#     quantity = models.IntegerField(null=True, blank=True)
+#     shipped = models.BooleanField(default=False, null=True, blank=True)
+#     shipped_date = models.DateTimeField(default=None, null=True, blank=True)
+#     box_label = models.FileField(null=True, blank=True)
+#     pallet = models.ForeignKey(PalletDimension, null=True, blank=True, default=None, on_delete=models.SET_NULL)
+#     inventory_id = models.ForeignKey(Inventory, null=True, blank=True, on_delete=models.SET_NULL)
 
-    def get_composite_key_model(self):
-    # Check in ServiceDetail first
-        service_detail_exists = ServiceDetail.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#     def get_composite_key_model(self):
+#     # Check in ServiceDetail first
+#         service_detail_exists = ServiceDetail.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_exists:
-            return ServiceDetail.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
+#         if service_detail_exists:
+#             return ServiceDetail.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
 
-        # If not found in ServiceDetail, check in ShipmentDetails
-        shipment_detail_exists = ShipmentDetails.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ServiceDetail, check in ShipmentDetails
+#         shipment_detail_exists = ShipmentDetails.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if shipment_detail_exists:
-            return ShipmentDetails.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
+#         if shipment_detail_exists:
+#             return ShipmentDetails.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
         
-        service_detail_history_exists = ServiceDetailHistory.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         service_detail_history_exists = ServiceDetailHistory.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_history_exists:
-            return ServiceDetailHistory.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
-        # If neither exists, return None or raise an error if needed
-        return None
+#         if service_detail_history_exists:
+#             return ServiceDetailHistory.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
+#         # If neither exists, return None or raise an error if needed
+#         return None
 
-    def save(self, *args, **kwargs):
-        if self.service_id == None and self.service_code == None and self.category_id == None:
-            super().save(*args, **kwargs)
-            return
-        # Check if the composite key exists in ServiceDetail first
-        service_detail_exists = ServiceDetail.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#     def save(self, *args, **kwargs):
+#         if self.service_id == None and self.service_code == None and self.category_id == None:
+#             super().save(*args, **kwargs)
+#             return
+#         # Check if the composite key exists in ServiceDetail first
+#         service_detail_exists = ServiceDetail.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_exists:
-            # If found, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if service_detail_exists:
+#             # If found, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If not found in ServiceDetail, check ShipmentDetails
-        shipment_detail_exists = ShipmentDetails.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ServiceDetail, check ShipmentDetails
+#         shipment_detail_exists = ShipmentDetails.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if shipment_detail_exists:
-            # If found in ShipmentDetails, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if shipment_detail_exists:
+#             # If found in ShipmentDetails, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If not found in ShipmentDetails, check ServiceDetailHistory
-        service_detail_history_exists = ServiceDetailHistory.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ShipmentDetails, check ServiceDetailHistory
+#         service_detail_history_exists = ServiceDetailHistory.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_history_exists:
-            # If found in ServiceDetailHistory, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if service_detail_history_exists:
+#             # If found in ServiceDetailHistory, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If the composite key is not found in any of the models, raise an error
-        raise ValueError("Composite key does not exist in ServiceDetail, ShipmentDetails, or ServiceDetailHistory")
+#         # If the composite key is not found in any of the models, raise an error
+#         raise ValueError("Composite key does not exist in ServiceDetail, ShipmentDetails, or ServiceDetailHistory")
 
-class ServiceBox(models.Model):
-    service_id = models.CharField(max_length=50)
-    item_id = models.CharField(max_length=20)
-    service_code = models.IntegerField()
-    category_id = models.IntegerField()
-    quantity = models.IntegerField()
-    box = models.ForeignKey(Dimension, on_delete=models.CASCADE, related_name='servicebox_box')
+# class ServiceBox(models.Model):
+#     service_id = models.CharField(max_length=50)
+#     item_id = models.CharField(max_length=20)
+#     service_code = models.IntegerField()
+#     category_id = models.IntegerField()
+#     quantity = models.IntegerField()
+#     box = models.ForeignKey(Dimension, on_delete=models.CASCADE, related_name='servicebox_box')
 
-    def get_composite_key_model(self):
-    # Check in ServiceDetail first
-        service_detail_exists = ServiceDetail.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#     def get_composite_key_model(self):
+#     # Check in ServiceDetail first
+#         service_detail_exists = ServiceDetail.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_exists:
-            return ServiceDetail.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
+#         if service_detail_exists:
+#             return ServiceDetail.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
 
-        # If not found in ServiceDetail, check in ShipmentDetails
-        shipment_detail_exists = ShipmentDetails.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ServiceDetail, check in ShipmentDetails
+#         shipment_detail_exists = ShipmentDetails.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if shipment_detail_exists:
-            return ShipmentDetails.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
+#         if shipment_detail_exists:
+#             return ShipmentDetails.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
         
-        service_detail_history_exists = ServiceDetailHistory.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         service_detail_history_exists = ServiceDetailHistory.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_history_exists:
-            return ServiceDetailHistory.objects.get(
-                service_id=self.service_id,
-                item_id=self.item_id,
-                service_code=self.service_code,
-                category_id=self.category_id
-            )
-        # If neither exists, return None or raise an error if needed
-        return None
+#         if service_detail_history_exists:
+#             return ServiceDetailHistory.objects.get(
+#                 service_id=self.service_id,
+#                 item_id=self.item_id,
+#                 service_code=self.service_code,
+#                 category_id=self.category_id
+#             )
+#         # If neither exists, return None or raise an error if needed
+#         return None
 
-    def save(self, *args, **kwargs):
-        # Check if the composite key exists in ServiceDetail first
-        service_detail_exists = ServiceDetail.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#     def save(self, *args, **kwargs):
+#         # Check if the composite key exists in ServiceDetail first
+#         service_detail_exists = ServiceDetail.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_exists:
-            # If found, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if service_detail_exists:
+#             # If found, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If not found in ServiceDetail, check ShipmentDetails
-        shipment_detail_exists = ShipmentDetails.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ServiceDetail, check ShipmentDetails
+#         shipment_detail_exists = ShipmentDetails.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if shipment_detail_exists:
-            # If found in ShipmentDetails, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if shipment_detail_exists:
+#             # If found in ShipmentDetails, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If not found in ShipmentDetails, check ServiceDetailHistory
-        service_detail_history_exists = ServiceDetailHistory.objects.filter(
-            service_id=self.service_id,
-            item_id=self.item_id,
-            service_code=self.service_code,
-            category_id=self.category_id
-        ).exists()
+#         # If not found in ShipmentDetails, check ServiceDetailHistory
+#         service_detail_history_exists = ServiceDetailHistory.objects.filter(
+#             service_id=self.service_id,
+#             item_id=self.item_id,
+#             service_code=self.service_code,
+#             category_id=self.category_id
+#         ).exists()
 
-        if service_detail_history_exists:
-            # If found in ServiceDetailHistory, proceed to save
-            super().save(*args, **kwargs)
-            return
+#         if service_detail_history_exists:
+#             # If found in ServiceDetailHistory, proceed to save
+#             super().save(*args, **kwargs)
+#             return
 
-        # If the composite key is not found in any of the models, raise an error
-        raise ValueError("Composite key does not exist in ServiceDetail, ShipmentDetails, or ServiceDetailHistory")
+#         # If the composite key is not found in any of the models, raise an error
+#         raise ValueError("Composite key does not exist in ServiceDetail, ShipmentDetails, or ServiceDetailHistory")
 
 # class ItemBox(models.Model):
 #     item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
 #     box_id = models.ForeignKey(Dimension, on_delete=models.CASCADE)
 
-class BundleInventory(models.Model):
-    other_item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name="inventory_second_item")
-    quantity = models.IntegerField()
-    inventory_id = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name="Inventory_bundle_inventory") 
+# class BundleInventory(models.Model):
+#     other_item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name="inventory_second_item")
+#     quantity = models.IntegerField()
+#     inventory_id = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name="Inventory_bundle_inventory") 
 
 # Shipment Details Table
 # class ShipmentDetails(models.Model):
@@ -935,29 +935,29 @@ class BundleInventory(models.Model):
 
 
 
-# Task Table
-class Task(models.Model):
-    task_id = models.AutoField(primary_key=True)
-    assigned_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="assigned_by_user")
-    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="assigned_to_user")
-    service_id = models.IntegerField(blank=True, null=True)
-    item_id = models.IntegerField(blank=True, null=True)
-    service_code = models.IntegerField(blank=True, null=True)
-    category_id = models.IntegerField(blank=True, null=True)
-    assigned_date = models.DateTimeField(default=timezone.now)
-    recurring = models.BooleanField(default=False)
+# # Task Table
+# class Task(models.Model):
+#     task_id = models.AutoField(primary_key=True)
+#     assigned_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="assigned_by_user")
+#     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="assigned_to_user")
+#     service_id = models.IntegerField(blank=True, null=True)
+#     item_id = models.IntegerField(blank=True, null=True)
+#     service_code = models.IntegerField(blank=True, null=True)
+#     category_id = models.IntegerField(blank=True, null=True)
+#     assigned_date = models.DateTimeField(default=timezone.now)
+#     recurring = models.BooleanField(default=False)
     
 
-class CompletedTasks(models.Model):
-    task_id = models.AutoField(primary_key=True)
-    assigned_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="completed_assigned_by_user")
-    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="completed_assigned_to_user")
-    service_id = models.IntegerField(blank=True, null=True)
-    item_id = models.IntegerField(blank=True, null=True)
-    service_code = models.IntegerField(blank=True, null=True)
-    category_id = models.IntegerField(blank=True, null=True)
-    assigned_date = models.DateTimeField()
-    completed_date = models.DateTimeField(default=timezone.now)
+# class CompletedTasks(models.Model):
+#     task_id = models.AutoField(primary_key=True)
+#     assigned_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="completed_assigned_by_user")
+#     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="completed_assigned_to_user")
+#     service_id = models.IntegerField(blank=True, null=True)
+#     item_id = models.IntegerField(blank=True, null=True)
+#     service_code = models.IntegerField(blank=True, null=True)
+#     category_id = models.IntegerField(blank=True, null=True)
+#     assigned_date = models.DateTimeField()
+#     completed_date = models.DateTimeField(default=timezone.now)
 
 # Balances Table
 # class Balance(models.Model):
@@ -991,11 +991,11 @@ class CompletedTasks(models.Model):
 #     boxes = models.IntegerField(default=0)
 
 # Check-in Table
-class LogRecord(models.Model):
-    check_in_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="logrecord_user_id")
-    check_in_time = models.DateTimeField(default=timezone.now, blank=True, null=True)
-    check_out_time = models.DateTimeField(blank=True, null=True)
+# class LogRecord(models.Model):
+#     check_in_id = models.AutoField(primary_key=True)
+#     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="logrecord_user_id")
+#     check_in_time = models.DateTimeField(default=timezone.now, blank=True, null=True)
+#     check_out_time = models.DateTimeField(blank=True, null=True)
 
 
 # Transaction Table
@@ -1011,25 +1011,25 @@ class LogRecord(models.Model):
 #     category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="custom_rates_category_id")
 #     charges = models.DecimalField(max_digits=10, decimal_places=2)
 
-class Courier(models.Model):
-    courier_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=20)
+# class Courier(models.Model):
+#     courier_id = models.AutoField(primary_key=True)
+#     name = models.CharField(max_length=20)
 
-class UserCourier(models.Model):
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_courier_client_id")
-    courier_id = models.ForeignKey(Courier, on_delete=models.CASCADE, related_name="user_courier_courier_id")
+# class UserCourier(models.Model):
+#     client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_courier_client_id")
+#     courier_id = models.ForeignKey(Courier, on_delete=models.CASCADE, related_name="user_courier_courier_id")
 
-class ClientPreference(models.Model):
-    client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="client_preference_client_id")
-    service_code = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="sclient_preference_ervice_code")
-    category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="client_preference_category_id")
+# class ClientPreference(models.Model):
+#     client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="client_preference_client_id")
+#     service_code = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name="sclient_preference_ervice_code")
+#     category_id = models.ForeignKey(OrderCategory, on_delete=models.CASCADE, related_name="client_preference_category_id")
 
-class client_courier_credentials:
-    email = models.TextField()
-    password = models.TextField()
-    courier = models.ForeignKey(Courier, on_delete=models.CASCADE)
+# class client_courier_credentials: #TODO
+#     email = models.TextField()
+#     password = models.TextField()
+#     courier = models.ForeignKey(Courier, on_delete=models.CASCADE)
 
-# class OTP(models.Model):
+# class OTP(models.Model): 
 #     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='OTP_user_id')
 #     otp = models.CharField(max_length=6)
 #     created_at = models.DateTimeField(auto_now_add=True)

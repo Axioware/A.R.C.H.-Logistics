@@ -33,12 +33,17 @@ class Inventory(models.Model):
         max_length=10,
         choices=CATEGORY_CHOICES, 
     )
-    pack_size = models.IntegerField()
+    pack_size = models.IntegerField() 
     no_bundles = models.IntegerField()
     date_added = models.DateTimeField(default=timezone.now)
     boxes = models.IntegerField(default=0)
     charge_by = models.ForeignKey(InventoryChargeChoices, verbose_name="Charge By")
     pallet = models.BooleanField(default=False)
+
+class BundleInventory(models.Model): #TODO PACK SIZE AND SO ON. 
+    other_item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name="inventory_second_item")
+    quantity = models.IntegerField()
+    inventory_id = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name="Inventory_bundle_inventory")
 
 class Discard(models.Model):
     discard_id = models.AutoField(primary_key=True)
@@ -60,8 +65,3 @@ class Removal(models.Model):
     location_id = models.ForeignKey(Locations, on_delete=models.CASCADE, blank=True, null=True, related_name="removal_bin_id")
     dimension_id = models.IntegerField(null=True)
     boxes = models.IntegerField(default=0)
-
-class BundleInventory(models.Model):
-    other_item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name="inventory_second_item")
-    quantity = models.IntegerField()
-    inventory_id = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name="Inventory_bundle_inventory")

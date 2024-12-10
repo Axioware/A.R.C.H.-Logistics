@@ -23,29 +23,11 @@ class Services(models.Model):
         return f"{self.service_name} - ({self.category})"
 
 
-class InventoryChargeChoices(models.TextChoices):
-    icc_id = models.AutoField(primary_key=True)
-    icc_name = models.CharField(max_length=30)
-    icc_charge = models.DecimalField(max_digits=8, decimal_places=2)
+# class InventoryChargeChoices(models.TextChoices):
+#     icc_id = models.AutoField(primary_key=True)
+#     icc_name = models.CharField(max_length=30)
+#     icc_charge = models.DecimalField(max_digits=12, decimal_places=2)
 
-
-# Charges Table
-class Charges(models.Model):
-    charge_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='user_charges')
-    order_id = models.ForeignKey(ShipmentDetails, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_service_id') #TODO
-    item_id = models.ForeignKey(Item, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_item_id')
-    service_id = models.ForeignKey(Services, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_service_code')  
-    invoice_id = models.ForeignKey(Invoice, on_delete=models.DO_NOTHING, null=True, related_name='charges_invoice_id')
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    date_charged = models.DateTimeField(default=timezone.now)
-    note = models.CharField(max_length=100, null=True, blank=True)
-
-
-class CustomRates(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_id_custom_rates")
-    service_id = models.ForeignKey(Services, on_delete=models.CASCADE, related_name="service_id_custom_rates")
-    custom_charge = models.DecimalField(max_digits=10, decimal_places=2)
 
 class Warehouse(models.Model):
     warehouse_id = models.AutoField(primary_key=True)

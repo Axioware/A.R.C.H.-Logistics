@@ -12,6 +12,7 @@ import string
 from datetime import date
 from django.db import models
 from django_tenants.models import TenantMixin, DomainMixin
+from Structures.models import Warehouse
 
 # Create your models here.
 class UsersExtended(TenantMixin):
