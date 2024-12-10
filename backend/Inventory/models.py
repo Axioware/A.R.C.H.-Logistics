@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from Structures.models import InventoryChargeChoices, Locations
 from django.utils import timezone
-
 # Create your models here.
 # Item Table
 class Item(models.Model):
@@ -40,3 +39,29 @@ class Inventory(models.Model):
     boxes = models.IntegerField(default=0)
     charge_by = models.ForeignKey(InventoryChargeChoices, verbose_name="Charge By")
     pallet = models.BooleanField(default=False)
+
+class Discard(models.Model):
+    discard_id = models.AutoField(primary_key=True)
+    item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="discard_item_id")
+    date_added = models.DateTimeField()
+    date_discarded = models.DateTimeField(default=timezone.now)
+    quantity = models.IntegerField()
+    client_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="discard_client_id")
+    location_id = models.ForeignKey(Locations, on_delete=models.CASCADE, blank=True, null=True, related_name="discard_bin_id")
+    dimension_id = models.IntegerField(null=True)
+    boxes = models.IntegerField(default=0)
+
+class Removal(models.Model):
+    removal_id = models.AutoField(primary_key=True)
+    item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="removal_item_id")
+    date = models.DateTimeField(default=timezone.now)
+    quantity = models.IntegerField(null=True)
+    client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="removal_client_id", null=True)
+    location_id = models.ForeignKey(Locations, on_delete=models.CASCADE, blank=True, null=True, related_name="removal_bin_id")
+    dimension_id = models.IntegerField(null=True)
+    boxes = models.IntegerField(default=0)
+
+class BundleInventory(models.Model):
+    other_item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name="inventory_second_item")
+    quantity = models.IntegerField()
+    inventory_id = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name="Inventory_bundle_inventory")
