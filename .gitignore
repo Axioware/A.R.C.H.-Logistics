@@ -4,3 +4,4 @@ backend/media/trackings/*
 prep/
 backend/static/invoices/*
 backend/Users/tests/
+backend/backend_env
