@@ -63,7 +63,6 @@ const NavBarWithSidebar = ({
         {/* Internal CSS */}
         <style>
           {`
-          
             .top-nav-bar {
               display: flex;
               align-items: center;

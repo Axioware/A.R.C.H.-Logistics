@@ -57,7 +57,7 @@ const MenuItem = ({
             padding-left: 30px; /* Add extra padding to prevent icon cutoff */
             border: none;
             border-radius: 8px;
-            background-color: rgb(${background_color?.join(",") || "42, 77, 107"});
+            background-color: rgb(${background_color.join(",") || "42, 77, 107"});
             cursor: pointer;
             width: ${width || "250px"};
             height: ${height || "50px"};
