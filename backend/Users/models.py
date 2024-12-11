@@ -12,23 +12,9 @@ import string
 from datetime import date
 from django.db import models
 from django_tenants.models import TenantMixin, DomainMixin
+from Structures.models import Warehouse
 
 # Create your models here.
-class Warehouse(models.Model):
-    warehouse_id = models.AutoField(primary_key=True)
-    warehouse_name = models.CharField(max_length=50, default=None)
-    address = models.CharField(max_length=100, default=None, null=True)
-    city = models.CharField(max_length=50, default=None, null=True)
-    state = models.CharField(max_length=50, default=None, null=True)
-    country = models.CharField(max_length=50, default=None, null=True)
-    zip_code = models.CharField(max_length=10, default=None, null=True)
-    phone = models.CharField(max_length=15, default=None, null=True)
-    email = models.EmailField(max_length=100, default=None, null=True)
-
-    def __str__(self):
-        return f"{self.warehouse_name}"
-
-
 class UsersExtended(TenantMixin):
     CLEARANCE_CHOICES = [
         (1, 'Level 1'),
