@@ -1,177 +1,129 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const StyledWrapper = styled.div`
-  .menu {
-    font-size: 16px;
-    line-height: 1.6;
-    color: #000000;
-    width: fit-content;
-    display: flex;
-    list-style: none;
-  }
+const StyledDropdown = styled.div`
+  position: relative;
+  width: fit-content;
 
-  .menu a {
-    text-decoration: none;
-    color: inherit;
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-  }
-
-  .menu .link {
-    position: relative;
+  .dropdown-toggle {
+    cursor: pointer;
+    padding: 10px;
+    background-color: rgb(${props => props.backgroundColor});
+    color: rgb(${props => props.textColor});
+    border-radius: ${props => props.borderRadius};
+    width: ${props => props.width[0]}; /* Assuming all buttons are the same width */
+    border: none;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 12px 36px;
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: rgb(${props => props.hoverColor});
+    }
+
+    svg {
+      transition: transform 0.3s;
+    }
   }
 
-  .menu .link::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #0a3cff;
-    z-index: -1;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.48s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .menu .link svg {
-    width: 14px;
-    height: 14px;
-    fill: #000000;
-    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .menu .item {
-    position: relative;
-  }
-
-  .menu .item .submenu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .dropdown-menu {
     position: absolute;
     top: 100%;
-    border-radius: 0 0 16px 16px;
     left: 0;
     width: 100%;
-    overflow: hidden;
-    border: 1px solid #cccccc;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-12px);
-    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
-    z-index: 1;
-    pointer-events: none;
-    list-style: none;
-  }
+    border: 1px solid #ccc;
+    border-radius: 0 0 5px 5px;
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+    background-color: #fff;
 
-  .menu .item:hover .submenu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-    border-top: transparent;
-    border-color: #0a3cff;
-  }
+    &.show {
+      display: flex;
+    }
 
-  .menu .item:hover .link {
-    color: #ffffff;
-    border-radius: 16px 16px 0 0;
-  }
+    button {
+      padding: 10px;
+      text-align: left;
+      width: 100%;
+      border: none;
+      background: none;
+      cursor: pointer;
 
-  .menu .item:hover .link::after {
-    transform: scaleX(1);
-    transform-origin: right;
-  }
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
 
-  .menu .item:hover .link svg {
-    fill: #ffffff;
-    transform: rotate(-180deg);
-  }
-
-  .submenu .submenu-item {
-    width: 100%;
-    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .submenu .submenu-link {
-    display: block;
-    padding: 12px 24px;
-    width: 100%;
-    position: relative;
-    text-align: center;
-    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .submenu .submenu-item:last-child .submenu-link {
-    border-bottom: none;
-  }
-
-  .submenu .submenu-link::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: scaleX(0);
-    width: 100%;
-    height: 100%;
-    background-color: #0a3cff;
-    z-index: -1;
-    transform-origin: left;
-    transition: transform 0.48s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .submenu .submenu-link:hover:before {
-    transform: scaleX(1);
-    transform-origin: right;
-  }
-
-  .submenu .submenu-link:hover {
-    color: #ffffff;
+      &.selected {
+        background-color: rgb(${props => props.selectedColor});
+      }
+    }
   }
 `;
 
-const FilterDropdown = () => {
+const FilterDropdown = ({
+  text,
+  text_color,
+  selected,
+  background_color,
+  hover_color,
+  selected_color,
+  func,
+  radio,
+  border_radius,
+  width,
+  height
+}) => {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState(selected);
+
+  const handleToggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const handleOptionSelect = (option) => {
+    if (radio) {
+      setSelectedOptions([option]);
+    } else {
+      if (selectedOptions.includes(option)) {
+        setSelectedOptions(selectedOptions.filter(item => item !== option));
+      } else {
+        setSelectedOptions([...selectedOptions, option]);
+      }
+    }
+    func(option); // Callback function when an option is selected
+    if (radio) setShowDropdown(false); // Close dropdown if radio is true
+  };
+
   return (
-    <StyledWrapper>
-      <div className="menu">
-        <div className="item">
-          <a href="#" className="link">
-            <span> Our Services </span>
-            <svg viewBox="0 0 360 360" xmlSpace="preserve">
-              <g id="SVGRepo_iconCarrier">
-                <path id="XMLID_225_" d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393 c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393 s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z" />
-              </g>
-            </svg>
-          </a>
-          <div className="submenu">
-            <div className="submenu-item">
-              <a href="#" className="submenu-link"> Development </a>
-            </div>
-            <div className="submenu-item">
-              <a href="#" className="submenu-link"> Design </a>
-            </div>
-            <div className="submenu-item">
-              <a href="#" className="submenu-link"> Marketing </a>
-            </div>
-            <div className="submenu-item">
-              <a href="#" className="submenu-link"> SEO </a>
-            </div>
-          </div>
-        </div>
+    <StyledDropdown
+      textColor={text_color.join(',')}
+      backgroundColor={background_color.join(',')}
+      hoverColor={hover_color.join(',')}
+      selectedColor={selected_color.join(',')}
+      borderRadius={border_radius}
+      width={width}
+      height={height}
+    >
+      <button className="dropdown-toggle" onClick={handleToggleDropdown}>
+        Select Options
+        <svg viewBox="0 0 20 20" width="20" height="20">
+          <path fill="currentColor" d="M5 8l5 5 5-5H5z" />
+        </svg>
+      </button>
+      <div className={`dropdown-menu ${showDropdown ? 'show' : ''}`}>
+        {text.map((option, index) => (
+          <button
+            key={index}
+            className={`button ${selectedOptions.includes(option) ? 'selected' : ''}`}
+            onClick={() => handleOptionSelect(option)}
+          >
+            {option}
+          </button>
+        ))}
       </div>
-    </StyledWrapper>
+    </StyledDropdown>
   );
 };
 
