@@ -108,7 +108,7 @@ export default function AllUser() {
           text={['Home', 'User Management', 'All Users']}
           paths={['/home', '/user_management', '/all_users']}
           text_color={[255, 255, 255]}
-          background_color={[30, 61, 89]}
+          background_color={[23, 23, 23]}
           hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
           width="110%"
           height="50px"
@@ -130,7 +130,7 @@ export default function AllUser() {
           <Table
             number_of_headings={headings.length}
             headings={headings}
-            heading_background={[30, 61, 89]}
+            heading_background={[23, 23, 23]}
             heading_color={[255, 255, 255]}
             sort_function={() => {}}
             data={data}
@@ -149,7 +149,7 @@ export default function AllUser() {
             total_pages={totalPages}
             text_color={[0, 0, 0]}
             button_text_color={[255, 255, 255]}
-            button_background_color={[34, 53, 83]}
+            button_background_color={[23, 23, 23]}
             width="110%"
             height="50px"
             onNext={handleNext}
