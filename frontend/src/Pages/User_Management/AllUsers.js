@@ -73,8 +73,8 @@ export default function AllUser() {
     <div style={{ display: "flex" }}>
       {/* Top Sidebar with Navigation */}
       <NavBarWithSidebar
-        background_color={[42, 77, 107]}
-        text_color={[255, 255, 255]}
+        background_color={[23, 23, 23]}
+        text_color={[230, 230, 230]}
         logo={archlogo}
         company_name="A.R.C.H Labs"
         company_name_color={[255, 255, 255]}
@@ -91,10 +91,10 @@ export default function AllUser() {
           ["Inventory", "Add Item", "Delete Item"],
         ]}
         routes={[['/app2', '/app3'], ['/top1', '/top2']]}
-        sidebar_background_color={[42, 77, 107]}
-        sidebar_text_color={[255, 255, 255]}
-        selected_color={[56, 21, 90]}
-        hover_color={[70, 100, 150]}
+        sidebar_background_color={[23, 23, 23]}
+        sidebar_text_color={[230, 230, 230]}
+        selected_color={[230, 230, 230]}
+        hover_color={[230, 230, 230]}
         expanded={[false, false, false]}
         sidebar_width="250px"
         sidebar_height="100vh"
