@@ -38,9 +38,10 @@ export default function AddButton({
           .add-button-container {
             display: flex;
             justify-content: center;
-            align-items: center;
+            // align-items: center;
             height: 10vh; /* Full viewport height for centering */
-            margin: 0px 0px 0px 0px;
+            margin: 20px 0px 0px 0px;
+            // align-items: left;
           }
 
           .add-button {

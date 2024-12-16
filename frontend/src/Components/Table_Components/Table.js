@@ -127,10 +127,10 @@ export default function Table({
             transition: background-color 0.3s ease, color 0.3s ease;
           }
 
-          .custom-table th:hover {
-            background-color: #233445;
-            color: #fff;
-          }
+          // .custom-table th:hover {
+          //   background-color: #233445;
+          //   color: #fff;
+          // }
 
           .custom-table tr:nth-child(even) {
             background-color: #f8f9fa;

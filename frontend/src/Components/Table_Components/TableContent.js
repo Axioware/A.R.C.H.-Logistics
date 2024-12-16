@@ -65,7 +65,7 @@ export default function App() {
       <div>
         <PageHeading
           text="All Users"
-          text_color={[8, 70, 127]}
+          text_color={[23, 23, 23]}
           sidebar_color={[25, 106, 172]}
           width="100%"
           height="50px"
@@ -78,7 +78,7 @@ export default function App() {
         <FilterButton
           text="+ Filter By"
           text_color={[255, 255, 255]}
-          background_color={[30, 61, 89]}
+          background_color={[23, 23, 23]}
           function={handleFilterClick}
         />
       </div>
