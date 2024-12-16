@@ -13,6 +13,10 @@ const LoginForm = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    const a = document.getElementById("loginbutton");
+a.disabled = true;
+a.style.backgroundColor="grey";
+
 
     // Reset previous errors
     const usernameError = document.getElementById('usernameError');
@@ -58,7 +62,14 @@ const LoginForm = () => {
       setErrorMessage('Failed to connect to the server. Please try again.');
     } finally {
       setIsSubmitting(false);
+      a.disabled = false
+      a.style.backgroundColor="#2C5B97"
     }
+  };
+
+  const handleInputChange = (setter) => (value) => {
+    setter(value);
+    setIsSubmitting(false); // Reset the button's disabled state on input change
   };
 
   const handleForgotPassword = () => {
@@ -137,6 +148,11 @@ const LoginForm = () => {
       textDecoration: 'none',
       cursor: 'pointer',
     },
+    buttonContainer: {
+      display: 'flex',
+      justifyContent: 'center'
+      // marginRight: '10%',
+    },
   };
 
   return (
@@ -159,7 +175,7 @@ const LoginForm = () => {
               placeholder="Username"
               hint="Enter Username"
               value={username}
-              func={setUsername}
+              func={handleInputChange(setUsername)}
               width="100%"
             />
             <span id="usernameError" style={styles.errorText}>
@@ -174,21 +190,25 @@ const LoginForm = () => {
               placeholder="Password"
               hint="Enter Password"
               value={password}
-              func={setPassword}
+              func={handleInputChange(setPassword)}
             />
             <span id="passwordError" style={styles.errorText}>
               Please enter a password.
             </span>
           </div>
           {errorMessage && <div style={styles.errorMessage}>{errorMessage}</div>}
-          <GeneralButton
-            text="Login"
-            text_color={[255, 255, 255]}
-            button_color={[44, 91, 151]}
-            width="100%"
-            disabled={isSubmitting}
-            func={handleLogin}
-          />
+          <div style={styles.buttonContainer}>
+            <GeneralButton
+              text="Login"
+              id="loginbutton"
+              text_color={[255, 255, 255]}
+              button_color={[44, 91, 151]}
+              width="30%"
+              disabled={isSubmitting}
+              func={handleLogin}
+              height="30px"
+            />
+          </div>
         </form>
         <div style={styles.footer}>
           <p>
@@ -213,4 +233,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-                            
