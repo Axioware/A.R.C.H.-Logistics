@@ -117,7 +117,7 @@ const OtpForm = ({ email, onSubmit }) => {
       fontSize: "1.75rem",
       marginBottom: "15px",
       color: "#333",
-      marginLeft: "30px",
+      textAlign:"center",
       fontWeight: "bold",
       ...responsiveStyles.heading,
     },
