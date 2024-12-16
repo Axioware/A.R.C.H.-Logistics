@@ -21,11 +21,11 @@ const LoginForm = () => {
     passwordError.style.display = 'none';
 
     // Input validation
-    if (!username) {
+    if (!username.trim()) {
       usernameError.style.display = 'block';
       return;
     }
-    if (!password) {
+    if (!password.trim()) {
       passwordError.style.display = 'block';
       return;
     }
@@ -48,17 +48,13 @@ const LoginForm = () => {
         // Success (status 200)
         navigate('/dashboard'); // Redirect to dashboard
       } else if (response.status === 400) {
-        // Validation error
         setErrorMessage('Validation error. Please check your input.');
       } else if (response.status >= 500 && response.status < 600) {
-        // Server error
         setErrorMessage('Server error. Please try again later.');
       } else {
-        // Other errors
         setErrorMessage('An unexpected error occurred.');
       }
     } catch (error) {
-      // Network or unexpected errors
       setErrorMessage('Failed to connect to the server. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -72,56 +68,58 @@ const LoginForm = () => {
   const styles = {
     container: {
       display: 'flex',
-      width: '90vw', // Responsive width
-      maxWidth: '900px', // Prevent container from becoming too wide
+      flexDirection: 'row',
+      width: '100%',
+      maxWidth: '900px',
       backgroundColor: 'rgba(255, 255, 255, 0.9)',
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
       borderRadius: '10px',
       overflow: 'hidden',
-      fontFamily: 'Konkhmer Sleokchher, sans-serif',
-      height: '80vh', // Responsive height
-      margin: '0 auto', // Center the container horizontally
+      fontFamily: 'Arial, sans-serif',
+      margin: '5% auto', // Center container vertically and horizontally
     },
     logoContainer: {
       backgroundColor: '#000',
       color: '#fff',
       width: '60%',
-      padding: '20px',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    logoImage: {
+      maxWidth: '80%',
+      height: 'auto',
     },
     loginContainer: {
       width: '40%',
       padding: '30px',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'flex-start',
+      justifyContent: 'center',
     },
     heading: {
-      fontSize: '2.3vw', // Use viewport width for responsive font size
-      marginBottom: '30px',
+      fontSize: '1.8rem',
+      marginBottom: '20px',
       color: '#333',
       textAlign: 'center',
-      fontWeight: 'bolder',
-      lineHeight: '120%',
+      fontWeight: 'bold',
+      lineHeight: '1.5',
     },
     inputGroup: {
       marginBottom: '20px',
       width: '100%',
-      position: 'relative',
     },
     errorText: {
-      display: 'none', // Hidden by default
+      display: 'none',
       color: '#ff4d4d',
-      fontSize: '1rem', // Use rem for better scalability
+      fontSize: '0.9rem',
       marginTop: '5px',
       textAlign: 'left',
     },
     errorMessage: {
       color: '#ff4d4d',
       backgroundColor: '#ffe6e6',
-      padding: '2px',
+      padding: '10px',
       borderRadius: '5px',
       marginBottom: '15px',
       border: '1px solid #ff9999',
@@ -130,7 +128,7 @@ const LoginForm = () => {
     },
     footer: {
       textAlign: 'center',
-      marginTop: '40px',
+      marginTop: '20px',
       fontSize: '0.9rem',
       color: '#555',
     },
@@ -147,7 +145,7 @@ const LoginForm = () => {
         <img
           src={PrepPrimeLogo}
           alt="PREPPRIME Logo"
-          style={{ maxWidth: '80%', height: 'auto' }}
+          style={styles.logoImage}
         />
       </div>
       <div style={styles.loginContainer}>
@@ -162,9 +160,9 @@ const LoginForm = () => {
               hint="Enter Username"
               value={username}
               func={setUsername}
-              width={"100%"}
+              width="100%"
             />
-            <span id="usernameError" style={{ ...styles.errorText, fontWeight: "lighter" }}>
+            <span id="usernameError" style={styles.errorText}>
               Please enter a username.
             </span>
           </div>
@@ -190,7 +188,6 @@ const LoginForm = () => {
             width="100%"
             disabled={isSubmitting}
             func={handleLogin}
-            height={"20%"}
           />
         </form>
         <div style={styles.footer}>
