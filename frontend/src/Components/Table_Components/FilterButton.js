@@ -57,6 +57,7 @@ export default function FilterButton({
             font-weight: bold; /* Make the button text bold */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
             outline: none; /* Remove outline on focus */
+            margin: -900px 0px 0px 650px;
           }
 
           .filter-button:hover {

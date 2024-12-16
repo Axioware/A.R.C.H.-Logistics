@@ -25,33 +25,33 @@ export default function Pagination({
   const buttonBgColor = rgbArrayToString(button_background_color);
 
   return (
-    <div className="pagination-container">
+    <div className="Pagination-container">
       {/* Remove the old button code and replace it with the new design */}
       <button
-        className="pagination-button"
+        className="Pagination-button"
         onClick={onPrev}
         disabled={current_page <= 1}
         style={{ width: '120px' }} // Consistent width
       >
-        <span className="arrow prev-arrow">&larr;</span> Previous
+        <span className="Pagination-arrow Pagination-prev-arrow">&larr;</span> Previous
       </button>
 
-      <div className="page-display">
+      <div className="Pagination-page-display">
         Page {current_page} of {total_pages}
       </div>
 
       <button
-        className="pagination-button"
+        className="Pagination-button"
         onClick={onNext}
         disabled={current_page >= total_pages}
         style={{ width: '120px' }} // Consistent width
       >
-        Next <span className="arrow next-arrow">&rarr;</span>
+        Next <span className="Pagination-arrow Pagination-next-arrow">&rarr;</span>
       </button>
 
       <style>
         {`
-          .pagination-container {
+          .Pagination-container {
             width: ${width};
             height: ${height};
             display: flex;
@@ -62,10 +62,10 @@ export default function Pagination({
             border-radius: 8px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             font-family: Arial, sans-serif;
-            margin: 0px 0px 0px -155px ;
+            margin: 20px 0px 0px -150px ;
           }
 
-          .pagination-button {
+          .Pagination-button {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -82,45 +82,45 @@ export default function Pagination({
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
           }
 
-          .pagination-button:disabled {
+          .Pagination-button:disabled {
             background-color: #cccccc; /* Gray color for disabled state */
             cursor: not-allowed;
           }
 
-          .pagination-button:not(:disabled):hover {
+          .Pagination-button:not(:disabled):hover {
             background-color: rgba(34, 53, 83, 0.9); /* Slightly darker on hover */
             transform: scale(1.05); /* Slight enlargement */
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
           }
 
           /* Arrow movement on hover */
-          .pagination-button:not(:disabled):hover .arrow {
+          .Pagination-button:not(:disabled):hover .Pagination-arrow {
             transition: transform 0.2s ease; /* Smooth animation */
           }
 
           /* Forward movement for 'Next' button arrow */
-          .pagination-button:not(:disabled):hover .next-arrow {
+          .Pagination-button:not(:disabled):hover .Pagination-next-arrow {
             transform: translateX(5px); /* Move the arrow 5px forward */
           }
 
           /* Backward movement for 'Previous' button arrow */
-          .pagination-button:not(:disabled):hover .prev-arrow {
+          .Pagination-button:not(:disabled):hover .Pagination-prev-arrow {
             transform: translateX(-5px); /* Move the arrow 5px backward */
           }
 
-          .page-display {
+          .Pagination-page-display {
             font-size: 15px;
             font-weight: 350;
             color: ${textColor};
             text-align: center; /* Center-align the text in the page display */
           }
 
-          .arrow {
+          .Pagination-arrow {
             font-size: 13px;
             transition: transform 0.2s ease; /* Add transition for smooth animation */
           }
 
-          .app-container {
+          .Pagination-app-container {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -133,4 +133,3 @@ export default function Pagination({
     </div>
   );
 }
-  

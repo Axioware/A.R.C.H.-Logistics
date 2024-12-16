@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SearchIcon from '../../Assets/Images/SearchIcon.png'
+import SearchIcon from '../../Assets/Images/SearchIcon.png';
 
 // Function to convert RGB array to 'rgb(r, g, b)' string
 function rgbArrayToString(rgbArray) {
@@ -40,16 +40,16 @@ export default function SearchBar({
 
   return (
     <div
-      className={`search-bar-container ${class_name}`}
+      className={`Search-bar-container ${class_name}`}
       style={{ width, height }}  // Apply width and height as props
     >
-        <div className="search-icon-container">
-        {icon && <img src={SearchBar} alt="Search Icon" className="search-icon" />}
+      <div className="Search-icon-container">
+        {icon && <img src={SearchIcon} alt="Search Icon" className="Search-icon" />}
       </div>
       <input
         type="text"
         placeholder={hint}
-        className="search-bar-input"
+        className="Search-bar-input"
         value={searchText}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
@@ -57,22 +57,23 @@ export default function SearchBar({
       />
       <style>
         {`
-          .app-container {
+          .Search-app-container {
             height: 100vh; /* Ensure the app's height is 100% of the viewport */
             display: flex;
             justify-content: center;
             align-items: center;
           }
 
-          .search-bar-container {
+          .Search-bar-container {
             display: flex;
             justify-content: center;
             align-items: center;
             width: ${width}; /* Apply percentage width */
             height: ${height}; /* Apply percentage height */
+            margin: -885px 0px 30px 990px;
           }
 
-          .search-bar-input {
+          .Search-bar-input {
             width: 100%;
             height: 100%;
             padding: 10px;
@@ -84,11 +85,11 @@ export default function SearchBar({
             box-sizing: border-box;
           }
 
-          .search-bar-input:focus {
+          .Search-bar-input:focus {
             border-color: #007bff; /* Focused input border color */
           }
 
-          .search-bar-button {
+          .Search-bar-button {
             border: none;
             background-color: transparent;
             cursor: pointer;
@@ -98,11 +99,11 @@ export default function SearchBar({
             color: #007bff;
           }
 
-          .search-bar-button:hover {
+          .Search-bar-button:hover {
             color: #0056b3; /* Change color on hover */
           }
 
-          .search-icon {
+          .Search-icon {
             font-size: 1.2rem;
           }
         `}

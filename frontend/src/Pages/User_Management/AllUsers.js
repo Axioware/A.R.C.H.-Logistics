@@ -5,6 +5,10 @@ import Table from '../../Components/Table_Components/Table'; // Include the Tabl
 import Pagination from '../../Components/Table_Components/Pagination'; // Include the Pagination component
 import archlogo from '../../Assets/Images/logo1.png'; // Include your logo image
 import NavPath from '../../Components/General/NavPath';  // Import NavPath component
+import MainBackground from '../../Components/General/MainBackground';
+import TableContent from '../../Components/Table_Components/TableContent';
+// import PageHeading from '../../Components/Table_Components/PageHeading';
+
 
 export default function AllUser() {
   const [data, setData] = useState([]);
@@ -70,93 +74,119 @@ export default function AllUser() {
   const headings = ['Name', 'Age', 'City'];
 
   return (
-    <div style={{ display: "flex" }}>
-      {/* Top Sidebar with Navigation */}
-      <NavBarWithSidebar
-        background_color={[23, 23, 23]}
-        text_color={[230, 230, 230]}
-        logo={archlogo}
-        company_name="A.R.C.H Labs"
-        company_name_color={[255, 255, 255]}
-        username="Owner"
-        username_color={[255, 255, 255]}
-        icons={[
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-        ]}
-        names={[
-          ["User Management", "All User", "Add User"],
-          ["Management", "Add Order", "Delete Order"],
-          ["Inventory", "Add Item", "Delete Item"],
-        ]}
-        routes={[['/app2', '/app3'], ['/top1', '/top2']]}
-        sidebar_background_color={[23, 23, 23]}
-        sidebar_text_color={[230, 230, 230]}
-        selected_color={[230, 230, 230]}
-        hover_color={[230, 230, 230]}
-        expanded={[false, false, false]}
-        sidebar_width="250px"
-        sidebar_height="100vh"
-        hamburger_color={[255, 255, 255]}
-      />
-
-      {/* Main content area */}
-      <div style={{ flex: 1, padding: "20px", marginLeft: "250px" }}>
-        {/* NavPath Component for Breadcrumb */}
-        <NavPath
-          text={['Home', 'User Management', 'All Users']}
-          paths={['/home', '/user_management', '/all_users']}
-          text_color={[255, 255, 255]}
+    // <MainBackground
+    //   background_color={[34, 255, 255]} // Set background color as white
+    //   border_color={[200, 200, 200]} // Light gray border color
+    //   height="100%"
+    //   width="100%"
+    // />,
+      <div style={{ display: "flex" }}>
+        {/* Top Sidebar with Navigation */}
+        <NavBarWithSidebar
           background_color={[23, 23, 23]}
-          hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
-          width="110%"
+          text_color={[230, 230, 230]}
+          logo={archlogo}
+          company_name="A.R.C.H Labs"
+          company_name_color={[255, 255, 255]}
+          username="Owner"
+          username_color={[255, 255, 255]}
+          icons={[
+            "https://via.placeholder.com/20",
+            "https://via.placeholder.com/20",
+            "https://via.placeholder.com/20",
+          ]}
+          names={[
+            ["User Management", "All User", "Add User"],
+            ["Management", "Add Order", "Delete Order"],
+            ["Inventory", "Add Item", "Delete Item"],
+          ]}
+          routes={[['/app2', '/app3'], ['/top1', '/top2']]}
+          sidebar_background_color={[23, 23, 23]}
+          sidebar_text_color={[230, 230, 230]}
+          selected_color={[230, 230, 230]}
+          hover_color={[230, 230, 230]}
+          expanded={[false, false, false]}
+          sidebar_width="250px"
+          sidebar_height="100vh"
+          hamburger_color={[255, 255, 255]}
+        />
+
+         
+        {/* <PageHeading
+          text="All Users"
+          text_color={[8, 70, 127]}
+          sidebar_color={[25, 106, 172]}
+          width="100%"
           height="50px"
-        />
+          font_size="2rem"
+        /> */}
+      
 
-        {/* Add Button Component */}
-        <AddButton 
-          text="Add User"
-          path="https://via.placeholder.com/20"
-          buttonFunction={() => alert('Add user clicked!')} // Example function for adding a user
-          width="13%"
-          height="47px"
-          text_color={[255, 255, 255]}
-        />
-
-        {/* Table and Pagination wrapped in the same div */}
-        <div style={{ marginTop: "20px" }}>
-          {/* Table Component */}
-          <Table
-            number_of_headings={headings.length}
-            headings={headings}
-            heading_background={[23, 23, 23]}
-            heading_color={[255, 255, 255]}
-            sort_function={() => {}}
-            data={data}
-            loading={loading}
-            success={success}
-            last_column={true}
-            last_column_text="Details"
-            last_column_icon="https://via.placeholder.com/20" // Replace with actual icon URL
-            last_column_function={() => {}}
-            handleRefresh={fetchData}
-          />
-
-          {/* Pagination Component */}
-          <Pagination
-            current_page={currentPage}
-            total_pages={totalPages}
-            text_color={[0, 0, 0]}
-            button_text_color={[255, 255, 255]}
-            button_background_color={[23, 23, 23]}
+        {/* Main content area */}
+        <div style={{ flex: 1, padding: "20px", marginLeft: "250px" }}>
+          {/* NavPath Component for Breadcrumb */}
+          <NavPath
+            text={['Home', 'User Management', 'All Users']}
+            paths={['/home', '/user_management', '/all_users']}
+            text_color={[255, 255, 255]}
+            background_color={[23, 23, 23]}
+            hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
             width="110%"
             height="50px"
-            onNext={handleNext}
-            onPrev={handlePrev}
           />
+
+          {/* Add Button Component */}
+          <AddButton 
+            text="Add User"
+            path="https://via.placeholder.com/20"
+            buttonFunction={() => alert('Add user clicked!')} // Example function for adding a user
+            width="13%"
+            height="47px"
+            text_color={[255, 255, 255]}
+          />
+
+          <div style={{ width: '100%', height: '100%', marginLeft: '0%' }}>
+                <TableContent />
+              </div>
+
+          {/* Table and Pagination wrapped in the same div */}
+          <div style={{ marginTop: "20px" }}>
+            {/* Table Component */}
+            {/* <Table
+              number_of_headings={headings.length}
+              headings={headings}
+              heading_background={[23, 23, 23]}
+              heading_color={[255, 255, 255]}
+              sort_function={() => {}}
+              data={data}
+              loading={loading}
+              success={success}
+              last_column={true}
+              last_column_text="Details"
+              last_column_icon="https://via.placeholder.com/20" // Replace with actual icon URL
+              last_column_function={() => {}}
+              handleRefresh={fetchData}
+            /> */}
+
+            {/* Pagination Component */}
+            {/* <Pagination
+              current_page={currentPage}
+              total_pages={totalPages}
+              text_color={[0, 0, 0]}
+              button_text_color={[255, 255, 255]}
+              button_background_color={[23, 23, 23]}
+              width="110%"
+              height="50px"
+              onNext={handleNext}
+              onPrev={handlePrev}
+            /> */}
+           
+          </div>
+          {/* <TableContent  */}
+            {/* /> */}
         </div>
+        
       </div>
-    </div>
+      
   );
 }
