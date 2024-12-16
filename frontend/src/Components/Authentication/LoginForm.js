@@ -13,11 +13,14 @@ const LoginForm = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    // Reset previous errors
     const usernameError = document.getElementById('usernameError');
     const passwordError = document.getElementById('passwordError');
     usernameError.style.display = 'none';
     passwordError.style.display = 'none';
 
+    // Input validation
     if (!username) {
       usernameError.style.display = 'block';
       return;
@@ -27,26 +30,35 @@ const LoginForm = () => {
       return;
     }
 
+    // Clear any previous error message
     setErrorMessage('');
     setIsSubmitting(true);
 
     try {
+      // Simulated API call
       const response = await fetch('https://example.com/api/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
-        navigate('/dashboard');
+        // Success (status 200)
+        navigate('/dashboard'); // Redirect to dashboard
       } else if (response.status === 400) {
+        // Validation error
         setErrorMessage('Validation error. Please check your input.');
-      } else if (response.status >= 500) {
+      } else if (response.status >= 500 && response.status < 600) {
+        // Server error
         setErrorMessage('Server error. Please try again later.');
       } else {
+        // Other errors
         setErrorMessage('An unexpected error occurred.');
       }
-    } catch {
+    } catch (error) {
+      // Network or unexpected errors
       setErrorMessage('Failed to connect to the server. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -60,47 +72,67 @@ const LoginForm = () => {
   const styles = {
     container: {
       display: 'flex',
-      width: '90%',
-      maxWidth: '800px',
-      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      width: '90vw', // Responsive width
+      maxWidth: '900px', // Prevent container from becoming too wide
+      backgroundColor: 'rgba(255, 255, 255, 0.9)',
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
       borderRadius: '10px',
-      margin: '5vh auto',
+      overflow: 'hidden',
       fontFamily: 'Konkhmer Sleokchher, sans-serif',
+      height: '80vh', // Responsive height
+      margin: '0 auto', // Center the container horizontally
     },
     logoContainer: {
       backgroundColor: '#000',
       color: '#fff',
-      flex: '1',
-      padding: '10px',
+      width: '60%',
+      padding: '20px',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
     },
     loginContainer: {
-      flex: '1',
-      padding: '20px',
+      width: '40%',
+      padding: '30px',
       display: 'flex',
       flexDirection: 'column',
+      justifyContent: 'flex-start',
     },
     heading: {
-      fontSize: 'clamp(1.5rem, 2.5vw, 2.3rem)',
-      marginBottom: '20px',
+      fontSize: '2.3vw', // Use viewport width for responsive font size
+      marginBottom: '30px',
       color: '#333',
       textAlign: 'center',
+      fontWeight: 'bolder',
+      lineHeight: '120%',
     },
-    inputGroup: { marginBottom: '15px' },
+    inputGroup: {
+      marginBottom: '20px',
+      width: '100%',
+      position: 'relative',
+    },
     errorText: {
-      display: 'none',
+      display: 'none', // Hidden by default
       color: '#ff4d4d',
-      fontSize: '0.9rem',
+      fontSize: '1rem', // Use rem for better scalability
       marginTop: '5px',
+      textAlign: 'left',
+    },
+    errorMessage: {
+      color: '#ff4d4d',
+      backgroundColor: '#ffe6e6',
+      padding: '2px',
+      borderRadius: '5px',
+      marginBottom: '15px',
+      border: '1px solid #ff9999',
+      fontSize: '1rem',
+      textAlign: 'center',
     },
     footer: {
-      marginTop: '20px',
-      fontSize: '0.85rem',
-      color: '#555',
       textAlign: 'center',
+      marginTop: '40px',
+      fontSize: '0.9rem',
+      color: '#555',
     },
     footerLink: {
       color: '#2c5b97',
@@ -130,9 +162,9 @@ const LoginForm = () => {
               hint="Enter Username"
               value={username}
               func={setUsername}
-              width="100%"
+              width={"100%"}
             />
-            <span id="usernameError" style={styles.errorText}>
+            <span id="usernameError" style={{ ...styles.errorText, fontWeight: "lighter" }}>
               Please enter a username.
             </span>
           </div>
@@ -145,13 +177,12 @@ const LoginForm = () => {
               hint="Enter Password"
               value={password}
               func={setPassword}
-              width="100%"
             />
             <span id="passwordError" style={styles.errorText}>
               Please enter a password.
             </span>
           </div>
-          {errorMessage && <div style={styles.errorText}>{errorMessage}</div>}
+          {errorMessage && <div style={styles.errorMessage}>{errorMessage}</div>}
           <GeneralButton
             text="Login"
             text_color={[255, 255, 255]}
@@ -159,6 +190,7 @@ const LoginForm = () => {
             width="100%"
             disabled={isSubmitting}
             func={handleLogin}
+            height={"20%"}
           />
         </form>
         <div style={styles.footer}>
@@ -169,6 +201,14 @@ const LoginForm = () => {
             </span>
           </p>
           <p>Prepprime © Copyright 2024</p>
+          <div>
+            <a
+              href="https://prepprime.com/contact-us-2/"
+              style={styles.footerLink}
+            >
+              Contact Us
+            </a>
+          </div>
         </div>
       </div>
     </div>
