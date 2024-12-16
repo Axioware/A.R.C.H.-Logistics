@@ -15,13 +15,13 @@ export default function TableTop() {
 
   return (
     <div className="table-top-container">
-      {/* <PageHeading
-        text="All"
+      <PageHeading
+        text="All table top"
         text_color={[255, 255, 255]} // White text color
         sidebar_color={[30, 61, 89]} // Sidebar color
         width="60%" // Adjust width as needed
         height="100px" // Adjust height as needed
-      /> */}
+      />
 
       <div className="row-container1">
         <FilterButton
@@ -59,7 +59,7 @@ export default function TableTop() {
           }
 
           .table-top-container {
-                display: block;
+                // display: block;
                 width: 100%;
                 text-align: right;
                 margin:0px 0px 0px -40px;

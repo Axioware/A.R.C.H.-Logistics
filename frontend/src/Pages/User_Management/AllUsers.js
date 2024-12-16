@@ -146,7 +146,7 @@ export default function AllUser() {
         text_color={[255, 255, 255]} // White text color
         sidebar_color={[30, 61, 89]} // Sidebar color
         width="60%" // Adjust width as needed
-        height="100px" // Adjust height as needed
+        // height="100px" // Adjust height as needed
       />
 
           <TableTop

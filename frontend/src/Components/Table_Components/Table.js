@@ -27,13 +27,13 @@ export default function Table({
   const headingTextColor = rgbArrayToString(heading_color);
 
   return (
-    <div className="custom-table-wrapper">
+    <div className="table-wrapper">
       {loading ? (
-        <div className="loading-spinner">
-          <div className="spinner"></div>
+        <div className="table-loading-spinner">
+          <div className="table-spinner"></div>
         </div>
       ) : success ? (
-        <table className="custom-table">
+        <table className="table">
           <thead>
             <tr style={{ backgroundColor: headingBackgroundColor, color: headingTextColor }}>
               {headings.map((heading, index) => (
@@ -76,7 +76,7 @@ export default function Table({
         <div>
           <p>Failed to load data.</p>
           <button
-            className="refresh-button"
+            className="table-refresh-button"
             onClick={(e) => {
               e.stopPropagation();
               handleRefresh();
@@ -94,14 +94,14 @@ export default function Table({
 
       <style>
         {`
-          .custom-table-wrapper {
+          .table-wrapper {
             max-width: 100%;
             text-align: center;
             font-family: 'Arial', sans-serif;
             margin: -750px 0px 0px -150px;
           }
 
-          .custom-table {
+          .table {
             width: 110%;
             border-collapse: collapse;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -109,14 +109,14 @@ export default function Table({
             overflow: hidden;
           }
 
-          .custom-table th,
-          .custom-table td {
+          .table th,
+          .table td {
             padding: 15px;
             text-align: left;
             border: none;
           }
 
-          .custom-table th {
+          .table th {
             background-color: ${headingBackgroundColor};
             color: ${headingTextColor};
             font-weight: bold;
@@ -126,36 +126,31 @@ export default function Table({
             transition: background-color 0.3s ease, color 0.3s ease;
           }
 
-          // .custom-table th:hover {
-          //   background-color: #233445;
-          //   color: #fff;
-          // }
-
-          .custom-table tr:nth-child(even) {
+          .table tr:nth-child(even) {
             background-color: #f8f9fa;
           }
 
-          .custom-table tr:nth-child(odd) {
+          .table tr:nth-child(odd) {
             background-color: #ffffff;
           }
 
-          .custom-table tr:hover {
+          .table tr:hover {
             background-color: #f1f1f1;
           }
 
-          .custom-table td {
+          .table td {
             font-size: 14px;
             color: #333;
           }
 
-          .loading-spinner {
+          .table-loading-spinner {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 200px;
           }
 
-          .spinner {
+          .table-spinner {
             border: 5px solid #f3f3f3;
             border-top: 5px solid #3498db;
             border-radius: 50%;
@@ -169,8 +164,7 @@ export default function Table({
             100% { transform: rotate(360deg); }
           }
 
-          .refresh-button {
-            // background-color: #1E3D59;
+          .table-refresh-button {
             color: white;
             border: none;
             padding: 10px 20px;
@@ -180,16 +174,16 @@ export default function Table({
             transition: background-color 0.3s ease;
           }
 
-          .refresh-button:hover {
+          .table-refresh-button:hover {
             // background-color: #3E5A79;
           }
 
-          .refresh-button svg {
+          .table-refresh-button svg {
             margin-left: 10px;
             transition: transform 0.3s ease;
           }
 
-          .refresh-button:hover svg {
+          .table-refresh-button:hover svg {
             transform: rotate(360deg);
           }
         `}

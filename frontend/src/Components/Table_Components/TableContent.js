@@ -62,7 +62,7 @@ export default function App() {
   return (
     <div style={{ width: '100%', height: '100%' }}>
       {/* Page Heading Component */}
-      <div>
+      {/* <div>
         <PageHeading
           text="All Users"
           text_color={[23, 23, 23]}
@@ -71,7 +71,7 @@ export default function App() {
           height="50px"
           font_size="2rem"
         />
-      </div>
+      </div> */}
 
       {/* Filter Button Component */}
       {/* <div>

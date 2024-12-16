@@ -30,26 +30,27 @@ export default function PageHeading({
       <style>
         {`
           .page-heading-container {
-            display: flex;
-            flex-direction: row; /* Horizontal layout for sidebar and text */
-            align-items: center;
-            justify-content: flex-start;
             width: ${width};
             height: ${height};
-            margin: 0px 0px -75px -150px;
 
+            // display: flex;
+            // flex-direction: row; /* Horizontal layout for sidebar and text */
+            // align-items: center;
+            // justify-content: flex-start;
+            // margin: 0px 0px -75px -150px;
           }
 
           .page-heading-text {
             color: ${textColor};
             font-size: ${font_size}; /* Use the font_size prop */
-            margin: 0;
-            padding-left: 10px; /* Space between sidebar and text */
-            text-align: left;
             font-weight: bold; /* Make text bold */
-            white-space: nowrap; /* Ensure text stays on one line */
+
+            // margin: 0;
+            // padding-left: 10px; /* Space between sidebar and text */
+            // text-align: left;
+            // white-space: nowrap; /* Ensure text stays on one line */
             // overflow: hidden;
-            text-overflow: ellipsis; /* Add ellipsis if text overflows */
+            // text-overflow: ellipsis; /* Add ellipsis if text overflows */
           }
         `}
       </style>
