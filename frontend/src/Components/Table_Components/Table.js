@@ -95,14 +95,15 @@ export default function Table({
       <style>
         {`
           .custom-table-wrapper {
-            max-width: 99%;
-            margin: 30px 0px 30px -155px ;
+            max-width: 100%;
+            margin: 0px 0px 0px 20px ;
             text-align: center;
             font-family: 'Arial', sans-serif;
+            margin: 0px 0px 0px -150px;
           }
 
           .custom-table {
-            width: 111%;
+            width: 110%;
             border-collapse: collapse;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 10px;

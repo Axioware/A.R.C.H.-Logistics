@@ -36,12 +36,8 @@ export default function PageHeading({
             justify-content: flex-start;
             width: ${width};
             height: ${height};
-          }
+            margin: 0px 0px 20px -150px;
 
-          .sidebar {
-            width: 8px; /* Smaller sidebar width */
-            height: 100%; /* Full height */
-            margin-right: 10px;
           }
 
           .page-heading-text {

@@ -11,7 +11,9 @@ import ForgotPassword from './Pages/Authentication/ForgotPassword';
 import ResetPassword from './Pages/Authentication/ResetPassword';
 import Otp from './Pages/Authentication/Otp';
 import AllUsers from './Pages/User_Management/AllUsers';
-
+import AllWarehouse from './Pages/Warehouses/AllWarehouse';
+import AddWarehouse from './Pages/Warehouses/AddWarehouse';
+import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 
 
 function App() {
@@ -24,6 +26,9 @@ function App() {
         <Route path="/rauf" element={<Rauf />} /> 
         <Route path="/ahsan" element={<Ahsan />} /> 
         <Route path="/login" element={<Login />} />
+        <Route path="/warehouses" element={<AllWarehouse />} />
+        <Route path="/edit-warehouses" element={<EditWarehouse />} />
+        <Route path="/add-warehouses" element={<AddWarehouse />} />        
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
