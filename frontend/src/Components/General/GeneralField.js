@@ -4,14 +4,16 @@ const GeneralField = ({
   label,
   label_position = 'top',
   hint,
-  field_type,
+  field_type = 'text', // Default to 'text' if no type is passed
   name,
   width,
   height,
   className_Input = '', // Class name for input
   className_Label = '', // Class name for label
-  func,
+  func = () => {}, // Default function: no-op
   id,
+  label_id,
+  label_text,
   maxLength, // New prop for max length
 }) => {
   const styles = `
@@ -32,11 +34,18 @@ const GeneralField = ({
     .field-input {
       padding: 8px;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 12px; /* Increased border radius for a more professional look */
       box-sizing: border-box;
       width: ${width};
       height: ${height};
+      transition: border-color 0.3s, box-shadow 0.3s; /* Optional: Smooth focus effect */
     }
+    .field-input:focus {
+      border-color: #007bff; /* Change border color on focus */
+      outline: none;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.25); /* Subtle shadow for focus */
+    }
+    #${label_id}{ color: red; display: none; }
   `;
 
   return (
@@ -53,23 +62,12 @@ const GeneralField = ({
         id={id}
         placeholder={hint}
         className={`field-input ${className_Input}`} // Apply modified class name for input
-        onChange={(e) => func(e.target.value, id)} 
+        onChange={(e) => func(e.target.value)} // Ensure func is always a function
         maxLength={maxLength} // Set the max length
       />
+      <p id={label_id}>{label_text}</p>
     </div>
   );
 };
 
 export default GeneralField;
-
-
-
-
-
-
-
-
-
-
-
-
