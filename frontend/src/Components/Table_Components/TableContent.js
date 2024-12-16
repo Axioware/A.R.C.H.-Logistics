@@ -62,7 +62,7 @@ export default function App() {
   return (
     <div style={{ width: '100%', height: '100%' }}>
       {/* Page Heading Component */}
-      <div>
+      {/* <div>
         <PageHeading
           text="All Users"
           text_color={[23, 23, 23]}
@@ -71,20 +71,20 @@ export default function App() {
           height="50px"
           font_size="2rem"
         />
-      </div>
+      </div> */}
 
       {/* Filter Button Component */}
-      <div>
+      {/* <div>
         <FilterButton
           text="+ Filter By"
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
           function={handleFilterClick}
         />
-      </div>
+      </div> */}
 
       {/* Search Bar Component */}
-      <div>
+      {/* <div>
         <SearchBar
           hint="Search..."
           field_color={[230, 230, 230]}
@@ -92,7 +92,7 @@ export default function App() {
           width="13%"
           height="50px"
         />
-      </div>
+      </div> */}
 
       {/* Table Component */}
       <div>

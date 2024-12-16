@@ -96,10 +96,9 @@ export default function Table({
         {`
           .custom-table-wrapper {
             max-width: 100%;
-            margin: 0px 0px 0px 20px ;
             text-align: center;
             font-family: 'Arial', sans-serif;
-            margin: 0px 0px 0px -150px;
+            margin: 20px 0px 0px -150px;
           }
 
           .custom-table {

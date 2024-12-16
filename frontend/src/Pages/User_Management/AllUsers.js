@@ -7,7 +7,9 @@ import archlogo from '../../Assets/Images/logo1.png'; // Include your logo image
 import NavPath from '../../Components/General/NavPath';  // Import NavPath component
 import MainBackground from '../../Components/General/MainBackground';
 import TableContent from '../../Components/Table_Components/TableContent';
-// import PageHeading from '../../Components/Table_Components/PageHeading';
+import PageHeading from '../../Components/Table_Components/PageHeading';
+import TableTop from '../../Components/Table_Components/TableTop';
+
 
 
 export default function AllUser() {
@@ -111,15 +113,6 @@ export default function AllUser() {
           hamburger_color={[255, 255, 255]}
         />
 
-         
-        {/* <PageHeading
-          text="All Users"
-          text_color={[8, 70, 127]}
-          sidebar_color={[25, 106, 172]}
-          width="100%"
-          height="50px"
-          font_size="2rem"
-        /> */}
       
 
         {/* Main content area */}
@@ -135,57 +128,37 @@ export default function AllUser() {
             height="50px"
           />
 
-          {/* Add Button Component */}
-          <AddButton 
-            text="Add User"
-            path="https://via.placeholder.com/20"
-            buttonFunction={() => alert('Add user clicked!')} // Example function for adding a user
-            width="13%"
-            height="47px"
-            text_color={[255, 255, 255]}
-          />
+          {/* Add Button Component
+          // <AddButton 
+          //   text="Add User"
+          //   path="https://via.placeholder.com/20"
+          //   buttonFunction={() => alert('Add user clicked!')} // Example function for adding a user
+          //   width="13%"
+          //   height="47px"
+          //   text_color={[255, 255, 255]}
+          // /> */}
 
-          <div style={{ width: '100%', height: '100%', marginLeft: '0%' }}>
-                <TableContent />
-              </div>
 
-          {/* Table and Pagination wrapped in the same div */}
-          <div style={{ marginTop: "20px" }}>
-            {/* Table Component */}
-            {/* <Table
-              number_of_headings={headings.length}
-              headings={headings}
-              heading_background={[23, 23, 23]}
-              heading_color={[255, 255, 255]}
-              sort_function={() => {}}
-              data={data}
-              loading={loading}
-              success={success}
-              last_column={true}
-              last_column_text="Details"
-              last_column_icon="https://via.placeholder.com/20" // Replace with actual icon URL
-              last_column_function={() => {}}
-              handleRefresh={fetchData}
-            /> */}
+          <div>
 
-            {/* Pagination Component */}
-            {/* <Pagination
-              current_page={currentPage}
-              total_pages={totalPages}
-              text_color={[0, 0, 0]}
-              button_text_color={[255, 255, 255]}
-              button_background_color={[23, 23, 23]}
-              width="110%"
-              height="50px"
-              onNext={handleNext}
-              onPrev={handlePrev}
-            /> */}
-           
-          </div>
-          {/* <TableContent  */}
-            {/* /> */}
+            <PageHeading
+        text="All"
+        text_color={[255, 255, 255]} // White text color
+        sidebar_color={[30, 61, 89]} // Sidebar color
+        width="60%" // Adjust width as needed
+        height="100px" // Adjust height as needed
+      />
+
+          <TableTop
+           />
+
+          {/* Add TableContent */}
+          <TableContent
+           />
+
+          </div>  
         </div>
-        
+          
       </div>
       
   );

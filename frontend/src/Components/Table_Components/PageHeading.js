@@ -36,7 +36,7 @@ export default function PageHeading({
             justify-content: flex-start;
             width: ${width};
             height: ${height};
-            margin: 0px 0px 20px -150px;
+            margin: 0px 0px 0px 0px;
 
           }
 
@@ -48,7 +48,7 @@ export default function PageHeading({
             text-align: left;
             font-weight: bold; /* Make text bold */
             white-space: nowrap; /* Ensure text stays on one line */
-            overflow: hidden;
+            // overflow: hidden;
             text-overflow: ellipsis; /* Add ellipsis if text overflows */
           }
         `}

@@ -36,28 +36,28 @@ export default function FilterButton({
           .filter-button-container {
             width: 100%;
             height: 100vh;
-            display: flex;
+            // display: flex;
             // justify-content: center;
-            align-items: center;
+            // align-items: center;
           }
 
           .filter-button {
             color: ${textColor};
             background-color: ${buttonColor};
-            border-radius: 8px;
+            // border-radius: 8px;
             font-size: 1rem;
-            padding: 15px 25px; /* Adjust padding for a larger button */
-            cursor: pointer;
+            // padding: 15px 25px; /* Adjust padding for a larger button */
+            // cursor: pointer;
             border: 2px solid ${textColor}; /* Border matching text color */
-            text-align: center;
+            // text-align: center;
             transition: all 0.3s ease; /* Smooth transition for all styles */
-            box-sizing: border-box;
+            // box-sizing: border-box;
             width: ${width};
             height: ${height};
             font-weight: bold; /* Make the button text bold */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
             outline: none; /* Remove outline on focus */
-            margin: -900px 0px 0px 650px;
+            margin: 0px 0px 0px 0px;
           }
 
           .filter-button:hover {
@@ -78,9 +78,9 @@ export default function FilterButton({
           }
 
           .filter-button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            // display: flex;
+            // justify-content: center;
+            // align-items: center;
           }
         `}
       </style>

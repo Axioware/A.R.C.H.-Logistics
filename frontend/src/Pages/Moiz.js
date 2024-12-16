@@ -1,10 +1,10 @@
 import React from 'react';
-import TableContent from '../Components/Table_Components/TableContent';
+import TableTop from '../Components/Table_Components/TableTop';
 
 export default function App() {
   return (
-    <div style={{ width: '100%', height: '100%', marginLeft: '0%' }}>
-      <TableContent />
-    </div>
+    // <div style={{ width: '100%', height: '100%', marginLeft: '0%' }}>
+      <TableTop />
+    // </div>
   );
 }
