@@ -38,6 +38,7 @@ export default function RootLayout() {
         <Stack.Screen name="reset_password"/>
         <Stack.Screen name="settings"/>
         <Stack.Screen name="acc_change_password"/>
+        <Stack.Screen name="dashboard"/>
         
       </Stack>
       <StatusBar style="auto" />
