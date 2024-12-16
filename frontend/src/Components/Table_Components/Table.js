@@ -98,7 +98,7 @@ export default function Table({
             max-width: 100%;
             text-align: center;
             font-family: 'Arial', sans-serif;
-            margin: 20px 0px 0px -150px;
+            margin: -750px 0px 0px -150px;
           }
 
           .custom-table {

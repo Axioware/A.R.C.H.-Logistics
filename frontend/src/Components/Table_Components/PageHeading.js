@@ -36,7 +36,7 @@ export default function PageHeading({
             justify-content: flex-start;
             width: ${width};
             height: ${height};
-            margin: 0px 0px 0px 0px;
+            margin: 0px 0px -75px -150px;
 
           }
 

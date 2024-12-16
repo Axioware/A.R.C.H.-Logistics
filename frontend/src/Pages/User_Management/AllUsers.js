@@ -142,7 +142,7 @@ export default function AllUser() {
           <div>
 
             <PageHeading
-        text="All"
+        text="All User"
         text_color={[255, 255, 255]} // White text color
         sidebar_color={[30, 61, 89]} // Sidebar color
         width="60%" // Adjust width as needed
