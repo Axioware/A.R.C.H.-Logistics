@@ -19,14 +19,20 @@ const NavBarWithSidebar = ({
   selected_color = [235, 232, 232],
   hover_color = [235, 232, 232],
   expanded,
+  isSidebarOpen_p,
+  toggleSidebar_func,
   sidebar_width,
   sidebar_height,
   hamburger_color = [0, 0, 0],
 }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
-    const savedSidebarState = localStorage.getItem("isSidebarOpen");
-    return savedSidebarState !== null ? JSON.parse(savedSidebarState) : true;
-  });
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(isSidebarOpen_p);
+  // const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+  //   const savedSidebarState = localStorage.getItem("isSidebarOpen");
+  //   return savedSidebarState !== null ? JSON.parse(savedSidebarState) : isSidebarOpen_p;
+  // });
+
+
 
   const [expandedStates, setExpandedStates] = useState(() => {
     const savedExpandedStates = localStorage.getItem("expandedStates");
@@ -52,6 +58,7 @@ const NavBarWithSidebar = ({
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
+    toggleSidebar_func();
   };
 
   return (
@@ -87,21 +94,21 @@ const NavBarWithSidebar = ({
             justify-content: space-between;
             text-color: rgb(${hamburger_color.join(",")});
           }
+          .TopSideNavBar-hamburger.open {
+              transform: translateX(250px); /* Moves the hamburger icon to the right by the sidebar width */
+          }
           .TopSideNavBar-hamburger-line {
             width: 100%;
             height: 3px;
             background-color: rgb(${hamburger_color.join(",")});
             transition: transform 0.3s ease, opacity 0.3s ease;
           }
-          .TopSideNavBar-hamburger.open .line1 {
-            transform: rotate(45deg) translate(5px, 5px);
-          }
-          .TopSideNavBar-hamburger.open .line2 {
-            opacity: 0;
-          }
-          .TopSideNavBar-hamburger.open .line3 {
-            transform: rotate(-45deg) translate(5px, -5px);
-          }
+          .TopSideNavBar-hamburger-line line1,
+          .TopSideNavBar-hamburger-line line2,
+          .TopSideNavBar-hamburger-line line3 {
+              transform: none;
+              opacity: 1;
+            }
           .TopSideNavBar-sidebar {
             width: ${isSidebarOpen ? sidebar_width : "0"};
             height: ${sidebar_height};

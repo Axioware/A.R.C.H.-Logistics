@@ -97,14 +97,13 @@ const OtpForm = ({ email, onSubmit }) => {
 
   const styles = {
     otpContainer: {
-      width: "65%",
+      width: "50%",
       padding: "60px",
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
       position: "relative",
-      margin: "0 auto",
-      border: '2px solid red',
+      // margin: "0 auto",
       textAlign: "center",
       ...responsiveStyles.otpContainer,
     },
