@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GeneralField from "../General/GeneralField";
 import GeneralButton from "../General/GeneralButton";
 
@@ -6,10 +6,41 @@ const OtpForm = ({ email, onSubmit }) => {
   const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [responsiveStyles, setResponsiveStyles] = useState({});
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 480) {
+        setResponsiveStyles({
+          otpContainer: { width: "95%", padding: "20px" },
+          heading: { fontSize: "1.2rem" },
+          otpInput: { width: "35px", height: "35px", fontSize: "16px" },
+          otpButton: { width: "100%", padding: "10px", fontSize: "0.9rem" },
+        });
+      } else if (window.innerWidth <= 768) {
+        setResponsiveStyles({
+          otpContainer: { width: "85%", padding: "40px" },
+          heading: { fontSize: "1.5rem" },
+          otpInput: { width: "40px", height: "40px", fontSize: "20px" },
+          otpButton: { width: "50%", fontSize: "0.95rem" },
+        });
+      } else if (window.innerWidth <= 1024) {
+        setResponsiveStyles({
+          otpContainer: { width: "75%", padding: "50px" },
+          heading: { fontSize: "1.75rem" },
+        });
+      } else {
+        setResponsiveStyles({ otpContainer: {}, heading: {}, otpInput: {}, otpButton: {} });
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleChange = (index, value) => {
     if (isNaN(value)) return; // Ensure only numbers are entered
-    console.log("dfgh");
     const updatedOtp = [...otp];
     updatedOtp[index] = value;
     setOtp(updatedOtp);
@@ -32,7 +63,6 @@ const OtpForm = ({ email, onSubmit }) => {
     setIsSubmitting(true);
 
     try {
-      // Simulating an API call
       const response = await simulateApiCall(otpValue);
 
       if (response.status === 200) {
@@ -64,6 +94,88 @@ const OtpForm = ({ email, onSubmit }) => {
     });
   };
 
+  const styles = {
+    otpContainer: {
+      width: "65%",
+      padding: "60px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      position: "relative",
+      margin: "0 auto",
+      ...responsiveStyles.otpContainer,
+    },
+    backArrow: {
+      position: "absolute",
+      top: "10px",
+      left: "10px",
+      fontSize: "1.75rem",
+      color: "#2c5b97",
+      textDecoration: "none",
+    },
+    heading: {
+      fontSize: "1.75rem",
+      marginBottom: "15px",
+      color: "#333",
+      marginLeft: "20px",
+      fontWeight: "bold",
+      ...responsiveStyles.heading,
+    },
+    paragraph: {
+      fontSize: "0.875rem",
+      marginBottom: "30px",
+      color: "#666",
+      textAlign: "center",
+    },
+    otpInputGroup: {
+      display: "flex",
+      justifyContent: "space-between",
+      marginBottom: "10px",
+    },
+    otpInput: {
+      width: "50px",
+      height: "50px",
+      border: "1px solid #ccc",
+      borderRadius: "10px",
+      fontSize: "24px",
+      textAlign: "center",
+      ...responsiveStyles.otpInput,
+    },
+    otpButton: {
+      width: "20%",
+      padding: "15px",
+      backgroundColor: "#2c5b97",
+      color: "white",
+      border: "none",
+      borderRadius: "10px",
+      fontSize: "1rem",
+      cursor: "pointer",
+      display: "block",
+      marginLeft: "20px",
+      ...responsiveStyles.otpButton,
+    },
+    errorMessage: {
+      color: "red",
+      marginTop: "5px",
+      textAlign: "left",
+    },
+    footer: {
+      textAlign: "center",
+      marginTop: "30px",
+      fontSize: "0.875rem",
+      color: "#555",
+    },
+    terms: {
+      textAlign: "center",
+      marginTop: "10px",
+      fontSize: "0.75rem",
+    },
+    link: {
+      color: "#2c5b97",
+      textDecoration: "none",
+    },
+  };
+
   return (
     <div style={styles.otpContainer}>
       <a href="/forgot-password" style={styles.backArrow}>
@@ -78,16 +190,16 @@ const OtpForm = ({ email, onSubmit }) => {
         <div style={styles.otpInputGroup}>
           {otp.map((digit, index) => (
             <GeneralField
-            key={index}
-            id={`otp-${index + 1}`}
-            type="text"
-            value={digit}
-            maxLength={1}
-            width="80%"
-            func={(value) => handleChange(index, value)} // Pass the function with the current index
-            style={styles.otpInput}
-            disabled={isSubmitting} // Disable fields during submission
-          />
+              key={index}
+              id={`otp-${index + 1}`}
+              type="text"
+              value={digit}
+              maxLength={1}
+              width="80%"
+              func={(value) => handleChange(index, value)} // Pass the function with the current index
+              style={styles.otpInput}
+              disabled={isSubmitting} // Disable fields during submission
+            />
           ))}
         </div>
         {error && <div style={styles.errorMessage}>{error}</div>}
@@ -100,7 +212,7 @@ const OtpForm = ({ email, onSubmit }) => {
         />
       </form>
       <div style={styles.footer}>
-        <p>Prepprime © Copyright 2024</p>
+        <p>Prepprime © Copyright 2024</p>0
         <div style={styles.terms}>
           <a href="https://prepprime.com/contact-us-2/" style={styles.link}>
             Contact Us
@@ -109,83 +221,6 @@ const OtpForm = ({ email, onSubmit }) => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  otpContainer: {
-    width: "65%",
-    padding: "60px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    position: "relative",
-  },
-  backArrow: {
-    position: "absolute",
-    top: "10px",
-    left: "10px",
-    fontSize: "28px",
-    color: "#2c5b97",
-    textDecoration: "none",
-  },
-  heading: {
-    fontSize: "28px",
-    marginBottom: "15px",
-    color: "#333",
-    marginLeft: "20px",
-    fontWeight: "bold",
-  },
-  paragraph: {
-    fontSize: "14px",
-    marginBottom: "30px",
-    color: "#666",
-    textAlign: "center",
-  },
-  otpInputGroup: {
-    display: "flex",
-    justifyContent: "space-between",
-    marginBottom: "10px",
-  },
-  otpInput: {
-    width: "50px",
-    height: "50px",
-    border: "1px solid #ccc",
-    borderRadius: "10px",
-    fontSize: "24px",
-    textAlign: "center",
-  },
-  otpButton: {
-    width: "20%",
-    padding: "15px",
-    backgroundColor: "#2c5b97",
-    color: "white",
-    border: "none",
-    borderRadius: "10px",
-    fontSize: "16px",
-    cursor: "pointer",
-    display: "block",
-    marginLeft: "20px",
-  },
-  errorMessage: {
-    color: "red",
-    marginTop: "5px",
-    textAlign: "left",
-  },
-  footer: {
-    textAlign: "center",
-    marginTop: "30px",
-    fontSize: "14px",
-    color: "#555",
-  },
-  terms: {
-    textAlign: "center",
-    marginTop: "10px",
-    fontSize: "12px",
-  },
-  link: {
-    color: "#2c5b97",
-    textDecoration: "none",
-  },
 };
 
 export default OtpForm;

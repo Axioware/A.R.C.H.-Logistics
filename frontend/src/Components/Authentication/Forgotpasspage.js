@@ -15,6 +15,7 @@ const Forgotpasspage = () => {
     e.preventDefault();
     setErrorMessage('');
 
+    // Validate email
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setErrorMessage('Invalid email address. Please try again.');
       return;
@@ -23,6 +24,7 @@ const Forgotpasspage = () => {
     setIsSubmitting(true);
 
     try {
+      // Simulating API call
       const response = await fetch('https://example.com/api/forgot-password', {
         method: 'POST',
         headers: {
@@ -32,14 +34,18 @@ const Forgotpasspage = () => {
       });
 
       if (response.status === 200) {
+        // On success
         localStorage.setItem('otp', 'true');
         navigate(`/otp&email=${encodeURIComponent(email)}`);
       } else if (response.status === 400) {
+        // On invalid email
         setErrorMessage('Email does not exist.');
       } else if (response.status >= 500) {
+        // On server error
         setErrorMessage('Server error. Please try again.');
       }
     } catch (error) {
+      // Handle network or unexpected errors
       setErrorMessage('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -48,6 +54,7 @@ const Forgotpasspage = () => {
 
   return (
     <>
+      {/* Add font-face styles */}
       <style>
         {`
           @font-face {
@@ -56,26 +63,6 @@ const Forgotpasspage = () => {
           }
           body, div, p, a, label, h2 {
             font-family: 'Konkhmer Sleokchher', sans-serif;
-          }
-          @media (max-width: 768px) {
-            .container {
-              flex-direction: column;
-              width: 95%;
-            }
-            .logo-section {
-              width: 100%;
-              padding: 10px;
-            }
-            .form-section {
-              width: 100%;
-              padding: 20px;
-            }
-            h2 {
-              font-size: 20px;
-            }
-            form {
-              width: 100%;
-            }
           }
         `}
       </style>
@@ -89,15 +76,13 @@ const Forgotpasspage = () => {
           justifyContent: 'center',
           alignItems: 'center',
           height: '100vh',
+          filter: 'saturate(0.8)',
         }}
       >
         <div
-          className="container"
           style={{
             display: 'flex',
-            flexDirection: 'row',
-            width: '80%',
-            maxWidth: '900px',
+            width: '900px',
             backgroundColor: 'rgba(255, 255, 255, 0.9)',
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
             borderRadius: '10px',
@@ -107,11 +92,10 @@ const Forgotpasspage = () => {
         >
           {/* Logo Section */}
           <div
-            className="logo-section"
             style={{
               backgroundColor: '#000',
               color: '#fff',
-              width: '50%',
+              width: '60%',
               padding: '20px',
               display: 'flex',
               justifyContent: 'center',
@@ -121,15 +105,14 @@ const Forgotpasspage = () => {
             <img
               src={PrepPrimeLogo}
               alt="PREPPRIME Logo"
-              style={{ maxWidth: '100%', height: 'auto' }}
+              style={{ maxWidth: '80%', height: 'auto' }}
             />
           </div>
 
           {/* Form Section */}
           <div
-            className="form-section"
             style={{
-              width: '50%',
+              width: '40%',
               padding: '40px',
               display: 'flex',
               flexDirection: 'column',
@@ -137,13 +120,14 @@ const Forgotpasspage = () => {
               position: 'relative',
             }}
           >
+            {/* Back Button */}
             <a
               href="/login"
               style={{
                 position: 'absolute',
                 top: '10px',
                 left: '10px',
-                fontSize: '20px',
+                fontSize: '28px',
                 color: '#2c5b97',
                 textDecoration: 'none',
               }}
@@ -153,11 +137,11 @@ const Forgotpasspage = () => {
 
             <h2
               style={{
-                fontSize: '24px',
+                fontSize: '28px',
                 marginBottom: '15px',
                 color: '#333',
                 fontWeight: 'bold',
-                textAlign: 'center',
+                marginLeft: '12%',
               }}
             >
               Forgot Password
@@ -165,15 +149,15 @@ const Forgotpasspage = () => {
             <p
               style={{
                 fontSize: '14px',
-                marginBottom: '20px',
+                marginBottom: '30px',
                 color: '#666',
-                textAlign: 'center',
               }}
             >
               Enter the email address associated with your account.
             </p>
 
-            <form onSubmit={handleFormSubmit} style={{ width: '100%' }}>
+            {/* Form */}
+            <form onSubmit={handleFormSubmit}>
               <div style={{ marginBottom: '20px' }}>
                 <label
                   htmlFor="email"
@@ -182,6 +166,7 @@ const Forgotpasspage = () => {
                     fontSize: '14px',
                     color: '#333',
                     marginBottom: '5px',
+                    marginLeft: '10px',
                   }}
                 >
                   Email
@@ -192,8 +177,9 @@ const Forgotpasspage = () => {
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  width="100%"
+                  width={'94%'}
                   disabled={isSubmitting}
+                  hint={"Email"}
                 />
               </div>
               {errorMessage && (
@@ -203,26 +189,29 @@ const Forgotpasspage = () => {
                 text={isSubmitting ? 'Submitting...' : 'Send OTP'}
                 text_color={[255, 255, 255]}
                 button_color={[44, 91, 151]}
-                width="100%"
-                height="37px"
+                width="94%"
+                height="37%"
                 disabled={isSubmitting}
               />
             </form>
 
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            {/* Footer */}
+            <div style={{ textAlign: 'center', marginTop: '18%' }}>
               <p style={{ fontSize: '12px', color: '#555' }}>
                 Prepprime © Copyright 2024
               </p>
-              <a
-                href="https://prepprime.com/contact-us-2/"
-                style={{
-                  color: '#2c5b97',
-                  textDecoration: 'none',
-                  fontSize: '12px',
-                }}
-              >
-                Contact Us
-              </a>
+              <div>
+                <a
+                  href="https://prepprime.com/contact-us-2/"
+                  style={{
+                    color: '#2c5b97',
+                    textDecoration: 'none',
+                    fontSize: '12px',
+                  }}
+                >
+                  Contact Us
+                </a>
+              </div>
             </div>
           </div>
         </div>
