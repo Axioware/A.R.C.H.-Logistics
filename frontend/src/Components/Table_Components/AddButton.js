@@ -39,7 +39,7 @@ export default function AddButton({
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Full viewport height for centering */
+            height: 10vh; /* Full viewport height for centering */
             margin: 0;
           }
 

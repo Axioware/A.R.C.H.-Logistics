@@ -62,7 +62,7 @@ export default function Pagination({
             border-radius: 8px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             font-family: Arial, sans-serif;
-            margin: 0px 100px 0px 100px ;
+            margin: 0px 0px 0px -155px ;
           }
 
           .pagination-button {

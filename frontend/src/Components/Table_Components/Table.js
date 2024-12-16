@@ -95,8 +95,8 @@
         <style>
           {`
             .custom-table-wrapper {
-              max-width: 90%;
-              margin: 30px auto;
+              max-width: 99%;
+              margin: 30px 0px 30px -155px ;
               text-align: center;
               font-family: 'Arial', sans-serif;
             }
