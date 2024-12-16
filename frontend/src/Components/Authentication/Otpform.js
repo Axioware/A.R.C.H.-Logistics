@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GeneralField from "../General/GeneralField";
 import GeneralButton from "../General/GeneralButton";
+import { border, position } from "polished";
 
 const OtpForm = ({ email, onSubmit }) => {
   const [otp, setOtp] = useState(["", "", "", "", ""]);
@@ -103,6 +104,9 @@ const OtpForm = ({ email, onSubmit }) => {
       justifyContent: "center",
       position: "relative",
       margin: "0 auto",
+      border: '2px solid red',
+      // alignSelf: "center",
+      textAlign: "center",
       ...responsiveStyles.otpContainer,
     },
     backArrow: {
@@ -116,8 +120,9 @@ const OtpForm = ({ email, onSubmit }) => {
     heading: {
       fontSize: "1.75rem",
       marginBottom: "15px",
+      position: 'relative',
       color: "#333",
-      marginLeft: "30px",
+      // marginLeft: "50%",
       fontWeight: "bold",
       ...responsiveStyles.heading,
     },
