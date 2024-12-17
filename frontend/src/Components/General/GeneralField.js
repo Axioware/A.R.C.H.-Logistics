@@ -8,8 +8,6 @@ const GeneralField = ({
   name,
   width,
   height,
-  className_Input = '', // Class name for input
-  className_Label = '', // Class name for label
   func = () => {}, // Default function: no-op
   id,
   label_id,
@@ -52,7 +50,7 @@ const GeneralField = ({
     <div className={`field-container ${label_position === 'left' ? 'left' : ''}`}>
       <style>{styles}</style>
       {label && (
-        <label htmlFor={name} className={`field-label ${className_Label}`}>
+        <label htmlFor={name} className={`field-label`}>
           {label}
         </label>
       )}
@@ -61,7 +59,7 @@ const GeneralField = ({
         name={name}
         id={id}
         placeholder={hint}
-        className={`field-input ${className_Input}`} // Apply modified class name for input
+        className={`field-input`} // Apply modified class name for input
         onChange={(e) => func(e.target.value)} // Ensure func is always a function
         maxLength={maxLength} // Set the max length
       />

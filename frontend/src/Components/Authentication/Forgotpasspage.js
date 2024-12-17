@@ -4,6 +4,7 @@ import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
 import PrepPrimeLogo from '../../Assets/Images/Login/PrepPrimeLogo.jpg';
 import bg from '../../Assets/Images/Login/background.jpg';
+import arch from '../../Assets/Images/archlabs.jpg';
 
 const Forgotpasspage = () => {
   const [email, setEmail] = useState('');
@@ -17,9 +18,14 @@ const Forgotpasspage = () => {
 
     // Validate email
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setErrorMessage('Invalid email address. Please try again.');
+      setErrorMessage('Invalid email address. Please try again.' + email);
+
       return;
     }
+
+    const btn = document.getElementById('loginbtn');
+    btn.style.backgroundColor = 'grey'
+    btn.disabled = true; 
 
     setIsSubmitting(true);
 
@@ -49,6 +55,8 @@ const Forgotpasspage = () => {
       setErrorMessage('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
+      btn.style.backgroundColor = '#1e1e1e'
+      btn.disabled = false;
     }
   };
 
@@ -103,8 +111,8 @@ const Forgotpasspage = () => {
             }}
           >
             <img
-              src={PrepPrimeLogo}
-              alt="PREPPRIME Logo"
+              src={arch}
+              alt="ARCH Logo"
               style={{ maxWidth: '80%', height: 'auto' }}
             />
           </div>
@@ -122,13 +130,13 @@ const Forgotpasspage = () => {
           >
             {/* Back Button */}
             <a
-              href="/login"
+              onClick={() => navigate('/login')}
               style={{
                 position: 'absolute',
                 top: '10px',
                 left: '10px',
                 fontSize: '28px',
-                color: '#2c5b97',
+                color: '#1e1e1e',
                 textDecoration: 'none',
               }}
             >
@@ -176,10 +184,10 @@ const Forgotpasspage = () => {
                   id="email"
                   placeholder="Email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  width={'94%'}
+                  func={setEmail}
+                  width={'100%'}
                   disabled={isSubmitting}
-                  hint={"Email"}
+                  hint={"johnsmith@example.com"}
                 />
               </div>
               {errorMessage && (
@@ -187,18 +195,19 @@ const Forgotpasspage = () => {
               )}
               <GeneralButton
                 text={isSubmitting ? 'Submitting...' : 'Send OTP'}
-                text_color={[255, 255, 255]}
-                button_color={[44, 91, 151]}
-                width="94%"
-                height="37%"
+                width="100%"
+                height="40px"
+                func = {handleFormSubmit}
+                border = '8px'
                 disabled={isSubmitting}
+                id='loginbtn'
               />
             </form>
 
             {/* Footer */}
             <div style={{ textAlign: 'center', marginTop: '18%' }}>
               <p style={{ fontSize: '12px', color: '#555' }}>
-                Prepprime © Copyright 2024
+                A.R.C.H. Labs © Copyright 2025
               </p>
               <div>
                 <a

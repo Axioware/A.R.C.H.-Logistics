@@ -5,6 +5,7 @@ import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
 import PrepPrimeLogo from '../../Assets/Images/Login/PrepPrimeLogo.jpg';
 import BackgroundImage from '../../Assets/Images/Login/background.jpg';
+import arch from '../../Assets/Images/archlabs.jpg';
 
 const ResetPassword = () => {
     const [formData, setFormData] = useState({ newPassword: "", confirmPassword: "" });
@@ -30,6 +31,10 @@ const ResetPassword = () => {
             return;
         }
 
+        const btn = document.getElementById('resetbtn');
+        btn.style.backgroundColor = 'grey'
+        btn.disabled = true; 
+
         // Disable fields and button
         setIsSubmitting(true);
         setErrorMessage("");
@@ -54,6 +59,8 @@ const ResetPassword = () => {
             setErrorMessage("An unexpected error occurred. Please try again.");
         } finally {
             setIsSubmitting(false);
+            btn.style.backgroundColor = '#1e1e1e'
+            btn.disabled = false;
         }
     };
 
@@ -106,8 +113,8 @@ const ResetPassword = () => {
                         }}
                     >
                         <img
-                            src={PrepPrimeLogo}
-                            alt="PREPPRIME Logo"
+                            src={arch}
+                            alt="ARCH Logo"
                             style={{ maxWidth: "80%", height: "auto" }}
                         />
                     </div>
@@ -151,27 +158,28 @@ const ResetPassword = () => {
                         <form method="POST" onSubmit={handleSubmit}>
                             <div style={{ marginBottom: "20px", fontWeight: "lighter",fontSize: "14px", color: "#333", }}>
                                 <GeneralField
-                                    hint={"New Password"}
+                                    hint={"Password"}
                                     type="password"
                                     id="password"
                                     placeholder="New Password"
                                     label="New Password"
                                     name="newPassword"
-                                    onChange={handleInputChange}
+                                    func={handleInputChange}
                                     value={formData.newPassword}
-                                    width={"98%"}
+                                    width={"100%"}
                                 />
                             </div>
                             <div style={{ marginBottom: "20px", fontWeight: "Normal", fontSize: "14px", color: "#333", }}>
                                 <GeneralField
-                                    hint={"Confirm Password"}
+                                    hint={"Re enter Password"}
                                     type="password"
                                     id="confirmPassword"
                                     placeholder="Confirm Password"
                                     label="Confirm Password"
                                     name="confirmPassword"
-                                    onChange={handleInputChange}
+                                    func={handleInputChange}
                                     value={formData.confirmPassword}
+
                                     
                                     
                                 />
@@ -179,9 +187,13 @@ const ResetPassword = () => {
                             <p style={{ color: "red" }}>{errorMessage}</p>
                             <GeneralButton
                                 label="Reset"
-                                className="login-btn"
+                                id="resetbtn"
+                                // className="login-btn"
                                 text="Reset"
-                                width="95%"
+                                width="100%"
+                                height="40px"
+                                border='8px'
+                                func={handleSubmit}
                                 isSubmitting={isSubmitting}
                             />
                         </form>

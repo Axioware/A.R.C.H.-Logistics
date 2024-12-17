@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GeneralField from '../General/GeneralField';
 import GeneralButton from '../General/GeneralButton';
-import PrepPrimeLogo from '../../Assets/Images/Login/PrepPrimeLogo.jpg';
+import arch from '../../Assets/Images/archlabs.jpg';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -63,7 +63,7 @@ a.style.backgroundColor="grey";
     } finally {
       setIsSubmitting(false);
       a.disabled = false
-      a.style.backgroundColor="#2C5B97"
+      a.style.backgroundColor="#1e1e1e"
     }
   };
 
@@ -159,8 +159,8 @@ a.style.backgroundColor="grey";
     <div style={styles.container}>
       <div style={styles.logoContainer}>
         <img
-          src={PrepPrimeLogo}
-          alt="PREPPRIME Logo"
+          src={arch}
+          alt="ARCH Logo"
           style={styles.logoImage}
         />
       </div>
@@ -201,12 +201,10 @@ a.style.backgroundColor="grey";
             <GeneralButton
               text="Login"
               id="loginbutton"
-              text_color={[255, 255, 255]}
-              button_color={[44, 91, 151]}
-              width="30%"
-              disabled={isSubmitting}
+              width="100%"
               func={handleLogin}
-              height="30px"
+              height="40px"
+              border = '8px'
             />
           </div>
         </form>
@@ -217,7 +215,7 @@ a.style.backgroundColor="grey";
               Click here
             </span>
           </p>
-          <p>Prepprime © Copyright 2024</p>
+          <p>A.R.C.H. Labs © Copyright 2025</p>
           <div>
             <a
               href="https://prepprime.com/contact-us-2/"
