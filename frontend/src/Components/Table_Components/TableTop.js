@@ -15,55 +15,58 @@ export default function TableTop() {
 
   return (
     <>
-    <style>
-    {`
-      .row-container1 {
-        display: flex;
-        width: 100%;
-        position: relative
-        text-align: right;
-      }
-
-      .table-top-container {
+      <style>
+        {`
+          .table-top-container {
             display: flex;
+            justify-content: space-between; /* Space between heading and buttons */
+            align-items: center; /* Align items vertically */
             width: 95%;
-            height: 5%;
-            text-align: left;
-            border: 2px solid black; /* Border color and width */
-            border-radius: 5px;
-}
-    `}
-  </style>
-    <div className="table-top-container">
-      
-      <PageHeading
-        text="Hello World"
-        text_color={[0, 0, 0]} // White text color
-        sidebar_color={[30, 61, 89]} // Sidebar color
-        width="80%" // Adjust width as needed
-        height="10px" // Adjust height as needed
-      />
-      
+            margin: 20px auto;
+          }
 
-      <div className="row-container1">
-        <FilterButton
-          text="+ Filter By"
-          text_color={[255, 255, 255]} // White text color
-          background_color={[30, 61, 89]} // Purple background
-          function={handleFilterClick} // Function to call on button click
-          width="100%" // Set width as percentage
-          height="100%" // Set height as percentage
+          .row-container1 {
+            display: flex;
+            justify-content: flex-end; /* Align buttons to the right */
+            align-items: center;
+            gap: 20px; /* Add spacing between FilterButton and SearchBar */
+          }
+
+          .page-heading {
+            flex-grow: 1; /* Allow the heading to take up space on the left */
+          }
+        `}
+      </style>
+
+      <div className="table-top-container">
+        <PageHeading
+          text="All Users"
+          text_color={[0, 0, 0]} // Black text color
+          sidebar_color={[23, 23, 23]} // Sidebar color
+          width="auto" // Auto width to align properly
+          height="auto" // Auto height
+          className="page-heading"
         />
 
-        <SearchBar
-          hint="Search..."
-          field_color={[255, 255, 255]} // White background
-          function={handleSearch} // Function to call on search
-          width="100%" // Set width as percentage
-          height="4%" // Set height for input field
-        />
+        <div className="row-container1">
+          <FilterButton
+            text="+ Filter By"
+            text_color={[255, 255, 255]} // White text color
+            background_color={[23, 23, 23]} // Dark background
+            function={handleFilterClick} // Function to call on button click
+            width="150px" // Set width explicitly
+            height="50px" // Set height explicitly
+          />
+
+          <SearchBar
+            hint="Search..."
+            field_color={[255, 255, 255]} // White background
+            function={handleSearch} // Function to call on search
+            width="250px" // Set width explicitly
+            height="50px" // Set height for input field
+          />
+        </div>
       </div>
-    </div>
     </>
   );
 }

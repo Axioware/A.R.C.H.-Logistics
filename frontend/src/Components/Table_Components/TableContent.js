@@ -61,43 +61,11 @@ export default function App() {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      {/* Page Heading Component */}
-      {/* <div>
-        <PageHeading
-          text="All Users"
-          text_color={[23, 23, 23]}
-          sidebar_color={[25, 106, 172]}
-          width="100%"
-          height="50px"
-          font_size="2rem"
-        />
-      </div> */}
-
-      {/* Filter Button Component */}
-      {/* <div>
-        <FilterButton
-          text="+ Filter By"
-          text_color={[255, 255, 255]}
-          background_color={[23, 23, 23]}
-          function={handleFilterClick}
-        />
-      </div> */}
-
-      {/* Search Bar Component */}
-      {/* <div>
-        <SearchBar
-          hint="Search..."
-          field_color={[230, 230, 230]}
-          handleSearch={handleSearch}
-          width="13%"
-          height="50px"
-        />
-      </div> */}
 
       {/* Table Component */}
       <div>
         <Table
-          headings={['Name', 'Age', 'City']}
+          headings={['LLC Name', 'First Name', 'Last Name','Address', 'Contact', 'Email','Alternate Email', 'Billing Type', 'Active Status']}
           heading_background={[23, 23, 23]}
           heading_color={[255, 255, 255]}
           sort_function={handleSort}
@@ -105,7 +73,7 @@ export default function App() {
           loading={loading}
           success={success}
           last_column={true}
-          last_column_text="Details"
+          // last_column_text="Details"
           handleRefresh={handleRefresh}
         />
       </div>
