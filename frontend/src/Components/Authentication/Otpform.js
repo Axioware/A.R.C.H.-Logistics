@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import GeneralField from "../General/GeneralField";
 import GeneralButton from "../General/GeneralButton";
 import { border, position } from "polished";
+import arch from '../../Assets/Images/archlabs.jpg';
 
 const OtpForm = ({ email, onSubmit }) => {
   const [otp, setOtp] = useState(["", "", "", "", ""]);

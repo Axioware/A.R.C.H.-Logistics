@@ -14,6 +14,7 @@ import AllUsers from './Pages/User_Management/AllUsers';
 import AllWarehouse from './Pages/Warehouses/AllWarehouse';
 import AddWarehouse from './Pages/Warehouses/AddWarehouse';
 import EditWarehouse from './Pages/Warehouses/EditWarehouse';
+import AddLocation from './Pages/Locations/AddLocation';
 
 
 function App() {
@@ -28,7 +29,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/warehouses" element={<AllWarehouse />} />
         <Route path="/edit-warehouses" element={<EditWarehouse />} />
-        <Route path="/add-warehouses" element={<AddWarehouse />} />        
+        <Route path="/add-warehouses" element={<AddWarehouse />} />
+        <Route path="/add-location" element={<AddLocation />} />        
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
