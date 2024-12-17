@@ -1,15 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import GeneralField from '../../Components/General/GeneralField';
+import GeneralButton from '../../Components/General/GeneralButton';
 import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
 import archlogo from '../../Assets/Images/logo1.png';
 import NavPath from '../../Components/General/NavPath';
-import TableContent from '../../Components/Table_Components/TableContent';
-import TableTop from '../../Components/Table_Components/TableTop';
 import PageHeading from '../../Components/Table_Components/PageHeading';
 
-export default function AddLocation() {
+const AddLocation = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted'); // Debug log
+    alert('Warehouse added successfully!');
+  };
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Track sidebar state
+  const handleCancel = () => {
+    console.log('Form cancelled'); // Debug log
+    alert('Form cancelled!');
+  };
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -21,13 +30,42 @@ export default function AddLocation() {
       padding: "10px",
       transition: "margin-left 0.5s ease",
       marginLeft: isSidebarOpen ? "18%" : "4%",
+      marginRight: "4%",
+      height: "80%",
     },
+    form: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr 1fr 1fr',
+      gap: '20px',
+    },
+    container: {
+      backgroundColor: "#F5F5F5",
+      padding: '20px',
+      borderRadius: '8px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      height: '100%',
+    },
+    buttonContainer: {
+        border: '2px solid white',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          width: '100%',
+          height:'70%', // Ensure container extends full width
+          gap: '10px',
+          marginTop: '20px',
+          lineHeight:'40px',
+      },
+      container:{
+        border: '2px solid white',
+        background_color :"#F5F5F5",
+    
+      },
   };
 
-  const headings = ["Name", "Age", "City"];
-
   return (
-      /* Sidebar */
     <div>
       <NavBarWithSidebar
         text_color={[255, 255, 255]}
@@ -48,22 +86,37 @@ export default function AddLocation() {
         sidebar_width="14%"
         sidebar_height="100vh"
         toggleSidebar_func={toggleSidebar}
-        isSidebarOpen_p = {isSidebarOpen}
+        isSidebarOpen_p={isSidebarOpen}
       />
-     
-      {/* Main content area */}
+
       <div style={styles.mainContent}>
         <NavPath
-          text={["Home", "User Management"]}
-          paths={["/home", "/users"]}
+          text={['Setting', 'location', 'Add location']}
+          paths={['/home', '/add-warehouses', '/add-warehouses']}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
-          width="95%"
+          hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
+          width="100%"
           height="50px"
         />
-         
 
+        <div style={styles.container}>
+          <PageHeading text="Add Location" />
+          <form style={styles.form} onSubmit={handleSubmit}>
+            <GeneralField label="Name" field_type="text" />
+            <GeneralField label="Type" field_type="text" />
+            <GeneralField label="Warehouse" field_type="text" />
+          </form>
+
+          {/* Button Container */}
+          <div id="buttonContainer" style={styles.buttonContainer}>
+                  <GeneralButton text="Cancel" width="5%" height="400%" />
+                  <GeneralButton text="Add" type="submit" width="5%" height="400%" />
+              </div>
+        </div>
       </div>
-      </div>
+    </div>
   );
-}
+};
+
+export default AddLocation;
