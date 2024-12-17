@@ -1,39 +1,37 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useFonts } from "expo-font";
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
 export default function Dashboard() {
   // Load Custom Fonts
   const [fontsLoaded] = useFonts({
     tahoma: require("../assets/fonts/tahoma.ttf"), // Adjust path to your font folder
   });
-  
+
   // Keep the splash screen visible while fonts are loading
   useEffect(() => {
     async function prepare() {
       if (!fontsLoaded) {
-        await SplashScreen.preventAutoHideAsync(); // Prevent splash screen from hiding
+        await SplashScreen.preventAutoHideAsync();
       } else {
-        await SplashScreen.hideAsync(); // Hide splash screen once fonts are loaded
+        await SplashScreen.hideAsync();
       }
     }
     prepare();
   }, [fontsLoaded]);
-  
+
   if (!fontsLoaded) {
-    return null; // Don't render anything while fonts are loading
+    return null;
   }
 
   return (
     <View style={styles.container}>
       {/* Top Section */}
       <View style={styles.topSection}>
-        {/* Logo */}
         <Image source={require("../assets/logo.png")} style={styles.logo} />
-
-        {/* Profile Button */}
         <TouchableOpacity style={styles.profileButton}>
           <Text style={styles.profileText}>Profile</Text>
         </TouchableOpacity>
@@ -41,10 +39,7 @@ export default function Dashboard() {
 
       {/* Overview Section */}
       <View style={styles.overviewContainer}>
-        {/* Title */}
         <Text style={styles.overviewTitle}>Overview</Text>
-
-        {/* Overview Box */}
         <View style={styles.overviewBox}>
           {/* Left Section */}
           <View style={styles.leftSection}>
@@ -52,7 +47,6 @@ export default function Dashboard() {
             <Text style={styles.smallText}>ORDERS</Text>
             <Text style={styles.greenText}>ready to ship</Text>
 
-            {/* Footer Row */}
             <View style={styles.footerRow}>
               <Text style={styles.footerText}>
                 <Text style={styles.boldText}>9</Text> DUE TODAY
@@ -70,6 +64,40 @@ export default function Dashboard() {
             <Text style={styles.greenTextCard}>ready to pick</Text>
           </View>
         </View>
+      </View>
+
+      {/* New Card Section */}
+      <View style={styles.newCard}>
+        <Text style={styles.cardTitle}>How would you like to proceed?</Text>
+
+        {/* Multi Item Orders Button */}
+       {/* Multi Item Orders Button */}
+        <TouchableOpacity style={[styles.buttonContainer, { borderTopWidth: 0 }]}>
+        <View style={styles.buttonContent}>
+            <FontAwesome name="cubes" size={24} color="#00000" />
+            <View style={styles.buttonTextContainer}>
+            <Text style={styles.buttonTitle}>Multi Item Orders</Text>
+            <Text style={styles.buttonFooter}>
+                Pick multi SKU orders into individual totes
+            </Text>
+            </View>
+            <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
+        </View>
+        </TouchableOpacity>
+
+        {/* Single Order Button */}
+        <TouchableOpacity style={[styles.buttonContainer, { borderTopWidth: 1, borderTopColor: "#ddd" }]}>
+        <View style={styles.buttonContent}>
+            <FontAwesome name="shopping-bag" size={24} color="#00000" />
+            <View style={styles.buttonTextContainer}>
+            <Text style={styles.buttonTitle}>Single Order</Text>
+            <Text style={styles.buttonFooter}>
+                Pick a specific order
+            </Text>
+            </View>
+            <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
+        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -102,20 +130,19 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
-    fontFamily: "tahoma", // Apply font here too
+    fontFamily: "tahoma",
   },
   overviewContainer: {
     backgroundColor: "#ffffff",
     borderRadius: 12,
     padding: 15,
     elevation: 4,
-    fontFamily: "tahoma", // Parent Card Font
   },
   overviewTitle: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 15,
-    fontFamily: "tahoma", // Custom Font
+    fontFamily: "tahoma",
   },
   overviewBox: {
     flexDirection: "row",
@@ -123,11 +150,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     position: "relative",
-    fontFamily: "tahoma", // Font applied to the box
   },
   leftSection: {
     flex: 1,
-    justifyContent: "flex-start",
   },
   bigText: {
     fontSize: 28,
@@ -153,21 +178,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "tahoma",
   },
-  greenTextCard: {
-    backgroundColor: "#e6f8ea",
-    color: "#28a745",
-    fontSize: 12,
-    padding: 5,
-    borderRadius: 5,
-    marginTop: 2,
-    width: 70,
-    textAlign: "center",
-    fontFamily: "tahoma",
+  rightCard: {
+    position: "absolute",
+    width: 150,
+    height: 100,
+    top: 5,
+    right: 10,
+    backgroundColor: "#ffffff",
+    padding: 13,
+    borderRadius: 10,
+    elevation: 4,
   },
   footerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
     marginTop: 10,
   },
   footerText: {
@@ -178,19 +202,59 @@ const styles = StyleSheet.create({
   boldText: {
     fontSize: 20,
     fontWeight: "bold",
-    fontFamily: "tahoma",
   },
-  rightCard: {
-    position: "absolute",
-    width: 150,
-    height: 100,
-    top: 5,
-    right: 10,
+  greenTextCard: {
+    backgroundColor: "#e6f8ea",
+    color: "#28a745",
+    fontSize: 12,
+    padding: 5,
+    borderRadius: 5,
+    marginTop: 2,
+    width: 70,
+    textAlign: "center",
+  },
+  // New Card Styles
+  newCard: {
+    marginTop: 20,
     backgroundColor: "#ffffff",
-    padding: 13,
-    paddingLeft: 15,
-    borderRadius: 10,
+    borderRadius: 12,
+    padding: 15,
     elevation: 4,
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
     fontFamily: "tahoma",
   },
+  buttonContainer: {
+    marginHorizontal: 10, // Adds spacing on both left and right
+    borderRadius: 8, // Slight rounded corners for a softer look
+    paddingVertical: 12, // Adjust the vertical padding
+    paddingHorizontal: 10, // Adds spacing inside the button from left and right
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff", // Optional for visibility
+  },
+  
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  buttonTextContainer: {
+    flex: 1,
+    marginLeft: 15,
+  },
+  buttonTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    fontFamily: "tahoma",
+  },
+  buttonFooter: {
+    fontSize: 12,
+    color: "#777",
+    fontFamily: "tahoma",
+  },
+  
 });
