@@ -1,9 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+
+// Get screen dimensions for responsiveness
+const { width } = Dimensions.get("window");
 
 export default function Dashboard() {
   // Load Custom Fonts
@@ -28,12 +31,17 @@ export default function Dashboard() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Top Section */}
       <View style={styles.topSection}>
         <Image source={require("../assets/logo.png")} style={styles.logo} />
+
+        {/* Profile Button */}
         <TouchableOpacity style={styles.profileButton}>
-          <Text style={styles.profileText}>Profile</Text>
+          <Image
+            source={{ uri: "https://via.placeholder.com/50x50.png?text= " }} // Grey placeholder
+            style={styles.profileImage}
+          />
         </TouchableOpacity>
       </View>
 
@@ -45,7 +53,9 @@ export default function Dashboard() {
           <View style={styles.leftSection}>
             <Text style={styles.bigText}>21</Text>
             <Text style={styles.smallText}>ORDERS</Text>
-            <Text style={styles.greenText}>ready to ship</Text>
+            <View style={styles.greenTextContainer}>
+              <Text style={styles.greenText}>ready to ship</Text>
+            </View>
 
             <View style={styles.footerRow}>
               <Text style={styles.footerText}>
@@ -61,7 +71,9 @@ export default function Dashboard() {
           <View style={styles.rightCard}>
             <Text style={styles.bigText}>31</Text>
             <Text style={styles.smallText}>ITEMS</Text>
-            <Text style={styles.greenTextCard}>ready to pick</Text>
+            <View style={styles.greenTextContainer}>
+              <Text style={styles.greenTextCard}>ready to pick</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -71,35 +83,32 @@ export default function Dashboard() {
         <Text style={styles.cardTitle}>How would you like to proceed?</Text>
 
         {/* Multi Item Orders Button */}
-       {/* Multi Item Orders Button */}
         <TouchableOpacity style={[styles.buttonContainer, { borderTopWidth: 0 }]}>
-        <View style={styles.buttonContent}>
-            <FontAwesome name="cubes" size={24} color="#00000" />
+          <View style={styles.buttonContent}>
+            <FontAwesome name="cubes" size={20} color="#00000" />
             <View style={styles.buttonTextContainer}>
-            <Text style={styles.buttonTitle}>Multi Item Orders</Text>
-            <Text style={styles.buttonFooter}>
+              <Text style={styles.buttonTitle}>Multi Item Orders</Text>
+              <Text style={styles.buttonFooter}>
                 Pick multi SKU orders into individual totes
-            </Text>
+              </Text>
             </View>
             <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
-        </View>
+          </View>
         </TouchableOpacity>
 
         {/* Single Order Button */}
         <TouchableOpacity style={[styles.buttonContainer, { borderTopWidth: 1, borderTopColor: "#ddd" }]}>
-        <View style={styles.buttonContent}>
-            <FontAwesome name="shopping-bag" size={24} color="#00000" />
+          <View style={styles.buttonContent}>
+            <FontAwesome name="shopping-bag" size={20} color="#00000" />
             <View style={styles.buttonTextContainer}>
-            <Text style={styles.buttonTitle}>Single Order</Text>
-            <Text style={styles.buttonFooter}>
-                Pick a specific order
-            </Text>
+              <Text style={styles.buttonTitle}>Single Order</Text>
+              <Text style={styles.buttonFooter}>Pick a specific order</Text>
             </View>
             <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
-        </View>
+          </View>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -110,33 +119,46 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   topSection: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
+    justifyContent: "center", // Center the logo horizontally
+    alignItems: "center",      // Center the logo vertically
+    marginBottom: 5,
+    position: "relative",      // Needed for the absolute profile button
   },
   logo: {
-    width: 100,
-    height: 50,
+    width: width * 0.7, // Logo is 50% of screen width
+    height: width * 0.2,
+    aspectRatio: 2, // Adjust the height proportionally
     resizeMode: "contain",
   },
   profileButton: {
-    backgroundColor: "#007bff",
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
+    position: "absolute",
+    right: 0, // Align the button to the right
+    top: 10, // Add top margin
+    width: 50,
+    height: 50,
+    borderRadius: 25, // Circular button
+    backgroundColor: "#d3d3d3", // Grey background
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden", // Ensures content inside is clipped properly
   },
-  profileText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-    fontFamily: "tahoma",
+  profileImage: {
+    width: "80%",
+    height: "80%",
+    borderRadius: 25, // Ensures circular shape
   },
   overviewContainer: {
     backgroundColor: "#ffffff",
     borderRadius: 12,
     padding: 15,
     elevation: 4,
+  },
+  greenTextCard: {
+    color: "#28a745",
+    fontSize: 12,
+    fontWeight: "bold",
+    textAlign: "center",
+    fontFamily: "tahoma",
   },
   overviewTitle: {
     fontSize: 20,
@@ -167,14 +189,17 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontFamily: "tahoma",
   },
-  greenText: {
+  greenTextContainer: {
     backgroundColor: "#e6f8ea",
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    alignSelf: "flex-start",
+  },
+  greenText: {
     color: "#28a745",
     fontSize: 12,
-    padding: 5,
-    borderRadius: 5,
-    marginBottom: 15,
-    width: 70,
+    fontWeight: "bold",
     textAlign: "center",
     fontFamily: "tahoma",
   },
@@ -188,6 +213,8 @@ const styles = StyleSheet.create({
     padding: 13,
     borderRadius: 10,
     elevation: 4,
+    justifyContent: "center",
+    overflow: "hidden",
   },
   footerRow: {
     flexDirection: "row",
@@ -203,17 +230,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-  greenTextCard: {
-    backgroundColor: "#e6f8ea",
-    color: "#28a745",
-    fontSize: 12,
-    padding: 5,
-    borderRadius: 5,
-    marginTop: 2,
-    width: 70,
-    textAlign: "center",
-  },
-  // New Card Styles
   newCard: {
     marginTop: 20,
     backgroundColor: "#ffffff",
@@ -228,15 +244,14 @@ const styles = StyleSheet.create({
     fontFamily: "tahoma",
   },
   buttonContainer: {
-    marginHorizontal: 10, // Adds spacing on both left and right
-    borderRadius: 8, // Slight rounded corners for a softer look
-    paddingVertical: 12, // Adjust the vertical padding
-    paddingHorizontal: 10, // Adds spacing inside the button from left and right
+    marginHorizontal: 10,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff", // Optional for visibility
+    backgroundColor: "#fff",
   },
-  
   buttonContent: {
     flexDirection: "row",
     alignItems: "center",
@@ -256,5 +271,4 @@ const styles = StyleSheet.create({
     color: "#777",
     fontFamily: "tahoma",
   },
-  
 });
