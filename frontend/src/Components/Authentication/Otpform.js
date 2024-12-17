@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import GeneralField from "../General/GeneralField";
 import GeneralButton from "../General/GeneralButton";
 import { border, position } from "polished";
+import arch from '../../Assets/Images/archlabs.jpg';
 
 const OtpForm = ({ email, onSubmit }) => {
   const [otp, setOtp] = useState(["", "", "", "", ""]);
@@ -106,6 +107,7 @@ const OtpForm = ({ email, onSubmit }) => {
       // margin: "0 auto",
       textAlign: "center",
       ...responsiveStyles.otpContainer,
+      lineHeight:"50px"
     },
     backArrow: {
       position: "absolute",
@@ -201,6 +203,7 @@ const OtpForm = ({ email, onSubmit }) => {
               func={(value) => handleChange(index, value)} // Pass the function with the current index
               style={styles.otpInput}
               disabled={isSubmitting} // Disable fields during submission
+              height={"50px"}
             />
           ))}
         </div>
@@ -214,7 +217,7 @@ const OtpForm = ({ email, onSubmit }) => {
         />
       </form>
       <div style={styles.footer}>
-        <p>Prepprime © Copyright 2024</p>0
+        <p>Prepprime © Copyright 2024</p>
         <div style={styles.terms}>
           <a href="https://prepprime.com/contact-us-2/" style={styles.link}>
             Contact Us

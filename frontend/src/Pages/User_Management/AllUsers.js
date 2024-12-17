@@ -17,14 +17,14 @@ export default function AllUser() {
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Track sidebar state
 
-  const totalPages = 5; // Example total pages for pagination
+  const totalPages = 5;
 
-  // Simulate API request to fetch user data
   const loadingFunction = () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const success = Math.random() > 0.5; // Simulate random success or failure
+        const success = Math.random() > 0.5;
         if (success) {
           resolve([
             { Name: 'Alice', Age: 25, City: 'New York' },
@@ -36,15 +36,14 @@ export default function AllUser() {
         } else {
           reject('Failed to load data');
         }
-      }, 2000); // Simulate 2-second delay
+      }, 2000);
     });
   };
 
   useEffect(() => {
-    fetchData(); // Initial data load
-  }, [currentPage]); // Trigger data load when the page changes
+    fetchData();
+  }, [currentPage]);
 
-  // Function to fetch data
   const fetchData = () => {
     setLoading(true);
     loadingFunction()
@@ -60,7 +59,6 @@ export default function AllUser() {
       });
   };
 
-  // Handle Next and Prev buttons for pagination
   const handleNext = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -73,93 +71,64 @@ export default function AllUser() {
     }
   };
 
-  const headings = ['Name', 'Age', 'City'];
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const styles = {
+    mainContent: {
+      flex: 1,
+      padding: "10px",
+      transition: "margin-left 0.5s ease",
+      marginLeft: isSidebarOpen ? "18%" : "4%",
+    },
+  };
+
+  const headings = ["Name", "Age", "City"];
 
   return (
-    // <MainBackground
-    //   background_color={[34, 255, 255]} // Set background color as white
-    //   border_color={[200, 200, 200]} // Light gray border color
-    //   height="100%"
-    //   width="100%"
-    // />,
-      <div style={{ display: "flex" }}>
-        {/* Top Sidebar with Navigation */}
-        <NavBarWithSidebar
-          background_color={[23, 23, 23]}
-          text_color={[230, 230, 230]}
-          logo={archlogo}
-          company_name="A.R.C.H Labs"
-          company_name_color={[255, 255, 255]}
-          username="Owner"
-          username_color={[255, 255, 255]}
-          icons={[
-            "https://via.placeholder.com/20",
-            "https://via.placeholder.com/20",
-            "https://via.placeholder.com/20",
-          ]}
-          names={[
-            ["User Management", "All User", "Add User"],
-            ["Management", "Add Order", "Delete Order"],
-            ["Inventory", "Add Item", "Delete Item"],
-          ]}
-          routes={[['/app2', '/app3'], ['/top1', '/top2']]}
-          sidebar_background_color={[23, 23, 23]}
-          sidebar_text_color={[230, 230, 230]}
-          selected_color={[230, 230, 230]}
-          hover_color={[230, 230, 230]}
-          expanded={[false, false, false]}
-          sidebar_width="250px"
-          sidebar_height="100vh"
-          hamburger_color={[255, 255, 255]}
-        />
-
-      
-
-        {/* Main content area */}
-        <div style={{ flex: 1, padding: "20px", marginLeft: "250px" }}>
-          {/* NavPath Component for Breadcrumb */}
-          <NavPath
-            text={['Home', 'User Management', 'All Users']}
-            paths={['/home', '/user_management', '/all_users']}
-            text_color={[255, 255, 255]}
-            background_color={[23, 23, 23]}
-            hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
-            width="110%"
-            height="50px"
-          />
-
-          {/* Add Button Component
-          // <AddButton 
-          //   text="Add User"
-          //   path="https://via.placeholder.com/20"
-          //   buttonFunction={() => alert('Add user clicked!')} // Example function for adding a user
-          //   width="13%"
-          //   height="47px"
-          //   text_color={[255, 255, 255]}
-          // /> */}
-
-
-          <div>
-
-            <PageHeading
-        text="All User"
-        text_color={[255, 255, 255]} // White text color
-        sidebar_color={[30, 61, 89]} // Sidebar color
-        width="60%" // Adjust width as needed
-        // height="100px" // Adjust height as needed
+      /* Sidebar */
+    <div>
+      <NavBarWithSidebar
+        text_color={[255, 255, 255]}
+        logo={archlogo}
+        company_name="A.R.C.H Labs"
+        username="Owner"
+        icons={[
+          "https://via.placeholder.com/20",
+          "https://via.placeholder.com/20",
+          "https://via.placeholder.com/20",
+        ]}
+        names={[
+          ["User Management", "All User", "Add User"],
+          ["Inventory", "Add Item", "Delete Item"],
+          ["Management", "Add Order", "Delete Order"],
+          
+        ]}
+        routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
+        sidebar_width="14%"
+        sidebar_height="100vh"
+        toggleSidebar_func={toggleSidebar}
+        isSidebarOpen_p = {isSidebarOpen}
       />
 
-          <TableTop
-           />
+     
+      {/* Main content area */}
+      <div style={styles.mainContent}>
+        <NavPath
+          text={["Home", "User Management"]}
+          paths={["/home", "/users"]}
+          text_color={[255, 255, 255]}
+          background_color={[23, 23, 23]}
+          width="95%"
+          height="50px"
+        />
+         
+        <TableTop />
 
-          {/* Add TableContent */}
-          <TableContent
-           />
-
-          </div>  
-        </div>
-          
+        <TableContent
+         />
       </div>
-      
+      </div>
   );
 }

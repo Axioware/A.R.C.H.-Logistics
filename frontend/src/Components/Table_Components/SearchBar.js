@@ -59,18 +59,20 @@ export default function SearchBar({
         {`
           .Search-app-container {
             height: 100vh; /* Ensure the app's height is 100% of the viewport */
+
             // display: flex;
             // justify-content: center;
             // align-items: center;
           }
 
           .Search-bar-container {
-            // display: flex;
-            // justify-content: center;
-            // align-items: center;
             width: ${width}; /* Apply percentage width */
             height: ${height}; /* Apply percentage height */
-            margin: 0px 0px 0px 0px;
+            margin: 0px 40px 0px 0px;
+
+             // display: flex;
+            // justify-content: center;
+            // align-items: center;
           }
 
           .Search-bar-input {
@@ -82,6 +84,7 @@ export default function SearchBar({
             font-size: 1rem;
             outline: none;
             transition: background-color 0.3s ease;
+
             // box-sizing: border-box;
           }
 
@@ -90,6 +93,7 @@ export default function SearchBar({
           }
 
           .Search-bar-button {
+
             // border: none;
             // background-color: transparent;
             // cursor: pointer;
@@ -104,6 +108,7 @@ export default function SearchBar({
           }
 
           .Search-icon {
+          
             // font-size: 1.2rem;
           }
         `}

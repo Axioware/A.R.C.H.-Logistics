@@ -36,7 +36,7 @@ export default function PageHeading({
             // flex-direction: row; /* Horizontal layout for sidebar and text */
             // align-items: center;
             // justify-content: flex-start;
-            // margin: 0px 0px -75px -150px;
+            // margin: 0px 0px 0px 0px;
           }
 
           .page-heading-text {
