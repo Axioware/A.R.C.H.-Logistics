@@ -55,12 +55,12 @@ export default function NavPath({
             display: flex;
             flex-direction: row;
             align-items: center;
-            padding: 10px;
+            padding: 5px;
             border-radius: 5px;
             width: ${width || 'auto'};
             height: ${height || 'auto'};
             background-color: ${bgColor || 'transparent'};
-            margin: 50px 0px 0px 0px;
+            margin: 50px 0px 80px 0px;
 
           }
         `}

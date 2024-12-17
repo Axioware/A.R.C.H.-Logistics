@@ -115,11 +115,25 @@ export default function AllUser() {
           height="50px"
         />
 
-        
+        {/* AddButton Component */}
+        <AddButton
+          text="Add User"
+          text_color={[255, 255, 255]}
+          path="/add_user" // Replace with the route to your Add User page
+          background_color={[23, 23, 23]}
+          class_name="custom-class"
+          width="200px"
+          height="50px"
+        />
 
         <TableTop />
 
-        <TableContent />
+        <TableContent 
+          tableheadings = {['llc name', 'first_name']}
+          loading={true}
+          success={false}
+          last_column={true}
+        />
       </div>
     </div>
   );
