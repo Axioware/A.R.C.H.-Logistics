@@ -12,44 +12,50 @@ function rgbArrayToString(rgbArray) {
 export default function PageHeading({
   text,
   text_color,
-  width,
-  height,
+  width = '100%', // Default to 100% width
+  height = 'auto', // Default height
   sidebar_color,
-  font_size = '2rem', 
+  font_size = '2rem',
+  sidebar_width = '10px', // Default sidebar width
 }) {
   // Convert colors to CSS string format
   const textColor = rgbArrayToString(text_color);
   const sidebarColor = rgbArrayToString(sidebar_color);
 
   return (
-    <div className='page-heading-container'>
-      {/* <div className="page-heading-sidebar" >nkjbkubkhkuh</div> */}
+    <div className="page-heading-container">
+      <div
+        className="page-heading-sidebar"
+        style={{
+          backgroundColor: sidebarColor,
+          width: sidebar_width,
+        }}
+      ></div>
       <h1 className="page-heading-text">{text}</h1>
 
       <style>
         {`
           .page-heading-container {
+            display: flex;
+            flex-direction: row; /* Ensures sidebar stays on the left */
+            align-items: center; /* Align items vertically */
             width: ${width};
             height: ${height};
+          }
 
-            // display: flex;
-            // flex-direction: row; /* Horizontal layout for sidebar and text */
-            // align-items: center;
-            // justify-content: flex-start;
-            // margin: 0px 0px 0px 0px;
+          .page-heading-sidebar {
+            height: 100%; /* Sidebar height matches container height */
+            flex-shrink: 0; /* Prevent sidebar from shrinking */
           }
 
           .page-heading-text {
             color: ${textColor};
-            font-size: ${font_size}; /* Use the font_size prop */
+            font-size: ${font_size}; /* Use font_size prop */
             font-weight: bold; /* Make text bold */
-
-            // margin: 0;
-            // padding-left: 10px; /* Space between sidebar and text */
-            // text-align: left;
-            // white-space: nowrap; /* Ensure text stays on one line */
-            // overflow: hidden;
-            // text-overflow: ellipsis; /* Add ellipsis if text overflows */
+            margin-left: 10px; /* Space between sidebar and text */
+            white-space: nowrap; /* Prevent wrapping */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Add ellipsis for overflowing text */
           }
         `}
       </style>

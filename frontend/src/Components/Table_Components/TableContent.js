@@ -5,12 +5,20 @@ import SearchBar from './SearchBar';
 import Table from './Table';
 import Pagination from './Pagination';
 
-export default function App() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 10;
+export default function App(
+  table_headings,
+  sorting_function,
+  url,
+  loading_p,
+  success_p,
+  last_column
+) {
+  
+  const [currentPage, setCurrentPage] = useState(null);
+  const totalPages = null;
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(loading_p);
+  const [success, setSuccess] = useState(success_p);
 
   const handleNext = () => {
     if (currentPage < totalPages) {
@@ -65,14 +73,14 @@ export default function App() {
       {/* Table Component */}
       <div>
         <Table
-          headings={['LLC Name', 'First Name', 'Last Name','Address', 'Contact', 'Email','Alternate Email', 'Billing Type', 'Active Status']}
+          headings={table_headings}
           heading_background={[23, 23, 23]}
           heading_color={[255, 255, 255]}
-          sort_function={handleSort}
+          sort_function={sorting_function}
           data={data}
           loading={loading}
           success={success}
-          last_column={true}
+          last_column={last_column}
           // last_column_text="Details"
           handleRefresh={handleRefresh}
         />
@@ -81,8 +89,8 @@ export default function App() {
       {/* Pagination Component */}
       <div>
         <Pagination
-        current_page={currentPage}
-        total_pages={totalPages}
+        current_page={currentPage || 0}
+        total_pages={totalPages || 0}
         text_color={[0, 0, 0]}
         button_text_color={[255, 255, 255]}
         button_background_color={[23, 23, 23]}

@@ -49,6 +49,10 @@ const Omer = () => {
     border: '2px solid white',
     background_color :"#F5F5F5",
 
+  },container:{
+    border: '2px solid white',
+    background_color :"#F5F5F5",
+
   },
   };
   
