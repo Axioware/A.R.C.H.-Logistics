@@ -26,7 +26,7 @@ export default function TableTop() {
 
       .table-top-container {
             display: flex;
-            width: 90%;
+            width: 95%;
             height: 5%;
             text-align: left;
             border: 2px solid black; /* Border color and width */

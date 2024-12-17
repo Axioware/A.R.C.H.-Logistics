@@ -71,7 +71,6 @@ const NavBarWithSidebar = ({
             align-items: center;
             justify-content: space-between;
             padding: 10px 30px;
-            border: 2px solid black;
             background-color: rgb(${background_color.join(",")});
             text-color: rgb(${text_color.join(",")});
           }
@@ -97,12 +96,13 @@ const NavBarWithSidebar = ({
           }
           .TopSideNavBar-hamburger.open {
               transform: translateX(250px); /* Moves the hamburger icon to the right by the sidebar width */
+              transition: transform 0.35s ease, opacity 0.3s ease;
           }
           .TopSideNavBar-hamburger-line {
             width: 100%;
             height: 3px;
             background-color: rgb(${hamburger_color.join(",")});
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            transition: transform 0.35s ease, opacity 0.3s ease;
           }
           .TopSideNavBar-hamburger-line line1,
           .TopSideNavBar-hamburger-line line2,
@@ -119,7 +119,7 @@ const NavBarWithSidebar = ({
             left: 0;
             overflow-x: hidden;
             z-index: 100;
-            transition: width 0.3s ease;
+            transition: width 0.35s ease;
             padding: ${isSidebarOpen ? "2% 2%" : "0"};
             box-shadow: ${isSidebarOpen
               ? "2px 0 10px rgba(0, 0, 0, 0.1)"
@@ -131,7 +131,7 @@ const NavBarWithSidebar = ({
           .TopSideNavBar-logo img {
             width: ${isSidebarOpen ? "80%" : "0"};
             height: auto;
-            transition: width 0.25s ease;
+            transition: width 0.35s ease;
             margin-bottom: ${isSidebarOpen ? "50%" : "0"};
           }
           .TopSideNavBar-user-section {

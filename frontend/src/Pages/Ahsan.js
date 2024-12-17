@@ -73,8 +73,8 @@ export default function AllUser() {
     mainContent: {
       flex: 1,
       padding: "10px",
-      transition: "margin-left 0.25s ease",
-      marginLeft: isSidebarOpen ? "16%" : "2%",
+      transition: "margin-left 0.5s ease",
+      marginLeft: isSidebarOpen ? "18%" : "4%",
     },
   };
 
@@ -109,12 +109,11 @@ export default function AllUser() {
       <div style={styles.mainContent}>
 test text
         <NavPath
-          text={["Home", "User Management", "All Users"]}
-          paths={["/home", "/user_management", "/all_users"]}
+          text={["Home", "User Management"]}
+          paths={["/home", "/users"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
-          hyperlink_size={[["10%", "55%"], ["40%", "50%"], ["4%", "4%"]]}
-          width="90%"
+          width="95%"
           height="50px"
         />
          

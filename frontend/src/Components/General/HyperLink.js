@@ -18,7 +18,8 @@ export default function HyperLink({
   width,
   background_color, // Background color prop
   hover_background_color, // Hover background color prop
-  height
+  height,
+  arrow
 }) {
   const navigate = useNavigate();  // Use the useNavigate hook for navigation
 
@@ -37,15 +38,6 @@ export default function HyperLink({
     <div
       className="hyperlink"
       onClick={handleClick}
-      style={{
-        width: width || 'auto',  // Use provided width or default to auto
-        height: height || 'auto',  // Use provided height or default to auto
-        minHeight: height || 'auto', // Ensure min-height is set
-        display: 'flex',
-        flexDirection: 'row', // Make sure the div is a flex container
-        justifyContent: 'center', // Center the text horizontally
-        alignItems: 'center', // Center the text vertically
-      }}
     >
       <span
         style={{
@@ -53,6 +45,9 @@ export default function HyperLink({
         }}
       >
         {text} 
+        
+        {arrow && <span style={{ marginLeft: '32px'}}>&gt;</span>}
+
       </span>
 
       <style>
@@ -65,17 +60,13 @@ export default function HyperLink({
             text-align: center;
             width: ${width || 'auto'};
             height: ${height || 'auto'};
-            
-          }
-
-          .hyperlink:hover {
-            background-color: ${hoverBgColor || '#4CAF50'};  /* Use the passed hover background color */
+            margin: -22px 0px 0px -45px;
           }
 
           .hyperlink span {
             font-size: 16px;
             font-weight: bold;
-            position: absolute;
+            position: relative;
           }
         `}
       </style>

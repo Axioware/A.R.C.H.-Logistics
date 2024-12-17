@@ -16,7 +16,6 @@ export default function NavPath({
   paths,
   text_color,  // Array of RGB values for text color
   background_color,  // Array of RGB values for background color
-  hyperlink_size,  // Array of size strings for hyperlinks
   width,
   height
 }) {
@@ -31,24 +30,21 @@ export default function NavPath({
       {text.map((linkText, index) => {
         // Get the corresponding path, text color, and size for each hyperlink
         const path = paths[index];
-        const size = hyperlink_size[index];
-        console.log(size[1]);
+        var arr = index !== text.length - 1;
 
         return (
-          <div key={index} style={{ marginRight: '2%', marginLeft: '10px', display: 'flex', flexDirection: 'row'}}>
-            {/* Render HyperLink component with dynamic props */}
+          <>
             <HyperLink
               text={linkText}
               path={path}
               text_color={text_color}  // Pass the text color to the HyperLink component
-              // background_color={[0, 0, 0]}  // Optional, if you want the same background for links
-              hover_background_color={[[255, 255, 255]]}  // Optional, for hover effect on link
-              width={size[0]}  // Set the width from hyperlink_size
-              height={size[1]}  // Set the height from hyperlink_size
+              width={'200px'}  // Set the width from hyperlink_size
+              height={'20px'}
+              arrow={arr}  // Set the height from hyperlink_size
             />
 
-            <span style={{ marginLeft: '40px', fontSize: '20px', color: tcolor, display: 'flex', flexDirection: 'row', position: 'relative', marginTop: '-5px'}}>&gt;</span>
-          </div>
+            {/* <span style={{ marginLeft: '40px', fontSize: '20px', color: tcolor, display: 'flex', flexDirection: 'row', position: 'relative', marginTop: '-5px'}}>&gt;</span> */}
+          </>
         );
       })}
 
@@ -64,20 +60,8 @@ export default function NavPath({
             width: ${width || 'auto'};
             height: ${height || 'auto'};
             background-color: ${bgColor || 'transparent'};
-            margin: 70px 0px 0px 0px;
+            margin: 50px 0px 0px 0px;
 
-          }
-
-          .navpath-container a {
-            padding: 10px;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-            text-align: center;
-          }
-
-          .navpath-container a:hover {
-            background-color: #dcdcdc;
           }
         `}
       </style>
