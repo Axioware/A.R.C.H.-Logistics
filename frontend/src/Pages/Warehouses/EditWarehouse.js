@@ -1,67 +1,127 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
+import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
+import archlogo from '../../Assets/Images/logo1.png';
+import NavPath from '../../Components/General/NavPath';
 import PageHeading from '../../Components/Table_Components/PageHeading';
 
 const EditWarehouse = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('Warehouse successfully!');
+    console.log('Form submitted'); 
+    alert('Warehouse Edited successfully!');
+  };
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   const styles = {
-    container: {
-      padding: '30px',
-      fontFamily: 'Arial, sans-serif',
-      backgroundColor: '#f8f9fa',
-      borderRadius: '8px',
-      width: '80%',
-      margin: 'auto',
-      boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-    },
-    form: {
+
+    mainContent: {
+      // border: '2px solid pink',
+      flex: 1,
+      padding: "10px",
+      transition: "margin-left 0.5s ease",
+      marginLeft: isSidebarOpen ? "18%" : "4%",
+      marginRight:"4%",
+      border: '2px solid white',
+      height:"80%",
+  },
+
+  form: {
+    marginTop:'15px',
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr', // Two columns per row
-      gap: '20px',
-      marginTop: '20px',
-    },
-    buttonContainer: {
+      gridTemplateColumns: '1fr 1fr 1fr 1fr', 
+      gap: '20px', 
+      // border: '2px solid black',
+  },
+
+  buttonContainer: {
+    // border: '2px solid red',
       display: 'flex',
-      justifyContent: 'flex-end',
-      marginTop: '20px',
+      flexDirection: 'row',
+      justifyContent: 'flex-end', 
+      width: '100%',
+      height:'70%', 
       gap: '10px',
-    },
+      marginTop: '20px',
+      lineHeight:'40px',
+  },
+
+  container:{
+    // border: '2px solid green',
+
+  },
+
+  heading:{
+    // border: '2px solid blue',
+    marginTop:'15px',
+
+  },
+
   };
-
+  
   return (
-    <div style={styles.container}>
-      <PageHeading text="Edit Warehouse" />
-      <form onSubmit={handleSubmit}>
-        <div style={styles.form}>
-          {/* Row 1 */}
-          <GeneralField label="Name" field_type="text" />
-          <GeneralField label="Country" field_type="text" />
+      <div>
+      <NavBarWithSidebar
+        text_color={[255, 255, 255]}
+        logo={archlogo}
+        company_name="A.R.C.H Labs"
+        username="Owner"
+        icons={[
+          "https://via.placeholder.com/20",
+          "https://via.placeholder.com/20",
+          "https://via.placeholder.com/20",
+        ]}
+        names={[
+          ["User Management", "All User", "Add User"],
+          ["Management", "Add Order", "Delete Order"],
+          ["Inventory", "Add Item", "Delete Item"],
+        ]}
+        routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
+        sidebar_width="14%"
+        sidebar_height="100vh"
+        toggleSidebar_func={toggleSidebar}
+        isSidebarOpen_p = {isSidebarOpen}
+      />
+        
 
-          {/* Row 2 */}
-          <GeneralField label="State" field_type="text" />
-          <GeneralField label="City" field_type="text" />
+        <div style={styles.mainContent}>
+          <NavPath
+            text={['Home', 'All Warehouses', 'Add Warehouses']}
+            paths={['/home', '/warehouses', '/add-warehouses']}
+            text_color={[255, 255, 255]}
+            background_color={[23, 23, 23]}
+            hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
+            width="100%"
+            height="50px"
+          />
 
-          {/* Row 3 */}
-          <GeneralField label="Address" field_type="text" />
-          <GeneralField label="Zip Code" field_type="text" />
-
-          {/* Row 4 */}
-          <GeneralField label="Email" field_type="email" />
-          <GeneralField label="Phone" field_type="tel" />
-        </div>
-
-        {/* Buttons */}
-        <div style={styles.buttonContainer}>
-          <GeneralButton text="Cancel" />
-          <GeneralButton text="Add" type="submit" />
-        </div>
-      </form>
-    </div>
+          
+          <div id="container" style={styles.container} >
+            <div style={styles.heading}>
+            <PageHeading text="Edit Warehouse"/>
+            </div>
+          <form id="form" style={styles.form} onSubmit={handleSubmit}>
+              <GeneralField label="Name" field_type="text" hint="Enter warehouse name" />
+              <GeneralField label="Country" field_type="text" hint="Country (e.g., USA)" />
+              <GeneralField label="State" field_type="text" hint="State (e.g., Texas)" />
+              <GeneralField label="City" field_type="text" hint="City (e.g., Stafford)" />
+              <GeneralField label="Address" field_type="text" hint="Full address(e.g., 123 Main St, Apt 101)" />
+              <GeneralField label="Zip Code" field_type="text" hint="Zip code(e.g., 75001)" />
+              <GeneralField label="Email" field_type="email" hint="Email address (e.g., example@mail.com)" />
+              <GeneralField label="Phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" />             
+            </form>
+            <div id="buttonContainer" style={styles.buttonContainer}>
+                  <GeneralButton text="Reset" width="10%" height="100%" button_color={[230,230,230]} text_color={[0,0,0]} />
+                  <GeneralButton text="Save" type="submit" width="10%" height="100%" />
+              </div>
+            </div>
+            </div>
+            </div>
   );
 };
 

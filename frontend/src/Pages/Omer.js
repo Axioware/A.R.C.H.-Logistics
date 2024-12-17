@@ -103,7 +103,7 @@ const Omer = () => {
              
             </form>
             <div id="buttonContainer" style={styles.buttonContainer}>
-                  <GeneralButton text="Cancel" width="10%" height="300%" />
+                  <GeneralButton text="Cancel" width="10%" height="300%" button_color={['23','23','23']} />
                   <GeneralButton text="Add" type="submit" width="10%" height="300%" />
               </div>
             </div>
