@@ -46,6 +46,15 @@ export default function TableTop() {
           width="auto" // Auto width to align properly
           height="auto" // Auto height
           className="page-heading"
+          sidebar_width="5px" // Narrow sidebar width
+
+
+          
+  
+
+  sidebar_height="40px"
+
+
         />
 
         <div className="row-container1">

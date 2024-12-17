@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from "react";
-import NavBarWithSidebar from '../../Components/General/TopSideNavBar'; // Corrected path for NavBarWithSidebar
+import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
+import NavPath from '../../Components/General/NavPath';
 import AddButton from '../../Components/Table_Components/AddButton';
-import Table from '../../Components/Table_Components/Table'; // Include the Table component
-import Pagination from '../../Components/Table_Components/Pagination'; // Include the Pagination component
-import archlogo from '../../Assets/Images/logo1.png'; // Include your logo image
-import NavPath from '../../Components/General/NavPath';  // Import NavPath component
-import MainBackground from '../../Components/General/MainBackground';
+import archlogo from '../../Assets/Images/logo1.png';
 import TableContent from '../../Components/Table_Components/TableContent';
-import PageHeading from '../../Components/Table_Components/PageHeading';
 import TableTop from '../../Components/Table_Components/TableTop';
-
-
 
 export default function AllUser() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Track sidebar state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const totalPages = 5;
 
@@ -87,7 +81,6 @@ export default function AllUser() {
   const headings = ["Name", "Age", "City"];
 
   return (
-      /* Sidebar */
     <div>
       <NavBarWithSidebar
         text_color={[255, 255, 255]}
@@ -103,16 +96,14 @@ export default function AllUser() {
           ["User Management", "All User", "Add User"],
           ["Inventory", "Add Item", "Delete Item"],
           ["Management", "Add Order", "Delete Order"],
-          
         ]}
         routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
         sidebar_width="14%"
         sidebar_height="100vh"
         toggleSidebar_func={toggleSidebar}
-        isSidebarOpen_p = {isSidebarOpen}
+        isSidebarOpen_p={isSidebarOpen}
       />
 
-     
       {/* Main content area */}
       <div style={styles.mainContent}>
         <NavPath
@@ -123,12 +114,13 @@ export default function AllUser() {
           width="95%"
           height="50px"
         />
-         
+
+        
+
         <TableTop />
 
-        <TableContent
-         />
+        <TableContent />
       </div>
-      </div>
+    </div>
   );
 }

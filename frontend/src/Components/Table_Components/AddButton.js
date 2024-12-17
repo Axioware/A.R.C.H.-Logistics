@@ -16,8 +16,8 @@ export default function AddButton({
   path,
   background_color,
   class_name,
-  width,
-  height,
+  width = '150px', // Default width
+  height = '50px', // Default height
 }) {
   const navigate = useNavigate();
 
@@ -37,11 +37,11 @@ export default function AddButton({
         {`
           .add-button-container {
             display: flex;
-            justify-content: center;
-            // align-items: center;
-            height: 10vh; /* Full viewport height for centering */
-            margin: 20px 0px 0px 0px;
-            // align-items: left;
+            justify-content: flex-end; /* Align button to the right */
+            align-items: center;
+            height: 10vh; /* Adjust as necessary */
+            margin: 0px 70px 0px 0px; /* Add some vertical spacing */
+            font-weight: bold;
           }
 
           .add-button {
@@ -56,10 +56,12 @@ export default function AddButton({
             font-size: 1rem;
             text-align: center;
             box-sizing: border-box;
+            transition: all 0.3s ease; /* Smooth hover effect */
           }
 
           .add-button:hover {
-            background-color: rgba(56, 21, 90, 0.8); /* Darker shade on hover */
+            background-color: rgba(255, 255, 255, 0.8); /* Change background on hover */
+            color: black; /* Text color changes to black on hover */
           }
         `}
       </style>
