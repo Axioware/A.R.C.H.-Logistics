@@ -48,21 +48,17 @@ const AddLocation = () => {
       height: '100%',
     },
     buttonContainer: {
-        border: '2px solid white',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          width: '100%',
-          height:'70%', // Ensure container extends full width
-          gap: '10px',
-          marginTop: '20px',
-          lineHeight:'40px',
-      },
-      container:{
-        border: '2px solid white',
-        background_color :"#F5F5F5",
-    
-      },
+      border: '2px solid #F5F5F5',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      width: '100%',
+      gap: '10px',
+      marginTop: '20px',
+    },
+    heading: {
+      marginBottom: '20px', // Added margin-bottom for the heading
+    },
   };
 
   return (
@@ -101,7 +97,11 @@ const AddLocation = () => {
         />
 
         <div style={styles.container}>
-          <PageHeading text="Add Location" />
+          {/* Updated heading with margin */}
+          <div style={styles.heading}>
+            <PageHeading text="Add Location" />
+          </div>
+
           <form style={styles.form} onSubmit={handleSubmit}>
             <GeneralField label="Name" field_type="text" />
             <GeneralField label="Type" field_type="text" />
@@ -110,9 +110,21 @@ const AddLocation = () => {
 
           {/* Button Container */}
           <div id="buttonContainer" style={styles.buttonContainer}>
-                  <GeneralButton text="Cancel" width="5%" height="400%" />
-                  <GeneralButton text="Add" type="submit" width="5%" height="400%" />
-              </div>
+            <GeneralButton 
+              text="Cancel" 
+              width="120px" 
+              height="40px" 
+              button_color={["230", "230", "230"]} 
+              text_color={["0", "0", "0"]} 
+              func={handleCancel}
+            />
+            <GeneralButton 
+              text="Add" 
+              type="submit" 
+              width="120px" 
+              height="40px" 
+            />
+          </div>
         </div>
       </div>
     </div>
