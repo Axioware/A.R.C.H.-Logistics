@@ -64,7 +64,7 @@ export default function NavPath({
             width: ${width || 'auto'};
             height: ${height || 'auto'};
             background-color: ${bgColor || 'transparent'};
-            margin: 70px 0px 0px -155px;
+            margin: 70px 0px 0px 0px;
 
           }
 

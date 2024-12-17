@@ -75,7 +75,7 @@ const MenuItem = ({
             list-style-type: none;
             padding: 0;
             margin: 0;
-            margin-left: 20px;
+            margin-left: 30px;
           }
 
           .submenu-item {

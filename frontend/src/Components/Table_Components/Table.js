@@ -98,11 +98,11 @@ export default function Table({
             max-width: 100%;
             text-align: center;
             font-family: 'Arial', sans-serif;
-            margin: -750px 0px 0px -150px;
+            margin: 0px 0px 0px 0px;
           }
 
           .table {
-            width: 110%;
+            width: 90%;
             border-collapse: collapse;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 10px;

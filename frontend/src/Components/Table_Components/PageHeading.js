@@ -12,7 +12,6 @@ function rgbArrayToString(rgbArray) {
 export default function PageHeading({
   text,
   text_color,
-  class_name,
   width,
   height,
   sidebar_color,
@@ -23,9 +22,9 @@ export default function PageHeading({
   const sidebarColor = rgbArrayToString(sidebar_color);
 
   return (
-    <div className={`page-heading-container ${class_name}`} style={{ width, height }}>
-      <div className="sidebar" style={{ backgroundColor: sidebarColor }}></div>
-      <h1 className="page-heading-text" style={{ fontSize: font_size }}>{text}</h1>
+    <div className='page-heading-container'>
+      {/* <div className="page-heading-sidebar" >nkjbkubkhkuh</div> */}
+      <h1 className="page-heading-text">{text}</h1>
 
       <style>
         {`

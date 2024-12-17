@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import NavBarWithSidebar from '../Components/General/TopSideNavBar';
 import archlogo from '../Assets/Images/logo1.png';
 import NavPath from '../Components/General/NavPath';
+import TableContent from '../Components/Table_Components/TableContent';
+import TableTop from '../Components/Table_Components/TableTop';
+import PageHeading from '../Components/Table_Components/PageHeading';
 
 export default function AllUser() {
   const [data, setData] = useState([]);
@@ -67,75 +70,59 @@ export default function AllUser() {
   };
 
   const styles = {
-    container: {
-      display: "flex",
-      height: "100vh",
-    },
-    sidebar: {
-      width: isSidebarOpen ? "250px" : "60px",
-      transition: "width 0.25s ease",
-      backgroundColor: "rgb(42, 77, 107)",
-      height: "100vh",
-    },
     mainContent: {
       flex: 1,
-      padding: "20px",
+      padding: "10px",
       transition: "margin-left 0.25s ease",
-      marginLeft: isSidebarOpen ? "250px" : "60px",
-    },
-    button: {
-      marginBottom: "20px",
-      padding: "10px 20px",
-      backgroundColor: "#007BFF",
-      color: "#FFF",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
+      marginLeft: isSidebarOpen ? "16%" : "2%",
     },
   };
 
   const headings = ["Name", "Age", "City"];
 
   return (
+      /* Sidebar */
     <div>
-      {/* Sidebar */}
-      <div>
-        <NavBarWithSidebar
-          text_color={[255, 255, 255]}
-          logo={archlogo}
-          company_name="A.R.C.H Labs"
-          username="Owner"
-          icons={[
-            "https://via.placeholder.com/20",
-            "https://via.placeholder.com/20",
-            "https://via.placeholder.com/20",
-          ]}
-          names={[
-            ["User Management", "All User", "Add User"],
-            ["Management", "Add Order", "Delete Order"],
-            ["Inventory", "Add Item", "Delete Item"],
-          ]}
-          routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
-          sidebar_width="250px"
-          sidebar_height="100vh"
-          toggleSidebar_func={toggleSidebar}
-          isSidebarOpen_p = {isSidebarOpen}
-        />
-      </div>
-
+      <NavBarWithSidebar
+        text_color={[255, 255, 255]}
+        logo={archlogo}
+        company_name="A.R.C.H Labs"
+        username="Owner"
+        icons={[
+          "https://via.placeholder.com/20",
+          "https://via.placeholder.com/20",
+          "https://via.placeholder.com/20",
+        ]}
+        names={[
+          ["User Management", "All User", "Add User"],
+          ["Management", "Add Order", "Delete Order"],
+          ["Inventory", "Add Item", "Delete Item"],
+        ]}
+        routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
+        sidebar_width="14%"
+        sidebar_height="100vh"
+        toggleSidebar_func={toggleSidebar}
+        isSidebarOpen_p = {isSidebarOpen}
+      />
+     
       {/* Main content area */}
       <div style={styles.mainContent}>
-
+test text
         <NavPath
           text={["Home", "User Management", "All Users"]}
           paths={["/home", "/user_management", "/all_users"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
           hyperlink_size={[["10%", "55%"], ["40%", "50%"], ["4%", "4%"]]}
-          width="110%"
+          width="90%"
           height="50px"
         />
+         
+        <TableTop />
+
+        <TableContent
+         />
       </div>
-    </div>
+      </div>
   );
 }

@@ -71,6 +71,7 @@ const NavBarWithSidebar = ({
             align-items: center;
             justify-content: space-between;
             padding: 10px 30px;
+            border: 2px solid black;
             background-color: rgb(${background_color.join(",")});
             text-color: rgb(${text_color.join(",")});
           }

@@ -118,7 +118,7 @@ export default function App() {
         text_color={[0, 0, 0]}
         button_text_color={[255, 255, 255]}
         button_background_color={[23, 23, 23]}
-        width="110%"
+        width="90%"
         height="50px"
         onNext={handleNext}
         onPrev={handlePrev}

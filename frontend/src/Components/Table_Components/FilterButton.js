@@ -13,19 +13,18 @@ export default function FilterButton({
   text,
   text_color,
   background_color,
-  class_name = '',
   function: handleClick,
   width = 'auto',
-  height = 'auto',
+  height
 }) {
   // Convert colors to CSS string format
   const textColor = rgbArrayToString(text_color);
   const buttonColor = rgbArrayToString(background_color);
 
   return (
-    <div className="filter-button-container">
+    <div>
       <button
-        className={`filter-button ${class_name}`}
+        className={`filter-button`}
         onClick={handleClick}
       >
         {text}
@@ -33,25 +32,12 @@ export default function FilterButton({
 
       <style>
         {`
-          .filter-button-container {
-            width: 100%;
-            height: 100vh;
-            // display: flex;
-            // justify-content: center;
-            // align-items: center;
-          }
-
           .filter-button {
             color: ${textColor};
             background-color: ${buttonColor};
-            // border-radius: 8px;
             font-size: 1rem;
-            // padding: 15px 25px; /* Adjust padding for a larger button */
-            // cursor: pointer;
             border: 2px solid ${textColor}; /* Border matching text color */
-            // text-align: center;
             transition: all 0.3s ease; /* Smooth transition for all styles */
-            // box-sizing: border-box;
             width: ${width};
             height: ${height};
             font-weight: bold; /* Make the button text bold */
@@ -75,12 +61,6 @@ export default function FilterButton({
           .filter-button:focus {
             border-color: #007bff; /* Change border color on focus */
             box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Add a glow effect on focus */
-          }
-
-          .filter-button-container {
-            // display: flex;
-            // justify-content: center;
-            // align-items: center;
           }
         `}
       </style>
