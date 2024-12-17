@@ -62,7 +62,7 @@ export default function TableTop() {
             hint="Search..."
             field_color={[255, 255, 255]} // White background
             function={handleSearch} // Function to call on search
-            width="250px" // Set width explicitly
+            width="300px" // Set width explicitly
             height="50px" // Set height for input field
           />
         </div>
