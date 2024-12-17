@@ -11,7 +11,7 @@ const { width } = Dimensions.get("window");
 export default function Dashboard() {
   // Load Custom Fonts
   const [fontsLoaded] = useFonts({
-    tahoma: require("../assets/fonts/tahoma.ttf"), // Adjust path to your font folder
+    tahoma: require("../../assets/fonts/tahoma.ttf"), // Adjust path to your font folder
   });
 
   // Keep the splash screen visible while fonts are loading
@@ -34,7 +34,7 @@ export default function Dashboard() {
     <SafeAreaView style={styles.container}>
       {/* Top Section */}
       <View style={styles.topSection}>
-        <Image source={require("../assets/logo.png")} style={styles.logo} />
+        <Image source={require("../../assets/logo.png")} style={styles.logo} />
 
         {/* Profile Button */}
         <TouchableOpacity style={styles.profileButton}>
