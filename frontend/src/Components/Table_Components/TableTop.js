@@ -3,11 +3,17 @@ import PageHeading from './PageHeading'; // Adjust path if necessary
 import FilterButton from './FilterButton'; // Adjust path if necessary
 import SearchBar from './SearchBar'; // Adjust path if necessary
 
+<<<<<<< Updated upstream
 export default function TableTop({
   search_function,
   filter_function,
   heading_text,
 }) {
+=======
+export default function TableTop(
+  table_text_heading
+) {
+>>>>>>> Stashed changes
   // Example function to handle search and filter actions
   // const handleSearch = (searchText) => {
   //   console.log('Searching for:', searchText);
@@ -44,7 +50,11 @@ export default function TableTop({
 
       <div className="table-top-container">
         <PageHeading
+<<<<<<< Updated upstream
           text={heading_text}
+=======
+          headings={table_text_heading}
+>>>>>>> Stashed changes
           text_color={[0, 0, 0]} // Black text color
           sidebar_color={[23, 23, 23]} // Sidebar color
           width="auto" // Auto width to align properly

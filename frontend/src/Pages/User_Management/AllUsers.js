@@ -126,7 +126,9 @@ export default function AllUser() {
           height="50px"
         />
 
-        <TableTop />
+        <TableTop 
+          headings= {['All User']}
+        />
 
         <TableContent 
           tableheadings = {['llc name', 'first_name']}

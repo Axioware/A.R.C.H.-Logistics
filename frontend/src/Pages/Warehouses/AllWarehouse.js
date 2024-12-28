@@ -116,7 +116,9 @@ export default function AllUser() {
         />
 
 
-        <TableTop />
+        <TableTop
+          headings= {['Ware House']}
+        />
 
         <TableContent 
             tableheadings = {['llc name', 'first_name']}
