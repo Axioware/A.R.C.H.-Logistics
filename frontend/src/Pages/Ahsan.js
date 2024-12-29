@@ -5,53 +5,58 @@ import NavPath from '../Components/General/NavPath';
 import TableContent from '../Components/Table_Components/TableContent';
 import TableTop from '../Components/Table_Components/TableTop';
 import PageHeading from '../Components/Table_Components/PageHeading';
+import fetchData from '../utils/fetch_data'
+import SessionExpired from '../Components/Modals/SessionExpired';
+// import Forbidden from '../Components/Error/Forbidden';
+// import ServerError from '../Components/Error/ServerError';
 
-export default function AllUser() {
+export default function Ahsan() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
+  const [errorCode, setErrorCode] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Track sidebar state
 
-  const totalPages = 5;
-
-  const loadingFunction = () => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const success = Math.random() > 0.5;
-        if (success) {
-          resolve([
-            { Name: 'Alice', Age: 25, City: 'New York' },
-            { Name: 'Bob', Age: 30, City: 'Los Angeles' },
-            { Name: 'Charlie', Age: 22, City: 'Chicago' },
-            { Name: 'David', Age: 28, City: 'San Francisco' },
-            { Name: 'Eva', Age: 26, City: 'Boston' },
-          ]);
-        } else {
-          reject('Failed to load data');
-        }
-      }, 2000);
-    });
+  const fetchUsers = async () => {
+    const url = `https://api.example.com/users?page=${currentPage}`;  // Example URL
+    const response = await fetchData(setLoading, setSuccess, url);
+    console.log(response.error)
+    
+    if (response && response.error) {
+      switch (response.error) {
+        case 400:
+          // Do nothing for 400 (Bad Request)
+          setErrorCode(401);
+          break;
+    
+        case 401:
+          setErrorCode(401);  // Unauthorized
+          break;
+    
+        case 403:
+          setErrorCode(403);  // Forbidden
+          break;
+    
+        case 500:
+          setErrorCode(500);  // Internal Server Error
+          break;
+    
+        default:
+          setErrorCode(response.error);  // Handle other errors (fallback)
+          break;
+      }
+      console.error('Error fetching data:', response.message);
+    } else if (response) {
+      setData(response);  // Update data for successful fetch
+      setErrorCode(null);  // Clear error if successful
+    }
   };
 
   useEffect(() => {
-    fetchData();
-  }, [currentPage]);
-
-  const fetchData = () => {
-    setLoading(true);
-    loadingFunction()
-      .then((data) => {
-        setData(data);
-        setSuccess(true);
-      })
-      .catch(() => {
-        setSuccess(false);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+    fetchUsers();
+  }, [currentPage]);  // Call on currentPage change
 
   const handleNext = () => {
     if (currentPage < totalPages) {
@@ -77,8 +82,6 @@ export default function AllUser() {
       marginLeft: isSidebarOpen ? "18%" : "4%",
     },
   };
-
-  const headings = ["Name", "Age", "City"];
 
   return (
       /* Sidebar */
@@ -107,7 +110,6 @@ export default function AllUser() {
      
       {/* Main content area */}
       <div style={styles.mainContent}>
-test text
         <NavPath
           text={["Home", "User Management"]}
           paths={["/home", "/users"]}
@@ -117,11 +119,29 @@ test text
           height="50px"
         />
          
-        <TableTop />
+        <TableTop 
+          heading_text={'All Users'} 
+          />
 
-        <TableContent
+        <TableContent 
+        table_headings = {['abd', 'hello', 'hello', 'bye', 'what', 'the', 'hell', 'is', 'wrong', 'with', 'me', 'world']}
+        last_column = {true}
+        loading={loading}
+        success={success}
+        prev_button={handlePrev}
+        next_button={handleNext}
+        fetchData={fetchUsers}
+        data={data}
+        currentPage={currentPage}
+        totalPages={totalPages}
          />
       </div>
+      {/* {errorCode === 401 && <SessionExpired
+          heading_text="Session Expired"
+          body_text="Your session has expired. Please log in again."
+          button_text="Login"
+          button_function={() => console.log("Logging in...")}
+      />} */}
       </div>
   );
 }

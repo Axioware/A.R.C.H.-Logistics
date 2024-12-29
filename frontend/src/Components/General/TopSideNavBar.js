@@ -194,25 +194,4 @@ const NavBarWithSidebar = ({
   );
 };
 
-NavBarWithSidebar.propTypes = {
-  // Props
-  background_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  text_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  logo: PropTypes.string.isRequired,
-  company_name: PropTypes.string.isRequired,
-  company_name_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  username: PropTypes.string.isRequired,
-  username_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  icons: PropTypes.arrayOf(PropTypes.string).isRequired,
-  names: PropTypes.arrayOf(PropTypes.array).isRequired,
-  sidebar_background_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  sidebar_text_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  selected_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  hover_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  expanded: PropTypes.arrayOf(PropTypes.bool).isRequired,
-  sidebar_width: PropTypes.string.isRequired,
-  sidebar_height: PropTypes.string.isRequired,
-  hamburger_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-};
-
 export default NavBarWithSidebar;

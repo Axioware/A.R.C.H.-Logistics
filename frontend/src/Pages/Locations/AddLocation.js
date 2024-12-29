@@ -5,20 +5,73 @@ import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
 import archlogo from '../../Assets/Images/logo1.png';
 import NavPath from '../../Components/General/NavPath';
 import PageHeading from '../../Components/Table_Components/PageHeading';
+import Forbidden from '../../Components/Error_Components/Forbidden';
+import SessionExpiredModal from '../../Components/Modals/SessionExpired';
+
+const SuccessModal = ({ message, onClose }) => (
+  <div className="modal success-modal">
+    <div className="modal-content">
+      <h2>Success</h2>
+      <p>{message}</p>
+      <button className="close-btn" onClick={onClose}>Close</button>
+    </div>
+  </div>
+);
+
+const GeneralError = ({ errorMessage }) => (
+  <div className="modal error-modal">
+    <div className="modal-content">
+      <h2>Error</h2>
+      <p>{errorMessage}</p>
+    </div>
+  </div>
+);
 
 const AddLocation = () => {
-  const handleSubmit = (e) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
+  const [forbidden, setForbidden] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted'); // Debug log
-    alert('Warehouse added successfully!');
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/add-location', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}), // Dummy payload
+      });
+
+      const result = await response.json();
+
+      if (response.status === 401) {
+        setSessionExpired(true);
+      } else if (response.status === 403) {
+        setForbidden(true);
+      } else if (response.status === 400) {
+        setError(result.error);
+      } else if (response.status >= 500) {
+        setError('Internal Server Error');
+      } else if (response.status >= 200 && response.status < 300) {
+        setSuccess(true);
+      }
+    } catch (err) {
+      setError('An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = () => {
-    console.log('Form cancelled'); // Debug log
-    alert('Form cancelled!');
+    window.history.back();
   };
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -57,7 +110,7 @@ const AddLocation = () => {
       marginTop: '20px',
     },
     heading: {
-      marginBottom: '20px', // Added margin-bottom for the heading
+      marginBottom: '20px',
     },
   };
 
@@ -91,24 +144,22 @@ const AddLocation = () => {
           paths={['/home', '/add-warehouses', '/add-warehouses']}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
-          hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
+          hyperlink_size={[["10%", "55%"], ["40%", "50%"], ["4%", "4%"]]}
           width="100%"
           height="50px"
         />
 
         <div style={styles.container}>
-          {/* Updated heading with margin */}
           <div style={styles.heading}>
             <PageHeading text="Add Location" />
           </div>
 
           <form style={styles.form} onSubmit={handleSubmit}>
-            <GeneralField label="Name" field_type="text" />
-            <GeneralField label="Type" field_type="text" />
-            <GeneralField label="Warehouse" field_type="text" />
+            <GeneralField label="Name *" field_type="text" required />
+            <GeneralField label="Type *" field_type="select" options={['Inventory Bin', 'Other']} required />
+            <GeneralField label="Warehouse *" field_type="text" required />
           </form>
 
-          {/* Button Container */}
           <div id="buttonContainer" style={styles.buttonContainer}>
             <GeneralButton 
               text="Cancel" 
@@ -123,12 +174,14 @@ const AddLocation = () => {
               type="submit" 
               width="120px" 
               height="40px" 
+              disabled={loading}
             />
           </div>
         </div>
       </div>
-    </div>
-  );
-};
 
-export default AddLocation;
+      {success && <SuccessModal message="Location Added Successfully" onClose={() => (window.location.href = '/add-warehouses')} />}
+      </div>
+  )}
+
+  export default AddLocation;

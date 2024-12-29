@@ -9,7 +9,6 @@ function rgbArrayToString(rgbArray) {
 }
 
 export default function Table({
-  number_of_headings,
   headings,
   heading_background,
   heading_color,

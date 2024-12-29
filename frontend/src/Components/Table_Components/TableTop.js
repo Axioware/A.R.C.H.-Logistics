@@ -3,15 +3,19 @@ import PageHeading from './PageHeading'; // Adjust path if necessary
 import FilterButton from './FilterButton'; // Adjust path if necessary
 import SearchBar from './SearchBar'; // Adjust path if necessary
 
-export default function TableTop() {
+export default function TableTop({
+  search_function,
+  filter_function,
+  heading_text,
+}) {
   // Example function to handle search and filter actions
-  const handleSearch = (searchText) => {
-    console.log('Searching for:', searchText);
-  };
+  // const handleSearch = (searchText) => {
+  //   console.log('Searching for:', searchText);
+  // };
 
-  const handleFilterClick = () => {
-    console.log('Filter button clicked');
-  };
+  // const handleFilterClick = () => {
+  //   console.log('Filter button clicked');
+  // };
 
   return (
     <>
@@ -40,21 +44,14 @@ export default function TableTop() {
 
       <div className="table-top-container">
         <PageHeading
-          text="All Users"
+          text={heading_text}
           text_color={[0, 0, 0]} // Black text color
           sidebar_color={[23, 23, 23]} // Sidebar color
           width="auto" // Auto width to align properly
           height="auto" // Auto height
           className="page-heading"
           sidebar_width="5px" // Narrow sidebar width
-
-
-          
-  
-
-  sidebar_height="40px"
-
-
+          sidebar_height="40px"
         />
 
         <div className="row-container1">
@@ -62,7 +59,7 @@ export default function TableTop() {
             text="+ Filter By"
             text_color={[255, 255, 255]} // White text color
             background_color={[23, 23, 23]} // Dark background
-            function={handleFilterClick} // Function to call on button click
+            function={filter_function} // Function to call on button click
             width="150px" // Set width explicitly
             height="50px" // Set height explicitly
           />
@@ -70,7 +67,7 @@ export default function TableTop() {
           <SearchBar
             hint="Search..."
             field_color={[255, 255, 255]} // White background
-            function={handleSearch} // Function to call on search
+            function={search_function} // Function to call on search
             width="300px" // Set width explicitly
             height="50px" // Set height for input field
           />

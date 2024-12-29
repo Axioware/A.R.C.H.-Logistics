@@ -1,25 +1,31 @@
 import React from "react";
 import PropTypes from "prop-types";
 import GeneralButton from "../General/GeneralButton"; // Adjust the path as needed
+import { useNavigate } from "react-router-dom";
 
 const SessionExpired = ({
   icon,
   heading_text,
-  heading_text_color,
-  heading_background,
+  heading_text_color  = [233, 233, 233],
+  heading_background = [23, 23, 23],
   body_text,
-  body_text_color,
-  background_color,
+  body_text_color  = [100, 100, 100],
+  background_color = [255, 255, 255],
   click_outside,
   button_text,
-  button_color,
-  button_function,
-  button_hover_color,
+  button_color = [23, 23, 23],
+  button_hover_color  = [100, 100, 100],
   button_width,
   button_height,
   width,
   height,
 }) => {
+
+  const navigate = useNavigate();
+
+  const button_function = () => {
+    navigate('/login');
+  }
   const closemodal = () => {
     if (click_outside) {
       button_function(); // Close modal when clicking outside
@@ -119,32 +125,13 @@ const SessionExpired = ({
               hoverColor={button_hover_color}
               width={button_width}
               height={button_height}
-              onClick={button_function}
+              func={button_function}
             />
           </div>
         </div>
       </div>
     </>
   );
-};
-
-SessionExpired.propTypes = {
-  icon: PropTypes.string, // Path to the icon image
-  heading_text: PropTypes.string.isRequired,
-  heading_text_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  heading_background: PropTypes.arrayOf(PropTypes.number).isRequired,
-  body_text: PropTypes.string.isRequired,
-  body_text_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  background_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  click_outside: PropTypes.bool.isRequired,
-  button_text: PropTypes.string.isRequired,
-  button_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  button_function: PropTypes.func.isRequired,
-  button_hover_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  button_width: PropTypes.string.isRequired,
-  button_height: PropTypes.string.isRequired,
-  width: PropTypes.string.isRequired,
-  height: PropTypes.string.isRequired,
 };
 
 export default SessionExpired;

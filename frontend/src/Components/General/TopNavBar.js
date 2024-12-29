@@ -60,14 +60,4 @@ const TopNavBar = ({
   );
 };
 
-TopNavBar.propTypes = {
-  background_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  text_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  logo: PropTypes.string.isRequired,
-  company_name: PropTypes.string.isRequired,
-  company_name_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-  username: PropTypes.string.isRequired,
-  username_color: PropTypes.arrayOf(PropTypes.number).isRequired,
-};
-
 export default TopNavBar;

@@ -5,40 +5,20 @@ import SearchBar from './SearchBar';
 import Table from './Table';
 import Pagination from './Pagination';
 
-export default function App(
-  table_headings,
-  sorting_function,
-  url,
-  loading_p,
-  success_p,
-  last_column
-) {
-  
-  const [currentPage, setCurrentPage] = useState(null);
-  const totalPages = null;
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(loading_p);
-  const [success, setSuccess] = useState(success_p);
+export default function TableContent({
+      table_headings,
+      sorting_function,
+      last_column,
+      next_button,
+      prev_button,
+      fetchData,
+      currentPage,
+      totalPages,
+      data,
+      loading,
+      success
+    }) {
 
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleFilterClick = () => {
-    console.log('Filter button clicked');
-  };
-
-  const handleSearch = (searchText) => {
-    console.log('Search initiated for:', searchText);
-  };
 
   const handleSort = (column) => {
     console.log('Sorting by column:', column);
@@ -46,25 +26,6 @@ export default function App(
 
   const handleRefresh = () => {
     fetchData();
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = () => {
-    // Simulate fetching data
-    setLoading(true);
-    setTimeout(() => {
-      const success = Math.random() > 0.5;
-      if (success) {
-        setData([{ Name: 'Alice', Age: 25, City: 'New York' }, { Name: 'Bob', Age: 30, City: 'Los Angeles' }, { Name: 'Charlie', Age: 22, City: 'Chicago' }]);
-        setSuccess(true);
-      } else {
-        setSuccess(false);
-      }
-      setLoading(false);
-    }, 2000);
   };
 
   return (
@@ -96,8 +57,8 @@ export default function App(
         button_background_color={[23, 23, 23]}
         width="95%"
         height="50px"
-        onNext={handleNext}
-        onPrev={handlePrev}
+        onNext={next_button}
+        onPrev={prev_button}
         />
       </div>
     </div>
