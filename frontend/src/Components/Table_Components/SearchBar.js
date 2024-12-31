@@ -28,7 +28,6 @@ export default function SearchBar({
   };
 
   // Handle search button click
-
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSearch(searchText); 
@@ -54,22 +53,16 @@ export default function SearchBar({
       />
       <style>
         {`
-          .Search-app-container {
-            height: 100vh; /* Ensure the app's height is 100% of the viewport */
-
-            // display: flex;
-            // justify-content: center;
-            // align-items: center;
+          .Search-bar-container {
+            width: ${width}; /* Apply width */
+            height: ${height}; /* Apply height */
+            margin: 0px 40px 0px 0px;
+            display: flex;
+            align-items: center;
           }
 
-          .Search-bar-container {
-            width: ${width}; /* Apply percentage width */
-            height: ${height}; /* Apply percentage height */
-            margin: 0px 40px 0px 0px;
-
-             // display: flex;
-            // justify-content: center;
-            // align-items: center;
+          .Search-icon-container {
+            margin-right: 10px; /* Space between icon and input field */
           }
 
           .Search-bar-input {
@@ -81,32 +74,53 @@ export default function SearchBar({
             font-size: 1rem;
             outline: none;
             transition: background-color 0.3s ease;
-
-            // box-sizing: border-box;
           }
 
           .Search-bar-input:focus {
             border-color: #007bff; /* Focused input border color */
           }
 
-          .Search-bar-button {
-
-            // border: none;
-            // background-color: transparent;
-            // cursor: pointer;
-            // padding: 10px;
-            // margin-left: 10px;
-            // font-size: 1.2rem;
-            // color: #007bff;
-          }
-
-          .Search-bar-button:hover {
-            color: #0056b3; /* Change color on hover */
-          }
-
           .Search-icon {
-          
-            // font-size: 1.2rem;
+            width: 20px;
+            height: 20px;
+          }
+
+          /* Responsive styles */
+          @media (max-width: 768px) {
+            .Search-bar-container {
+              flex-direction: column; /* Stack input and icon vertically on smaller screens */
+              margin: 10px; /* Adjust margin */
+            }
+
+            .Search-bar-input {
+              font-size: 1.2rem; /* Adjust font size on smaller screens */
+              padding: 8px; /* Reduce padding for a more compact input */
+            }
+
+            .Search-icon-container {
+              margin-right: 0px; /* Remove right margin for icon */
+            }
+
+            .Search-icon {
+              width: 18px; /* Adjust icon size on small screens */
+              height: 18px;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .Search-bar-container {
+              margin: 10px 0px; /* Further adjust margin for very small screens */
+            }
+
+            .Search-bar-input {
+              font-size: 1rem; /* Further reduce font size */
+              padding: 6px; /* Further reduce padding */
+            }
+
+            .Search-icon {
+              width: 16px; /* Reduce icon size on very small screens */
+              height: 16px;
+            }
           }
         `}
       </style>

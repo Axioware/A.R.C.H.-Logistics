@@ -1,4 +1,3 @@
-
 function rgbArrayToString(rgbArray) {
   if (Array.isArray(rgbArray) && rgbArray.length === 3) {
     const [r, g, b] = rgbArray;
@@ -183,6 +182,54 @@ export default function Table({
 
           .table-refresh-button:hover svg {
             transform: rotate(360deg);
+          }
+
+          /* Media Queries for Responsiveness */
+
+          @media (max-width: 768px) {
+            .table th, .table td {
+              padding: 10px;
+              font-size: 12px;
+            }
+
+            .table {
+              width: 100%;
+              font-size: 12px;
+            }
+
+            .table-wrapper {
+              padding: 10px;
+            }
+
+            .table-refresh-button {
+              font-size: 14px;
+              padding: 8px 16px;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .table th, .table td {
+              padding: 8px;
+              font-size: 10px;
+            }
+
+            .table-wrapper {
+              padding: 5px;
+            }
+
+            .table-refresh-button {
+              font-size: 12px;
+              padding: 6px 12px;
+            }
+
+            .table {
+              font-size: 10px;
+            }
+
+            .table-refresh-button svg {
+              width: 30px;
+              height: 30px;
+            }
           }
         `}
       </style>
