@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 
 function rgbArrayToString(rgbArray) {
   if (Array.isArray(rgbArray) && rgbArray.length === 3) {

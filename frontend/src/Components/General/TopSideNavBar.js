@@ -111,9 +111,10 @@ const NavBarWithSidebar = ({
             }
           .TopSideNavBar-sidebar {
             width: ${isSidebarOpen ? sidebar_width : "0"};
-            height: ${sidebar_height};
+            // height: ${sidebar_height};
             background-color: rgb(${sidebar_background_color.join(",")});
             position: fixed;
+            height: 100%;
             top: 0;
             left: 0;
             overflow-x: hidden;

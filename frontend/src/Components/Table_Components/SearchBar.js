@@ -28,20 +28,17 @@ export default function SearchBar({
   };
 
   // Handle search button click
-  const handleButtonClick = () => {
-    handleSearch(searchText); // Call the passed function with search text
-  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleSearch(searchText); // Call the search function on Enter key press
+      handleSearch(searchText); 
     }
   };
 
   return (
     <div
       className={`Search-bar-container ${class_name}`}
-      style={{ width, height }}  // Apply width and height as props
+      style={{ width, height }}  
     >
       <div className="Search-icon-container">
         {icon && <img src={SearchIcon} alt="Search Icon" className="Search-icon" />}

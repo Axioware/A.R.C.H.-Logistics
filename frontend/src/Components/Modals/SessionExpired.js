@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import GeneralButton from "../General/GeneralButton"; // Adjust the path as needed
 import { useNavigate } from "react-router-dom";
 

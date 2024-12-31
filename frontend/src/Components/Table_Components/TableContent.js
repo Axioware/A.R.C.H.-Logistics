@@ -1,7 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import PageHeading from './PageHeading';
-import FilterButton from './FilterButton';
-import SearchBar from './SearchBar';
+// import React, { useState, useEffect } from 'react';
 import Table from './Table';
 import Pagination from './Pagination';
 
