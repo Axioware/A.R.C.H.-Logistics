@@ -132,7 +132,7 @@ const AddLocation = () => {
       <div style={styles.mainContent}>
         <NavPath
           text={['Setting', 'location', 'Add location']}
-          paths={['/home', '/add-warehouses', '/add-warehouses']}
+          paths={['/home', '/add-location', '/add-location']}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
           hyperlink_size={[["10%", "55%"], ["40%", "50%"], ["4%", "4%"]]}
