@@ -9,14 +9,6 @@ export default function TableTop({
   filter_function,
   heading_text,
 }) {
-  // Example function to handle search and filter actions
-  // const handleSearch = (searchText) => {
-  //   console.log('Searching for:', searchText);
-  // };
-
-  // const handleFilterClick = () => {
-  //   console.log('Filter button clicked');
-  // };
 
   return (
     <>

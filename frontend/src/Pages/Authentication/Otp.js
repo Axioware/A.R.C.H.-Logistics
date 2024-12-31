@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import OtpForm from "../../Components/Authentication/Otpform"; // Adjust the path if necessary
-import PrepPrimeLogo from "../../Assets/Images/Login/PrepPrimeLogo.jpg";
+// import PrepPrimeLogo from "../../Assets/Images/Login/PrepPrimeLogo.jpg";
 import BackgroundImage from "../../Assets/Images/Login/background.jpg";
 import arch from '../../Assets/Images/archlabs.jpg';
 

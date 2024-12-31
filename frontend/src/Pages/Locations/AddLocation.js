@@ -18,15 +18,6 @@ const SuccessModal = ({ message, onClose }) => (
   </div>
 );
 
-const GeneralError = ({ errorMessage }) => (
-  <div className="modal error-modal">
-    <div className="modal-content">
-      <h2>Error</h2>
-      <p>{errorMessage}</p>
-    </div>
-  </div>
-);
-
 const AddLocation = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [loading, setLoading] = useState(false);
