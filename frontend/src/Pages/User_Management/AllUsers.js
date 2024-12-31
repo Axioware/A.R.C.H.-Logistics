@@ -82,17 +82,20 @@ export default function All_Users() {
     },
     lightGreyBackground: {
       backgroundColor: '#f7f6f6',  // Light grey color
-      padding: '20px',
-      borderRadius: '8px',  // Optional: to add rounded corners
-      minHeight: '10vh',  // Ensure the div takes up full height (or adjust as needed)
-      display: 'flex', // Make sure the div is a flex container
+      padding: '20px 0px 40px 60px',
+      borderRadius: '8px',  // Rounded corners
+      minHeight: '10vh',  // Ensure the div takes up at least a small height
+      display: 'flex',  // Make sure the div is a flex container
       flexDirection: 'column', // Stack child elements vertically
-      // alignItems: 'stretch', // Ensure child elements stretch within the div
-      marginRight: '0px', // This centers the background relative to the content
-      marginLeft: '0px',  // This ensures the background is centered horizontally
-      maxWidth: '95%',  // Adjust as needed to match the desired content width
+      justifyContent: 'center', // Center content vertically
+      alignItems: 'center', // Center content horizontally
+      width: '95%',  // Match width to NavPath
+      margin: '20px 0px 0px 0px',  // Center horizontally and add spacing
+      boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)', // Optional: Add a shadow for better visuals
+    
     },
   };
+  
 
   return (
       /* Sidebar */
@@ -136,21 +139,23 @@ export default function All_Users() {
         />
           
 
-        <div style={styles.lightGreyBackground}>
-          <TableTop heading_text={'All Users'} />
-          <TableContent
-            table_headings={['abd', 'hello', 'hello', 'bye', 'what', 'the', 'hell', 'is', 'wrong', 'with', 'me', 'world']}
-            last_column={true}
-            loading={loading}
-            success={success}
-            prev_button={handlePrev}
-            next_button={handleNext}
-            fetchData={fetchUsers}
-            data={data}
-            currentPage={currentPage}
-            totalPages={totalPages}
-          />
-        </div>
+          <div style={styles.lightGreyBackground}>
+  <TableTop heading_text={'All Users'} />
+  <TableContent
+    table_headings={['abd', 'hello', 'hello', 'bye', 'what', 'the', 'hell', 'is', 'wrong', 'with', 'me', 'world']}
+    last_column={true}
+    loading={loading}
+    success={success}
+    prev_button={handlePrev}
+    next_button={handleNext}
+    fetchData={fetchUsers}
+    data={data}
+    currentPage={currentPage}
+    totalPages={totalPages}
+  />
+</div>
+
+
         
        
       </div>
