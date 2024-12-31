@@ -73,10 +73,50 @@ const NavBarWithSidebar = ({
             background-color: rgb(${background_color.join(",")});
             text-color: rgb(${text_color.join(",")});
           }
+            /* Ensure fixed position for smaller screen widths */
+@media (max-width: 1700px) {
+  .TopSideNavBar-hamburger {
+    top: 10px; /* Keep the same top position */
+    left: 30px; /* Maintain the left position for consistency */
+  }
+}
+  @media (min-width: 1700px) {
+  .TopSideNavBar-hamburger {
+    top: 10px; /* Maintain the same vertical alignment */
+    left: 50px; /* Adjust left position for wider screens */
+  }
+}
+
+@media (max-width: 1200px) {
+  .TopSideNavBar-hamburger {
+    top: 10px; /* Ensure it remains aligned */
+    left: 30px; /* Adjust if necessary for tighter spaces */
+  }
+}
+
+@media (max-width: 768px) {
+  .TopSideNavBar-hamburger {
+    top: 10px; /* Align for smaller viewports */
+    left: 30px; /* Adjust only if there's overlap or misalignment */
+  }
+}
+
+/* Parent navbar to ensure relative positioning for hamburger */
+.TopSideNavBar-nav-bar {
+  position: relative; /* Parent container for absolute positioning */
+  display: flex;
+   width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 30px;
+  background-color: rgb(${background_color.join(",")});
+  text-color: rgb(${text_color.join(",")});
+}
           .TopSideNavBar-center-container {
             flex-grow: 1;
             display: flex;
             justify-content: center;
+           
           }
           .TopSideNavBar-company-name {
             margin: 0;
@@ -129,18 +169,33 @@ const NavBarWithSidebar = ({
             align-items: center;
           }
           .TopSideNavBar-logo img {
-            width: ${isSidebarOpen ? "80%" : "0"};
-            height: auto;
-            transition: width 0.35s ease;
-            margin-bottom: ${isSidebarOpen ? "50%" : "0"};
-          }
-          .TopSideNavBar-user-section {
-            position: absolute;
-            bottom: 2%;
-            width: 100%;
-            text-align: center;
-            color: rgb(${sidebar_text_color.join(",")});
-          }
+  width: ${isSidebarOpen ? "80%" : "0"};
+  height: auto;
+  transition: width 0.35s ease;
+  margin-bottom: ${isSidebarOpen ? "50%" : "0"};
+}
+
+/* Adjust logo for smaller screens */
+@media (max-width: 1200px) {
+  .TopSideNavBar-logo img {
+    width: ${isSidebarOpen ? "70%" : "0"}; /* Slightly reduce width */
+    margin-bottom: ${isSidebarOpen ? "30%" : "0"}; /* Adjust spacing */
+  }
+}
+
+@media (max-width: 768px) {
+  .TopSideNavBar-logo img {
+    width: ${isSidebarOpen ? "60%" : "0"}; /* Reduce width further */
+    margin-bottom: ${isSidebarOpen ? "20%" : "0"}; /* Adjust for smaller viewports */
+  }
+    /* Media Query for very large screens (above 1900px) */
+@media (min-width: 1900px) {
+  .TopSideNavBar-hamburger {
+    top: 10px; /* Keep the vertical positioning same */
+    left: 60px; /* Ensure it stays at the same position on very large screens */
+    opacity: 1; /* Ensure hamburger remains visible */
+  }
+
         `}
       </style>
 

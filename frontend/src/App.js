@@ -15,6 +15,7 @@ import AllWarehouse from './Pages/Warehouses/AllWarehouse';
 import AddWarehouse from './Pages/Warehouses/AddWarehouse';
 import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 import AddLocation from './Pages/Locations/AddLocation';
+import EditLocation from './Pages/Locations/EditLocation';
 
 
 function App() {
