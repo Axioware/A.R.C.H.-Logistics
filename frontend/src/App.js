@@ -31,7 +31,8 @@ function App() {
         <Route path="/warehouses" element={<AllWarehouse />} />
         <Route path="/edit-warehouses" element={<EditWarehouse />} />
         <Route path="/add-warehouses" element={<AddWarehouse />} />
-        <Route path="/add-location" element={<AddLocation />} />        
+        <Route path="/add-location" element={<AddLocation />} />  
+        <Route path="/edit-location" element={<EditLocation />} />      
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
