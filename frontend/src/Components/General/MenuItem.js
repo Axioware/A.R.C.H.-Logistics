@@ -109,6 +109,50 @@ const MenuItem = ({
           .menu-item-expanded .expand-icon {
             transform: rotate(180deg); /* Rotate 180 degrees when expanded */
           }
+            @media (max-width: 1500px) {
+  .menu-item {
+    width: calc(${width || "250px"} - 50px); /* Reduce width */
+    height: calc(${height || "50px"} - 10px); /* Reduce height */
+    padding-left: 20px; /* Adjust padding */
+    font-size: 0.9rem; /* Reduce font size */
+  }
+
+  .submenu-item {
+    width: calc(250px - 50px); /* Reduce width */
+    height: calc(50px - 10px); /* Reduce height */
+    font-size: 0.9rem; /* Reduce font size */
+    padding: 8px 16px; /* Adjust padding */
+  }
+
+  .submenu {
+    margin-left: 20px; /* Adjust margin for submenu */
+  }
+
+  .menu-item .expand-icon {
+    margin-left: 10px; /* Adjust icon spacing */
+  }
+}
+
+/* Media Query for Screens Smaller Than 768px (Optional) */
+@media (max-width: 768px) {
+  .menu-item {
+    width: calc(${width || "250px"} - 100px); /* Further reduce width */
+    height: calc(${height || "50px"} - 20px); /* Further reduce height */
+    padding-left: 15px; /* Adjust padding */
+    font-size: 0.8rem; /* Further reduce font size */
+  }
+
+  .submenu-item {
+    width: calc(250px - 100px); /* Further reduce width */
+    height: calc(50px - 20px); /* Further reduce height */
+    font-size: 0.8rem; /* Further reduce font size */
+    padding: 6px 12px; /* Adjust padding */
+  }
+
+  .submenu {
+    margin-left: 10px; /* Adjust margin for submenu */
+  }
+}
         `}
       </style>
 

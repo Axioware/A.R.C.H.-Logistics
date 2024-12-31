@@ -39,7 +39,7 @@ export default function AddButton({
             display: flex;
             justify-content: flex-end; /* Align button to the right */
             align-items: center;
-            height: 10vh; /* Adjust as necessary */
+            height: 8vh; /* Adjust as necessary */
             margin: 0px 70px 0px 0px; /* Add some vertical spacing */
             font-weight: bold;
           }

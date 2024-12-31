@@ -1,57 +1,61 @@
 import React, { useState, useEffect } from "react";
 import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
 import NavPath from '../../Components/General/NavPath';
-import AddButton from '../../Components/Table_Components/AddButton';
 import archlogo from '../../Assets/Images/logo1.png';
 import TableContent from '../../Components/Table_Components/TableContent';
 import TableTop from '../../Components/Table_Components/TableTop';
+import fetchData from '../../utils/fetch_data'
+import AddButton from '../../Components/Table_Components/AddButton';
+// import PageHeading from '../../Components/Table_Components/PageHeading';
+// import SessionExpired from '../../Components/Modals/SessionExpired';
 
-export default function AllUser() {
+export default function All_Users() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [totalPages, setTotalPages] = useState(null);
+  const [errorCode, setErrorCode] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Track sidebar state
 
-  const totalPages = 5;
-
-  const loadingFunction = () => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const success = Math.random() > 0.5;
-        if (success) {
-          resolve([
-            { Name: 'Alice', Age: 25, City: 'New York' },
-            { Name: 'Bob', Age: 30, City: 'Los Angeles' },
-            { Name: 'Charlie', Age: 22, City: 'Chicago' },
-            { Name: 'David', Age: 28, City: 'San Francisco' },
-            { Name: 'Eva', Age: 26, City: 'Boston' },
-          ]);
-        } else {
-          reject('Failed to load data');
-        }
-      }, 2000);
-    });
+  const fetchUsers = async () => {
+    const url = `https://api.example.com/users?page=${currentPage}`;  // Example URL
+    const response = await fetchData(setLoading, setSuccess, url);
+    console.log(response.error)
+    
+    if (response && response.error) {
+      switch (response.error) {
+        case 400:
+          // Do nothing for 400 (Bad Request)
+          setErrorCode(401);
+          break;
+    
+        case 401:
+          setErrorCode(401);  // Unauthorized
+          break;
+    
+        case 403:
+          setErrorCode(403);  // Forbidden
+          break;
+    
+        case 500:
+          setErrorCode(500);  // Internal Server Error
+          break;
+    
+        default:
+          setErrorCode(response.error);  // Handle other errors (fallback)
+          break;
+      }
+      console.error('Error fetching data:', response.message);
+    } else if (response) {
+      setData(response);  // Update data for successful fetch
+      setErrorCode(null);  // Clear error if successful
+    }
   };
 
   useEffect(() => {
-    fetchData();
-  }, [currentPage]);
-
-  const fetchData = () => {
-    setLoading(true);
-    loadingFunction()
-      .then((data) => {
-        setData(data);
-        setSuccess(true);
-      })
-      .catch(() => {
-        setSuccess(false);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+    fetchUsers();
+  }, [currentPage]);  // Call on currentPage change
 
   const handleNext = () => {
     if (currentPage < totalPages) {
@@ -76,11 +80,22 @@ export default function AllUser() {
       transition: "margin-left 0.5s ease",
       marginLeft: isSidebarOpen ? "18%" : "4%",
     },
+    lightGreyBackground: {
+      backgroundColor: '#f7f6f6',  // Light grey color
+      padding: '20px',
+      borderRadius: '8px',  // Optional: to add rounded corners
+      minHeight: '10vh',  // Ensure the div takes up full height (or adjust as needed)
+      display: 'flex', // Make sure the div is a flex container
+      flexDirection: 'column', // Stack child elements vertically
+      // alignItems: 'stretch', // Ensure child elements stretch within the div
+      marginRight: '0px', // This centers the background relative to the content
+      marginLeft: '0px',  // This ensures the background is centered horizontally
+      maxWidth: '95%',  // Adjust as needed to match the desired content width
+    },
   };
 
-  const headings = ["Name", "Age", "City"];
-
   return (
+      /* Sidebar */
     <div>
       <NavBarWithSidebar
         text_color={[255, 255, 255]}
@@ -94,16 +109,16 @@ export default function AllUser() {
         ]}
         names={[
           ["User Management", "All User", "Add User"],
-          ["Inventory", "Add Item", "Delete Item"],
           ["Management", "Add Order", "Delete Order"],
+          ["Inventory", "Add Item", "Delete Item"],
         ]}
         routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
         sidebar_width="14%"
         sidebar_height="100vh"
         toggleSidebar_func={toggleSidebar}
-        isSidebarOpen_p={isSidebarOpen}
+        isSidebarOpen_p = {isSidebarOpen}
       />
-
+     
       {/* Main content area */}
       <div style={styles.mainContent}>
         <NavPath
@@ -115,28 +130,55 @@ export default function AllUser() {
           height="50px"
         />
 
-        {/* AddButton Component */}
         <AddButton
           text="Add User"
           text_color={[255, 255, 255]}
-          path="/add_user" // Replace with the route to your Add User page
-          background_color={[23, 23, 23]}
-          class_name="custom-class"
-          width="200px"
-          height="50px"
         />
+          
 
-        <TableTop 
-          headings= {['All User']}
-        />
-
-        <TableContent 
-          tableheadings = {['llc name', 'first_name']}
-          loading={true}
-          success={false}
-          last_column={true}
-        />
+        <div style={styles.lightGreyBackground}>
+          <TableTop heading_text={'All Users'} />
+          <TableContent
+            table_headings={['abd', 'hello', 'hello', 'bye', 'what', 'the', 'hell', 'is', 'wrong', 'with', 'me', 'world']}
+            last_column={true}
+            loading={loading}
+            success={success}
+            prev_button={handlePrev}
+            next_button={handleNext}
+            fetchData={fetchUsers}
+            data={data}
+            currentPage={currentPage}
+            totalPages={totalPages}
+          />
+        </div>
+        
+       
       </div>
-    </div>
+      {/* {errorCode === 401 && <SessionExpired
+          heading_text="Session Expired"
+          body_text="Your session has expired. Please log in again."
+          button_text="Login"
+          button_function={() => console.log("Logging in...")}
+      />} */}
+      </div>
   );
 }
+
+
+
+ {/* <TableTop 
+          heading_text={'All Users'} 
+          />
+
+        <TableContent 
+        table_headings = {['abd', 'hello', 'hello', 'bye', 'what', 'the', 'hell', 'is', 'wrong', 'with', 'me', 'world']}
+        last_column = {true}
+        loading={loading}
+        success={success}
+        prev_button={handlePrev}
+        next_button={handleNext}
+        fetchData={fetchUsers}
+        data={data}
+        currentPage={currentPage}
+        totalPages={totalPages}
+         /> */}

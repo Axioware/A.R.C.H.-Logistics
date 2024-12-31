@@ -60,7 +60,7 @@ export default function NavPath({
             width: ${width || 'auto'};
             height: ${height || 'auto'};
             background-color: ${bgColor || 'transparent'};
-            margin: 50px 0px 80px 0px;
+            margin: 50px 0px 25px 0px;
 
           }
         `}

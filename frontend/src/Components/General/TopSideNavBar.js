@@ -11,7 +11,6 @@ const NavBarWithSidebar = ({
   company_name,
   company_name_color = [0, 0, 0],
   username,
-  username_color,
   icons,
   names,
   sidebar_background_color = [26, 24, 24],
@@ -36,12 +35,12 @@ const NavBarWithSidebar = ({
 
   const [expandedStates, setExpandedStates] = useState(() => {
     const savedExpandedStates = localStorage.getItem("expandedStates");
-    return savedExpandedStates ? JSON.parse(savedExpandedStates) : expanded;
+    return savedExpandedStates ? false : expanded;
   });
 
   const [selectedSubItem, setSelectedSubItem] = useState(() => {
     const savedSelectedSubItem = localStorage.getItem("selectedSubItem");
-    return savedSelectedSubItem ? JSON.parse(savedSelectedSubItem) : null;
+    return savedSelectedSubItem ? null : null;
   });
 
   useEffect(() => {
