@@ -11,7 +11,6 @@ const NavBarWithSidebar = ({
   company_name,
   company_name_color = [0, 0, 0],
   username,
-  username_color,
   icons,
   names,
   sidebar_background_color = [26, 24, 24],
