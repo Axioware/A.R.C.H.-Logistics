@@ -5,6 +5,7 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
+        headerShown: false,
         tabBarStyle: {
           backgroundColor: 'black', // Black background
           height: 60, // Optional: Adjust height if needed
