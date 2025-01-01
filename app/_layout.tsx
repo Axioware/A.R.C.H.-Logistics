@@ -6,12 +6,12 @@ export default function RootLayout() {
       {/* Pages Without Tabs */}
       <Stack.Screen name="select_tenant" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ headerShown: false }} />
-      <Stack.Screen name="forgot_password" options={{ headerShown: false }} />
+      {/* <Stack.Screen name="forgot_password" options={{ headerShown: false }} />
       <Stack.Screen name="otp_verincation" options={{ headerShown: false }} />
       <Stack.Screen name="reset_password" options={{ headerShown: false }} />
       <Stack.Screen name="acc_change_password" options={{ headerShown: false }} />
       <Stack.Screen name="profile" options={{ headerShown: false }} />
-      <Stack.Screen name="settings" options={{ headerShown: false }} />
+      <Stack.Screen name="settings" options={{ headerShown: false }} /> */}
 
       {/* Tabs Layout */}
       <Stack.Screen name="tabs" options={{ headerShown: false }} />
