@@ -42,8 +42,6 @@ export default function NavPath({
               height={'20px'}
               arrow={arr}  // Set the height from hyperlink_size
             />
-
-            {/* <span style={{ marginLeft: '40px', fontSize: '20px', color: tcolor, display: 'flex', flexDirection: 'row', position: 'relative', marginTop: '-5px'}}>&gt;</span> */}
           </>
         );
       })}
@@ -60,8 +58,35 @@ export default function NavPath({
             width: ${width || 'auto'};
             height: ${height || 'auto'};
             background-color: ${bgColor || 'transparent'};
-            margin: 50px 0px 80px 0px;
+            margin: 50px 0px 25px 0px;
+          }
 
+          /* Responsive styles */
+          @media (max-width: 768px) {
+            .navpath-container {
+              flex-direction: column; /* Stack items vertically on smaller screens */
+              margin: 30px 0px;
+            }
+
+            .navpath-container p {
+              display: none; /* Hide extra space on smaller screens */
+            }
+
+            /* Make the HyperLink width more flexible */
+            .navpath-container a {
+              width: auto; /* Allow links to adjust their width */
+              font-size: 1rem; /* Adjust font size */
+            }
+          }
+
+          @media (max-width: 480px) {
+            .navpath-container {
+              margin: 20px 0px; /* Reduce the margin for very small screens */
+            }
+
+            .navpath-container a {
+              font-size: 0.9rem; /* Further adjust font size */
+            }
           }
         `}
       </style>

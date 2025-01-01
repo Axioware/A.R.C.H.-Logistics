@@ -37,11 +37,12 @@ export default function AddButton({
         {`
           .add-button-container {
             display: flex;
-            justify-content: flex-end; /* Align button to the right */
+            justify-content: flex-end; /* Align button to the right on larger screens */
             align-items: center;
-            height: 10vh; /* Adjust as necessary */
-            margin: 0px 70px 0px 0px; /* Add some vertical spacing */
+            height: 8vh; /* Adjust as necessary */
+            margin: 0px; /* Add some vertical spacing if needed */
             font-weight: bold;
+            padding: 10px; /* Add some padding for smaller screens */
           }
 
           .add-button {
@@ -62,6 +63,27 @@ export default function AddButton({
           .add-button:hover {
             background-color: rgba(255, 255, 255, 0.8); /* Change background on hover */
             color: black; /* Text color changes to black on hover */
+          }
+
+          /* Responsive styles */
+          @media (max-width: 768px) {
+            .add-button-container {
+              justify-content: center; /* Center button on smaller screens */
+            }
+
+            .add-button {
+              width: 120px; /* Make button smaller on mobile */
+              height: 40px;
+              font-size: 0.9rem; /* Slightly smaller text */
+            }
+          }
+
+          @media (max-width: 480px) {
+            .add-button {
+              width: 100px; /* Further reduce button size */
+              height: 35px;
+              font-size: 0.8rem; /* Further reduce font size */
+            }
           }
         `}
       </style>

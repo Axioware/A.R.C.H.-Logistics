@@ -4,7 +4,6 @@ import archlogo from '../Assets/Images/logo1.png';
 import NavPath from '../Components/General/NavPath';
 import TableContent from '../Components/Table_Components/TableContent';
 import TableTop from '../Components/Table_Components/TableTop';
-import PageHeading from '../Components/Table_Components/PageHeading';
 import fetchData from '../utils/fetch_data'
 import SessionExpired from '../Components/Modals/SessionExpired';
 // import Forbidden from '../Components/Error/Forbidden';
@@ -16,11 +15,15 @@ export default function Ahsan() {
   const [success, setSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [errorCode, setErrorCode] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Track sidebar state
+  const [currenturl, setCurrentUrl] = useState('https://127.0.0.1:8000/users');
+  const [baseurl, setBaseUrl] = useState('https://127.0.0.1:8000/users');
 
-  const fetchUsers = async () => {
-    const url = `https://api.example.com/users?page=${currentPage}`;  // Example URL
+
+  const fetchUsers = async (urls) => {
+    const url = `${urls}?page=${currentPage}`;  // Example URL
     const response = await fetchData(setLoading, setSuccess, url);
     console.log(response.error)
     
@@ -28,7 +31,7 @@ export default function Ahsan() {
       switch (response.error) {
         case 400:
           // Do nothing for 400 (Bad Request)
-          setErrorCode(401);
+          setErrorCode(400);
           break;
     
         case 401:
@@ -55,8 +58,36 @@ export default function Ahsan() {
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchUsers(currenturl);
   }, [currentPage]);  // Call on currentPage change
+
+
+  function handleSearch(text) {
+    const searchParam = `search=${encodeURIComponent(text)}`;
+
+    if (currenturl.includes('search')) {
+      console.log(currenturl);
+      return 
+    }
+    else {
+      if (currenturl.includes('?')) {
+        // If URL already has query parameters, append with '&'
+        setCurrentUrl(`${currenturl}&${searchParam}`);
+      } else {
+        // If no query parameters, start with '?'
+        setCurrentUrl(`${currenturl}?${searchParam}`);
+      }
+      console.log(currenturl);
+  }
+  }
+
+  const toggleFilter = () => {
+    setFilterOpen((prev) => !prev);  // Toggle between true and false
+  };
+
+  function resetUrl() {
+    setCurrentUrl(`${baseurl}`);
+  }
 
   const handleNext = () => {
     if (currentPage < totalPages) {
@@ -121,6 +152,8 @@ export default function Ahsan() {
          
         <TableTop 
           heading_text={'All Users'} 
+          search_function = {handleSearch}
+          filter_function={toggleFilter}
           />
 
         <TableContent 

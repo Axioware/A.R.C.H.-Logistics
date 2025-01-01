@@ -8,14 +8,6 @@ export default function TableTop({
   filter_function,
   heading_text,
 }) {
-  // Example function to handle search and filter actions
-  // const handleSearch = (searchText) => {
-  //   console.log('Searching for:', searchText);
-  // };
-
-  // const handleFilterClick = () => {
-  //   console.log('Filter button clicked');
-  // };
 
   return (
     <>
@@ -27,6 +19,7 @@ export default function TableTop({
             align-items: center; /* Align items vertically */
             width: 95%;
             margin: 20px auto;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
           }
 
           .row-container1 {
@@ -39,12 +32,44 @@ export default function TableTop({
           .page-heading {
             flex-grow: 1; /* Allow the heading to take up space on the left */
           }
+
+          /* Media Queries for Responsiveness */
+          @media (max-width: 768px) {
+            .table-top-container {
+              flex-direction: column; /* Stack elements vertically */
+              align-items: flex-start; /* Align to the left for smaller screens */
+              gap: 15px; /* Add space between items */
+            }
+
+            .row-container1 {
+              justify-content: flex-start; /* Align buttons to the left */
+              width: 100%; /* Make sure row container takes full width */
+              gap: 15px; /* Adjust space between buttons */
+              margin-top: 10px;
+            }
+
+            .page-heading {
+              width: 100%; /* Ensure page heading takes full width */
+            }
+          }
+
+          @media (max-width: 480px) {
+            .row-container1 {
+              flex-direction: column; /* Stack the FilterButton and SearchBar vertically */
+              gap: 10px; /* Reduce the gap between buttons */
+            }
+
+            .page-heading {
+              text-align: center; /* Center the page heading on small screens */
+            }
+          }
         `}
       </style>
 
       <div className="table-top-container">
         <PageHeading
           text={heading_text}
+          headings={'users'}
           text_color={[0, 0, 0]} // Black text color
           sidebar_color={[23, 23, 23]} // Sidebar color
           width="auto" // Auto width to align properly

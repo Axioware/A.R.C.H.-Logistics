@@ -15,7 +15,28 @@ import AllWarehouse from './Pages/Warehouses/AllWarehouse';
 import AddWarehouse from './Pages/Warehouses/AddWarehouse';
 import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 import AddLocation from './Pages/Locations/AddLocation';
+<<<<<<< HEAD
 import AddUser from './Pages/User_Management/AddUser';
+=======
+import EditLocation from './Pages/Locations/EditLocation';
+
+
+import BalanceSheet from './Pages/Balance_Sheet/BalanceSheet';
+import Transaction from './Pages/Balance_Sheet/Transaction';
+import Invoices from './Pages/Balance_Sheet/Invoices';
+import RatesManagement from './Pages/Custom_Rates/RatesManagement';
+import AllInventory from './Pages/Inventory/AllInventory';
+import ByDateInventory from './Pages/Inventory/ByDateInventory';
+import CombineInventory from './Pages/Inventory/CombineInventory';
+import ActiveOrder from './Pages/Order/ActiveOrder';
+import BoxesToBeShipped from './Pages/Order/BoxesToBeShipped';
+import OrderDetails from './Pages/Order/OrderDetails';
+import OrderHistory from './Pages/Order/OrderHistory';
+import ViewTracking from './Pages/Order/ViewTracking';
+import Bin from './Pages/Setting/Bin';
+import Category from './Pages/Setting/Category';
+import Service from './Pages/Setting/Service';
+>>>>>>> 16dc2baf908135976c93c5aabd163befd30c98d0
 
 
 function App() {
@@ -31,12 +52,34 @@ function App() {
         <Route path="/warehouses" element={<AllWarehouse />} />
         <Route path="/edit-warehouses" element={<EditWarehouse />} />
         <Route path="/add-warehouses" element={<AddWarehouse />} />
-        <Route path="/add-location" element={<AddLocation />} />        
+        <Route path="/add-location" element={<AddLocation />} />  
+        <Route path="/edit-location" element={<EditLocation />} />      
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/users" element={<AllUsers />} />
+<<<<<<< HEAD
         <Route path="/add-user" element={<AddUser />} />
+=======
+
+
+        <Route path="/balance-sheet" element={<BalanceSheet />} />
+        <Route path="/transaction" element={<Transaction />} />
+        <Route path="/invoices" element={<Invoices />} />
+        <Route path="/rates-management" element={<RatesManagement />} />     
+        <Route path="/all-items" element={<AllInventory />} />
+        <Route path="/by-date-inventory" element={<ByDateInventory />} />
+        <Route path="/inventory-overview" element={<CombineInventory />} />
+        <Route path="/active-order" element={<ActiveOrder />} />
+        <Route path="/boxes-to-be-shipped" element={<BoxesToBeShipped />} />     
+        <Route path="/order-details" element={<OrderDetails />} />
+        <Route path="/order-history" element={<OrderHistory />} />
+        <Route path="/view-tracking" element={<ViewTracking />} />
+        <Route path="/bin" element={<Bin />} />
+        <Route path="/category" element={<Category />} />
+        <Route path="/service" element={<Service />} />
+        
+>>>>>>> 16dc2baf908135976c93c5aabd163befd30c98d0
       </Routes>
     </Router>
   );
