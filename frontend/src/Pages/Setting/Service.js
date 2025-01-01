@@ -5,6 +5,7 @@ import archlogo from '../../Assets/Images/logo1.png';
 import TableContent from '../../Components/Table_Components/TableContent';
 import TableTop from '../../Components/Table_Components/TableTop';
 import fetchData from '../../utils/fetch_data';
+import AddButton from '../../Components/Table_Components/AddButton';
 
 export default function All_Users() {
   const [data, setData] = useState([]);
@@ -76,17 +77,17 @@ export default function All_Users() {
         marginLeft: "0%", // Adjust for very small screens
       },
     },
-    container: {
-      width: "95%",
-      margin: "20px 0px 0px 0px", // Center horizontally
-      '@media (max-width: 768px)': {
-        width: "100%",
-        padding: "0 10px",
-      },
-      '@media (max-width: 480px)': {
-        padding: "0 5px", // Reduce padding on smaller screens
-      },
-    },
+    // container: {
+    //   width: "95%",
+    //   margin: "20px 0px 0px 0px", // Center horizontally
+    //   '@media (max-width: 768px)': {
+    //     width: "100%",
+    //     padding: "0 10px",
+    //   },
+    //   '@media (max-width: 480px)': {
+    //     padding: "0 5px", // Reduce padding on smaller screens
+    //   },
+    // },
     lightGreyBackground: {
       backgroundColor: '#f7f6f6',
       padding: '20px 0px 40px 60px',
@@ -94,8 +95,8 @@ export default function All_Users() {
       minHeight: '10vh',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
+      // justifyContent: 'center',
+      // alignItems: 'center',
       width: '95%',
       margin: '20px 0px 0px 0px',
       boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
@@ -138,8 +139,8 @@ export default function All_Users() {
 
       <div style={styles.mainContent}>
         <NavPath
-          text={["Home", "Inventory","Inventory Overview"]}
-          paths={["/home", "/inventory","inventory-overview"]}
+          text={["Home", "Setting","Service"]}
+          paths={["/home", "/setting","/service"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
           width="95%"
@@ -148,9 +149,28 @@ export default function All_Users() {
 
 
         <div style={styles.lightGreyBackground}>
-          <TableTop heading_text={'Inventory'} />
+
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '20px' }}>
+        <AddButton
+          text="Category"
+          text_color={[255, 255, 255]}
+        />
+        <AddButton
+          text="Service"
+          text_color={[255, 255, 255]}
+        />
+        <AddButton
+          text="Bin"
+          text_color={[255, 255, 255]}
+        />
+      </div>
+
+          <TableTop 
+          heading_text={'Service'} 
+          />
+
           <TableContent
-            table_headings={['S.No', 'Item ID', 'Item Name', 'LLC Name', 'Quantity', 'Description', 'Bin', 'Charge By']}
+            table_headings={['Service ID', 'Service Name', 'Category', 'Default Charge', 'Action']}
             last_column={true}
             loading={loading}
             success={success}
