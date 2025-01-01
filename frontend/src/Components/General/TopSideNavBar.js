@@ -17,7 +17,7 @@ const NavBarWithSidebar = ({
   sidebar_text_color = [235, 232, 232],
   selected_color = [235, 232, 232],
   hover_color = [235, 232, 232],
-  expanded,
+  expanded = ['User Management'],
   isSidebarOpen_p,
   toggleSidebar_func,
   sidebar_width,

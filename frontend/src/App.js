@@ -19,6 +19,7 @@ import EditLocation from './Pages/Locations/EditLocation';
 import BalanceSheet from './Pages/Balance_Sheet/BalanceSheet';
 import Transaction from './Pages/Balance_Sheet/Transaction';
 import Invoices from './Pages/Balance_Sheet/Invoices';
+import Forbidden from './Components/Error_Components/Forbidden';
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
         <Route path="/balance-sheet" element={<BalanceSheet />} />
         <Route path="/transaction" element={<Transaction />} />
         <Route path="/invoices" element={<Invoices />} />
+        <Route path="/test" element={<Forbidden />} />
       </Routes>
     </Router>
   );

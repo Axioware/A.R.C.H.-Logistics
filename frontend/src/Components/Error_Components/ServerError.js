@@ -7,9 +7,9 @@ export default function ServerError() {
   return (
     <main className="grid min-h-screen px-6 py-24 place-items-center bg-rgb-235-232-232 sm:py-32 lg:px-8">
       <div className="text-center">
-        <p className="text-4xl font-bold text-rgb-26-24-24">404</p>
+        <p className="text-4xl font-bold text-rgb-26-24-24">500</p>
         <h1 className="mt-4 text-6xl font-bold tracking-tight text-rgb-26-24-24 sm:text-7xl">
-          Unexpected Error
+          Unexpected Server Error
         </h1>
         <p className="mt-6 text-lg font-medium text-rgb-26-24-24 sm:text-xl">
           Sorry, Please try again a few minutes later.  
