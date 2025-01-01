@@ -15,9 +15,7 @@ import AllWarehouse from './Pages/Warehouses/AllWarehouse';
 import AddWarehouse from './Pages/Warehouses/AddWarehouse';
 import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 import AddLocation from './Pages/Locations/AddLocation';
-<<<<<<< HEAD
 import AddUser from './Pages/User_Management/AddUser';
-=======
 import EditLocation from './Pages/Locations/EditLocation';
 
 
@@ -37,7 +35,6 @@ import ViewTracking from './Pages/Order/ViewTracking';
 import Bin from './Pages/Setting/Bin';
 import Category from './Pages/Setting/Category';
 import Service from './Pages/Setting/Service';
->>>>>>> 16dc2baf908135976c93c5aabd163befd30c98d0
 
 
 function App() {
@@ -59,9 +56,7 @@ function App() {
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/users" element={<AllUsers />} />
-<<<<<<< HEAD
         <Route path="/add-user" element={<AddUser />} />
-=======
 
 
         <Route path="/balance-sheet" element={<BalanceSheet />} />
@@ -81,7 +76,6 @@ function App() {
         <Route path="/category" element={<Category />} />
         <Route path="/service" element={<Service />} />
         
->>>>>>> 16dc2baf908135976c93c5aabd163befd30c98d0
       </Routes>
     </Router>
   );
