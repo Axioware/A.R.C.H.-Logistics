@@ -16,9 +16,20 @@ import AddWarehouse from './Pages/Warehouses/AddWarehouse';
 import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 import AddLocation from './Pages/Locations/AddLocation';
 import EditLocation from './Pages/Locations/EditLocation';
+
+
 import BalanceSheet from './Pages/Balance_Sheet/BalanceSheet';
 import Transaction from './Pages/Balance_Sheet/Transaction';
 import Invoices from './Pages/Balance_Sheet/Invoices';
+import RatesManagement from './Pages/Custom_Rates/RatesManagement';
+import AllInventory from './Pages/Inventory/AllInventory';
+import ByDateInventory from './Pages/Inventory/ByDateInventory';
+import CombineInventory from './Pages/Inventory/CombineInventory';
+import ActiveOrder from './Pages/Order/ActiveOrder';
+import BoxesToBeShipped from './Pages/Order/BoxesToBeShipped';
+import OrderDetails from './Pages/Order/OrderDetails';
+import OrderHistory from './Pages/Order/OrderHistory';
+import ViewTracking from './Pages/Order/ViewTracking';
 
 
 function App() {
@@ -40,9 +51,21 @@ function App() {
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/users" element={<AllUsers />} />
+
+
         <Route path="/balance-sheet" element={<BalanceSheet />} />
         <Route path="/transaction" element={<Transaction />} />
         <Route path="/invoices" element={<Invoices />} />
+        <Route path="/rates-management" element={<RatesManagement />} />     
+        <Route path="/all-items" element={<AllInventory />} />
+        <Route path="/by-date-inventory" element={<ByDateInventory />} />
+        <Route path="/inventory-overview" element={<CombineInventory />} />
+        <Route path="/active-order" element={<ActiveOrder />} />
+        <Route path="/boxes-to-be-shipped" element={<BoxesToBeShipped />} />     
+        <Route path="/order-details" element={<OrderDetails />} />
+        <Route path="/order-history" element={<OrderHistory />} />
+        <Route path="/view-tracking" element={<ViewTracking />} />
+        
       </Routes>
     </Router>
   );
