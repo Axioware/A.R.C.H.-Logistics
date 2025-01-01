@@ -3,7 +3,6 @@ import PageHeading from './PageHeading'; // Adjust path if necessary
 import FilterButton from './FilterButton'; // Adjust path if necessary
 import SearchBar from './SearchBar'; // Adjust path if necessary
 
-
 export default function TableTop({
   search_function,
   filter_function,
@@ -20,6 +19,7 @@ export default function TableTop({
             align-items: center; /* Align items vertically */
             width: 95%;
             margin: 20px auto;
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
           }
 
           .row-container1 {
@@ -31,6 +31,37 @@ export default function TableTop({
 
           .page-heading {
             flex-grow: 1; /* Allow the heading to take up space on the left */
+          }
+
+          /* Media Queries for Responsiveness */
+          @media (max-width: 768px) {
+            .table-top-container {
+              flex-direction: column; /* Stack elements vertically */
+              align-items: flex-start; /* Align to the left for smaller screens */
+              gap: 15px; /* Add space between items */
+            }
+
+            .row-container1 {
+              justify-content: flex-start; /* Align buttons to the left */
+              width: 100%; /* Make sure row container takes full width */
+              gap: 15px; /* Adjust space between buttons */
+              margin-top: 10px;
+            }
+
+            .page-heading {
+              width: 100%; /* Ensure page heading takes full width */
+            }
+          }
+
+          @media (max-width: 480px) {
+            .row-container1 {
+              flex-direction: column; /* Stack the FilterButton and SearchBar vertically */
+              gap: 10px; /* Reduce the gap between buttons */
+            }
+
+            .page-heading {
+              text-align: center; /* Center the page heading on small screens */
+            }
           }
         `}
       </style>

@@ -26,7 +26,6 @@ export default function Pagination({
 
   return (
     <div className="Pagination-container">
-      {/* Remove the old button code and replace it with the new design */}
       <button
         className="Pagination-button"
         onClick={onPrev}
@@ -127,6 +126,40 @@ export default function Pagination({
             min-height: 100vh;
             background-color: #f9f9f9;
             font-family: Arial, sans-serif;
+          }
+
+          /* Media queries for responsiveness */
+          @media (max-width: 768px) {
+            .Pagination-container {
+              padding: 15px; /* Reduce padding on smaller screens */
+            }
+
+            .Pagination-button {
+              font-size: 12px; /* Adjust font size for smaller screens */
+              padding: 8px 16px; /* Smaller padding for buttons */
+            }
+
+            .Pagination-page-display {
+              font-size: 14px; /* Adjust page display font size */
+            }
+          }
+
+          @media (max-width: 480px) {
+            .Pagination-container {
+              flex-direction: column; /* Stack buttons and page display */
+              align-items: flex-start; /* Align items to the left */
+              padding: 10px; /* Further reduce padding */
+            }
+
+            .Pagination-button {
+              width: 100%; /* Full-width buttons */
+              font-size: 14px; /* Slightly larger font size */
+              margin-bottom: 10px; /* Add space between buttons */
+            }
+
+            .Pagination-page-display {
+              font-size: 13px; /* Smaller font size for mobile */
+            }
           }
         `}
       </style>

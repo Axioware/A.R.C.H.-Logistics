@@ -5,6 +5,7 @@ import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
 import archlogo from '../../Assets/Images/logo1.png';
 import NavPath from '../../Components/General/NavPath';
 import PageHeading from '../../Components/Table_Components/PageHeading';
+import { borderRadius } from "polished";
 
 const AddWarehouse = () => {
   const handleSubmit = (e) => {
@@ -25,17 +26,19 @@ const AddWarehouse = () => {
       transition: "margin-left 0.5s ease",
       marginLeft: isSidebarOpen ? "18%" : "4%",
       marginRight:"4%",
-      border: '2px solid white',
+      // border: '2px solid white',
       height:"80%",
   },
   form: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr 1fr 1fr', // Two columns
       gap: '20px', // Space between fields
-      border: '2px solid white',
+      // border: '2px solid white',
+      marginLeft:'20px',
+      marginTop:'35px',
   },
   buttonContainer: {
-    border: '2px solid white',
+    // border: '2px solid white',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
@@ -47,9 +50,17 @@ const AddWarehouse = () => {
   },
   container:{
     border: '2px solid white',
-    background_color :"#F5F5F5",
+    borderRadius:'8px',
+    backgroundColor :"#F5F5F5",
+    padding: '20px',
+    gap: '10px',
+    boxShadow: "5px 5px 5px 5px lightgrey"
 
   },
+  PageHeading:{
+    marginLeft:'0px',
+    marginTop:'20px',  
+  }
   };
   
   return (
@@ -63,26 +74,25 @@ const AddWarehouse = () => {
           "https://via.placeholder.com/20",
           "https://via.placeholder.com/20",
           "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
         ]}
         names={[
           ["User Management", "All User", "Add User"],
           ["Management", "Add Order", "Delete Order"],
           ["Inventory", "Add Item", "Delete Item"],
-          ["Warehouses", "Add Warehouses", "Edit Warehouses"],
         ]}
         routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
         sidebar_width="14%"
         sidebar_height="100vh"
         toggleSidebar_func={toggleSidebar}
         isSidebarOpen_p = {isSidebarOpen}
+        expanded = {['User_Management']}
       />
         
 
         <div style={styles.mainContent}>
           <NavPath
-            text={['Home', 'All Warehouses', 'Edit Warehouses']}
-            paths={['/home', '/add-warehouses', '/edit-warehouses']}
+            text={['Home', 'All Warehouses', 'Add Warehouses']}
+            paths={['/home', '/add-warehouses', '/add-warehouses']}
             text_color={[255, 255, 255]}
             background_color={[23, 23, 23]}
             hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
@@ -106,7 +116,7 @@ const AddWarehouse = () => {
              
             </form>
             <div id="buttonContainer" style={styles.buttonContainer}>
-                  <GeneralButton text="Cancel" width="10%" height="100%" button_color="Grey"   />
+                  <GeneralButton text="Cancel" width="10%" height="100%" button_color={["230", "230", "230"]}  text_color={["0", "0", "0"]}   />
                   <GeneralButton text="Add" type="submit" width="10%" height="100%" />
               </div>
             </div>

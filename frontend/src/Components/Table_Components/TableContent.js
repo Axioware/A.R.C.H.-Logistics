@@ -16,7 +16,6 @@ export default function TableContent({
       success
     }) {
 
-
   const handleSort = (column) => {
     console.log('Sorting by column:', column);
   };
@@ -26,10 +25,9 @@ export default function TableContent({
   };
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-
+    <div className="table-content-wrapper">
       {/* Table Component */}
-      <div>
+      <div className="table-wrapper">
         <Table
           headings={table_headings}
           heading_background={[23, 23, 23]}
@@ -39,25 +37,76 @@ export default function TableContent({
           loading={loading}
           success={success}
           last_column={last_column}
-          // last_column_text="Details"
           handleRefresh={handleRefresh}
         />
       </div>
 
       {/* Pagination Component */}
-      <div>
+      <div className="pagination-wrapper">
         <Pagination
-        current_page={currentPage || 0}
-        total_pages={totalPages || 0}
-        text_color={[0, 0, 0]}
-        button_text_color={[255, 255, 255]}
-        button_background_color={[23, 23, 23]}
-        width="95%"
-        height="50px"
-        onNext={next_button}
-        onPrev={prev_button}
+          current_page={currentPage || 0}
+          total_pages={totalPages || 0}
+          text_color={[0, 0, 0]}
+          button_text_color={[255, 255, 255]}
+          button_background_color={[23, 23, 23]}
+          width="95%"
+          height="50px"
+          onNext={next_button}
+          onPrev={prev_button}
         />
       </div>
+      
+      {/* Styles for responsiveness */}
+      <style>
+        {`
+          .table-content-wrapper {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+          }
+
+          .table-wrapper {
+            margin-bottom: 20px;
+            overflow-x: auto;
+          }
+
+          .pagination-wrapper {
+            margin-top: 20px;
+            text-align: center;
+          }
+
+          /* Media Queries for Responsiveness */
+
+          @media (max-width: 768px) {
+            .table-wrapper {
+              margin-bottom: 15px;
+            }
+
+            .pagination-wrapper {
+              margin-top: 15px;
+            }
+
+            .table-content-wrapper {
+              padding: 5px;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .table-wrapper {
+              margin-bottom: 10px;
+            }
+
+            .pagination-wrapper {
+              margin-top: 10px;
+            }
+
+            .table-content-wrapper {
+              padding: 0px;
+            }
+          }
+        `}
+      </style>
     </div>
   );
 }

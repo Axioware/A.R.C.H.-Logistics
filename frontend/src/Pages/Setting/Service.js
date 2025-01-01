@@ -5,6 +5,7 @@ import archlogo from '../../Assets/Images/logo1.png';
 import TableContent from '../../Components/Table_Components/TableContent';
 import TableTop from '../../Components/Table_Components/TableTop';
 import fetchData from '../../utils/fetch_data';
+import AddButton from '../../Components/Table_Components/AddButton';
 
 export default function All_Users() {
   const [data, setData] = useState([]);
@@ -70,23 +71,23 @@ export default function All_Users() {
       transition: "margin-left 0.5s ease",
       marginLeft: isSidebarOpen ? "18%" : "4%",
       '@media (max-width: 768px)': {
-        marginLeft: isSidebarOpen ? "18%" : "4%", 
+        marginLeft: isSidebarOpen ? "18%" : "4%", // adjust as needed
       },
       '@media (max-width: 480px)': {
-        marginLeft: "0%", 
+        marginLeft: "0%", // Adjust for very small screens
       },
     },
-    container: {
-      width: "95%",
-      margin: "20px 0px 0px 0px", 
-      '@media (max-width: 768px)': {
-        width: "100%",
-        padding: "0 10px",
-      },
-      '@media (max-width: 480px)': {
-        padding: "0 5px", 
-      },
-    },
+    // container: {
+    //   width: "95%",
+    //   margin: "20px 0px 0px 0px", // Center horizontally
+    //   '@media (max-width: 768px)': {
+    //     width: "100%",
+    //     padding: "0 10px",
+    //   },
+    //   '@media (max-width: 480px)': {
+    //     padding: "0 5px", // Reduce padding on smaller screens
+    //   },
+    // },
     lightGreyBackground: {
       backgroundColor: '#f7f6f6',
       padding: '20px 0px 40px 60px',
@@ -94,20 +95,23 @@ export default function All_Users() {
       minHeight: '10vh',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
+      // justifyContent: 'center',
+      // alignItems: 'center',
       width: '95%',
       margin: '20px 0px 0px 0px',
       boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
       '@media (max-width: 768px)': {
-        width: "100%", 
-        padding: '15px', 
+        width: "100%", // Full width for small screens
+        padding: '15px', // Less padding
       },
       '@media (max-width: 480px)': {
         padding: '10px', // Further reduce padding for very small screens
       },
     },
   };
+
+
+  
 
   return (
     <div>
@@ -135,22 +139,38 @@ export default function All_Users() {
 
       <div style={styles.mainContent}>
         <NavPath
-          text={["Setting", "WareHouses"]}
-          paths={["/setting", "/warehouses"]}
+          text={["Home", "Setting","Service"]}
+          paths={["/home", "/setting","/service"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
           width="95%"
           height="50px"
         />
 
+
         <div style={styles.lightGreyBackground}>
 
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '20px' }}>
+        <AddButton
+          text="Category"
+          text_color={[255, 255, 255]}
+        />
+        <AddButton
+          text="Service"
+          text_color={[255, 255, 255]}
+        />
+        <AddButton
+          text="Bin"
+          text_color={[255, 255, 255]}
+        />
+      </div>
+
           <TableTop 
-          heading_text={'WareHouses'}
+          heading_text={'Service'} 
           />
 
           <TableContent
-            table_headings={['Tax ID', 'Name', 'Country', 'Balance', 'State', 'City', 'Email', 'Phone']}
+            table_headings={['Service ID', 'Service Name', 'Category', 'Default Charge', 'Action']}
             last_column={true}
             loading={loading}
             success={success}
@@ -161,7 +181,6 @@ export default function All_Users() {
             currentPage={currentPage}
             totalPages={totalPages}
           />
-
         </div>
       </div>
     </div>
