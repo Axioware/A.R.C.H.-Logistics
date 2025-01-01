@@ -5,7 +5,6 @@ import archlogo from '../../Assets/Images/logo1.png';
 import TableContent from '../../Components/Table_Components/TableContent';
 import TableTop from '../../Components/Table_Components/TableTop';
 import fetchData from '../../utils/fetch_data';
-import AddButton from '../../Components/Table_Components/AddButton';
 
 export default function All_Users() {
   const [data, setData] = useState([]);
@@ -77,17 +76,17 @@ export default function All_Users() {
         marginLeft: "0%", // Adjust for very small screens
       },
     },
-    container: {
-      width: "95%",
-      margin: "20px 0px 0px 0px", // Center horizontally
-      '@media (max-width: 768px)': {
-        width: "100%",
-        padding: "0 10px",
-      },
-      '@media (max-width: 480px)': {
-        padding: "0 5px", // Reduce padding on smaller screens
-      },
-    },
+    // container: {
+    //   width: "95%",
+    //   margin: "20px 0px 0px 0px", // Center horizontally
+    //   '@media (max-width: 768px)': {
+    //     width: "100%",
+    //     padding: "0 10px",
+    //   },
+    //   '@media (max-width: 480px)': {
+    //     padding: "0 5px", // Reduce padding on smaller screens
+    //   },
+    // },
     lightGreyBackground: {
       backgroundColor: '#f7f6f6',
       padding: '20px 0px 40px 60px',
@@ -95,8 +94,8 @@ export default function All_Users() {
       minHeight: '10vh',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
+      // justifyContent: 'center',
+      // alignItems: 'center',
       width: '95%',
       margin: '20px 0px 0px 0px',
       boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
@@ -139,26 +138,23 @@ export default function All_Users() {
 
       <div style={styles.mainContent}>
         <NavPath
-          text={["Home", "User Management"]}
-          paths={["/home", "/users"]}
+          text={["Home", "Orders", "Order History"]}
+          paths={["/home", "/orders", "/order history"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
           width="95%"
           height="50px"
         />
 
-        <div style={styles.container}>
-          <AddButton
-            text="Add User"
-            text_color={[255, 255, 255]}
-            
-          />
-        </div>
 
         <div style={styles.lightGreyBackground}>
-          <TableTop heading_text={'All Users'} />
+
+          <TableTop 
+          heading_text={'Order History'} 
+          />
+
           <TableContent
-            table_headings={['ID', 'Name', 'Email', 'Role', 'Actions']}
+            table_headings={['Order ID ', 'LLC Name', 'Order Date', "Action"]}
             last_column={true}
             loading={loading}
             success={success}
