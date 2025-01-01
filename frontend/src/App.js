@@ -15,11 +15,12 @@ import AllWarehouse from './Pages/Warehouses/AllWarehouse';
 import AddWarehouse from './Pages/Warehouses/AddWarehouse';
 import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 import AddLocation from './Pages/Locations/AddLocation';
+import AddUser from './Pages/User_Management/AddUser';
 
 
 function App() {
   return (
-    <Router>
+    <Router>  
       <Routes>
         <Route path="/moiz" element={<Moiz />} />
         <Route path="/asad" element={<Asad />} />
@@ -35,6 +36,7 @@ function App() {
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/users" element={<AllUsers />} />
+        <Route path="/add-user" element={<AddUser />} />
       </Routes>
     </Router>
   );
