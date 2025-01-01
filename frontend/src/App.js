@@ -16,6 +16,8 @@ import AddWarehouse from './Pages/Warehouses/AddWarehouse';
 import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 import AddLocation from './Pages/Locations/AddLocation';
 import EditLocation from './Pages/Locations/EditLocation';
+import BoxContent from './Components/General/BoxContent';
+import Spinner from "./Components/General/Spinner";
 
 
 function App() {
@@ -37,6 +39,8 @@ function App() {
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/users" element={<AllUsers />} />
+        <Route path="/content" element={<BoxContent />} />
+        <Route path="/spinner" element={<Spinner />} />
       </Routes>
     </Router>
   );
