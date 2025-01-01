@@ -30,6 +30,9 @@ import BoxesToBeShipped from './Pages/Order/BoxesToBeShipped';
 import OrderDetails from './Pages/Order/OrderDetails';
 import OrderHistory from './Pages/Order/OrderHistory';
 import ViewTracking from './Pages/Order/ViewTracking';
+import Bin from './Pages/Setting/Bin';
+import Category from './Pages/Setting/Category';
+import Service from './Pages/Setting/Service';
 
 
 function App() {
@@ -65,6 +68,9 @@ function App() {
         <Route path="/order-details" element={<OrderDetails />} />
         <Route path="/order-history" element={<OrderHistory />} />
         <Route path="/view-tracking" element={<ViewTracking />} />
+        <Route path="/bin" element={<Bin />} />
+        <Route path="/category" element={<Category />} />
+        <Route path="/service" element={<Service />} />
         
       </Routes>
     </Router>
