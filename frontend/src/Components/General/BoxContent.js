@@ -18,13 +18,14 @@ const BoxContent = () => {
       gap: '20px',
     },
     container: {
-      backgroundColor: "#F5F5F5",
+      backgroundColor: '#f7f6f6',
       padding: '20px',
       borderRadius: '8px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
       height: '100%',
+      boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
     },
     buttonContainer: {
       display: 'flex',
@@ -53,9 +54,25 @@ const BoxContent = () => {
         </div>
 
         <form style={styles.form} onSubmit={handleSubmit}>
-          <GeneralField label="Name *" field_type="text" required />
-          <GeneralField label="Type *" field_type="select" options={["Inventory Bin", "Other"]} required />
-          <GeneralField label="Warehouse *" field_type="text" required />
+          <GeneralField 
+            label="Name *" 
+            field_type="text" 
+            hint="Enter the name of the location (e.g., Warehouse A)" 
+            required 
+          />
+          <GeneralField 
+            label="Type *" 
+            field_type="select" 
+            options={["Inventory Bin", "Other"]} 
+            hint="Select the type of location (e.g., Inventory Bin, Other)" 
+            required 
+          />
+          <GeneralField 
+            label="Warehouse *" 
+            field_type="text" 
+            hint="Enter the warehouse name (e.g., Main Warehouse)" 
+            required 
+          />
         </form>
 
         <div id="buttonContainer" style={styles.buttonContainer}>
