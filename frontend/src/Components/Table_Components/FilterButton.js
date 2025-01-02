@@ -62,22 +62,6 @@ export default function FilterButton({
             border-color: #007bff; /* Change border color on focus */
             box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Add a glow effect on focus */
           }
-
-          /* Media queries for responsiveness */
-          @media (max-width: 768px) {
-            .filter-button {
-              width: 100%; /* Full width on smaller screens */
-              font-size: 0.9rem; /* Slightly smaller font size */
-              padding: 12px; /* Add padding for better touch interaction */
-            }
-          }
-
-          @media (max-width: 480px) {
-            .filter-button {
-              font-size: 0.8rem; /* Smaller font size for very small screens */
-              padding: 10px; /* Adjust padding for very small screens */
-            }
-          }
         `}
       </style>
     </div>

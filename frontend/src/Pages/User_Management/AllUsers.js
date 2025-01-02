@@ -70,23 +70,23 @@ export default function All_Users() {
       padding: "10px",
       transition: "margin-left 0.5s ease",
       marginLeft: isSidebarOpen ? "18%" : "4%",
-      '@media (max-width: 768px)': {
-        marginLeft: isSidebarOpen ? "18%" : "4%", // adjust as needed
-      },
-      '@media (max-width: 480px)': {
-        marginLeft: "0%", // Adjust for very small screens
-      },
+      // '@media (max-width: 768px)': {
+      //   marginLeft: isSidebarOpen ? "18%" : "4%", // adjust as needed
+      // },
+      // '@media (max-width: 480px)': {
+      //   marginLeft: "0%", // Adjust for very small screens
+      // },
     },
     container: {
       width: "95%",
       margin: "20px 0px 0px 0px", // Center horizontally
-      '@media (max-width: 768px)': {
-        width: "100%",
-        padding: "0 10px",
-      },
-      '@media (max-width: 480px)': {
-        padding: "0 5px", // Reduce padding on smaller screens
-      },
+      // '@media (max-width: 768px)': {
+      //   width: "100%",
+      //   padding: "0 10px",
+      // },
+      // '@media (max-width: 480px)': {
+      //   padding: "0 5px", // Reduce padding on smaller screens
+      // },
     },
     lightGreyBackground: {
       backgroundColor: '#f7f6f6',
@@ -100,13 +100,19 @@ export default function All_Users() {
       width: '95%',
       margin: '20px 0px 0px 0px',
       boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
-      '@media (max-width: 768px)': {
-        width: "100%", // Full width for small screens
-        padding: '15px', // Less padding
-      },
-      '@media (max-width: 480px)': {
-        padding: '10px', // Further reduce padding for very small screens
-      },
+      // '@media '@media (max-width: 768px)': {
+      //   width: "100%", // Full width for small screens
+      //   padding: '15px', // Less padding
+      // },
+      // '@media (max-width: 480px)': {
+      //   padding: '10px', // Further reduce padding for very small screens
+      // (max-width: 768px)': {
+      //   width: "100%", // Full width for small screens
+      //   padding: '15px', // Less padding
+      // },
+      // '@media (max-width: 480px)': {
+      //   padding: '10px', // Further reduce padding for very small screens
+      // },
     },
   };
 

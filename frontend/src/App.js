@@ -58,10 +58,8 @@ function App() {
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/users" element={<AllUsers />} />
-<<<<<<< HEAD
         <Route path="/content" element={<BoxContent />} />
         <Route path="/spinner" element={<Spinner />} />
-=======
         <Route path="/add-user" element={<AddUser />} />
 
 
@@ -82,7 +80,6 @@ function App() {
         <Route path="/category" element={<Category />} />
         <Route path="/service" element={<Service />} />
         
->>>>>>> 40f7c9cad403c1782c6363059488b10095a1da95
       </Routes>
     </Router>
   );

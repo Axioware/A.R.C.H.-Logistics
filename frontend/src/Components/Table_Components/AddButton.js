@@ -64,27 +64,6 @@ export default function AddButton({
             background-color: rgba(255, 255, 255, 0.8); /* Change background on hover */
             color: black; /* Text color changes to black on hover */
           }
-
-          /* Responsive styles */
-          @media (max-width: 768px) {
-            .add-button-container {
-              justify-content: center; /* Center button on smaller screens */
-            }
-
-            .add-button {
-              width: 120px; /* Make button smaller on mobile */
-              height: 40px;
-              font-size: 0.9rem; /* Slightly smaller text */
-            }
-          }
-
-          @media (max-width: 480px) {
-            .add-button {
-              width: 100px; /* Further reduce button size */
-              height: 35px;
-              font-size: 0.8rem; /* Further reduce font size */
-            }
-          }
         `}
       </style>
     </div>

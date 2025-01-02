@@ -75,36 +75,6 @@ export default function TableContent({
             margin-top: 20px;
             text-align: center;
           }
-
-          /* Media Queries for Responsiveness */
-
-          @media (max-width: 768px) {
-            .table-wrapper {
-              margin-bottom: 15px;
-            }
-
-            .pagination-wrapper {
-              margin-top: 15px;
-            }
-
-            .table-content-wrapper {
-              padding: 5px;
-            }
-          }
-
-          @media (max-width: 480px) {
-            .table-wrapper {
-              margin-bottom: 10px;
-            }
-
-            .pagination-wrapper {
-              margin-top: 10px;
-            }
-
-            .table-content-wrapper {
-              padding: 0px;
-            }
-          }
         `}
       </style>
     </div>
