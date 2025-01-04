@@ -22,20 +22,23 @@ class CustomJWTAuthentication(JWTAuthentication):
         return validated_token
 
 
+def authenticate_clearance_level(user, levels):
+    return user.extended.clearance_level in levels
+
 def authenticate_owner(user):
-    return user.extended.role == "Owner"
+    return user.extended.clearance_level == "Owner"
 
 def authenticate_manager(user):
-    return user.extended.role == "Manager"
+    return user.extended.clearance_level == "Manager"
 
 def authenticate_client(user):
-    return user.extended.role == "Client"
+    return user.extended.clearance_level == "Client"
 
 def authenticate_VA(user):
-    return user.extended.role == "Virtual Assistant"
+    return user.extended.clearance_level == "Virtual Assistant"
 
 def authenticate_prep(user):
-    return user.extended.role == "Prep Team"
+    return user.extended.clearance_level == "Prep Team"
 
 def make_superuser(username):
     try:

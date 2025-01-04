@@ -6,8 +6,6 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
 from django.core.mail import send_mail
-from django.utils import timezone
-from datetime import timedelta
 from django.contrib.auth.models import User
 from API.models import *
 from rest_framework import status
@@ -15,12 +13,11 @@ from .helpers import UserPagination
 from django.contrib.auth.hashers import make_password
 from django.db.models import Q, Sum, F
 from django.db import transaction
-from Prep_Prime.helpers import authenticate_client, authenticate_manager, authenticate_owner, authenticate_VA, make_superuser, authenticate_prep, get_extended_field, get_texas_time
+from Prep_Prime.helpers import authenticate_client, authenticate_manager, authenticate_owner, authenticate_VA, make_superuser, authenticate_prep, get_extended_field, get_texas_time, authenticate_clearance_level
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_datetime
-import random
-import pytz
+from .models import UsersExtended
 
 # Create your views here.
 @api_view(['GET', 'POST'])
@@ -30,29 +27,29 @@ def users(request):
     
     clearance_level = request.query_params.get('clearance_level') 
     
-    if clearance_level and int(clearance_level) in [3, 4]:
+    if authenticate_clearance_level(user, [1, 2]):
         return Response({'errors': "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == "GET":
-        # Filter and search parameters
-        all_data = request.query_params.get('all', 'false').lower() == 'true'
+        clearance_level = request.query_params.get('clearance_level')
         billing_type = request.query_params.get('billing_type')
         search = request.query_params.get('search')
         active = request.query_params.get('is_active')
         warehouses = request.query_params.get('warehouses')
+        all_data = request.query_params.get('all', 'false').lower() == 'true'
+
         # Access control
         try:
-            queryset = User.objects.all().select_related('extended')  # Efficiently join with UsersExtended
+            queryset = User.objects.all().select_related('extended')
 
             if clearance_level:
-                queryset = queryset.filter(extended__clearance_level__level=clearance_level)
+                queryset = queryset.filter(extended__clearance_level=int(clearance_level))
             if billing_type:
-                print(billing_type)
                 queryset = queryset.filter(extended__billing_type=billing_type)
             if warehouses:
                 queryset = queryset.filter(extended__warehouses=warehouses)
             if active:
-                queryset = queryset.filter(is_active=active)
+                queryset = queryset.filter(is_active=bool(active))
             if search:
                 queryset = queryset.filter(
                     Q(first_name__icontains=search) | 
@@ -60,28 +57,28 @@ def users(request):
                 )
 
             # Manual data construction
-            result = []
-            for user in queryset:
-                user_data = {
+            result = [
+                {
                     'id': user.id,
                     'username': user.username,
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'email': user.email,
                     'is_active': user.is_active,
-                    'tax_id': user.extended.tax_id if hasattr(user, 'extended') else None,
-                    'phone': user.extended.phone if hasattr(user, 'extended') else None,
-                    'state': user.extended.state if hasattr(user, 'extended') else None,
-                    'city': user.extended.city if hasattr(user, 'extended') else None,
-                    'zip': user.extended.zip if hasattr(user, 'extended') else None,
-                    'clearance_level': user.extended.clearance_level.name if hasattr(user, 'extended') else None,
-                    'email2': user.extended.email2 if hasattr(user, 'extended') else None,
-                    'address': user.extended.address if hasattr(user, 'extended') else None,
-                    'llc_name': user.extended.llc_name if hasattr(user, 'extended') else None,
-                    'billing_type': user.extended.billing_type if hasattr(user, 'extended') else None,
-                    'warehouses': list(user.extended.warehouses.values_list('warehouse_id', flat=True)) if hasattr(user, 'extended') else None
+                    'tax_id': getattr(user.extended, 'tax_id', None),
+                    'phone': getattr(user.extended, 'phone', None),
+                    'state': getattr(user.extended, 'state', None),
+                    'city': getattr(user.extended, 'city', None),
+                    'zip': getattr(user.extended, 'zip', None),
+                    'clearance_level': getattr(user.extended, 'clearance_level', None),
+                    'email2': getattr(user.extended, 'email2', None),
+                    'address': getattr(user.extended, 'address', None),
+                    'llc_name': getattr(user.extended, 'llc_name', None),
+                    'billing_type': getattr(user.extended, 'billing_type', None),
+                    'warehouses': list(getattr(user.extended, 'warehouses', []).values_list('id', flat=True))
                 }
-                result.append(user_data)
+                for user in queryset
+            ]
 
             if all_data:
                 return Response({"results": result, "count": len(result)}, status=status.HTTP_200_OK)
@@ -102,23 +99,19 @@ def users(request):
         data = request.data
         clearance_level = data.get('clearance_level')
 
-        if clearance_level and int(clearance_level) in [3, 4]:
+        if authenticate_clearance_level(user, [1, 2]):
             return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
             
 
         #------------------------------------------------------------ Validation ---------------------------------------------------------
         errors = {}
-        warehouses = data.get('warehouses')
+        warehouses = data.get('warehouses', [])
 
-        if clearance_level == 4 and not warehouses:
-            errors['warehouses'] = "warehouses is required for clients."
-            
-        username = data.get('username', '')
-        if not username:
-            errors['username'] = "Username is required.')"
-    
+        if authenticate_clearance_level(user, 4) and not warehouses:
+            errors['warehouses'] = "warehouses are required for clients."    
         
+        username = data.get('username', '')
         first_name = data.get('first_name', '')
         last_name = data.get('last_name', '')
         email = data.get('email', '')
@@ -128,13 +121,17 @@ def users(request):
         email2 = data.get('email2', '')
         password = data.get('password', '')
 
+        if not username:
+            errors['username'] = "Username is required.')"
+            
         if not password:
             errors['password'] = "password is required." 
         
         if not first_name:
             errors['first_name'] = "First name is required."
-        if not role:
-            errors['role'] = "Role is required."
+            
+        if not clearance_level:
+            errors['clearance_level'] = "Clearance level is required."
         
         if email:
             try:
@@ -142,13 +139,10 @@ def users(request):
             except ValidationError:
                 errors['email'] = "Invalid email format."
         
-        if phone:
-            if not phone.isdigit():
-                errors['phone'] = "Phone number must contain only digits."
-        elif len(phone) > 15 or len(phone) < 6:
-            errors['phone'] = "Phone number must be exactly 10 digits long."
+        if phone and (not phone.isdigit() or not (6 <= len(phone) <= 15)):
+            errors['phone'] = "Phone number must be between 6 and 15 digits."
         # LLC name validation: non-empty
-        if role == "Client" and not llc_name:
+        if authenticate_clearance_level(user, [4]) and not llc_name:
             errors['llc_name'] = "LLC name is required."
         
         if data.get('zip', ''):
@@ -172,33 +166,33 @@ def users(request):
         #------------------------------------------------------------ Validation ---------------------------------------------------------
 
         try:
-            # Transaction ensures that both User and UsersExtended are created successfully
             with transaction.atomic():
-                
-                # Create User
-                new_user = User(
+                new_user = User.objects.create_user(
                     username=username,
                     first_name=first_name,
                     last_name=last_name,
-                    email=email
+                    email=email,
+                    password=password
                 )
                 new_user.set_password(password)  # Properly handle password setting
                 new_user.save()
                 target_extended = new_user.extended
-                if role != None:
-                    if role == "Owner":
+                if clearance_level != None:
+                    if authenticate_clearance_level(user, [1]):
                         make_superuser(username)
                 # Create UsersExtended
-                target_extended.address = data.get('address', target_extended.address)
-                target_extended.llc_name = data.get('llc_name', target_extended.llc_name)
-                target_extended.billing_type = data.get('billing_type', target_extended.billing_type)
-                target_extended.phone = data.get('phone', target_extended.phone)
-                target_extended.city = data.get('city', target_extended.city)
-                target_extended.state = data.get('state', target_extended.state)
-                target_extended.zip = data.get('zip', target_extended.zip)
-                target_extended.tax_id = data.get('tax_id', target_extended.tax_id)
-                target_extended.email2 = data.get('email2', target_extended.email2)
-                target_extended.clearance_level = ClearanceLevel.objects.get(id=clearance_level)
+                extended = new_user.extended
+                extended.phone = phone
+                extended.clearance_level = clearance_level
+                extended.tax_id = tax_id
+                extended.email2 = email2
+                extended.llc_name = llc_name
+                extended.address = data.get('address', '')
+                extended.city = data.get('city', '')
+                extended.state = data.get('state', '')
+                extended.zip = data.get('zip', '')
+                extended.billing_type = data.get('billing_type', UsersExtended.BillingTypeChoices.MONTHLY)
+                # target_extended.clearance_level = ClearanceLevel.objects.get(id=clearance_level)
                 if warehouses:
                     target_extended.warehouses.set(warehouses)
                 target_extended.save()
