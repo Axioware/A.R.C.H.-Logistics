@@ -8,7 +8,7 @@ const BoxContent = () => {
     mainContent: {
       flex: 1,
       padding: "10px",
-      marginLeft: "18%",
+      // marginLeft: "18%",
       marginRight: "4%",
       height: "80%",
     },
@@ -28,6 +28,7 @@ const BoxContent = () => {
       boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
     },
     buttonContainer: {
+      border: '2px solid #F5F5F5',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
@@ -50,7 +51,7 @@ const BoxContent = () => {
     <div style={styles.container}>
       <div style={styles.mainContent}>
         <div style={styles.heading}>
-          <PageHeading text="Add Location" />
+          <PageHeading text="Edit Location" />
         </div>
 
         <form style={styles.form} onSubmit={handleSubmit}>

@@ -3,8 +3,8 @@ import Spinner from "./Spinner";
 import BoxContent from "./BoxContent";
 
 const BoxContentTop = () => {
-  const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(true);
   const [status, setStatus] = useState(null);
   const [url, setUrl] = useState("https://example.com"); // Replace with a valid URL
 
