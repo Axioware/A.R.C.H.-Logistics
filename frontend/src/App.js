@@ -15,12 +15,16 @@ import AllWarehouse from './Pages/Warehouses/AllWarehouse';
 import AddWarehouse from './Pages/Warehouses/AddWarehouse';
 import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 import AddLocation from './Pages/Locations/AddLocation';
+import AddUser from './Pages/User_Management/AddUser';
 import EditLocation from './Pages/Locations/EditLocation';
+import BoxContent from './Components/General/BoxContent';
+import Spinner from "./Components/General/Spinner";
 
 
 import BalanceSheet from './Pages/Balance_Sheet/BalanceSheet';
 import Transaction from './Pages/Balance_Sheet/Transaction';
 import Invoices from './Pages/Balance_Sheet/Invoices';
+import Forbidden from './Components/Error_Components/Forbidden';
 import RatesManagement from './Pages/Custom_Rates/RatesManagement';
 import AllInventory from './Pages/Inventory/AllInventory';
 import ByDateInventory from './Pages/Inventory/ByDateInventory';
@@ -37,7 +41,7 @@ import Service from './Pages/Setting/Service';
 
 function App() {
   return (
-    <Router>
+    <Router>  
       <Routes>
         <Route path="/moiz" element={<Moiz />} />
         <Route path="/asad" element={<Asad />} />
@@ -54,11 +58,15 @@ function App() {
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/users" element={<AllUsers />} />
+        <Route path="/content" element={<BoxContent />} />
+        <Route path="/spinner" element={<Spinner />} />
+        <Route path="/add-user" element={<AddUser />} />
 
 
         <Route path="/balance-sheet" element={<BalanceSheet />} />
         <Route path="/transaction" element={<Transaction />} />
         <Route path="/invoices" element={<Invoices />} />
+        <Route path="/test" element={<Forbidden />} />
         <Route path="/rates-management" element={<RatesManagement />} />     
         <Route path="/all-items" element={<AllInventory />} />
         <Route path="/by-date-inventory" element={<ByDateInventory />} />

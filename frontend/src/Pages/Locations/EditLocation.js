@@ -7,6 +7,7 @@ import NavPath from '../../Components/General/NavPath';
 import PageHeading from '../../Components/Table_Components/PageHeading';
 import Forbidden from '../../Components/Error_Components/Forbidden';
 import SessionExpiredModal from '../../Components/Modals/SessionExpired';
+import BoxContentTop from "../../Components/General/BoxContentTop";
 
 const EditLocation = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -97,37 +98,11 @@ const EditLocation = () => {
           height="50px"
         />
 
-        <div style={styles.container}>
-          <div style={styles.heading}>
-            <PageHeading text="Edit Location" />
-          </div>
+        <BoxContentTop />
 
-          <form style={styles.form} onSubmit={handleSubmit}>
-            <GeneralField label="Name *" field_type="text" required />
-            <GeneralField label="Type *" field_type="select" options={['Inventory Bin', 'Other']} required />
-            <GeneralField label="Warehouse *" field_type="text" required />
-          </form>
-
-          <div id="buttonContainer" style={styles.buttonContainer}>
-            <GeneralButton 
-              text="Cancel" 
-              width="120px" 
-              height="40px" 
-              button_color={["230", "230", "230"]} 
-              text_color={["0", "0", "0"]} 
-              func={handleCancel}
-            />
-            <GeneralButton 
-              text="Add" 
-              type="submit" 
-              width="120px" 
-              height="40px" 
-              disabled={loading}
-            />
-          </div>
         </div>
-      </div>
-    </div>
+        </div>
+        
   );
 };
 

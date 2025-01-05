@@ -57,38 +57,6 @@ export default function PageHeading({
             overflow: hidden;
             text-overflow: ellipsis; /* Add ellipsis for overflowing text */
           }
-
-          /* Responsive styles */
-          @media (max-width: 768px) {
-            .page-heading-container {
-              flex-direction: column; /* Stack items vertically on smaller screens */
-              align-items: flex-start; /* Align items to the left */
-            }
-
-            .page-heading-text {
-              font-size: 1.5rem; /* Adjust font size on smaller screens */
-              margin-left: 0px; /* Remove space between sidebar and text */
-              text-align: center; /* Center text on small screens */
-            }
-
-            .page-heading-sidebar {
-              width: 5px; /* Reduce sidebar width on smaller screens */
-            }
-          }
-
-          @media (max-width: 480px) {
-            .page-heading-container {
-              margin: 20px 0px; /* Reduce margin for very small screens */
-            }
-
-            .page-heading-text {
-              font-size: 1.2rem; /* Further reduce font size */
-            }
-
-            .page-heading-sidebar {
-              width: 4px; /* Further reduce sidebar width */
-            }
-          }
         `}
       </style>
     </div>

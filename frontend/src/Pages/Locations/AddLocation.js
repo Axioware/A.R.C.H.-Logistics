@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import GeneralField from '../../Components/General/GeneralField';
-import GeneralButton from '../../Components/General/GeneralButton';
-import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
+import GeneralField from '../../Components/General/GeneralField'; // Ensure this is the correct path and exported as default
+import GeneralButton from '../../Components/General/GeneralButton'; // Ensure this is the correct path and exported as default
+import NavBarWithSidebar from '../../Components/General/TopSideNavBar'; // Ensure this is the correct path and exported as default
 import archlogo from '../../Assets/Images/logo1.png';
-import NavPath from '../../Components/General/NavPath';
-import PageHeading from '../../Components/Table_Components/PageHeading';
-import Forbidden from '../../Components/Error_Components/Forbidden';
-import SessionExpiredModal from '../../Components/Modals/SessionExpired';
+import NavPath from '../../Components/General/NavPath'; // Ensure this is the correct path and exported as default
+import PageHeading from '../../Components/Table_Components/PageHeading'; // Ensure this is the correct path and exported as default
+import Forbidden from '../../Components/Error_Components/Forbidden'; // Ensure this is the correct path and exported as default
+import SessionExpiredModal from '../../Components/Modals/SessionExpired'; // Ensure this is the correct path and exported as default
 
 const SuccessModal = ({ message, onClose }) => (
   <div className="modal success-modal">
@@ -77,19 +77,21 @@ const AddLocation = () => {
       marginRight: "4%",
       height: "80%",
     },
+    
     form: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr 1fr 1fr',
       gap: '20px',
     },
     container: {
-      backgroundColor: "#F5F5F5",
+      backgroundColor: '#f7f6f6',
       padding: '20px',
       borderRadius: '8px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
       height: '100%',
+      boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
     },
     buttonContainer: {
       border: '2px solid #F5F5F5',
@@ -131,7 +133,7 @@ const AddLocation = () => {
 
       <div style={styles.mainContent}>
         <NavPath
-          text={['Setting', 'location', 'Add location']}
+          text={['Setting', 'Location', 'Add Location']}
           paths={['/home', '/add-location', '/add-location']}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
@@ -146,9 +148,24 @@ const AddLocation = () => {
           </div>
 
           <form style={styles.form} onSubmit={handleSubmit}>
-            <GeneralField label="Name *" field_type="text" required />
-            <GeneralField label="Type *" field_type="select" options={['Inventory Bin', 'Other']} required />
-            <GeneralField label="Warehouse *" field_type="text" required />
+            <GeneralField
+              label="Name *"
+              field_type="text"
+              hint="Enter the name of the location (e.g., Warehouse A)"
+              required
+            />
+            <GeneralField
+              label="Type *"
+              field_type="text"
+              hint="Select the type of location"
+              required
+            />
+            <GeneralField
+              label="Warehouse *"
+              field_type="text"
+              hint="Enter the warehouse name (e.g., Main Warehouse)"
+              required
+            />
           </form>
 
           <div id="buttonContainer" style={styles.buttonContainer}>
@@ -172,7 +189,8 @@ const AddLocation = () => {
       </div>
 
       {success && <SuccessModal message="Location Added Successfully" onClose={() => (window.location.href = '/add-warehouses')} />}
-      </div>
-  )}
+    </div>
+  );
+};
 
-  export default AddLocation;
+export default AddLocation;

@@ -84,44 +84,6 @@ export default function SearchBar({
             width: 20px;
             height: 20px;
           }
-
-          /* Responsive styles */
-          @media (max-width: 768px) {
-            .Search-bar-container {
-              flex-direction: column; /* Stack input and icon vertically on smaller screens */
-              margin: 10px; /* Adjust margin */
-            }
-
-            .Search-bar-input {
-              font-size: 1.2rem; /* Adjust font size on smaller screens */
-              padding: 8px; /* Reduce padding for a more compact input */
-            }
-
-            .Search-icon-container {
-              margin-right: 0px; /* Remove right margin for icon */
-            }
-
-            .Search-icon {
-              width: 18px; /* Adjust icon size on small screens */
-              height: 18px;
-            }
-          }
-
-          @media (max-width: 480px) {
-            .Search-bar-container {
-              margin: 10px 0px; /* Further adjust margin for very small screens */
-            }
-
-            .Search-bar-input {
-              font-size: 1rem; /* Further reduce font size */
-              padding: 6px; /* Further reduce padding */
-            }
-
-            .Search-icon {
-              width: 16px; /* Reduce icon size on very small screens */
-              height: 16px;
-            }
-          }
         `}
       </style>
     </div>

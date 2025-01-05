@@ -17,7 +17,7 @@ const NavBarWithSidebar = ({
   sidebar_text_color = [235, 232, 232],
   selected_color = [235, 232, 232],
   hover_color = [235, 232, 232],
-  expanded,
+  expanded = ['User Management'],
   isSidebarOpen_p,
   toggleSidebar_func,
   sidebar_width,
@@ -35,12 +35,12 @@ const NavBarWithSidebar = ({
 
   const [expandedStates, setExpandedStates] = useState(() => {
     const savedExpandedStates = localStorage.getItem("expandedStates");
-    return savedExpandedStates ? false : expanded;
+    return savedExpandedStates ? JSON.parse(savedExpandedStates) : expanded;
   });
 
   const [selectedSubItem, setSelectedSubItem] = useState(() => {
     const savedSelectedSubItem = localStorage.getItem("selectedSubItem");
-    return savedSelectedSubItem ? null : null;
+    return savedSelectedSubItem ? JSON.parse(savedSelectedSubItem) : null;
   });
 
   useEffect(() => {
@@ -50,9 +50,11 @@ const NavBarWithSidebar = ({
   }, [isSidebarOpen, expandedStates, selectedSubItem]);
 
   const toggleExpand = (index) => {
+    if (expandedStates) {
     setExpandedStates((prev) =>
       prev.map((value, i) => (i === index ? !value : value))
     );
+  }
   };
 
   const toggleSidebar = () => {

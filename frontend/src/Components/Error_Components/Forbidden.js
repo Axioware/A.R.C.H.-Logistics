@@ -7,7 +7,7 @@ export default function Forbidden() {
   return (
     <main className="grid min-h-screen px-6 py-24 place-items-center bg-rgb-235-232-232 sm:py-32 lg:px-8">
       <div className="text-center">
-        <p className="text-4xl font-bold text-rgb-26-24-24">404</p>
+        <p className="text-4xl font-bold text-rgb-26-24-24">401</p>
         <h1 className="mt-4 text-6xl font-bold tracking-tight text-rgb-26-24-24 sm:text-7xl">
           Access to this page is restriced
         </h1>

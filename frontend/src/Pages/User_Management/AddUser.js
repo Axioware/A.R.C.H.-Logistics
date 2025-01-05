@@ -7,7 +7,7 @@ import NavPath from '../../Components/General/NavPath';
 import PageHeading from '../../Components/Table_Components/PageHeading';
 import { borderRadius } from "polished";
 
-const EditWarehouse = () => {
+const AddUser = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted'); // Debug log
@@ -29,6 +29,7 @@ const EditWarehouse = () => {
       // border: '2px solid white',
       height:"80%",
   },
+
   form: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr 1fr 1fr', // Two columns
@@ -37,6 +38,12 @@ const EditWarehouse = () => {
       marginLeft:'20px',
       marginTop:'35px',
   },
+
+  select: {
+    marginLeft:"40px",
+    marginTop:"40px",
+  },
+
   buttonContainer: {
     // border: '2px solid white',
       display: 'flex',
@@ -48,19 +55,44 @@ const EditWarehouse = () => {
       marginTop: '20px',
       lineHeight:'40px',
   },
+
   container:{
     border: '2px solid white',
     borderRadius:'8px',
     backgroundColor :"#F5F5F5",
     padding: '20px',
     gap: '10px',
-    boxShadow: "5px 5px 5px 5px lightgrey"
-
+    boxShadow: '2px 2px 2px 2px lightgrey',
   },
+
   PageHeading:{
     marginLeft:'0px',
     marginTop:'20px',  
-  }
+  },
+
+  RoleContainer: {
+    marginTop:'10px',  
+    marginLeft:"10px",
+    width:'100%',
+  },
+
+  label: {
+    marginTop:'10px',  
+    marginLeft:"20px",
+    display:'block',
+    fontWeight:'700px',
+  },
+
+  select: {
+    marginTop:'20px',  
+    marginLeft:"10px",
+    display:'block',
+    width:'260px',
+    height:'45px',
+    borderRadius:'09px',
+    border: '2px solid lightgrey',
+    boxShadow: '2px 2px 2px 2px lightgrey',
+  },
   };
   
   return (
@@ -91,8 +123,8 @@ const EditWarehouse = () => {
 
         <div style={styles.mainContent}>
           <NavPath
-            text={['Home', 'All Warehouses', 'Edit Warehouses']}
-            paths={['/home', '/add-warehouses', '/edit-warehouses']}
+            text={['Home', 'All User', 'Edit User']}
+            paths={['/home', '/add-user', '/edit-user']}
             text_color={[255, 255, 255]}
             background_color={[23, 23, 23]}
             hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
@@ -102,16 +134,34 @@ const EditWarehouse = () => {
 
           
           <div id="container" style={styles.container}>
-            <PageHeading text="Edit Warehouse" />
+            <PageHeading text="Add User" />
+            
+        <div id="RoleContainer" style={styles.RoleContainer}>
+
+        <label htmlFor="Dropdown" style={styles.label}>Role</label>
+
+        <select name="Dropdown" id="Dropdown" style={styles.select}>
+            <option value="Client">Client</option>
+            <option value="Prep-Team">Prep-Team</option>
+            <option value="VA's">VA's</option>
+            <option value="Others">Others</option>
+            </select>
+        </div>
+
           <form id="form" style={styles.form} onSubmit={handleSubmit}>
-          <GeneralField label="Name" field_type="text" hint="Enter warehouse name" />
+          <GeneralField label="LLC Name" field_type="text" hint="Enter Company name" />
+          <GeneralField label="First Name" field_type="text" hint="First Name (e.g. , John)" />
+          <GeneralField label="Last Name" field_type="text" hint="Last Name (e.g. , Doe)" />
+          <GeneralField label="Phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" />
+          <GeneralField label="Address" field_type="text" hint="Full address" />
           <GeneralField label="Country" field_type="text" hint="Country (e.g., USA)" />
           <GeneralField label="State" field_type="text" hint="State (e.g., Texas)" />
           <GeneralField label="City" field_type="text" hint="City (e.g., Stafford)" />
-          <GeneralField label="Address" field_type="text" hint="Full address" />
           <GeneralField label="Zip Code" field_type="text" hint="Zip code" />
           <GeneralField label="Email" field_type="email" hint="Email address (e.g., example@mail.com)" />
-          <GeneralField label="Phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" />
+          <GeneralField label="Alternate Email" field_type="email" hint="Alternate Email address (e.g., example@mail.com)" />
+          <GeneralField label="Password" field_type="text" hint="Enter Password" />
+          <GeneralField label="Retype Password" field_type="text" hint="Re-Type Password" />
 
              
             </form>
@@ -125,4 +175,4 @@ const EditWarehouse = () => {
   );
 };
 
-export default EditWarehouse;
+export default AddUser;
