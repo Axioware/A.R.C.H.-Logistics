@@ -11,15 +11,14 @@ const BoxContentTop = () => {
   
 
   const containerStyle = {
-    backgroundColor: "#f7f6f6", // Replace with BoxContent's actual background color
-    padding: "20px",
-    borderRadius: "8px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    height: "100%",
-    boxShadow: "0 5px 55px rgba(0, 0, 0, 0.1)",
- 
+    backgroundColor: '#f7f6f6',
+    // padding: '20px',
+    borderRadius: '8px',
+    display: 'flex',
+    flexDirection: 'column',
+    // justifyContent: 'space-between',
+    // height: '100%',
+    // boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
   };
 
   return (
@@ -38,6 +37,10 @@ const BoxContentTop = () => {
               justifyContent: "center",
               zIndex: 10,
               backgroundColor: "#f7f6f6", 
+              borderRadius: '8px',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
 
             }}
           >
