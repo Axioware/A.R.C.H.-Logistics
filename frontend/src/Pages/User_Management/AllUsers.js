@@ -108,10 +108,7 @@ export default function All_Users() {
         padding: '10px', // Further reduce padding for very small screens
       },
     },
-  };
-
-
-  
+  }; 
 
   return (
     <div>
