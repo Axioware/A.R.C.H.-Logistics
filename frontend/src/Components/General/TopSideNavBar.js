@@ -120,12 +120,16 @@ const NavBarWithSidebar = ({
             justify-content: center;
            
           }
+
           .TopSideNavBar-company-name {
             margin: 0;
             text-color: rgb(${company_name_color.join(",")});
             font-size: 23px;
             font-weight: 500;
+            transition: transform 0.35s ease; /* Smooth animation */
+            transform: translateX(${isSidebarOpen ? "80px" : "0"}); /* Adjust the translateX value */
           }
+
           .TopSideNavBar-hamburger {
             cursor: pointer;
             width: 25px;
@@ -136,7 +140,7 @@ const NavBarWithSidebar = ({
             text-color: rgb(${hamburger_color.join(",")});
           }
           .TopSideNavBar-hamburger.open {
-              transform: translateX(250px); /* Moves the hamburger icon to the right by the sidebar width */
+              transform: translateX(220px); /* Moves the hamburger icon to the right by the sidebar width */
               transition: transform 0.35s ease, opacity 0.3s ease;
           }
           .TopSideNavBar-hamburger-line {

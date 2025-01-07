@@ -58,6 +58,7 @@ export default function AddButton({
             text-align: center;
             box-sizing: border-box;
             transition: all 0.3s ease; /* Smooth hover effect */
+            border: 2px solid black;
           }
 
           .add-button:hover {

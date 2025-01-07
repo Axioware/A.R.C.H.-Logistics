@@ -44,6 +44,7 @@ export default function FilterButton({
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
             outline: none; /* Remove outline on focus */
             margin: 0px 0px 0px 0px;
+            
           }
 
           .filter-button:hover {
@@ -51,6 +52,7 @@ export default function FilterButton({
             color: ${buttonColor}; /* Change text color to background color */
             transform: translateY(-3px); /* Lift button slightly on hover */
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
+            border: 2px solid black;
           }
 
           .filter-button:active {
