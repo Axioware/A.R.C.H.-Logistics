@@ -36,13 +36,15 @@ const EditLocation = () => {
       height: '80%',
     },
     container: {
-      backgroundColor: "#F5F5F5",
+      backgroundColor: '#f7f6f6',
       padding: '20px',
       borderRadius: '8px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
       height: '100%',
+      boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
+      marginTop: "40px",
     },
     buttonContainer: {
       border: '2px solid #F5F5F5',
@@ -55,12 +57,9 @@ const EditLocation = () => {
     },
     heading: {
       marginBottom: '20px',
+      
     },
-    form: {
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr 1fr 1fr',
-      gap: '20px',
-    },
+    
   };
 
   return (

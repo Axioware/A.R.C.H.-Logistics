@@ -1,6 +1,7 @@
 import React from "react";
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
+import GeneralDropdown from "../General/GeneralDropdown";
 import PageHeading from '../../Components/Table_Components/PageHeading';
 
 const BoxContent = () => {
@@ -8,7 +9,6 @@ const BoxContent = () => {
     mainContent: {
       flex: 1,
       padding: "10px",
-      // marginLeft: "18%",
       marginRight: "4%",
       height: "80%",
     },
@@ -26,6 +26,7 @@ const BoxContent = () => {
       justifyContent: 'space-between',
       height: '100%',
       boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
+      
     },
     buttonContainer: {
       border: '2px solid #F5F5F5',
@@ -34,16 +35,28 @@ const BoxContent = () => {
       justifyContent: 'flex-end',
       width: '100%',
       gap: '10px',
-      marginTop: '20px',
+      marginTop: '40%',
+      marginLeft: "50px",
     },
     heading: {
       marginBottom: '20px',
+      marginLeft: "-1%",
+    },
+    selectContainer: {
+      marginTop: '7px',
+      marginLeft: "10px",
+      display: 'block',
+      width: '260px',
+      height: '45px',
+      borderRadius: '9px',
+      // border: '2px solid lightgrey',
+      // boxShadow: '2px 2px 2px 2px lightgrey',
+      padding: '10px',
     },
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your form submit logic here
     console.log("Form Submitted");
   };
 
@@ -68,13 +81,15 @@ const BoxContent = () => {
             hint="Select the type of location (e.g., Inventory Bin, Other)" 
             required 
           />
-          <GeneralField 
-            label="Warehouse *" 
-            field_type="text" 
-            hint="Enter the warehouse name (e.g., Main Warehouse)" 
-            required 
-          />
-        </form>
+
+          <GeneralDropdown
+          label="Warehouse *"
+          options={["Main Warehouse", "Warehouse A", "Warehouse B"]}
+          hint="Select the warehouse"
+          id="warehouse-dropdown"
+          func={(value) => console.log("Selected:", value)}
+/>
+
 
         <div id="buttonContainer" style={styles.buttonContainer}>
           <GeneralButton 
@@ -91,6 +106,7 @@ const BoxContent = () => {
             height="40px" 
           />
         </div>
+      </form>
       </div>
     </div>
   );

@@ -45,7 +45,8 @@ const UserDrop = ({ userName }) => {
       fontSize: '14px',
       fontWeight: '500',
       cursor: 'pointer',
-      transition: '0.2s ease', // Smooth transition on hover
+      transition: '0.2s ease',
+       // Smooth transition on hover
     },
     dropdownLink: {
       textDecoration: 'none',

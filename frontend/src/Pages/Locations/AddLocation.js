@@ -75,7 +75,8 @@ const AddLocation = () => {
       transition: "margin-left 0.5s ease",
       marginLeft: isSidebarOpen ? "18%" : "4%",
       marginRight: "4%",
-      height: "80%",
+      height: "100%",
+      
     },
     
     form: {
@@ -92,6 +93,7 @@ const AddLocation = () => {
       justifyContent: 'space-between',
       height: '100%',
       boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
+      marginTop:"40px",
     },
     buttonContainer: {
       border: '2px solid #F5F5F5',
@@ -104,6 +106,7 @@ const AddLocation = () => {
     },
     heading: {
       marginBottom: '20px',
+      marginLeft: "-1%",
     },
   };
 
