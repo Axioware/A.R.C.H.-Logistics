@@ -24,16 +24,16 @@ const UserDrop = ({ userName }) => {
       transition: '0.3s ease', // Smooth transition for hover effect
     },
     dropdownContainer: {
-      position: 'relative',
+      // position: 'relative',
     },
     dropdownMenu: {
       position: 'absolute',
-      top: '100%',
-      right: '40px',
+      top: '70%',
+      right: '0px',
       background: '#fff',
       listStyle: 'none',
       padding: '10px 0',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.)',
       borderRadius: '5px',
       display: isDropdownVisible ? 'block' : 'none',
       width: '200px', // Optional: Control the width of the dropdown menu

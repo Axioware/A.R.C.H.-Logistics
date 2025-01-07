@@ -202,6 +202,51 @@ const NavBarWithSidebar = ({
     opacity: 1; /* Ensure hamburger remains visible */
   }
 
+
+  .TopSideNavBar-nav-bar {
+  position: relative; /* Already present */
+  z-index: 2; /* Ensure navbar is on top */
+}
+
+.TopSideNavBar-hamburger {
+  position: absolute; /* Ensure it's positioned correctly within the navbar */
+  top: 10px;
+  left: 30px;
+  cursor: pointer;
+  width: 25px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-color: rgb(${hamburger_color.join(",")});
+  z-index: 3; /* Ensure hamburger is above other navbar elements */
+}
+
+@media (max-width: 1700px) {
+  .TopSideNavBar-hamburger {
+    left: 30px; /* Keep consistent for smaller screens */
+  }
+}
+
+@media (min-width: 1700px) {
+  .TopSideNavBar-hamburger {
+    left: 50px; /* Adjust for larger screens */
+  }
+}
+
+@media (max-width: 1200px) {
+  .TopSideNavBar-hamburger {
+    left: 30px; /* Ensure alignment stays for smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .TopSideNavBar-hamburger {
+    left: 30px; /* Adjust if necessary for tighter spaces */
+  }
+}
+
+
         `}
       </style>
 
