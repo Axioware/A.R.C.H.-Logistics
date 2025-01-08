@@ -1,26 +1,15 @@
-from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
-from django.http import JsonResponse, HttpResponse
-from django.core.serializers import serialize
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
-from django.core.mail import send_mail
-from django.utils import timezone
-from datetime import timedelta
 from django.contrib.auth.models import User
 from .models import *
 from rest_framework import status
 from .helpers import UserPagination
-from django.contrib.auth.hashers import make_password
-from django.db.models import Q, Sum, F
+from django.db.models import Q
 from django.db import transaction
-from Arch_Logistics.helpers import authenticate_client, authenticate_manager, authenticate_owner, authenticate_VA, make_superuser, authenticate_prep, get_extended_field, get_texas_time
+from Arch_Logistics.helpers import authenticate_client, authenticate_manager, authenticate_VA, make_superuser, authenticate_prep, get_extended_field
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from django.utils.dateparse import parse_datetime
-import random
-import pytz
 
 # Create your views here.
 @api_view(['GET', 'POST'])
@@ -408,44 +397,3 @@ def reset_password(request):
         return Response({"success": "Password has been updated successfully."}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-
-
-
-from django_tenants.utils import schema_context
-from django.contrib.auth.models import User
-from django.http import HttpResponse
-from datetime import date
-from django_tenants.middleware.main import TenantMainMiddleware
-
-# def tenant_hello_user_creation(request):
-#     tenant = request.tenant  # Automatically fetch the tenant from the request
-#     tenant_schema = tenant.schema_name  # Get the tenant schema (e.g., 'testing')
-
-#     with schema_context(tenant_schema):
-#         username = f"{tenant_schema}_user1"
-        
-#         # Check if the user already exists to avoid duplicates
-#         if not User.objects.filter(username=username).exists():
-#             # Create User
-#             user = TenantUser.objects.create_user(
-#                 username=username,
-#                 password='defaultpassword123',
-#                 email=f'{username}@example.com'
-#             )
-#             user.save()
-
-#             # Create Extended User Profile
-#             UsersExtended.objects.create(
-#                 username=user,
-#                 phone='000-000-0000',
-#                 clearance_level=2,
-#                 llc_name=f'{tenant_schema} LLC',
-#                 state='California',
-#                 city='San Francisco',
-#                 zip='94103',
-#                 date_created=date.today()
-#             )
-#             return HttpResponse(f"User '{username}' created for tenant '{tenant_schema}'.")
-        
-#         return HttpResponse(f"User '{username}' already exists for tenant '{tenant_schema}'.")
