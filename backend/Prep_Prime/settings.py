@@ -135,6 +135,7 @@ TENANT_APPS = (
     'Structures',
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.staticfiles',
     # 'myapp.houses',
 )
 
