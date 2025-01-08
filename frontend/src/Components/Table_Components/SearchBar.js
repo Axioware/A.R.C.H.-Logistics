@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { FaSearch } from 'react-icons/fa'; // Import search icon from react-icons
-import SearchIcon from '../../Assets/Images/SearchIcon.png'; // Import custom search icon image
+import SearchIcon from '../../Assets/Images/SearchIcon.png';
 
 // Function to convert RGB array to 'rgb(r, g, b)' string
 function rgbArrayToString(rgbArray) {
@@ -41,7 +40,7 @@ export default function SearchBar({
       style={{ width, height }}  
     >
       <div className="Search-icon-container">
-        {icon ? <FaSearch className="Search-icon" /> : <img src={SearchIcon} alt="Search Icon" className="Search-icon" />}
+        {icon && <img src={SearchIcon} alt="Search Icon" className="Search-icon" />}
       </div>
       <input
         type="text"
@@ -55,24 +54,21 @@ export default function SearchBar({
       <style>
         {`
           .Search-bar-container {
-            position: relative;
             width: ${width}; /* Apply width */
             height: ${height}; /* Apply height */
+            margin: 0px 40px 0px 0px;
             display: flex;
             align-items: center;
-            margin: 0px 40px 0px 0px;
           }
 
           .Search-icon-container {
-            position: absolute;
-            left: 10px; /* Position the icon inside the input field */
-            z-index: 1; /* Make sure the icon appears above the input */
+            margin-right: 10px; /* Space between icon and input field */
           }
 
           .Search-bar-input {
             width: 100%;
             height: 100%;
-            padding: 10px 10px 10px 40px; /* Add extra left padding to create space between the icon and the text */
+            padding: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
             font-size: 1rem;
@@ -87,11 +83,6 @@ export default function SearchBar({
           .Search-icon {
             width: 20px;
             height: 20px;
-            color: #aaa; /* Dim the color of the search icon */
-          }
-
-          .Search-bar-input::placeholder {
-            color: #aaa; /* Set the placeholder color to match the icon */
           }
         `}
       </style>

@@ -38,12 +38,14 @@ export default function TableTop({
       <div className="table-top-container">
         <PageHeading
           text={heading_text}
+          headings={'users'}
           text_color={[0, 0, 0]} // Black text color
           sidebar_color={[23, 23, 23]} // Sidebar color
           width="auto" // Auto width to align properly
           height="auto" // Auto height
-          sidebar_width="5px" // Increased sidebar width for visibility
-          sidebar_height="35px" // Set sidebar height explicitly
+          className="page-heading"
+          sidebar_width="5px" // Narrow sidebar width
+          sidebar_height="40px"
         />
 
         <div className="row-container1">

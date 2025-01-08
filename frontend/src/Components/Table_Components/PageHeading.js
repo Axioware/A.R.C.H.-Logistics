@@ -17,7 +17,6 @@ export default function PageHeading({
   sidebar_color,
   font_size = '2rem',
   sidebar_width = '10px', // Default sidebar width
-  sidebar_height = '40px', // Default sidebar height
 }) {
   // Convert colors to CSS string format
   const textColor = rgbArrayToString(text_color);
@@ -30,7 +29,6 @@ export default function PageHeading({
         style={{
           backgroundColor: sidebarColor,
           width: sidebar_width,
-          height: sidebar_height, // Apply height to the sidebar
         }}
       ></div>
       <h1 className="page-heading-text">{text}</h1>
@@ -46,6 +44,7 @@ export default function PageHeading({
           }
 
           .page-heading-sidebar {
+            height: 100%; /* Sidebar height matches container height */
             flex-shrink: 0; /* Prevent sidebar from shrinking */
           }
 
@@ -53,7 +52,7 @@ export default function PageHeading({
             color: ${textColor};
             font-size: ${font_size}; /* Use font_size prop */
             font-weight: bold; /* Make text bold */
-            margin-left: 17px; /* Space between sidebar and text */
+            margin-left: 10px; /* Space between sidebar and text */
             white-space: nowrap; /* Prevent wrapping */
             overflow: hidden;
             text-overflow: ellipsis; /* Add ellipsis for overflowing text */
