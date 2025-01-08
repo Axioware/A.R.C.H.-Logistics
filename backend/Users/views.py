@@ -9,13 +9,13 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.models import User
-from API.models import *
+from .models import *
 from rest_framework import status
 from .helpers import UserPagination
 from django.contrib.auth.hashers import make_password
 from django.db.models import Q, Sum, F
 from django.db import transaction
-from Prep_Prime.helpers import authenticate_client, authenticate_manager, authenticate_owner, authenticate_VA, make_superuser, authenticate_prep, get_extended_field, get_texas_time
+from Arch_Logistics.helpers import authenticate_client, authenticate_manager, authenticate_owner, authenticate_VA, make_superuser, authenticate_prep, get_extended_field, get_texas_time
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_datetime
