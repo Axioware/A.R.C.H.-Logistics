@@ -18,16 +18,16 @@ export default function Settings() {
         <CardWithButtons
           title="Settings"
           button1={{
+            icon: "person",
+            text: "Account Information",
+            onPress: () => console.log("Settings pressed"),
+            visible: true,
+          }}
+          button2={{
             icon: "lock",
             text: "Change Password",
             onPress: () => console.log("Change Password Pressed"),
-            visible: true, // Show this button
-          }}
-          button2={{
-            icon: "settings",
-            text: "Settings",
-            onPress: () => console.log("Settings pressed"),
-            visible: false, // Show this button
+            visible: true,
           }}
         />
       </View>

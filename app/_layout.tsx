@@ -2,7 +2,9 @@ import { Stack } from 'expo-router';
 
 export default function RootLayout() {
   return (
-    <Stack>
+    <Stack screenOptions={{
+      headerShown: false,
+    }}>
       {/* Pages Without Tabs */}
       <Stack.Screen name="select_tenant" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ headerShown: false }} />
