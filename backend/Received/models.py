@@ -1,12 +1,13 @@
 from django.db import models
 from Users.models import UsersExtended
 from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
 # Received Table
 class Received(models.Model):
     tracking_id = models.CharField(max_length=32, primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='recieved_user_id')
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True, related_name='recieved_user_id')
     tracking_type = models.CharField(max_length=20, null=True, blank=True)
     date_received = models.DateTimeField(null=True) # null if not received
     completed = models.BooleanField(default=False) # if this box has 0 quantity left

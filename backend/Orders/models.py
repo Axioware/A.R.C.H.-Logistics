@@ -3,11 +3,12 @@ from Users.models import User
 from Inventory.models import Item, Inventory
 from Structures.models import Services, Locations
 from django.utils import timezone
+from django.conf import settings
 
 # Create your models here.
 class Orders(models.Model):
     order_id = models.CharField(max_length=50, primary_key=True)
-    user_id = models.ForeignKey(User)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
 
 class SubOrders(models.Model): #TODO Completed Orders
 
@@ -31,8 +32,8 @@ class SubOrders(models.Model): #TODO Completed Orders
         return 'fba/{0}_{1}_{2}_{3}'.format(self.order_id, self.item_id, self.service_id, self.sub_order_id)
 
     sub_order_id = models.CharField(max_length=100, primary_key=True)
-    order_id = models.ForeignKey(Orders)
-    item_id = models.ManyToManyField(Item, on_delete=models.PROTECT, related_name="item_id_sub_order")
+    order_id = models.ForeignKey(Orders, on_delete=models.DO_NOTHING)
+    item_id = models.ManyToManyField(Item, related_name="item_id_sub_order")
     service_id = models.ForeignKey(Services, on_delete=models.PROTECT, related_name="service_id_sub_order")
     location_id = models.ForeignKey(Locations, on_delete=models.SET_NULL, null=True, blank=True)
     no_bundles = models.IntegerField(default=None, null=True, blank=True)

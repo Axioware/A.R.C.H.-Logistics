@@ -12,9 +12,19 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Points to backend/static/
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -32,13 +42,14 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'django_tenants',
+    'TenantsManagement',
+    'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_tenants',
     'API',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -65,6 +76,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -74,7 +86,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django_tenants.middleware.main.TenantMainMiddleware',
 ]
 
 ROOT_URLCONF = 'Prep_Prime.urls'
@@ -90,7 +101,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request',
             ],
         },
     },
@@ -99,38 +109,49 @@ TEMPLATES = [
 
 SHARED_APPS = (
     'django_tenants',  # mandatory
+    'TenantsManagement',
     # 'Users', # you must list the app where your tenant model resides in
 
     'django.contrib.contenttypes',
 
     # everything below here is optional
-    'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    'django.contrib.admin',
+    
 )
 
 TENANT_APPS = (
     # your tenant-specific apps
     'Users',
+    'API',
+    'Authentication',
+    'Billing',
+    'Checkin',
+    'Inventory',
+    'Orders',
+    'Received',
+    'Reports',
+    'Structures',
+    'django.contrib.admin',
+    'django.contrib.auth',
     # 'myapp.houses',
 )
+
+# AUTH_USER_MODEL = 'Users.TenantUser'
+AUTH_USER_MODEL = 'auth.User'
+
+
+TENANT_MODEL = "TenantsManagement.Client" # app.Model
+TENANT_PUBLIC_SCHEMA = 'public'
+TENANT_DOMAIN_MODEL = "TenantsManagement.Domain"  # app.Model
+# SHOW_PUBLIC_IF_NO_TENANT_FOUND = True
+SITE_ID = 1
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
 WSGI_APPLICATION = 'Prep_Prime.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
     'default': {
@@ -213,9 +234,7 @@ CORS_ALLOWED_ORIGINS = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Path where media is stored
 MEDIA_URL = '/media/'  # URL to access media

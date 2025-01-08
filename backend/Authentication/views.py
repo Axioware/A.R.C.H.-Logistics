@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from API.models import *
 from rest_framework import status, pagination
 from django.contrib.auth.hashers import make_password
+from django.conf import settings
 from django.db.models import Q, Sum, F
 from django.db import transaction
 from Prep_Prime.helpers import authenticate_client, authenticate_manager, authenticate_owner, authenticate_VA, make_superuser, authenticate_prep
@@ -20,13 +21,19 @@ from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_datetime
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django_tenants.utils import schema_context
+
+
+
 # Create your views here.
 
 @api_view(['POST'])
 def send_otp(request):
     email = request.data.get('email')
     
-    user = User.objects.filter(email=email).first()
+    user = settings.AUTH_USER_MODEL.objects.filter(email=email).first()
     if user == None:
         user = UsersExtended.objects.filter(email2=email).first()
     
@@ -108,3 +115,35 @@ def change_password(request):
     except User.DoesNotExist:
         return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
     
+
+
+from django_tenants.utils import schema_context
+from django.contrib.auth import authenticate
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
+
+
+@csrf_exempt
+def check_user_in_testing(request):
+    if request.method == 'POST':
+        username = request.POST.get('username') or request.GET.get('username')
+        password = request.POST.get('password') or request.GET.get('password')
+
+        print(username, password)
+        if not username or not password:
+            return JsonResponse({'error': 'Username and password are required.'}, status=400)
+
+        try:
+            with schema_context('testing'):
+                a = TenantUser.objects.get(username=username)
+                print(a)
+                user = authenticate(request, username=username, password=password)
+                if user is not None:
+                    return JsonResponse({'exists': True, 'message': 'User authenticated successfully.'})
+                else:
+                    return JsonResponse({'exists': False, 'message': 'Invalid credentials or user not found.'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)

@@ -7,6 +7,6 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-    path('api/checkin/', views.checkin, name="checkin"),
-    path('api/checkin/<int:pk>/', views.checkin_detail, name="checkin detail"),
+    # path('api/checkin/', views.checkin, name="checkin"),
+    # path('api/checkin/<int:pk>/', views.checkin_detail, name="checkin detail"),
 ]

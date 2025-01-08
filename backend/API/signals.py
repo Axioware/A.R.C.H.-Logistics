@@ -1,8 +1,8 @@
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from .models import ShipmentDetails, CustomRates, Charges, ServiceCategory
-from datetime import datetime
-from django.utils import timezone
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
+# from .models import ShipmentDetails, CustomRates, Charges, ServiceCategory
+# from datetime import datetime
+# from django.utils import timezone
 
 
 # @receiver(post_save, sender=ShipmentDetails)
