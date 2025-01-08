@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import MenuItem from "../General/MenuItem";
 import UserDrop from "./UserDrop";
 
@@ -218,6 +218,8 @@ const NavBarWithSidebar = ({
         </div>
         <UserDrop userName={username} />
       </nav>
+
+      
 
       {/* Sidebar */}
       <div className="TopSideNavBar-sidebar">

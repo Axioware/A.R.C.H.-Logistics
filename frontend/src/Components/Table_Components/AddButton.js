@@ -58,11 +58,62 @@ export default function AddButton({
             text-align: center;
             box-sizing: border-box;
             transition: all 0.3s ease; /* Smooth hover effect */
+            border: 2px solid black;
           }
 
           .add-button:hover {
             background-color: rgba(255, 255, 255, 0.8); /* Change background on hover */
             color: black; /* Text color changes to black on hover */
+          }
+
+          /* Responsive styles */
+          @media (max-width: 768px) {
+            .add-button-container {
+              justify-content: center; /* Center button on smaller screens */
+            }
+
+            .add-button {
+              width: 120px; /* Make button smaller on mobile */
+              height: 40px;
+              font-size: 0.9rem; /* Slightly smaller text */
+            }
+          }
+
+          @media (max-width: 480px) {
+            .add-button {
+              width: 100px; /* Further reduce button size */
+              height: 35px;
+              font-size: 0.8rem; /* Further reduce font size */
+            }
+          }
+
+          /* Lock layout for screens narrower than 1366px */
+          @media (max-width: 1366px) {
+            body {
+              width: 1920px;
+              transform: scale(0.7); /* Scale down to fit smaller screens */
+              transform-origin: top left;
+              overflow-x: auto; /* Allow horizontal scrolling */
+            }
+
+            .add-button {
+              width: 150px;
+              height: 50px;
+              font-size: 1rem; /* Maintain original size for 1920x1080 view */
+            }
+          }
+
+          /* Maintain responsiveness above 1366px */
+          @media (min-width: 1366px) {
+            .add-button-container {
+              justify-content: flex-end; /* Default alignment */
+            }
+
+            .add-button {
+              width: ${width};
+              height: ${height};
+              font-size: 1rem;
+            }
           }
         `}
       </style>

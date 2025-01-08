@@ -18,23 +18,22 @@ const UserDrop = ({ userName }) => {
     },
     img: {
       width: '40px',
-      // height: '30px',
       cursor: 'pointer',
       padding: '30px 20px 30px 0px',
       borderRadius: '50%', // Circle effect for profile icon
       transition: '0.3s ease', // Smooth transition for hover effect
     },
     dropdownContainer: {
-      position: 'relative',
+      // position: 'relative',
     },
     dropdownMenu: {
       position: 'absolute',
-      top: '100%',
-      right: '0',
+      top: '70%',
+      right: '0px',
       background: '#fff',
       listStyle: 'none',
       padding: '10px 0',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.)',
       borderRadius: '5px',
       display: isDropdownVisible ? 'block' : 'none',
       width: '200px', // Optional: Control the width of the dropdown menu
@@ -45,7 +44,8 @@ const UserDrop = ({ userName }) => {
       fontSize: '14px',
       fontWeight: '500',
       cursor: 'pointer',
-      transition: '0.2s ease', // Smooth transition on hover
+      transition: '0.2s ease',
+       // Smooth transition on hover
     },
     dropdownLink: {
       textDecoration: 'none',
@@ -64,53 +64,66 @@ const UserDrop = ({ userName }) => {
   };
 
   return (
-    <div style={styles.container}>
-      {/* Username */}
-      <p style={{ marginRight: '10px', fontSize: '20px', fontWeight: '500' }}>{userName}</p>
+    <>
+      <style>
+        {`
+          .dropdown-item {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s ease;
+          }
+          .dropdown-link {
+            text-decoration: none;
+            color: #333;
+            display: block; /* Make the entire item clickable */
+          }
+          .dropdown-item:hover {
+            background-color: #000; /* Black background */
+          }
+          .dropdown-item:hover .dropdown-link {
+            color: #fff; /* White text */
+          }
+        `}
+      </style>
 
-      {/* Profile Icon */}
-      <img
-        src={profileIcon} // Make sure this points to the correct location of your image
-        alt="Profile Icon"
-        style={styles.img}
-        onClick={toggleProfileDropdown}
-        onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')} // Hover effect for the icon
-        onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')} // Revert to normal scale
-      />
+      <div style={styles.container}>
+        {/* Username */}
+        <p style={{ marginRight: '10px', fontSize: '20px', fontWeight: '500' }}>{userName}</p>
 
-      <div style={styles.dropdownContainer}>
-        {/* Dropdown Menu */}
-        <ul style={styles.dropdownMenu}>
-          <li
-            style={styles.dropdownItem}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = '#f0f0f0')} // Hover effect for items
-            onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')} // Reset hover effect
-          >
-            <a href="/edit-profile" style={styles.dropdownLink}>
-              Edit Profile
-            </a>
-          </li>
-          <li
-            style={styles.dropdownItem}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = '#f0f0f0')}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
-          >
-            <a href="/user-reset-password" style={styles.dropdownLink}>
-              Reset Password
-            </a>
-          </li>
-          <li
-            style={styles.dropdownItem}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = '#f0f0f0')}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
-          >
-            <a href="/" style={styles.dropdownLink}>
-              Logout
-            </a>
-          </li>
-        </ul>
+        {/* Profile Icon */}
+        <img
+          src={profileIcon} // Make sure this points to the correct location of your image
+          alt="Profile Icon"
+          style={styles.img}
+          onClick={toggleProfileDropdown}
+          onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')} // Hover effect for the icon
+          onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')} // Revert to normal scale
+        />
+
+        <div style={styles.dropdownContainer}>
+          {/* Dropdown Menu */}
+          <ul style={styles.dropdownMenu}>
+            <li className="dropdown-item">
+              <a href="/edit-profile" className="dropdown-link">
+                Edit Profile
+              </a>
+            </li>
+            <li className="dropdown-item">
+              <a href="/user-reset-password" className="dropdown-link">
+                Reset Password
+              </a>
+            </li>
+            <li className="dropdown-item">
+              <a href="/" className="dropdown-link">
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
