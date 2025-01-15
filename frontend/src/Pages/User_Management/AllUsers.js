@@ -7,7 +7,10 @@ import TableTop from '../../Components/Table_Components/TableTop';
 import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 
-export default function All_Users() {
+export default function All_Users({
+  menuItems,
+  toggleExpand,
+}) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -125,6 +128,8 @@ export default function All_Users() {
         text_color={[255, 255, 255]}
         logo={archlogo}
         company_name="A.R.C.H Labs"
+        menuItems={menuItems}
+        toggle={toggleExpand}
         username="Owner"
         icons={[
           "https://via.placeholder.com/20",
@@ -140,7 +145,7 @@ export default function All_Users() {
         sidebar_width="14%"
         sidebar_height="100vh"
         toggleSidebar_func={toggleSidebar}
-        isSidebarOpen_p={isSidebarOpen}
+        isSidebarOpen_p = {isSidebarOpen}
       />
 
       <div style={styles.mainContent}>

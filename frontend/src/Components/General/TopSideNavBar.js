@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import {Navigate} from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import MenuItem from "../General/MenuItem";
 import UserDrop from "./UserDrop";
 
 const NavBarWithSidebar = ({
   background_color = [235, 232, 232],
   text_color = [0, 0, 0],
+  menuItems,
+  toggle,
   logo,
   routes,
   company_name,
@@ -17,49 +21,57 @@ const NavBarWithSidebar = ({
   sidebar_text_color = [235, 232, 232],
   selected_color = [235, 232, 232],
   hover_color = [235, 232, 232],
-  expanded = ['User Management'],
-  isSidebarOpen_p,
+  // expanded = ['User Management'],
+  // isSidebarOpen_p,
   toggleSidebar_func,
   sidebar_width,
   sidebar_height,
   hamburger_color = [0, 0, 0],
 }) => {
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(isSidebarOpen_p);
-  // const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
-  //   const savedSidebarState = localStorage.getItem("isSidebarOpen");
-  //   return savedSidebarState !== null ? JSON.parse(savedSidebarState) : isSidebarOpen_p;
-  // });
+  // const [isSidebarOpen, setIsSidebarOpen] = useState(isSidebarOpen_p);
+   const navigate = useNavigate();
+  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    const savedSidebarState = localStorage.getItem("isSidebarOpen");
+    return savedSidebarState;
+  });
 
 
 
   const [expandedStates, setExpandedStates] = useState(() => {
     const savedExpandedStates = localStorage.getItem("expandedStates");
-    return savedExpandedStates ? JSON.parse(savedExpandedStates) : expanded;
+    return savedExpandedStates !== null ? JSON.parse(savedExpandedStates) : null;
   });
 
-  const [selectedSubItem, setSelectedSubItem] = useState(() => {
-    const savedSelectedSubItem = localStorage.getItem("selectedSubItem");
-    return savedSelectedSubItem ? JSON.parse(savedSelectedSubItem) : null;
+  const [selectedMenuItem, setSelectedMenuItem] = useState(() => {
+    const savedSelectedMenuItem = localStorage.getItem("selectedSubItem");
+    return savedSelectedMenuItem;
   });
+
+  // const toggleExpand = (index) => {
+  //   if (expandedStates) {
+  //   setExpandedStates((prev) =>
+  //     prev.map((value, i) => (i === index ? !value : value))
+  //   );
+  // }};
 
   useEffect(() => {
-    localStorage.setItem("isSidebarOpen", JSON.stringify(isSidebarOpen));
-    localStorage.setItem("expandedStates", JSON.stringify(expandedStates));
-    localStorage.setItem("selectedSubItem", JSON.stringify(selectedSubItem));
-  }, [isSidebarOpen, expandedStates, selectedSubItem]);
-
-  const toggleExpand = (index) => {
-    if (expandedStates) {
-    setExpandedStates((prev) =>
-      prev.map((value, i) => (i === index ? !value : value))
-    );
-  }
-  };
+    // Simulating an async data fetch
+    console.log('hello world' + menuItems);
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
     toggleSidebar_func();
+  };
+
+  const selectedMenuItemChange = (text, route) => {
+    // console.log('d' + selectedMenuItem);
+    setSelectedMenuItem(text);
+    localStorage.setItem("selectedMenuItem", text);
+    navigate(routes);
+    // func(Item); // Update parent's selected sub-item state
   };
 
   return (
@@ -153,7 +165,7 @@ const NavBarWithSidebar = ({
             }
           .TopSideNavBar-sidebar {
             width: ${isSidebarOpen ? sidebar_width : "0"};
-            // height: ${sidebar_height};
+            height: ${sidebar_height};
             background-color: rgb(${sidebar_background_color.join(",")});
             position: fixed;
             height: 100%;
@@ -162,7 +174,7 @@ const NavBarWithSidebar = ({
             overflow-x: hidden;
             z-index: 100;
             transition: width 0.35s ease;
-            padding: ${isSidebarOpen ? "2% 2%" : "0"};
+            // padding: ${isSidebarOpen ? "2% 2%" : "0"};
             box-shadow: ${isSidebarOpen
               ? "2px 0 10px rgba(0, 0, 0, 0.1)"
               : "none"};
@@ -171,32 +183,12 @@ const NavBarWithSidebar = ({
             align-items: center;
           }
           .TopSideNavBar-logo img {
-  width: ${isSidebarOpen ? "80%" : "0"};
-  height: auto;
-  transition: width 0.35s ease;
-  margin-bottom: ${isSidebarOpen ? "50%" : "0"};
-}
-
-/* Adjust logo for smaller screens */
-@media (max-width: 1200px) {
-  .TopSideNavBar-logo img {
-    width: ${isSidebarOpen ? "70%" : "0"}; /* Slightly reduce width */
-    margin-bottom: ${isSidebarOpen ? "30%" : "0"}; /* Adjust spacing */
-  }
-}
-
-@media (max-width: 768px) {
-  .TopSideNavBar-logo img {
-    width: ${isSidebarOpen ? "60%" : "0"}; /* Reduce width further */
-    margin-bottom: ${isSidebarOpen ? "20%" : "0"}; /* Adjust for smaller viewports */
-  }
-    /* Media Query for very large screens (above 1900px) */
-@media (min-width: 1900px) {
-  .TopSideNavBar-hamburger {
-    top: 10px; /* Keep the vertical positioning same */
-    left: 60px; /* Ensure it stays at the same position on very large screens */
-    opacity: 1; /* Ensure hamburger remains visible */
-  }
+            width: ${isSidebarOpen ? "80%" : "0"};
+            height: auto;
+            transition: width 0.35s ease;
+            padding: ${isSidebarOpen ? "2% 2%" : "0"};
+            margin-bottom: ${isSidebarOpen ? "50%" : "0"};
+          }
 
         `}
       </style>
@@ -224,22 +216,36 @@ const NavBarWithSidebar = ({
         <div className="TopSideNavBar-logo">
           <img src={logo} alt="Logo" />
         </div>
-        <div>
-          {names.map((menuItems, index) => (
+        <div
+          style={{
+            // display: 'flex',
+            // flexDirection: 'column',
+            display: 'flex',
+            justifyContent: 'center', /* Align buttons horizontally */
+            alignItems: 'center', /* Align buttons vertically */
+            gap: '10px',
+            flexDirection: 'column',
+            // alignItems: 'center',
+            position: 'relative',
+            width: '100%' // Centers content horizontally
+          }}
+          >
+
+          {menuItems.map((menuItem, index) => (
             <MenuItem
               key={index}
-              icon={icons[index]}
-              text={menuItems[0]}
-              routes={routes[index]}
-              expanded={expandedStates[index]}
+              icon={menuItem.icon}
+              text={menuItem.name}
+              routes={menuItem.route}
+              expanded={menuItem.expanded}
               text_color={sidebar_text_color}
-              sub_items={menuItems.slice(1)}
+              sub_items={menuItem.subItems}
               selected_color={selected_color}
               hover_color={hover_color}
               background_color={sidebar_background_color}
-              onToggle={() => toggleExpand(index)}
-              func={setSelectedSubItem}
-              selectedSubItem={selectedSubItem}
+              onToggle={toggle}
+              func={selectedMenuItemChange}
+              selectedSubItem={selectedMenuItem}
             />
           ))}
         </div>

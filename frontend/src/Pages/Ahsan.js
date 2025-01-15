@@ -9,7 +9,11 @@ import SessionExpired from '../Components/Modals/SessionExpired';
 // import Forbidden from '../Components/Error/Forbidden';
 // import ServerError from '../Components/Error/ServerError';
 
-export default function Ahsan() {
+export default function Ahsan({
+  menuItems,
+  toggleExpand,
+}
+) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -121,6 +125,8 @@ export default function Ahsan() {
         text_color={[255, 255, 255]}
         logo={archlogo}
         company_name="A.R.C.H Labs"
+        menuItems={menuItems}
+        toggle={toggleExpand}
         username="Owner"
         icons={[
           "https://via.placeholder.com/20",
