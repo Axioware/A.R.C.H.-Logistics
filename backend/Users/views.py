@@ -1,23 +1,15 @@
-from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
-from django.http import JsonResponse, HttpResponse
-from django.core.serializers import serialize
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
-from django.core.mail import send_mail
 from django.contrib.auth.models import User
-from API.models import *
+from .models import *
 from rest_framework import status
 from .helpers import UserPagination
-from django.contrib.auth.hashers import make_password
-from django.db.models import Q, Sum, F
+from django.db.models import Q
 from django.db import transaction
-from Prep_Prime.helpers import authenticate_client, authenticate_manager, authenticate_owner, authenticate_VA, make_superuser, authenticate_prep, get_extended_field, get_texas_time, authenticate_clearance_level
+from Arch_Logistics.helpers import authenticate_client, authenticate_manager, authenticate_VA, make_superuser, authenticate_prep, get_extended_field
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from django.utils.dateparse import parse_datetime
-from .models import UsersExtended
 
 # Create your views here.
 @api_view(['GET', 'POST'])

@@ -9,12 +9,12 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.models import User
-from API.models import *
+from .models import *
 from rest_framework import status, pagination
 from django.contrib.auth.hashers import make_password
 from django.db.models import Q, Sum, F
 from django.db import transaction
-from Prep_Prime.helpers import *
+from Arch_Logistics.helpers import *
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_datetime
@@ -22,11 +22,11 @@ import random
 import pytz
 import ast
 from rest_framework.parsers import JSONParser
-from API.helpers import *
+# from API.helpers import *
 import json
 from itertools import groupby
 from operator import itemgetter
-from Prep_Prime import settings, helpers
+from Arch_Logistics import settings, helpers
 from django.db.models import Q
 from itertools import groupby
 from operator import itemgetter

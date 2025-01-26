@@ -53,7 +53,7 @@ class Locations(models.Model):
     location_id = models.AutoField(primary_key=True)
     location_type = models.CharField(max_length=10, choices=LOCATION_TYPE_CHOICES)
     location_name = models.CharField(max_length=50)
-    warehouse_id = models.ForeignKey(Warehouse)
+    warehouse_id = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.location_name} - ({self.warehouse_id})"

@@ -3,16 +3,16 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils import timezone
 import random
 import string
 from django.db import models
-from django_tenants.models import TenantMixin, DomainMixin
 from Structures.models import Warehouse
+from django.conf import settings
+
 
 # Create your models here.
-class UsersExtended(TenantMixin):
+class UsersExtended(models.Model):
     CLEARANCE_CHOICES = [
         (1, 'Level 1'),
         (2, 'Level 2'),
@@ -63,7 +63,7 @@ class UsersExtended(TenantMixin):
         return f"{self.username.username} - {self.clearance_level}"
 
 class OTP(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='OTP_user_id')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='OTP_user_id')
     otp = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()

@@ -6,7 +6,7 @@ from Inventory.models import Item
 from Orders.models import Orders, SubOrders
 import os
 from datetime import datetime
-
+from django.conf import settings
 # Create your models here.
 
 def dynamic_upload_path(instance, filename):
@@ -38,12 +38,12 @@ class Invoice(models.Model):
 
 class Balance(models.Model):
     balance_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="balance_user_id")
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="balance_user_id")
     balance = models.DecimalField(max_digits=10, decimal_places=2)
 
 class Transaction(models.Model):
     transaction_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="transaction_user_id")
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="transaction_user_id")
     invoice_id = models.ForeignKey(Invoice, on_delete=models.PROTECT)
     date = models.DateTimeField(default=timezone.now)
 
@@ -51,7 +51,7 @@ class Transaction(models.Model):
 # Charges Table
 class Charges(models.Model):
     charge_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='charges_user_id')
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='charges_user_id')
     sub_order_id = models.ForeignKey(SubOrders, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='charges_service_id') #TODO  
     invoice_id = models.ForeignKey(Invoice, on_delete=models.DO_NOTHING, null=True, related_name='charges_invoice_id')
     amount = models.DecimalField(max_digits=12, decimal_places=2)
@@ -60,6 +60,6 @@ class Charges(models.Model):
 
 
 class CustomRates(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_id_custom_rates")
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_id_custom_rates")
     service_id = models.ForeignKey(Services, on_delete=models.CASCADE, related_name="service_id_custom_rates")
     custom_charge = models.DecimalField(max_digits=12, decimal_places=2)

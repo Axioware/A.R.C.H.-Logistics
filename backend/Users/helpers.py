@@ -1,6 +1,7 @@
 from rest_framework import status, pagination
 from django.contrib.auth.models import User
-from API.models import UsersExtended, Dimension
+from Users.models import UsersExtended
+# Dimension
 import pytz
 from datetime import datetime
 
