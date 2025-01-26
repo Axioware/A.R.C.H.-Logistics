@@ -16,8 +16,8 @@ export default function AddButton({
   path,
   background_color,
   class_name,
-  width = '150px', // Default width
-  height = '50px', // Default height
+  width = '8.5%', // Default width
+  height = '80%', // Default height
 }) {
   const navigate = useNavigate();
 

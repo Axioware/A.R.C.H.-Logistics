@@ -153,7 +153,7 @@ const NavBarWithSidebar = ({
             }
           .TopSideNavBar-sidebar {
             width: ${isSidebarOpen ? sidebar_width : "0"};
-            // height: ${sidebar_height};
+            height: ${sidebar_height || "100vh"};
             background-color: rgb(${sidebar_background_color.join(",")});
             position: fixed;
             height: 100%;

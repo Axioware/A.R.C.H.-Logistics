@@ -37,10 +37,21 @@ import ViewTracking from './Pages/Order/ViewTracking';
 import Bin from './Pages/Setting/Bin';
 import Category from './Pages/Setting/Category';
 import Service from './Pages/Setting/Service';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyles = createGlobalStyle`
+  html, :host {
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+`;
+
 
 
 function App() {
   return (
+    <>
+    {/* <GlobalStyles /> */}
     <Router>  
       <Routes>
         <Route path="/moiz" element={<Moiz />} />
@@ -82,6 +93,7 @@ function App() {
         
       </Routes>
     </Router>
+    </>
   );
 }
 export default App;

@@ -54,8 +54,8 @@ export default function TableTop({
             text_color={[255, 255, 255]} // White text color
             background_color={[23, 23, 23]} // Dark background
             function={filter_function} // Function to call on button click
-            width="150px" // Set width explicitly
-            height="50px" // Set height explicitly
+            width="145px" // Set width explicitly
+            height="45px" // Set height explicitly
           />
 
           <SearchBar
@@ -63,7 +63,7 @@ export default function TableTop({
             field_color={[255, 255, 255]} // White background
             function={search_function} // Function to call on search
             width="300px" // Set width explicitly
-            height="50px" // Set height for input field
+            height="45px" // Set height for input field
           />
         </div>
       </div>

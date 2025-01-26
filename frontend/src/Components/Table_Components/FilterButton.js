@@ -40,6 +40,7 @@ export default function FilterButton({
             transition: all 0.3s ease; /* Smooth transition for all styles */
             width: ${width};
             height: ${height};
+            border-radius: 5px;
             font-weight: bold; /* Make the button text bold */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
             outline: none; /* Remove outline on focus */

@@ -8,6 +8,7 @@ import fetchData from '../utils/fetch_data'
 import SessionExpired from '../Components/Modals/SessionExpired';
 // import Forbidden from '../Components/Error/Forbidden';
 // import ServerError from '../Components/Error/ServerError';
+import SideBar from '../Components/General/sidebartest';
 
 export default function Ahsan() {
   const [data, setData] = useState([]);
@@ -114,67 +115,38 @@ export default function Ahsan() {
     },
   };
 
+  const [menuItems, setMenuItems] = useState([
+    {
+      name: "Dashboard",
+      route: "/dashboard",
+      icon: "bx bx-grid-alt",
+    },
+    {
+      name: "Category",
+      route: "/category",
+      icon: "bx bx-user",
+      subMenu: [
+        { name: "HTML & CSS", route: "/html-css" },
+        { name: "JavaScript", route: "/javascript" },
+        { name: "PHP & MySQL", route: "/php-mysql" },
+      ],
+    },
+    {
+      name: "Posts",
+      route: "/posts",
+      icon: "bx bx-cabinet",
+      subMenu: [
+        { name: "Web Design", route: "/web-design" },
+        { name: "Login Form", route: "/login-form" },
+        { name: "Card Design", route: "/card-design" },
+      ],
+    },
+  ]);
   return (
-      /* Sidebar */
-    <div>
-      <NavBarWithSidebar
-        text_color={[255, 255, 255]}
-        logo={archlogo}
-        company_name="A.R.C.H Labs"
-        username="Owner"
-        icons={[
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-        ]}
-        names={[
-          ["User Management", "All User", "Add User"],
-          ["Management", "Add Order", "Delete Order"],
-          ["Inventory", "Add Item", "Delete Item"],
-        ]}
-        routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
-        sidebar_width="14%"
-        sidebar_height="100vh"
-        toggleSidebar_func={toggleSidebar}
-        isSidebarOpen_p = {isSidebarOpen}
-      />
-     
-      {/* Main content area */}
-      <div style={styles.mainContent}>
-        <NavPath
-          text={["Home", "User Management"]}
-          paths={["/home", "/users"]}
-          text_color={[255, 255, 255]}
-          background_color={[23, 23, 23]}
-          width="95%"
-          height="50px"
-        />
-         
-        <TableTop 
-          heading_text={'All Users'} 
-          search_function = {handleSearch}
-          filter_function={toggleFilter}
-          />
-
-        <TableContent 
-        table_headings = {['abd', 'hello', 'hello', 'bye', 'what', 'the', 'hell', 'is', 'wrong', 'with', 'me', 'world']}
-        last_column = {true}
-        loading={loading}
-        success={success}
-        prev_button={handlePrev}
-        next_button={handleNext}
-        fetchData={fetchUsers}
-        data={data}
-        currentPage={currentPage}
-        totalPages={totalPages}
-         />
-      </div>
-      {/* {errorCode === 401 && <SessionExpired
-          heading_text="Session Expired"
-          body_text="Your session has expired. Please log in again."
-          button_text="Login"
-          button_function={() => console.log("Logging in...")}
-      />} */}
-      </div>
+    <>
+    
+    <SideBar />
+  {/* <SideBar menuItems={menuItems} set={setMenuItems}/> */}
+  </>
   );
 }
