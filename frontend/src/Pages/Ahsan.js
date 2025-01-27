@@ -11,7 +11,7 @@ import SessionExpired from '../Components/Modals/SessionExpired';
 import SideBar from '../Components/General/sidebartest';
 
 export default function Ahsan({
-  menuItgems,
+  menuItems,
   toggleExpand,
 }
 ) {

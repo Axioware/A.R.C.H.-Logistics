@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
+<<<<<<< HEAD
+// import PropTypes from "prop-types";
+=======
 import PropTypes from "prop-types";
 import {Navigate} from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-// import MenuItem from "../General/MenuItem";
+>>>>>>> 3218bf829ba4d2acf0bae22578f292aaade5a95b
+import MenuItem from "../General/MenuItem";
 import UserDrop from "./UserDrop";
 
 const NavBarWithSidebar = ({
@@ -165,7 +169,11 @@ const NavBarWithSidebar = ({
             }
           .TopSideNavBar-sidebar {
             width: ${isSidebarOpen ? sidebar_width : "0"};
+<<<<<<< HEAD
+            height: ${sidebar_height || "100vh"};
+=======
             height: ${sidebar_height};
+>>>>>>> 3218bf829ba4d2acf0bae22578f292aaade5a95b
             background-color: rgb(${sidebar_background_color.join(",")});
             position: fixed;
             height: 100%;
@@ -233,7 +241,7 @@ const NavBarWithSidebar = ({
           }}
           >
 
-          {/* {menuItems.map((menuItem, index) => (
+          {menuItems.map((menuItem, index) => (
             <MenuItem
               key={index}
               icon={menuItem.icon}
@@ -249,7 +257,7 @@ const NavBarWithSidebar = ({
               func={selectedMenuItemChange}
               selectedSubItem={selectedMenuItem}
             />
-          ))} */}
+          ))}
         </div>
         <div className="TopSideNavBar-user-section">
           {isSidebarOpen && <p>{username}</p>}
