@@ -174,7 +174,8 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           left: 0;
           height: 100%;
           width: 260px;
-          background: #11101d;
+          // background:#11101d;
+          background: rgb(23, 23, 23);
           z-index: 100;
           transition: all 0.5s ease;
         }

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
 import NavPath from '../../Components/General/NavPath';
-import archlogo from '../../Assets/Images/logo1.png';
 import TableContent from '../../Components/Table_Components/TableContent';
 import TableTop from '../../Components/Table_Components/TableTop';
 import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
-import SideBar from '../../Components/General/sidebartest';
+import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
+// import mainFunctions from "../../Assets/JS/script";
 
 export default function All_Users() {
 
@@ -17,12 +16,10 @@ export default function All_Users() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [clearance, setclearance] = useState(1);
 
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
-
-    // If it's null, default to true; otherwise, parse it as a boolean
     return storedState === null ? true : JSON.parse(storedState);
   });
 
@@ -33,7 +30,7 @@ export default function All_Users() {
   // State to toggle the dropdown visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const fetchUsers = async () => {
+  const getData = async () => {
     const url = `https://api.example.com/users?page=${currentPage}&billingType=${billingType}&userStatus=${userStatus}`;
     const response = await fetchData(setLoading, setSuccess, url);
 
@@ -62,8 +59,16 @@ export default function All_Users() {
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, [currentPage, billingType, userStatus]);
+    // if (!mainFunctions.generalValidate()) {
+      
+    // } 
+    // if (!mainFunctions.employeeValidate()) {
+
+    // }
+    // var data = mainFunctions.getUserData();
+    // setclearance(data.clearance);
+    getData();
+  }, [currentPage]);
 
   const handleNext = () => {
     if (currentPage < totalPages) {
@@ -75,10 +80,6 @@ export default function All_Users() {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
-  };
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
   };
 
   // Handle Reset and Apply for filters
@@ -97,20 +98,15 @@ export default function All_Users() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const styles = {
-    mainContent: {
-    },
-    container: {
-      width: "100%",
-      margin: "20px 0px 0px 0px",
-    },
-  };
-
   return (
     <div>
-      <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed}/>
-      <div style={mainStyles.mainContent(isSidebarClosed)}>
-      <div style={styles.mainContent}>
+      {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      ) : (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      )}
+      <div style={mainStyles.centerContent(isSidebarClosed)}>
+
         <NavPath
           text={["Home", "User Management"]}
           paths={["/home", "/users"]}
@@ -120,17 +116,16 @@ export default function All_Users() {
           height="50px"
         />
 
-        <div style={styles.container}>
-          <AddButton
-            text="Add User"
-            text_color={[255, 255, 255]}
-          />
-        </div>
+        <AddButton
+          text="Add User"
+          text_color={[255, 255, 255]}
+          path='/add-user'
+        />
 
         <div style={mainStyles.tableBackground}>
           <TableTop
             heading_text={'All Users'}
-            search_function={fetchUsers}
+            search_function={getData}
             filter_function={() => {}}   
             filters={(
               <>
@@ -174,13 +169,12 @@ export default function All_Users() {
             success={success}
             prev_button={handlePrev}
             next_button={handleNext}
-            fetchData={fetchUsers}
+            fetchData={getData}
             data={data}
             currentPage={currentPage}
             totalPages={totalPages}
           />
         </div>
-      </div>
       </div>
     </div>
   );

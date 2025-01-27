@@ -1,7 +1,7 @@
 import { position } from "polished";
 
 const mainStyles = {
-    mainContent: (isSidebarClosed) => ({
+    centerContent: (isSidebarClosed) => ({
       flex: 1,
       position: 'relative',
       padding: "10px 90px 10px 10px",
@@ -29,8 +29,6 @@ const mainStyles = {
         margin: '20px 0px 0px 0px',
         boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
       },
-
-    url: 'localhost:8000'
   };
   
 export default mainStyles;

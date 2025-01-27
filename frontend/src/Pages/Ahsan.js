@@ -8,7 +8,7 @@ import fetchData from '../utils/fetch_data'
 import SessionExpired from '../Components/Modals/SessionExpired';
 // import Forbidden from '../Components/Error/Forbidden';
 // import ServerError from '../Components/Error/ServerError';
-import SideBar from '../Components/General/sidebartest';
+import SideBar from '../Components/General/Sidebar';
 import AddButton from '../Components/Table_Components/AddButton';
 import mainStyles from "../Assets/CSS/styles";
 
@@ -117,7 +117,7 @@ export default function Ahsan({
     <>
     
     <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed}/>
-    <div style={mainStyles.mainContent(isSidebarClosed)}>
+    <div style={mainStyles.centerContent(isSidebarClosed)}>
       
         <NavPath
               text={["Home", "User Management"]}

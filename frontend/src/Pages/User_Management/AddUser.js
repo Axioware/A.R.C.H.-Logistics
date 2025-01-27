@@ -1,33 +1,29 @@
 import React, { useState, useEffect } from "react";
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
-import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
-import archlogo from '../../Assets/Images/logo1.png';
 import NavPath from '../../Components/General/NavPath';
 import PageHeading from '../../Components/Table_Components/PageHeading';
-import { borderRadius } from "polished";
+import mainStyles from "../../Assets/CSS/styles";
+import SideBar from "../../Components/General/Sidebar";
 
 const AddUser = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted'); // Debug log
+    console.log('Form submitted'); 
     alert('Warehouse added successfully!');
   };
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  const [clearance, setclearance] = useState(1);
+  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
+      const storedState = localStorage.getItem("sidebarclosed");
+      return storedState === null ? true : JSON.parse(storedState);
+    });
+
+  
 
   const styles = {
     mainContent: {
-      flex: 1,
-      padding: "10px",
-      transition: "margin-left 0.5s ease",
-      marginLeft: isSidebarOpen ? "18%" : "4%",
-      marginRight:"4%",
-      // border: '2px solid white',
-      height:"80%",
+      padding: "10px 0px 50px 0px",
   },
 
   form: {
@@ -49,7 +45,6 @@ const AddUser = () => {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-      width: '100%',
       height:'70%', // Ensure container extends full width
       gap: '10px',
       marginTop: '20px',
@@ -73,7 +68,6 @@ const AddUser = () => {
   RoleContainer: {
     marginTop:'10px',  
     marginLeft:"10px",
-    width:'100%',
   },
 
   label: {
@@ -97,30 +91,13 @@ const AddUser = () => {
   
   return (
       <div>
-      <NavBarWithSidebar
-        text_color={[255, 255, 255]}
-        logo={archlogo}
-        company_name="A.R.C.H Labs"
-        username="Owner"
-        icons={[
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-        ]}
-        names={[
-          ["User Management", "All User", "Add User"],
-          ["Management", "Add Order", "Delete Order"],
-          ["Inventory", "Add Item", "Delete Item"],
-        ]}
-        routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
-        sidebar_width="14%"
-        sidebar_height="100vh"
-        toggleSidebar_func={toggleSidebar}
-        isSidebarOpen_p = {isSidebarOpen}
-        expanded = {['User_Management']}
-      />
+      {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      ) : (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      )}
         
-
+      <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={styles.mainContent}>
           <NavPath
             text={['Home', 'All User', 'Add User']}
@@ -164,14 +141,15 @@ const AddUser = () => {
           <GeneralField label="Retype Password" field_type="text" hint="Re-Type Password" />
 
              
-            </form>
+          </form>
             <div id="buttonContainer" style={styles.buttonContainer}>
                   <GeneralButton text="Cancel" width="10%" height="100%" button_color={["230", "230", "230"]}  text_color={["0", "0", "0"]}   />
                   <GeneralButton text="Add" type="submit" width="10%" height="100%" />
-              </div>
             </div>
-            </div>
-            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
