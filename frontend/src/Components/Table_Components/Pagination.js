@@ -10,6 +10,7 @@ function rgbArrayToString(rgbArray) {
 }
 
 export default function Pagination({
+  success, // New prop to determine visibility
   current_page,
   total_pages,
   text_color = [0, 0, 0],
@@ -23,6 +24,11 @@ export default function Pagination({
   const textColor = rgbArrayToString(text_color);
   const buttonTextColor = rgbArrayToString(button_text_color);
   const buttonBgColor = rgbArrayToString(button_background_color);
+
+  // Don't render pagination if there's an error (success === false)
+  if (!success) {
+    return null;
+  }
 
   return (
     <div className="Pagination-container">

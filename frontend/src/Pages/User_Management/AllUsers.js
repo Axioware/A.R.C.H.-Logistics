@@ -19,8 +19,15 @@ export default function All_Users({
   const [errorCode, setErrorCode] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  // State for filters
+  const [billingType, setBillingType] = useState('All');
+  const [userStatus, setUserStatus] = useState('All');
+  
+  // State to toggle the dropdown visibility
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const fetchUsers = async () => {
-    const url = `https://api.example.com/users?page=${currentPage}`;
+    const url = `https://api.example.com/users?page=${currentPage}&billingType=${billingType}&userStatus=${userStatus}`;
     const response = await fetchData(setLoading, setSuccess, url);
 
     if (response && response.error) {
@@ -49,7 +56,7 @@ export default function All_Users({
 
   useEffect(() => {
     fetchUsers();
-  }, [currentPage]);
+  }, [currentPage, billingType, userStatus]);
 
   const handleNext = () => {
     if (currentPage < totalPages) {
@@ -67,29 +74,32 @@ export default function All_Users({
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  // Handle Reset and Apply for filters
+  const handleReset = () => {
+    setBillingType('All');
+    setUserStatus('All');
+  };
+
+  const handleApply = () => {
+    console.log("Filters applied:", { billingType, userStatus });
+  };
+
+  // Toggle dropdown visibility on filter button click
+  const toggleDropdown = () => {
+    console.log("Dropdown toggled");
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   const styles = {
     mainContent: {
       flex: 1,
       padding: "10px",
       transition: "margin-left 0.5s ease",
       marginLeft: isSidebarOpen ? "18%" : "4%",
-      // '@media (max-width: 768px)': {
-      //   marginLeft: isSidebarOpen ? "18%" : "4%", // adjust as needed
-      // },
-      // '@media (max-width: 480px)': {
-      //   marginLeft: "0%", // Adjust for very small screens
-      // },
     },
     container: {
       width: "95%",
-      margin: "20px 0px 0px 0px", // Center horizontally
-      // '@media (max-width: 768px)': {
-      //   width: "100%",
-      //   padding: "0 10px",
-      // },
-      // '@media (max-width: 480px)': {
-      //   padding: "0 5px", // Reduce padding on smaller screens
-      // },
+      margin: "20px 0px 0px 0px",
     },
     lightGreyBackground: {
       backgroundColor: '#f7f6f6',
@@ -103,21 +113,8 @@ export default function All_Users({
       width: '95%',
       margin: '20px 0px 0px 0px',
       boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
-      // '@media '@media (max-width: 768px)': {
-      //   width: "100%", // Full width for small screens
-      //   padding: '15px', // Less padding
-      // },
-      // '@media (max-width: 480px)': {
-      //   padding: '10px', // Further reduce padding for very small screens
-      // (max-width: 768px)': {
-      //   width: "100%", // Full width for small screens
-      //   padding: '15px', // Less padding
-      // },
-      // '@media (max-width: 480px)': {
-      //   padding: '10px', // Further reduce padding for very small screens
-      // },
     },
-  }; 
+  };
 
   return (
     <div>
@@ -128,9 +125,9 @@ export default function All_Users({
         menuItems={menuItems}
         toggle={toggleExpand}
         username="Owner"
-        icons={[
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
+        icons={[ 
+          "https://via.placeholder.com/20", 
+          "https://via.placeholder.com/20", 
           "https://via.placeholder.com/20",
         ]}
         names={[
@@ -138,11 +135,10 @@ export default function All_Users({
           ["Management", "Add Order", "Delete Order"],
           ["Inventory", "Add Item", "Delete Item"],
         ]}
-        routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
         sidebar_width="14%"
         sidebar_height="100vh"
         toggleSidebar_func={toggleSidebar}
-        isSidebarOpen_p = {isSidebarOpen}
+        isSidebarOpen_p={isSidebarOpen}
       />
 
       <div style={styles.mainContent}>
@@ -159,12 +155,49 @@ export default function All_Users({
           <AddButton
             text="Add User"
             text_color={[255, 255, 255]}
-            
           />
         </div>
 
         <div style={styles.lightGreyBackground}>
-          <TableTop heading_text={'All Users'} />
+          <TableTop
+            heading_text={'All Users'}
+            search_function={fetchUsers}
+            filter_function={() => {}}   
+            filters={(
+              <>
+                <button onClick={toggleDropdown}>Filter</button>
+
+                {isDropdownOpen && (
+                  <div style={{ display: "flex", flexDirection: "column", marginTop: "10px", border: "1px solid black", backgroundColor: "white" }}>
+                    <select
+                      value={billingType}
+                      onChange={(e) => setBillingType(e.target.value)}
+                      style={{ width: "150px", height: "40px", marginBottom: "10px" }}
+                    >
+                      <option value="All">All Billing Types</option>
+                      <option value="Daily">Daily</option>
+                      <option value="Bimonthly">Bimonthly</option>
+                      <option value="Monthly">Monthly</option>
+                    </select>
+
+                    <select
+                      value={userStatus}
+                      onChange={(e) => setUserStatus(e.target.value)}
+                      style={{ width: "150px", height: "40px", marginBottom: "10px" }}
+                    >
+                      <option value="All">All User Status</option>
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
+
+                    <button onClick={handleReset} style={{ padding: "10px", backgroundColor: "gray", color: "white" }}>Reset</button>
+                    <button onClick={handleApply} style={{ padding: "10px", backgroundColor: "green", color: "white" }}>Apply</button>
+                  </div>
+                )}
+              </>
+            )}
+          />
+
           <TableContent
             table_headings={['ID', 'Name', 'Email', 'Role', 'Actions']}
             last_column={true}
@@ -181,7 +214,4 @@ export default function All_Users({
       </div>
     </div>
   );
-  
-}
-
-
+}  

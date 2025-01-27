@@ -16,8 +16,8 @@ export default function AddButton({
   path,
   background_color,
   class_name,
-  width = '8.5%', // Default width
-  height = '80%', // Default height
+  width = '150px', // Default width
+  height = '50px', // Default height
 }) {
   const navigate = useNavigate();
 
@@ -58,13 +58,12 @@ export default function AddButton({
             text-align: center;
             box-sizing: border-box;
             transition: all 0.3s ease; /* Smooth hover effect */
+            border: 2px solid black;
           }
 
           .add-button:hover {
             background-color: rgba(255, 255, 255, 0.8); /* Change background on hover */
             color: black; /* Text color changes to black on hover */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
-
           }
 
           /* Responsive styles */

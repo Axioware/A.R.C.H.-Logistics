@@ -2,7 +2,6 @@ import React from 'react';
 import PageHeading from './PageHeading'; // Adjust path if necessary
 import FilterButton from './FilterButton'; // Adjust path if necessary
 import SearchBar from './SearchBar'; // Adjust path if necessary
-import SearchIcon from '../../Assets/Images/SearchIcon.png'
 
 export default function TableTop({
   search_function,
@@ -39,14 +38,12 @@ export default function TableTop({
       <div className="table-top-container">
         <PageHeading
           text={heading_text}
-          headings={'users'}
           text_color={[0, 0, 0]} // Black text color
           sidebar_color={[23, 23, 23]} // Sidebar color
           width="auto" // Auto width to align properly
           height="auto" // Auto height
-          className="page-heading"
-          sidebar_width="5px" // Narrow sidebar width
-          sidebar_height="40px"
+          sidebar_width="5px" // Increased sidebar width for visibility
+          sidebar_height="35px" // Set sidebar height explicitly
         />
 
         <div className="row-container1">
@@ -55,8 +52,8 @@ export default function TableTop({
             text_color={[255, 255, 255]} // White text color
             background_color={[23, 23, 23]} // Dark background
             function={filter_function} // Function to call on button click
-            width="145px" // Set width explicitly
-            height="45px" // Set height explicitly
+            width="150px" // Set width explicitly
+            height="50px" // Set height explicitly
           />
 
           <SearchBar
@@ -64,8 +61,7 @@ export default function TableTop({
             field_color={[255, 255, 255]} // White background
             function={search_function} // Function to call on search
             width="300px" // Set width explicitly
-            height="45px" // Set height for input field
-            icon={SearchIcon}
+            height="50px" // Set height for input field
           />
         </div>
       </div>
