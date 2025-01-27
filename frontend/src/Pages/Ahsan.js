@@ -10,7 +10,11 @@ import SessionExpired from '../Components/Modals/SessionExpired';
 // import ServerError from '../Components/Error/ServerError';
 import SideBar from '../Components/General/sidebartest';
 
-export default function Ahsan() {
+export default function Ahsan({
+  menuItems,
+  toggleExpand,
+}
+) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);

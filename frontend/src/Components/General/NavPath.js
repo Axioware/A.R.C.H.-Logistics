@@ -35,6 +35,7 @@ export default function NavPath({
         return (
           <>
             <HyperLink
+              key={index}
               text={linkText}
               path={path}
               text_color={text_color}  // Pass the text color to the HyperLink component
