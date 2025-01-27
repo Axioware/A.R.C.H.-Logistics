@@ -1,4 +1,5 @@
 // import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Table from './Table';
 import Pagination from './Pagination';
 
@@ -15,6 +16,14 @@ export default function TableContent({
       loading,
       success
     }) {
+
+    
+    useEffect(() => {
+      console.log("Success state updated to:", success);
+      if (!success) {
+        console.log("Should not show pagination now.");
+      }
+    }, [success]);
 
   const handleSort = (column) => {
     console.log('Sorting by column:', column);
@@ -42,8 +51,8 @@ export default function TableContent({
       </div>
 
       {/* Pagination Component */}
-      <div className="pagination-wrapper">
-        <Pagination
+      {!success && (
+        <div className="pagination-wrapper" key={success ? 'pagination-true' : 'pagination-false'}>        <Pagination
           current_page={currentPage || 0}
           total_pages={totalPages || 0}
           text_color={[0, 0, 0]}
@@ -55,7 +64,7 @@ export default function TableContent({
           onPrev={prev_button}
         />
       </div>
-      
+      )}
       {/* Styles for responsiveness */}
       <style>
         {`

@@ -2,6 +2,7 @@ import React from 'react';
 import PageHeading from './PageHeading'; // Adjust path if necessary
 import FilterButton from './FilterButton'; // Adjust path if necessary
 import SearchBar from './SearchBar'; // Adjust path if necessary
+import SearchIcon from '../../Assets/Images/SearchIcon.png'
 
 export default function TableTop({
   search_function,
@@ -64,6 +65,7 @@ export default function TableTop({
             function={search_function} // Function to call on search
             width="300px" // Set width explicitly
             height="45px" // Set height for input field
+            icon={SearchIcon}
           />
         </div>
       </div>
