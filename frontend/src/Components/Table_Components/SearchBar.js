@@ -14,10 +14,10 @@ export default function SearchBar({
   hint,
   field_color,
   class_name = '',
-  handleSearch,
+  function: handleSearch,
   width = 'auto',
   height = 'auto',
-  icon = true
+  icon
 }) {
   const [searchText, setSearchText] = useState('');
   const fieldColor = rgbArrayToString(field_color);
@@ -37,16 +37,11 @@ export default function SearchBar({
   return (
     <div
       className={`Search-bar-container ${class_name}`}
-      style={{ width, height, position: 'relative' }} // Add position relative here
+      style={{ width, height }}  
     >
-      {icon && (
-        <img
-          src={SearchIcon}
-          alt="Search Icon"
-          className="Search-icon"
-          style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', zIndex: 10 }}
-        />
-      )}
+      <div className="Search-icon-container">
+        {icon && <img src={SearchIcon} alt="Search Icon" className="Search-icon" />}
+      </div>
       <input
         type="text"
         placeholder={hint}
@@ -54,33 +49,35 @@ export default function SearchBar({
         value={searchText}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        style={{
-          backgroundColor: fieldColor,
-          paddingLeft: icon ? '40px' : '10px', // Adjust padding to make space for the icon
-        }}
+        style={{ backgroundColor: fieldColor }} // Input background color
       />
       <style>
         {`
           .Search-bar-container {
+            width: ${width}; /* Apply width */
+            height: ${height}; /* Apply height */
+            margin: 0px 40px 0px 0px;
             display: flex;
             align-items: center;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            overflow: hidden; // Ensure the container clips the contents properly
+          }
+
+          .Search-icon-container {
+            margin-right: 10px; /* Space between icon and input field */
           }
 
           .Search-bar-input {
             width: 100%;
             height: 100%;
-            padding: 10px 10px 10px 40px; // Add left padding to make space for the icon
-            border: none; // Remove border to integrate with the container
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
             font-size: 1rem;
             outline: none;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            transition: background-color 0.3s ease;
           }
 
           .Search-bar-input:focus {
-            box-shadow: inset 0 0 8px rgba(0, 123, 255, 0.25); // Optional focus style
+            border-color: #007bff; /* Focused input border color */
           }
 
           .Search-icon {

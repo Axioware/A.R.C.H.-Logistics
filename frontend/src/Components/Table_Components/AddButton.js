@@ -63,8 +63,6 @@ export default function AddButton({
           .add-button:hover {
             background-color: rgba(255, 255, 255, 0.8); /* Change background on hover */
             color: black; /* Text color changes to black on hover */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
-
           }
 
           /* Responsive styles */

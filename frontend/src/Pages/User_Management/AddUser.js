@@ -123,7 +123,7 @@ const AddUser = () => {
 
         <div style={styles.mainContent}>
           <NavPath
-            text={['Home', 'All User', 'Add User']}
+            text={['Home', 'All User', 'Edit User']}
             paths={['/home', '/add-user', '/edit-user']}
             text_color={[255, 255, 255]}
             background_color={[23, 23, 23]}

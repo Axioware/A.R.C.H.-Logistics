@@ -16,8 +16,7 @@ export default function PageHeading({
   height = 'auto', // Default height
   sidebar_color,
   font_size = '2rem',
-  sidebar_width = '10px',
-  border_color = 'rgb(23, 23, 23)',
+  sidebar_width = '10px', // Default sidebar width
 }) {
   // Convert colors to CSS string format
   const textColor = rgbArrayToString(text_color);
@@ -42,7 +41,6 @@ export default function PageHeading({
             align-items: center; /* Align items vertically */
             width: ${width};
             height: ${height};
-            border-left: 4px solid ${border_color}; /* Blue left border, adjustable via props */
           }
 
           .page-heading-sidebar {
