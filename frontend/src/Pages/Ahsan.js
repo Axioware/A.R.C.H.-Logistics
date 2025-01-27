@@ -9,10 +9,10 @@ import SessionExpired from '../Components/Modals/SessionExpired';
 // import Forbidden from '../Components/Error/Forbidden';
 // import ServerError from '../Components/Error/ServerError';
 import SideBar from '../Components/General/sidebartest';
+import AddButton from '../Components/Table_Components/AddButton';
+import mainStyles from "../Assets/CSS/styles";
 
 export default function Ahsan({
-  menuItgems,
-  toggleExpand,
 }
 ) {
   const [data, setData] = useState([]);
@@ -22,6 +22,7 @@ export default function Ahsan({
   const [totalPages, setTotalPages] = useState(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [errorCode, setErrorCode] = useState(null);
+  const [isSidebarClosed, setIsSidebarClosed] = useState(true); // Track sidebar state
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Track sidebar state
   const [currenturl, setCurrentUrl] = useState('https://127.0.0.1:8000/users');
   const [baseurl, setBaseUrl] = useState('https://127.0.0.1:8000/users');
@@ -110,47 +111,81 @@ export default function Ahsan({
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const styles = {
-    mainContent: {
-      flex: 1,
-      padding: "10px",
-      transition: "margin-left 0.5s ease",
-      marginLeft: isSidebarOpen ? "18%" : "4%",
-    },
-  };
 
-  const [menuItems, setMenuItems] = useState([
-    {
-      name: "Dashboard",
-      route: "/dashboard",
-      icon: "bx bx-grid-alt",
-    },
-    {
-      name: "Category",
-      route: "/category",
-      icon: "bx bx-user",
-      subMenu: [
-        { name: "HTML & CSS", route: "/html-css" },
-        { name: "JavaScript", route: "/javascript" },
-        { name: "PHP & MySQL", route: "/php-mysql" },
-      ],
-    },
-    {
-      name: "Posts",
-      route: "/posts",
-      icon: "bx bx-cabinet",
-      subMenu: [
-        { name: "Web Design", route: "/web-design" },
-        { name: "Login Form", route: "/login-form" },
-        { name: "Card Design", route: "/card-design" },
-      ],
-    },
-  ]);
+
   return (
     <>
     
-    <SideBar />
-  {/* <SideBar menuItems={menuItems} set={setMenuItems}/> */}
+    <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed}/>
+    <div style={mainStyles.mainContent(isSidebarClosed)}>
+      
+        <NavPath
+              text={["Home", "User Management"]}
+              paths={["/home", "/users"]}
+              text_color={[255, 255, 255]}
+              background_color={[23, 23, 23]}
+              width="95%"
+              height="50px"
+        />
+
+              <AddButton
+                text="Add User"
+                text_color={[255, 255, 255]}
+              />
+    
+           
+              <TableTop
+                heading_text={'All Users'}
+                search_function={fetchUsers}
+                filter_function={() => {}}   
+                // filters={(
+                //   <>
+                //     <button onClick={toggleDropdown}>Filter</button>
+    
+                //     {isDropdownOpen && (
+                //       <div style={{ display: "flex", flexDirection: "column", marginTop: "10px", border: "1px solid black", backgroundColor: "white" }}>
+                //         <select
+                //           value={billingType}
+                //           onChange={(e) => setBillingType(e.target.value)}
+                //           style={{ width: "150px", height: "40px", marginBottom: "10px" }}
+                //         >
+                //           <option value="All">All Billing Types</option>
+                //           <option value="Daily">Daily</option>
+                //           <option value="Bimonthly">Bimonthly</option>
+                //           <option value="Monthly">Monthly</option>
+                //         </select>
+    
+                //         <select
+                //           value={userStatus}
+                //           onChange={(e) => setUserStatus(e.target.value)}
+                //           style={{ width: "150px", height: "40px", marginBottom: "10px" }}
+                //         >
+                //           <option value="All">All User Status</option>
+                //           <option value="Active">Active</option>
+                //           <option value="Inactive">Inactive</option>
+                //         </select>
+    
+                //         <button onClick={handleReset} style={{ padding: "10px", backgroundColor: "gray", color: "white" }}>Reset</button>
+                //         <button onClick={handleApply} style={{ padding: "10px", backgroundColor: "green", color: "white" }}>Apply</button>
+                //       </div>
+                //     )}
+                //   </>
+                // )}
+              />
+    
+              <TableContent
+                table_headings={['ID', 'Name', 'Email', 'Role', 'Actions']}
+                last_column={true}
+                loading={loading}
+                success={success}
+                prev_button={handlePrev}
+                next_button={handleNext}
+                fetchData={fetchUsers}
+                data={data}
+                currentPage={currentPage}
+                totalPages={totalPages}
+              />
+    </div>
   </>
   );
 }

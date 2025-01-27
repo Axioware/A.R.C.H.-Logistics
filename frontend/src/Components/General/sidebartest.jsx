@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "boxicons/css/boxicons.min.css";
 
-const Sidebar = () => {
-  const [isSidebarClosed, setSidebarClosed] = useState(true);
+const Sidebar = ({sidebar_state, set_sidebar_state}) => {
+  const [isSidebarClosed, setSidebarClosed] = useState(
+    sidebar_state === null || sidebar_state === undefined ? true : sidebar_state
+  );
   const [openMenus, setOpenMenus] = useState({});
 
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setSidebarClosed(!isSidebarClosed);
+    set_sidebar_state(!isSidebarClosed);
   };
 
   const toggleSubmenu = (menuName) => {

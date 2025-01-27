@@ -6,11 +6,11 @@ import TableContent from '../../Components/Table_Components/TableContent';
 import TableTop from '../../Components/Table_Components/TableTop';
 import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
+import SideBar from '../../Components/General/sidebartest';
+import mainStyles from "../../Assets/CSS/styles";
 
-export default function All_Users({
-  menuItems,
-  toggleExpand,
-}) {
+export default function All_Users() {
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -18,6 +18,13 @@ export default function All_Users({
   const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
+    const storedState = localStorage.getItem("sidebarclosed");
+
+    // If it's null, default to true; otherwise, parse it as a boolean
+    return storedState === null ? true : JSON.parse(storedState);
+  });
 
   // State for filters
   const [billingType, setBillingType] = useState('All');
@@ -92,62 +99,24 @@ export default function All_Users({
 
   const styles = {
     mainContent: {
-      flex: 1,
-      padding: "10px",
-      transition: "margin-left 0.5s ease",
-      marginLeft: isSidebarOpen ? "18%" : "4%",
     },
     container: {
-      width: "95%",
+      width: "100%",
       margin: "20px 0px 0px 0px",
-    },
-    lightGreyBackground: {
-      backgroundColor: '#f7f6f6',
-      padding: '20px 0px 40px 60px',
-      borderRadius: '8px',
-      minHeight: '10vh',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '95%',
-      margin: '20px 0px 0px 0px',
-      boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
     },
   };
 
   return (
     <div>
-      <NavBarWithSidebar
-        text_color={[255, 255, 255]}
-        logo={archlogo}
-        company_name="A.R.C.H Labs"
-        menuItems={menuItems}
-        toggle={toggleExpand}
-        username="Owner"
-        icons={[ 
-          "https://via.placeholder.com/20", 
-          "https://via.placeholder.com/20", 
-          "https://via.placeholder.com/20",
-        ]}
-        names={[
-          ["User Management", "All User", "Add User"],
-          ["Management", "Add Order", "Delete Order"],
-          ["Inventory", "Add Item", "Delete Item"],
-        ]}
-        sidebar_width="14%"
-        sidebar_height="100vh"
-        toggleSidebar_func={toggleSidebar}
-        isSidebarOpen_p={isSidebarOpen}
-      />
-
+      <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed}/>
+      <div style={mainStyles.mainContent(isSidebarClosed)}>
       <div style={styles.mainContent}>
         <NavPath
           text={["Home", "User Management"]}
           paths={["/home", "/users"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
-          width="95%"
+          width="100%"
           height="50px"
         />
 
@@ -158,7 +127,7 @@ export default function All_Users({
           />
         </div>
 
-        <div style={styles.lightGreyBackground}>
+        <div style={mainStyles.tableBackground}>
           <TableTop
             heading_text={'All Users'}
             search_function={fetchUsers}
@@ -211,6 +180,7 @@ export default function All_Users({
             totalPages={totalPages}
           />
         </div>
+      </div>
       </div>
     </div>
   );
