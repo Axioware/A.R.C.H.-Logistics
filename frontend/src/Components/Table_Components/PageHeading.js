@@ -42,6 +42,7 @@ export default function PageHeading({
             width: ${width};
             height: ${height};
             border-left: 4px solid ${border_color}; /* Blue left border, adjustable via props */
+            margin-left: -50px;
           }
 
           .page-heading-sidebar {

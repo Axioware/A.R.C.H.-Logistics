@@ -15,9 +15,8 @@ export default function AddButton({
   text_color,
   path,
   background_color,
-  class_name,
-  width = '8.5%', // Default width
-  height = '80%', // Default height
+  width = '135px', // Default width
+  height = '45px', // Default height
 }) {
   const navigate = useNavigate();
 
@@ -27,7 +26,7 @@ export default function AddButton({
   return (
     <div className="add-button-container">
       <button
-        className={`add-button ${class_name}`}
+        className={`add-button`}
         onClick={() => navigate(path)} // Redirect to the given path when clicked
       >
         {text}
@@ -42,7 +41,7 @@ export default function AddButton({
             height: 8vh; /* Adjust as necessary */
             margin: 0px; /* Add some vertical spacing if needed */
             font-weight: bold;
-            padding: 10px; /* Add some padding for smaller screens */
+            padding: 10px 0px 10px 10px; /* Add some padding for smaller screens */
           }
 
           .add-button {
@@ -58,11 +57,14 @@ export default function AddButton({
             text-align: center;
             box-sizing: border-box;
             transition: all 0.3s ease; /* Smooth hover effect */
+            // border: 2px solid black;
+            box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
           }
 
           .add-button:hover {
             background-color: rgba(255, 255, 255, 0.8); /* Change background on hover */
             color: black; /* Text color changes to black on hover */
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
           }
 
           /* Responsive styles */
@@ -74,7 +76,7 @@ export default function AddButton({
             .add-button {
               width: 120px; /* Make button smaller on mobile */
               height: 40px;
-              font-size: 0.9rem; /* Slightly smaller text */
+              font-size: 0.5rem; /* Slightly smaller text */
             }
           }
 
@@ -83,35 +85,6 @@ export default function AddButton({
               width: 100px; /* Further reduce button size */
               height: 35px;
               font-size: 0.8rem; /* Further reduce font size */
-            }
-          }
-
-          /* Lock layout for screens narrower than 1366px */
-          @media (max-width: 1366px) {
-            body {
-              width: 1920px;
-              transform: scale(0.7); /* Scale down to fit smaller screens */
-              transform-origin: top left;
-              overflow-x: auto; /* Allow horizontal scrolling */
-            }
-
-            .add-button {
-              width: 150px;
-              height: 50px;
-              font-size: 1rem; /* Maintain original size for 1920x1080 view */
-            }
-          }
-
-          /* Maintain responsiveness above 1366px */
-          @media (min-width: 1366px) {
-            .add-button-container {
-              justify-content: flex-end; /* Default alignment */
-            }
-
-            .add-button {
-              width: ${width};
-              height: ${height};
-              font-size: 1rem;
             }
           }
         `}

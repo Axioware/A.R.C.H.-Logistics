@@ -243,3 +243,25 @@
     display: none;
   }
 }
+
+
+.abccc-section {
+  position: relative;
+  background: #e4e9f7;
+  height: 100%;
+  justify-content: center;
+  left: 260px;
+  width: calc(100% - 260px);
+  transition: all 0.5s ease;
+}
+
+.sidebar.close ~ .abccc-section {
+  left: 78px;
+  width: calc(100% - 78px);
+}
+
+.abccc-section .abccc-content {
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
