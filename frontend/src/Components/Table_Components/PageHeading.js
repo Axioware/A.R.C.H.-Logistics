@@ -41,6 +41,7 @@ export default function PageHeading({
             align-items: center; /* Align items vertically */
             width: ${width};
             height: ${height};
+            border-left: 4px solid ${border_color}; /* Blue left border, adjustable via props */
           }
 
           .page-heading-sidebar {
