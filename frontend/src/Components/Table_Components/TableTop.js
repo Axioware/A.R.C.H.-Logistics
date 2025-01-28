@@ -2,6 +2,7 @@ import React from 'react';
 import PageHeading from './PageHeading'; // Adjust path if necessary
 import FilterButton from './FilterButton'; // Adjust path if necessary
 import SearchBar from './SearchBar'; // Adjust path if necessary
+import FilterOption from '../../Pages/FilterOption';
 
 export default function TableTop({
   search_function,
@@ -52,6 +53,7 @@ export default function TableTop({
             text_color={[255, 255, 255]} // White text color
             background_color={[23, 23, 23]} // Dark background
             function={filter_function} // Function to call on button click
+            content={FilterOption}
             width="150px" // Set width explicitly
             height="50px" // Set height explicitly
           />

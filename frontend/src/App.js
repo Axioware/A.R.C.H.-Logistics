@@ -92,7 +92,7 @@ function App() {
     {/* <GlobalStyles /> */}
     <Router>  
       <Routes>
-        {/* <Route path="/moiz" element={<Moiz />} /> */}
+        <Route path="/moiz" element={<Moiz />} />
         <Route path="/asad" element={<Asad />} />
         <Route path="/omer" element={<Omer />} />
         <Route path="/rauf" element={<Rauf />} /> 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from "react";
 
 // Function to convert RGB array to 'rgb(r, g, b)' string
 function rgbArrayToString(rgbArray) {
@@ -14,21 +14,43 @@ export default function FilterButton({
   text_color,
   background_color,
   function: handleClick,
+  content: Content,
   width = 'auto',
   height
 }) {
   // Convert colors to CSS string format
   const textColor = rgbArrayToString(text_color);
   const buttonColor = rgbArrayToString(background_color);
+  const [isVisible, setIsVisible] = useState(false);
+
+  function show() {
+    setIsVisible(!isVisible);
+  }
 
   return (
-    <div>
+    <div style={{ position: 'relative', display: 'inline-block' }}>
       <button
         className={`filter-button`}
-        onClick={handleClick}
+        onClick={show}
       >
         {text}
       </button>
+
+      <div className='content' style={{ 
+        display: isVisible ? 'block' : 'none', 
+        position: 'absolute', 
+        top: '100%', 
+        left: '0', 
+        zIndex: 1000, 
+        backgroundColor: 'white', 
+        border: '1px solid #ccc', 
+        borderRadius: '5px', 
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', 
+        marginTop: '5px',
+        width: '300px' // Increased width of the content box
+      }}>
+        <Content />
+      </div>
 
       <style>
         {`
@@ -58,7 +80,6 @@ export default function FilterButton({
             transform: translateY(1px); /* Slightly press the button when clicked */
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Reduce shadow on click */
           }
-
         `}
       </style>
     </div>
