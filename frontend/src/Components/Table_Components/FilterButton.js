@@ -59,10 +59,6 @@ export default function FilterButton({
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Reduce shadow on click */
           }
 
-          .filter-button:focus {
-            border-color: #007bff; /* Change border color on focus */
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Add a glow effect on focus */
-          }
         `}
       </style>
     </div>

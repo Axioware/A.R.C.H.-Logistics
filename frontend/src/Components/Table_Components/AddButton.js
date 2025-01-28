@@ -57,28 +57,15 @@ export default function AddButton({
             text-align: center;
             box-sizing: border-box;
             transition: all 0.3s ease; /* Smooth hover effect */
-            border: 2px solid black;
+            // border: 2px solid black;
+            box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
           }
 
           .add-button:hover {
             background-color: rgba(255, 255, 255, 0.8); /* Change background on hover */
             color: black; /* Text color changes to black on hover */
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
           }
-
-          // @media (max-width: 1366px) {
-          //   .add-button-container {
-          //     justify-content: flex-end; /* Adjust alignment for medium screens */
-          //     padding: 10px 0px 10px 10px; /* Add some padding */
-          //   }
-
-          //   .add-button {
-          //     width: 120px; /* Adjust button width */
-          //     height: 35px; /* Adjust button height */
-          //     font-size: 0.8rem; /* Slightly smaller text */
-          //     // align-items: center;
-          //     text-align: center;
-          //   }
-          // }
 
           /* Responsive styles */
           @media (max-width: 768px) {
@@ -90,7 +77,6 @@ export default function AddButton({
               width: 120px; /* Make button smaller on mobile */
               height: 40px;
               font-size: 0.5rem; /* Slightly smaller text */
-              
             }
           }
 
