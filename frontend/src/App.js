@@ -1,39 +1,58 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+//Dummy Pages
 import Omer from './Pages/Omer';
 import Moiz from './Pages/Moiz';
 import Asad from './Pages/Asad';
 import Rauf from './Pages/Rauf';
 import Ahsan from './Pages/Ahsan';
+
+//User Authentication
 import Login from './Pages/Authentication/Login';
 import ForgotPassword from './Pages/Authentication/ForgotPassword';
 import ResetPassword from './Pages/Authentication/ResetPassword';
 import Otp from './Pages/Authentication/Otp';
+
+//User Management
 import AllUsers from './Pages/User_Management/AllUsers';
+import AddUser from './Pages/User_Management/AddUser';
+
+//Warehouse Management
 import AllWarehouse from './Pages/Warehouses/AllWarehouse';
 import AddWarehouse from './Pages/Warehouses/AddWarehouse';
 import EditWarehouse from './Pages/Warehouses/EditWarehouse';
+
+//Location Management
 import AddLocation from './Pages/Locations/AddLocation';
-import AddUser from './Pages/User_Management/AddUser';
 import EditLocation from './Pages/Locations/EditLocation';
+
+//Components
 import BoxContent from './Components/General/BoxContent';
 import Spinner from "./Components/General/Spinner";
 
-
+//Payment Management
 import BalanceSheet from './Pages/Balance_Sheet/BalanceSheet';
 import Transaction from './Pages/Balance_Sheet/Transaction';
 import Invoices from './Pages/Balance_Sheet/Invoices';
-import Forbidden from './Components/Error_Components/Forbidden';
 import RatesManagement from './Pages/Custom_Rates/RatesManagement';
+
+//Modals
+import Forbidden from './Components/Error_Components/Forbidden';
+
+//Inventory
 import AllInventory from './Pages/Inventory/AllInventory';
 import ByDateInventory from './Pages/Inventory/ByDateInventory';
 import CombineInventory from './Pages/Inventory/CombineInventory';
+
+//Orders
 import ActiveOrder from './Pages/Order/ActiveOrder';
 import BoxesToBeShipped from './Pages/Order/BoxesToBeShipped';
 import OrderDetails from './Pages/Order/OrderDetails';
 import OrderHistory from './Pages/Order/OrderHistory';
 import ViewTracking from './Pages/Order/ViewTracking';
+
+//Settings
 import Bin from './Pages/Setting/Bin';
 import Category from './Pages/Setting/Category';
 import Service from './Pages/Setting/Service';
@@ -92,40 +111,63 @@ function App() {
     {/* <GlobalStyles /> */}
     <Router>  
       <Routes>
+
+        {/* Dummy Pages */}
         {/* <Route path="/moiz" element={<Moiz />} /> */}
         <Route path="/asad" element={<Asad />} />
         <Route path="/omer" element={<Omer />} />
         <Route path="/rauf" element={<Rauf />} /> 
-        <Route path="/ahsan" element={<Ahsan menuItems={menuItems} toggleExpand={toggleExpand}/>} /> 
+        <Route path="/ahsan" element={<Ahsan menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
+        {/* User Authentication */}
         <Route path="/login" element={<Login />} />
-        <Route path="/warehouses" element={<AllWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/edit-warehouses" element={<EditWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/add-warehouses" element={<AddWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/add-location" element={<AddLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
-        <Route path="/edit-location" element={<EditLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />      
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+
+        {/* Warehouse Management */}
+        <Route path="/warehouses" element={<AllWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/edit-warehouses" element={<EditWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/add-warehouses" element={<AddWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
+        {/* Location Management */}
+        <Route path="/add-location" element={<AddLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
+        <Route path="/edit-location" element={<EditLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />      
+        
+        {/* User_Management */}
         <Route path="/users" element={<AllUsers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/add-user" element={<AddUser menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
+        {/* Components */}
         <Route path="/content" element={<BoxContent />} />
         <Route path="/spinner" element={<Spinner />} />
-        <Route path="/add-user" element={<AddUser menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        
+        {/* Payment Section */}
         <Route path="/balance-sheet" element={<BalanceSheet menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/transaction" element={<Transaction menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/invoices" element={<Invoices menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
+        {/* Settings */}
+        <Route path="/rates-management" element={<RatesManagement menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/bin" element={<Bin menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/service" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
+        {/* Modals */}
         <Route path="/test" element={<Forbidden />} />
-        <Route path="/rates-management" element={<RatesManagement menuItems={menuItems} toggleExpand={toggleExpand}/>} />     
+
+        {/* Inventory  */}
         <Route path="/all-items" element={<AllInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/by-date-inventory" element={<ByDateInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/inventory-overview" element={<CombineInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
+        {/* Orders */}
         <Route path="/active-order" element={<ActiveOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/boxes-to-be-shipped" element={<BoxesToBeShipped />} />      */}
         {/* <Route path="/order-details" element={<OrderDetails />} /> */}
         <Route path="/order-history" element={<OrderHistory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/view-tracking" element={<ViewTracking menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/bin" element={<Bin menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/service" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
         
       </Routes>
     </Router>
