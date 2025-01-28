@@ -1,47 +1,36 @@
 import React, { useState } from 'react';
-import UserFilterModal from '../Components/Modals/FilterModals'; // Assuming the path to UserFilterModal is correct
-import GeneralButton from '../Components/General/GeneralButton'; // Adjusted path
+import LargeModal from '../Components/Modals/SuccessModal';  
 
-function Omer() {
-  const [isModalOpen, setModalOpen] = useState(false);
+const OmerComponent = () => {
+  const [modalOpen, setModalOpen] = useState(false);  
 
-  const modifyUrl = () => {
-    console.log("URL Modified");
+  const handleOpenModal = () => {
+    setModalOpen(true);
   };
 
-  const handleUserTypeSelection = (option) => {
-    console.log("User Type Selected:", option);
-  };
-
-  const handleBillingTypeSelection = (option) => {
-    console.log("Billing Type Selected:", option);
-  };
-
-  const applyChanges = () => {
-    console.log("Filters Applied");
+  const handleCloseModal = () => {
     setModalOpen(false);
   };
 
-  const handleClick = (message) => {
-    console.log("Button clicked:", message);
+  const handleSaveChanges = () => {
+    console.log("Changes saved!");
+    handleCloseModal();  // Optionally close modal after save
   };
 
   return (
     <div>
-      <h1>User and Billing Management</h1>
-      <button onClick={() => setModalOpen(true)}>Open Filter Modal</button>
-      {isModalOpen && (
-        <>
-          <UserFilterModal
-            func1={modifyUrl}
-            func2={handleUserTypeSelection}
-            func3={handleBillingTypeSelection}
-            apply_function={applyChanges}
-          />
-        </>
+      <button onClick={handleOpenModal}>Open Modal</button>
+      {modalOpen && (
+        <LargeModal
+          isOpen={modalOpen}
+          onClose={handleCloseModal}
+          onSave={handleSaveChanges}
+          title="User Added"
+          content="You are about to perform an action that could impact your account or data. Please review all details carefully before proceeding to ensure accuracy."
+        />
       )}
     </div>
   );
-}
+};
 
-export default Omer;
+export default OmerComponent;

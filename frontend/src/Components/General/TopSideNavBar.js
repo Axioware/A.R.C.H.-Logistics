@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
-<<<<<<< HEAD
-// import PropTypes from "prop-types";
-=======
 import PropTypes from "prop-types";
 import {Navigate} from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
->>>>>>> 3218bf829ba4d2acf0bae22578f292aaade5a95b
 import MenuItem from "../General/MenuItem";
 import UserDrop from "./UserDrop";
 
