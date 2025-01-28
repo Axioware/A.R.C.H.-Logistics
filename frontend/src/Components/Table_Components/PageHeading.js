@@ -16,8 +16,7 @@ export default function PageHeading({
   height = 'auto', // Default height
   sidebar_color,
   font_size = '2rem',
-  sidebar_width = '10px',
-  border_color = 'rgb(23, 23, 23)',
+  sidebar_width = '10px', // Default sidebar width
 }) {
   // Convert colors to CSS string format
   const textColor = rgbArrayToString(text_color);

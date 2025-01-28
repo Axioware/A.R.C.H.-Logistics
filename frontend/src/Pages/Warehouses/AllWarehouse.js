@@ -135,7 +135,7 @@ export default function All_Users() {
 
       <div style={styles.mainContent}>
         <NavPath
-          text={["Setting", "Warehouses"]}
+          text={["Setting", "WareHouses"]}
           paths={["/setting", "/warehouses"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
@@ -146,7 +146,7 @@ export default function All_Users() {
         <div style={styles.lightGreyBackground}>
 
           <TableTop 
-          heading_text={'Warehouses'}
+          heading_text={'WareHouses'}
           />
 
           <TableContent

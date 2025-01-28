@@ -6,17 +6,15 @@ import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
+// import mainFunctions from "../../Assets/JS/script";
 
 export default function All_Users() {
-  const [data, setData] = useState([
-    { id: 1, name: "John Doe", email: "john.doe@example.com", role: "Admin", actions: "Edit/Delete" },
-    { id: 2, name: "Jane Smith", email: "jane.smith@example.com", role: "User", actions: "Edit/Delete" },
-    { id: 3, name: "Michael Brown", email: "michael.brown@example.com", role: "Moderator", actions: "Edit/Delete" },
-  ]);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(true);
+
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(3);
+  const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
   const [clearance, setclearance] = useState(1);
 
@@ -28,13 +26,32 @@ export default function All_Users() {
   // State for filters
   const [billingType, setBillingType] = useState('All');
   const [userStatus, setUserStatus] = useState('All');
+  
+  // State to toggle the dropdown visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const getData = async () => {
     const url = `https://api.example.com/users?page=${currentPage}&billingType=${billingType}&userStatus=${userStatus}`;
     const response = await fetchData(setLoading, setSuccess, url);
+
     if (response && response.error) {
-      setErrorCode(response.error);
+      switch (response.error) {
+        case 400:
+          setErrorCode(401);
+          break;
+        case 401:
+          setErrorCode(401);
+          break;
+        case 403:
+          setErrorCode(403);
+          break;
+        case 500:
+          setErrorCode(500);
+          break;
+        default:
+          setErrorCode(response.error);
+          break;
+      }
     } else if (response) {
       setData(response);
       setErrorCode(null);
@@ -42,6 +59,14 @@ export default function All_Users() {
   };
 
   useEffect(() => {
+    // if (!mainFunctions.generalValidate()) {
+      
+    // } 
+    // if (!mainFunctions.employeeValidate()) {
+
+    // }
+    // var data = mainFunctions.getUserData();
+    // setclearance(data.clearance);
     getData();
   }, [currentPage]);
 
@@ -57,6 +82,7 @@ export default function All_Users() {
     }
   };
 
+  // Handle Reset and Apply for filters
   const handleReset = () => {
     setBillingType('All');
     setUserStatus('All');
@@ -66,7 +92,9 @@ export default function All_Users() {
     console.log("Filters applied:", { billingType, userStatus });
   };
 
+  // Toggle dropdown visibility on filter button click
   const toggleDropdown = () => {
+    console.log("Dropdown toggled");
     setIsDropdownOpen(!isDropdownOpen);
   };
 
@@ -78,24 +106,31 @@ export default function All_Users() {
         <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
       )}
       <div style={mainStyles.centerContent(isSidebarClosed)}>
+
         <NavPath
-          text={["Home", "Inventory", "All Items"]}
-          paths={["/home", "/users", "/all-items"]}
+          text={["Home", "User Management"]}
+          paths={["/home", "/users"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
           width="100%"
           height="50px"
         />
-        <AddButton text="All Items" text_color={[255, 255, 255]} path='/add-user' />
+
+        <AddButton
+          text="Add User"
+          text_color={[255, 255, 255]}
+          path='/add-user'
+        />
+
         <div style={mainStyles.tableBackground}>
           <TableTop
-            heading_text={'All Items'}
+            heading_text={'All Users'}
             search_function={getData}
-            filter_function={() => {}}
-            sort_function={(column) => console.log(`Sorting by column: ${column}`)} // Dummy sort function
+            filter_function={() => {}}   
             filters={(
               <>
                 <button onClick={toggleDropdown}>Filter</button>
+
                 {isDropdownOpen && (
                   <div style={{ display: "flex", flexDirection: "column", marginTop: "10px", border: "1px solid black", backgroundColor: "white" }}>
                     <select
@@ -108,6 +143,7 @@ export default function All_Users() {
                       <option value="Bimonthly">Bimonthly</option>
                       <option value="Monthly">Monthly</option>
                     </select>
+
                     <select
                       value={userStatus}
                       onChange={(e) => setUserStatus(e.target.value)}
@@ -117,6 +153,7 @@ export default function All_Users() {
                       <option value="Active">Active</option>
                       <option value="Inactive">Inactive</option>
                     </select>
+
                     <button onClick={handleReset} style={{ padding: "10px", backgroundColor: "gray", color: "white" }}>Reset</button>
                     <button onClick={handleApply} style={{ padding: "10px", backgroundColor: "green", color: "white" }}>Apply</button>
                   </div>
@@ -124,6 +161,7 @@ export default function All_Users() {
               </>
             )}
           />
+
           <TableContent
             table_headings={['ID', 'Name', 'Email', 'Role', 'Actions']}
             last_column={true}
@@ -140,4 +178,4 @@ export default function All_Users() {
       </div>
     </div>
   );
-}
+}  

@@ -12,8 +12,7 @@ const GeneralField = ({
   id,
   label_id,
   label_text,
-  maxLength,
-  required = false,
+  maxLength, // New prop for max length
   
 }) => {
   const styles = `
@@ -45,9 +44,6 @@ const GeneralField = ({
       outline: none;
       box-shadow: 0 0 8px rgba(0, 123, 255, 0.25); /* Subtle shadow for focus */
     }
-    .required-asterisk {
-      color: red;
-    }
     #${label_id}{ color: red; display: none; }
   `;
 
@@ -55,9 +51,8 @@ const GeneralField = ({
     <div className={`field-container ${label_position === 'left' ? 'left' : ''}`}>
       <style>{styles}</style>
       {label && (
-        <label htmlFor={name} className="field-label">
+        <label htmlFor={name} className={`field-label`}>
           {label}
-          {required && <span className="required-asterisk">*</span>}
         </label>
       )}
       <input

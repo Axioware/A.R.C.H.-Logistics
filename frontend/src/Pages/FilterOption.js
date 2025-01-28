@@ -58,7 +58,7 @@ const FilterOption = ({ billing, user, ware, setbill, setuser, setware }) => {
           <div className="mb-4">
             <label className="block mb-2 mr-8 font-medium text-gray-700">User Status</label>
             <select
-              className="w-full p-2 border rounded-md shadow-sm  transition duration-200"
+              className="w-full p-2 border rounded-md shadow-sm transition duration-200 "
               value={userStatus}
               onChange={(e) => {
                 setUserStatus(e.target.value);
@@ -75,7 +75,7 @@ const FilterOption = ({ billing, user, ware, setbill, setuser, setware }) => {
         <div className="mb-4">
           <label className="block mb-2 font-medium text-gray-700">Warehouses</label>
           <select
-            className="w-full p-2 border rounded-md shadow-sm  transition duration-200"
+            className="w-full p-2 border rounded-md shadow-sm transition duration-200 "
             value={warehouse}
             onChange={(e) => {
               setWarehouse(e.target.value);
@@ -90,13 +90,13 @@ const FilterOption = ({ billing, user, ware, setbill, setuser, setware }) => {
 
         <div className="button-container">
           <button
-            className="reset-btn bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+            className="reset-btn bg-gray-500 hover:bg-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
             onClick={handleReset}
           >
             Reset
           </button>
           <button
-            className={`apply-btn ${isApplied ? 'bg-black hover:bg-gray-800' : 'bg-blue-600 hover:bg-blue-700'} text-white font-semibold py-2 px-4 rounded-lg transition duration-200`}
+            className="apply-btn bg-black hover:bg-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
             onClick={handleApply}
           >
             Apply
@@ -104,7 +104,7 @@ const FilterOption = ({ billing, user, ware, setbill, setuser, setware }) => {
         </div>
       </div>
 
-      <style jsx>{`
+     <style jsx>{`
   .filter-container {
     padding: 20px;
     border: 1px solid #e2e8f0;
@@ -131,17 +131,14 @@ const FilterOption = ({ billing, user, ware, setbill, setuser, setware }) => {
     width: 100%;
     padding: 8px;
     border-radius: 6px;
-    border: 1px solid #cbd5e0;
     margin-bottom: 12px;
-    background-color: #f7fafc;
     transition: border-color 0.2s, box-shadow 0.2s;
-    color: black; /* Change text color to black */
+    color: black;
   }
 
   select:focus {
-    border-color: #4299e1;
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
-    color: black; /* Ensure text color is black on focus */
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.5);
+    color: black;
   }
 
   label {
@@ -157,13 +154,26 @@ const FilterOption = ({ billing, user, ware, setbill, setuser, setware }) => {
 
   .reset-btn:focus,
   .apply-btn:focus {
-    outline: none; /* Remove the default focus outline */
-    box-shadow: none; /* Remove any box shadow on focus */
+    outline: none;
+    box-shadow: none;
   }
 
   .reset-btn:active,
   .apply-btn:active {
-    transform: scale(0.98); /* Optional: Add a slight scale effect on click */
+    transform: scale(0.98);
+  }
+
+  /* Dropdown styling */
+  select option {
+    background-color: white;
+    color: black;
+  }
+
+  /* Change hover and focus color to black */
+  select option:hover,
+  select option:focus {
+    background-color: black !important;
+    color: white !important;
   }
 `}</style>
 

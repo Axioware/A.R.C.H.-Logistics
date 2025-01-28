@@ -82,8 +82,6 @@ const AddLocation = () => {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr 1fr 1fr',
       gap: '20px',
-      marginLeft:'20px',
-      marginTop:'35px',
     },
     container: {
       backgroundColor: '#f7f6f6',
@@ -151,19 +149,19 @@ const AddLocation = () => {
 
           <form style={styles.form} onSubmit={handleSubmit}>
             <GeneralField
-              label="Name"
+              label="Name *"
               field_type="text"
               hint="Enter the name of the location (e.g., Warehouse A)"
               required
             />
             <GeneralField
-              label="Type "
+              label="Type *"
               field_type="text"
               hint="Select the type of location"
               required
             />
             <GeneralField
-              label="Warehouse"
+              label="Warehouse *"
               field_type="text"
               hint="Enter the warehouse name (e.g., Main Warehouse)"
               required
