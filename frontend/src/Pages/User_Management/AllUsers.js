@@ -7,6 +7,7 @@ import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
 // import mainFunctions from "../../Assets/JS/script";
+import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement"
 
 export default function All_Users() {
 
@@ -127,11 +128,7 @@ export default function All_Users() {
             heading_text={'All Users'}
             search_function={getData}
             filter_function={() => {}}   
-            filters={(
-              <>
-                <button onClick={toggleDropdown}>Filter</button>
-              </>
-            )}
+            content={filterOptionUser}
           />
 
           <TableContent
