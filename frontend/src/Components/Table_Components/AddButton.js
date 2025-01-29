@@ -2,13 +2,18 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // Function to convert RGB array to 'rgb(r, g, b)' string
-function rgbArrayToString(rgbArray) {
-  if (Array.isArray(rgbArray) && rgbArray.length === 3) {
-    const [r, g, b] = rgbArray;
+// Function to convert RGB array or string to 'rgb(r, g, b)' string
+function rgbArrayToString(color) {
+  if (Array.isArray(color) && color.length === 3) {
+    const [r, g, b] = color;
     return `rgb(${r}, ${g}, ${b})`;
+  } else if (typeof color === 'string') {
+    // If it's a valid color string like 'black' or 'white', return it directly
+    return color;
   }
   return 'rgb(0, 0, 0)'; // Default color if input is invalid
 }
+
 
 export default function AddButton({
   text,
