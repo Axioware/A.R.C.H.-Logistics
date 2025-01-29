@@ -12,7 +12,7 @@ function rgbArrayToString(rgbArray) {
 export default function PageHeading({
   text,
   text_color,
-  width = '100%', // Default to 100% width
+  width = '100%', 
   height = 'auto', 
   sidebar_color,
   font_size = '2rem',

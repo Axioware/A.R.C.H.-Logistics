@@ -7,7 +7,7 @@ const FilterOption = ({ billing, user, ware, setbill, setuser, setware }) => {
   const [isApplied, setIsApplied] = useState(false); // State to track if "Apply" is clicked
 
   const handleFilterChange = (type, option) => {
-    console.log(`Filter changed: Type - ${type}, Option - ${option}`);
+    console.log('Filter changed: Type - ${type}, Option - ${option}');
 
     if (type === 'Billing Type') {
       setbill(option);
@@ -104,83 +104,74 @@ const FilterOption = ({ billing, user, ware, setbill, setuser, setware }) => {
         </div>
       </div>
 
-     <style jsx>{`
-  .filter-container {
-    padding: 20px;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    margin: auto;
-    background-color: white;
-  }
+      <style jsx>{`
+        .filter-container {
+          padding: 20px;
+          border: 1px solid #e2e8f0;
+          border-radius: 12px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          max-width: 400px;
+          margin: auto;
+          background-color: white;
+        }
 
-  .filters-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-  }
+        .filters-row {
+          display: flex;
+          justify-content: space-between;
+          gap: 8px;
+        }
 
-  .button-container {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-  }
+        .button-container {
+          display: flex;
+          justify-content: flex-end;
+          gap: 12px;
+        }
 
-  select {
-    width: 100%;
-    padding: 8px;
-    border-radius: 6px;
-    margin-bottom: 12px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    color: black;
-  }
+        select {
+          width: 100%;
+          padding: 8px;
+          border-radius: 6px;
+          margin-bottom: 12px;
+          transition: border-color 0.2s, box-shadow 0.2s;
+          color: black;
+          background-color: white;
+        }
 
-  select:focus {
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.5);
-    color: black;
-  }
+        select:focus {
+          box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.5);
+          color: black;
+        }
 
-  label {
-    font-weight: bold;
-    margin-bottom: 8px;
-    display: block;
-    color: #4a5568;
-  }
+        /* Styling options */
+        select option {
+          background-color: white;
+          color: black;
+        }
 
-  .mb-4 {
-    margin-bottom: 16px;
-  }
+        /* Hover effect for options */
+        select option:hover {
+          background-color: black !important; /* Ensure only option's background changes */
+          color: white !important; /* Change text color to white on hover */
+        }
 
-  .reset-btn:focus,
-  .apply-btn:focus {
-    outline: none;
-    box-shadow: none;
-  }
+        label {
+          font-weight: bold;
+          margin-bottom: 8px;
+          display: block;
+          color: #4a5568;
+        }
 
-  .reset-btn:active,
-  .apply-btn:active {
-    transform: scale(0.98);
-  }
+        .reset-btn:focus,
+        .apply-btn:focus {
+          outline: none;
+          box-shadow: none;
+        }
 
-  /* Dropdown styling */
-  select option {
-    background-color: white;
-    color: black;
-  }
-
-  /* Change hover and focus color to black */
-  select option:hover,
-  select option:focus {
-    background-color: black !important;
-    color: white !important;
-  }
-    
-
-  
-  
-`}</style>
-
+        .reset-btn:active,
+        .apply-btn:active {
+          transform: scale(0.98);
+        }
+      `}</style>
     </div>
   );
 };
