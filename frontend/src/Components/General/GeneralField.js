@@ -13,10 +13,18 @@ const GeneralField = ({
   label_id,
   label_text,
   maxLength, // New prop for max length
-  
+  required = false,
 }) => {
   const styles = `
-    .field-container {
+  .field-input:hint{
+    color: #999; /* Light gray for a subtle look */
+    font-style: italic; /* Italicize hint text to differentiate from input text */
+    font-size: 0.9em; /* Slightly smaller font size to keep focus on the input values */
+    padding-left: 5px; /
+  
+
+  }
+     .field-container {
       display: flex;
       flex-direction: ${label_position === 'left' ? 'row' : 'column'};
       align-items: ${label_position === 'left' ? 'center' : 'flex-start'};
@@ -33,7 +41,7 @@ const GeneralField = ({
     .field-input {
       padding: 8px;
       border: 1px solid #ccc;
-      border-radius: 12px; /* Increased border radius for a more professional look */
+      border-radius: 8px; /* Increased border radius for a more professional look */
       box-sizing: border-box;
       width: ${width};
       height: ${height};
@@ -44,6 +52,17 @@ const GeneralField = ({
       outline: none;
       box-shadow: 0 0 8px rgba(0, 123, 255, 0.25); /* Subtle shadow for focus */
     }
+    .field-input.required {
+     border-color: #d9534f; /* Red border color to indicate required fields */
+    }
+
+    .field-label.required::after {
+    content: '*';
+    color: #d9534f; /* Red asterisk to indicate required fields */
+    margin-left: 4px; /* Spacing between the label and the asterisk */
+    }
+
+
     #${label_id}{ color: red; display: none; }
   `;
 
@@ -51,7 +70,7 @@ const GeneralField = ({
     <div className={`field-container ${label_position === 'left' ? 'left' : ''}`}>
       <style>{styles}</style>
       {label && (
-        <label htmlFor={name} className={`field-label`}>
+          <label htmlFor={name} className={`field-label ${required ? 'required' : ''}`}>
           {label}
         </label>
       )}
@@ -63,6 +82,7 @@ const GeneralField = ({
         className={`field-input`} // Apply modified class name for input
         onChange={(e) => func(e.target.value)} // Ensure func is always a function
         maxLength={maxLength} // Set the max length
+        required={required} // Set the HTML5 required attribute
       />
       <p id={label_id}>{label_text}</p>
     </div>

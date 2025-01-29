@@ -56,6 +56,8 @@ import ViewTracking from './Pages/Order/ViewTracking';
 import Bin from './Pages/Setting/Bin';
 import Category from './Pages/Setting/Category';
 import Service from './Pages/Setting/Service';
+import AddService from './Pages/Setting/AddService';
+
 import test from './Assets/Images/SearchIcon.png'
 import test2 from './Assets/Images/user-solid.svg'
 
@@ -152,6 +154,8 @@ function App() {
         <Route path="/bin" element={<Bin menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/service" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/add-service" element={<AddService menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
 
         {/* Modals */}
         <Route path="/test" element={<Forbidden />} />

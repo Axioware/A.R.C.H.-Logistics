@@ -6,6 +6,7 @@ import PageHeading from '../../Components/Table_Components/PageHeading';
 import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
 
+
 const AddUser = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,7 +19,6 @@ const AddUser = () => {
       const storedState = localStorage.getItem("sidebarclosed");
       return storedState === null ? true : JSON.parse(storedState);
     });
-
   
 
   const styles = {
@@ -36,8 +36,9 @@ const AddUser = () => {
   },
 
   select: {
+
     marginLeft:"40px",
-    marginTop:"40px",
+    marginTop:"10px",
   },
 
   buttonContainer: {
@@ -52,16 +53,24 @@ const AddUser = () => {
   },
 
   container:{
-    border: '2px solid white',
+    // border: '2px solid black',
     borderRadius:'8px',
     backgroundColor :"#F5F5F5",
     padding: '20px',
     gap: '10px',
     boxShadow: '2px 2px 2px 2px lightgrey',
+    marginLeft:'10px',
+  },
+
+  headingcontainer:{
+    // border: '2px solid white',
+    marginLeft:'30px',
+    marginTop:'24px',
+
   },
 
   PageHeading:{
-    marginLeft:'0px',
+    marginLeft:'10px',
     marginTop:'20px',  
   },
 
@@ -78,14 +87,14 @@ const AddUser = () => {
   },
 
   select: {
-    marginTop:'20px',  
+    marginTop:'15px',  
     marginLeft:"10px",
     display:'block',
     width:'260px',
     height:'45px',
-    borderRadius:'09px',
-    border: '2px solid lightgrey',
-    boxShadow: '2px 2px 2px 2px lightgrey',
+    borderRadius:'10px',
+    border: '1px solid lightgrey',
+    boxShadow: '1px 1px 1px 1px lightgrey',
   },
   };
   
@@ -100,8 +109,8 @@ const AddUser = () => {
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={styles.mainContent}>
           <NavPath
-            text={['Home', 'All User', 'Edit User']}
-            paths={['/home', '/add-user', '/edit-user']}
+            text={['Home', 'All User', 'Add User']}
+            paths={['/home', '/users', '/add-user']}
             text_color={[255, 255, 255]}
             background_color={[23, 23, 23]}
             hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
@@ -111,8 +120,10 @@ const AddUser = () => {
 
           
           <div id="container" style={styles.container}>
+
+          <div id="headingcontainer" style={styles.headingcontainer}>
             <PageHeading text="Add User" />
-            
+          </div>
         <div id="RoleContainer" style={styles.RoleContainer}>
 
         <label htmlFor="Dropdown" style={styles.label}>Role</label>
@@ -126,7 +137,7 @@ const AddUser = () => {
         </div>
 
           <form id="form" style={styles.form} onSubmit={handleSubmit}>
-          <GeneralField label="LLC Name" field_type="text" hint="Enter Company name" />
+          <GeneralField label="LLC Name" field_type="text" hint="Enter Company name" required={true}/>
           <GeneralField label="First Name" field_type="text" hint="First Name (e.g. , John)" />
           <GeneralField label="Last Name" field_type="text" hint="Last Name (e.g. , Doe)" />
           <GeneralField label="Phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" />
@@ -134,9 +145,10 @@ const AddUser = () => {
           <GeneralField label="Country" field_type="text" hint="Country (e.g., USA)" />
           <GeneralField label="State" field_type="text" hint="State (e.g., Texas)" />
           <GeneralField label="City" field_type="text" hint="City (e.g., Stafford)" />
-          <GeneralField label="Zip Code" field_type="text" hint="Zip code" />
+          <GeneralField label="Zip Code" field_type="text" hint="Zip code" required={true}/>
           <GeneralField label="Email" field_type="email" hint="Email address (e.g., example@mail.com)" />
           <GeneralField label="Alternate Email" field_type="email" hint="Alternate Email address (e.g., example@mail.com)" />
+          <GeneralField label="Tax ID" field_type="Tax ID/EIN" hint="Tax ID/EIN (e.g., 123456)" required={true}/>
           <GeneralField label="Password" field_type="text" hint="Enter Password" />
           <GeneralField label="Retype Password" field_type="text" hint="Re-Type Password" />
 
