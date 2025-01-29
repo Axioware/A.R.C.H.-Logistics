@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from API.models import UsersExtended, Dimension, CustomRates, ServiceCategory
+# from API.models import UsersExtended, Dimension, CustomRates, ServiceCategory
 import pytz
 from datetime import datetime
 from datetime import timezone as time

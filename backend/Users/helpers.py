@@ -43,3 +43,5 @@ class UserPagination(pagination.PageNumberPagination):
 #     if hasattr(user, 'extended') and getattr(user.extended, field_name, None) is not None:
 #         return getattr(user.extended, field_name)
 #     return None
+def authenticate_clearance_level(user, levels):
+    return user.extended.clearance_level in levels

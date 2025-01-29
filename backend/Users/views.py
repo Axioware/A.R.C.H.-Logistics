@@ -4,19 +4,20 @@ from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.models import User
 from .models import *
 from rest_framework import status
-from .helpers import UserPagination
+from .helpers import UserPagination,authenticate_clearance_level
 from django.db.models import Q
 from django.db import transaction
 from Arch_Logistics.helpers import authenticate_client, authenticate_manager, authenticate_VA, make_superuser, authenticate_prep, get_extended_field
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django_tenants.utils import schema_context
 
 # Create your views here.
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def users(request):
     user = request.user
-    
+    tenant = request.tenant
     clearance_level = request.query_params.get('clearance_level') 
     
     if authenticate_clearance_level(user, [1, 2]):
@@ -32,21 +33,24 @@ def users(request):
 
         # Access control
         try:
-            queryset = User.objects.all().select_related('extended')
+            # Use schema_context to ensure queries are tenant-aware
+            with schema_context(tenant.schema_name):  # Explicitly set schema context
+                queryset = User.objects.filter(extended__tenant=tenant).select_related('extended')
 
-            if clearance_level:
-                queryset = queryset.filter(extended__clearance_level=int(clearance_level))
-            if billing_type:
-                queryset = queryset.filter(extended__billing_type=billing_type)
-            if warehouses:
-                queryset = queryset.filter(extended__warehouses=warehouses)
-            if active:
-                queryset = queryset.filter(is_active=bool(active))
-            if search:
-                queryset = queryset.filter(
-                    Q(first_name__icontains=search) | 
-                    Q(last_name__icontains=search)
-                )
+                if clearance_level:
+                    queryset = queryset.filter(extended__clearance_level=int(clearance_level))
+                if billing_type:
+                    queryset = queryset.filter(extended__billing_type=billing_type)
+                if warehouses:
+                    queryset = queryset.filter(extended__warehouses__id=warehouses)
+                if active:
+                    queryset = queryset.filter(is_active=bool(active))
+                if search:
+                    queryset = queryset.filter(
+                        Q(first_name__icontains=search) | 
+                        Q(last_name__icontains=search)
+                    )
+
 
             # Manual data construction
             result = [
@@ -75,7 +79,6 @@ def users(request):
             if all_data:
                 return Response({"results": result, "count": len(result)}, status=status.HTTP_200_OK)
         
-        
             # Pagination
             paginator = UserPagination()
             page = paginator.paginate_queryset(result, request)
@@ -86,23 +89,23 @@ def users(request):
         except Exception as e:
             # General exception handling
             return Response({"error": str(e), "status": "error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         
     if request.method == "POST":
         data = request.data
         clearance_level = data.get('clearance_level')
 
+        # Access control
         if authenticate_clearance_level(user, [1, 2]):
             return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-
-            
 
         #------------------------------------------------------------ Validation ---------------------------------------------------------
         errors = {}
         warehouses = data.get('warehouses', [])
 
         if authenticate_clearance_level(user, 4) and not warehouses:
-            errors['warehouses'] = "warehouses are required for clients."    
-        
+            errors['warehouses'] = "warehouses are required for clients."
+
         username = data.get('username', '')
         first_name = data.get('first_name', '')
         last_name = data.get('last_name', '')
@@ -114,10 +117,10 @@ def users(request):
         password = data.get('password', '')
 
         if not username:
-            errors['username'] = "Username is required.')"
+            errors['username'] = "Username is required."
             
         if not password:
-            errors['password'] = "password is required." 
+            errors['password'] = "Password is required." 
         
         if not first_name:
             errors['first_name'] = "First name is required."
@@ -133,32 +136,34 @@ def users(request):
         
         if phone and (not phone.isdigit() or not (6 <= len(phone) <= 15)):
             errors['phone'] = "Phone number must be between 6 and 15 digits."
-        # LLC name validation: non-empty
+        
         if authenticate_clearance_level(user, [4]) and not llc_name:
             errors['llc_name'] = "LLC name is required."
         
         if data.get('zip', ''):
             if not data.get('zip', '').isdigit() or len(data.get('zip', '')) > 5:
-                errors['zip'] = "ZIP must be atleast 5 digits long."
-        # Tax ID validation: specific format or length checks as required
+                errors['zip'] = "ZIP must be at least 5 digits long."
+        
         if tax_id:
             if not tax_id.isdigit() or len(tax_id) < 8:
                 errors['tax_id'] = "Tax ID must be 8 digits long."
         elif clearance_level == 4:
             errors['tax_id'] = "Tax ID is required."
-        # Secondary email validation
+        
         if email2:
             try:
                 validate_email(email2)
             except ValidationError:
                 errors['email2'] = "Invalid secondary email format."
+                
         if errors:
             return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
-            
+
         #------------------------------------------------------------ Validation ---------------------------------------------------------
 
         try:
             with transaction.atomic():
+                # Ensure the user is created within the tenant context
                 new_user = User.objects.create_user(
                     username=username,
                     first_name=first_name,
@@ -168,11 +173,8 @@ def users(request):
                 )
                 new_user.set_password(password)  # Properly handle password setting
                 new_user.save()
-                target_extended = new_user.extended
-                if clearance_level != None:
-                    if authenticate_clearance_level(user, [1]):
-                        make_superuser(username)
-                # Create UsersExtended
+
+                # Create UsersExtended (tenant-aware)
                 extended = new_user.extended
                 extended.phone = phone
                 extended.clearance_level = clearance_level
@@ -184,15 +186,19 @@ def users(request):
                 extended.state = data.get('state', '')
                 extended.zip = data.get('zip', '')
                 extended.billing_type = data.get('billing_type', UsersExtended.BillingTypeChoices.MONTHLY)
-                # target_extended.clearance_level = ClearanceLevel.objects.get(id=clearance_level)
+                extended.tenant = tenant  # Ensure tenant is set
                 if warehouses:
-                    target_extended.warehouses.set(warehouses)
-                target_extended.save()
+                    valid_warehouses = Warehouse.objects.filter(tenant=tenant, id__in=warehouses)
+                    if len(warehouses) != valid_warehouses.count():
+                        return Response({"error": "Invalid warehouses for this tenant"}, status=status.HTTP_400_BAD_REQUEST)
+                    extended.warehouses.set(valid_warehouses)
+                extended.save()
+
                 return Response({"success": "New user created successfully"}, status=status.HTTP_201_CREATED)
-            # If anything goes wrong in the transaction block, this will be executed
-            return Response({"error": "Failed to create user"}, status=status.HTTP_400_BAD_REQUEST)
+        
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     return Response({"error": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
@@ -200,19 +206,18 @@ def users(request):
 @permission_classes([IsAuthenticated])
 def user_by_id(request, id):
     user = request.user
+    tenant = request.tenant  # Get the tenant context
 
     if request.method == "GET":
         try:
-            main_user = User.objects.get(id=id)
-            target_user = UsersExtended.objects.get(id=id)
-        except UsersExtended.DoesNotExist:
+            main_user = User.objects.get(id=id, tenant=tenant)  # Ensure tenant-specific query
+            target_user = UsersExtended.objects.get(id=id, tenant=tenant)
+        except (UsersExtended.DoesNotExist, User.DoesNotExist):
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
         if user.extended.role not in ['Owner', 'Manager', 'Virtual Assistants']:
             return Response({"error": "Unauthorized - Insufficient permissions"}, status=status.HTTP_403_FORBIDDEN)
-        
-        
-        
+
         user_data = {
             'id': main_user.id,
             'username': main_user.username,
@@ -239,6 +244,7 @@ def user_by_id(request, id):
         data = request.data
         role = data.get('role')
 
+        # Authorization checks based on role and tenant context
         if authenticate_VA(user) and (role == "Owner" or role == "Manager"):
             return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
         if authenticate_manager(user) and role == "Owner":
@@ -247,7 +253,6 @@ def user_by_id(request, id):
             return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
         if authenticate_prep(user):
             return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-            
 
         #------------------------------------------------------------ Validation ---------------------------------------------------------
         errors = {}
@@ -260,65 +265,57 @@ def user_by_id(request, id):
         tax_id = data.get('tax_id', '')
         email2 = data.get('email2', '')
         is_active = data.get('is_active', '')
-        
-        
+
         if not is_active:
-            errors['is_active'] = "is_active is required.')"
+            errors['is_active'] = "is_active is required."
         
         if not first_name:
             errors['first_name'] = "First name is required."
-        # if not last_name:
-        #     errors['last_name'] = "Last name is required."
         
         if email:
             try:
                 validate_email(email)
             except ValidationError:
                 errors['email'] = "Invalid email format."
-        # Phone number validation: basic length check
+        
         if phone and not phone.isdigit():
             errors['phone'] = "Phone number must contain only digits."
         elif len(phone) > 15 or len(phone) < 8:
-            errors['phone'] = "Phone number must be between 15 and 8 digits long."
+            errors['phone'] = "Phone number must be between 8 and 15 digits long."
+        
         if role == "Client" and not llc_name:
             errors['llc_name'] = "LLC name is required."
+        
         if not data.get('zip', '').isdigit() or len(data.get('zip', '')) != 5:
             errors['zip'] = "ZIP must be exactly 5 digits long."
+        
         if tax_id:
-            if not (len(tax_id) > 5 and len(tax_id) < 20):
+            if not (5 < len(tax_id) < 20):
                 errors['tax_id'] = "Tax ID must be greater than 5, and less than 20 digits long."
         elif role == "Client":    
             errors['tax_id'] = "Tax ID is required."
-        # Secondary email validation
+        
         if email2:
             try:
                 validate_email(email2)
             except ValidationError:
                 errors['email2'] = "Invalid secondary email format."
+        
         if errors:
             return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
 
         #------------------------------------------------------------ Validation ---------------------------------------------------------
 
-
         try:
-            target_user = User.objects.get(pk=id)
+            target_user = User.objects.get(id=id, tenant=tenant)  # Ensure tenant-specific query
             target_extended = target_user.extended
-            target_extended.warehouses = data.get('warehouses', target_extended.warehouses)
-            if data.get('password'):
-                target_user.set_password(data.get('password'))
-            # Data from request
 
-            # Update core user fields
+            # Update user and extended fields
             with transaction.atomic():
-
-                # target_user.username = data.get('username', target_user.username)
                 target_user.first_name = data.get('first_name', target_user.first_name)
                 target_user.last_name = data.get('last_name', target_user.last_name)
                 target_user.email = data.get('email', target_user.email)
                 target_user.is_active = data.get('is_active', target_user.is_active)
-                # target_user.password = data.get('password', target_user.password)
-                target_user.save()
 
                 # Update extended fields
                 if data.get('address') is not None:
@@ -341,18 +338,23 @@ def user_by_id(request, id):
                     target_extended.email2 = data.get('email2')
                 if data.get('warehouses') is not None:
                     target_extended.warehouses = data.get('warehouses')
-                return Response({"success": "User updated successfully"}, status=status.HTTP_202_ACCEPTED)
-            return Response({"error": "failed"}, status=status.HTTP_400_BAD_REQUEST)
 
+                # Save changes
+                target_user.save()
+                target_extended.save()
+
+                return Response({"success": "User updated successfully"}, status=status.HTTP_202_ACCEPTED)
+        
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-    if request.method == "DELETE":
+
+    elif request.method == "DELETE":
         data = request.data
         role = data.get('role')
 
+        # Authorization checks based on role and tenant context
         if authenticate_VA(user) and (role == "Owner" or role == "Manager"):
             return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
         if authenticate_manager(user) and role == "Owner":
@@ -361,13 +363,15 @@ def user_by_id(request, id):
             return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
         if authenticate_prep(user):
             return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-        
+
         try:
-            target_user = User.objects.get(id=id)
+            target_user = User.objects.get(id=id, tenant=tenant)  # Ensure tenant-specific query
             target_user.delete()
-            return Response({'success': "user deleted"}, status=status.HTTP_200_OK)
-        except UsersExtended.DoesNotExist:
+            return Response({'success': "User deleted"}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
 @api_view(['POST'])
