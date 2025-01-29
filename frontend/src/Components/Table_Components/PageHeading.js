@@ -13,11 +13,11 @@ export default function PageHeading({
   text,
   text_color,
   width = '100%', // Default to 100% width
-  height = 'auto', // Default height
+  height = 'auto', 
   sidebar_color,
   font_size = '2rem',
-  sidebar_width = '10px', // Default sidebar width
-  border_color = [0, 0, 255], // Default border color (blue)
+  sidebar_width = '10px', 
+  border_color = [23, 23, 23], 
 }) {
   // Convert colors to CSS string format
   const textColor = rgbArrayToString(text_color);
