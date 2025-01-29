@@ -38,4 +38,4 @@ if not Client.objects.filter(schema_name='$TENANT_SCHEMA').exists():
     print('Tenant $TENANT_NAME ($TENANT_SCHEMA) created with domain $DOMAIN_NAME.')
 else:
     print('Tenant $TENANT_SCHEMA already exists.')
-" | python ../backend/manage.py shell
+" | python3 ../backend/manage.py shell
