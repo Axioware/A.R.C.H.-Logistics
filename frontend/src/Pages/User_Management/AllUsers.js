@@ -130,34 +130,6 @@ export default function All_Users() {
             filters={(
               <>
                 <button onClick={toggleDropdown}>Filter</button>
-
-                {isDropdownOpen && (
-                  <div style={{ display: "flex", flexDirection: "column", marginTop: "10px", border: "1px solid black", backgroundColor: "white" }}>
-                    <select
-                      value={billingType}
-                      onChange={(e) => setBillingType(e.target.value)}
-                      style={{ width: "150px", height: "40px", marginBottom: "10px" }}
-                    >
-                      <option value="All">All Billing Types</option>
-                      <option value="Daily">Daily</option>
-                      <option value="Bimonthly">Bimonthly</option>
-                      <option value="Monthly">Monthly</option>
-                    </select>
-
-                    <select
-                      value={userStatus}
-                      onChange={(e) => setUserStatus(e.target.value)}
-                      style={{ width: "150px", height: "40px", marginBottom: "10px" }}
-                    >
-                      <option value="All">All User Status</option>
-                      <option value="Active">Active</option>
-                      <option value="Inactive">Inactive</option>
-                    </select>
-
-                    <button onClick={handleReset} style={{ padding: "10px", backgroundColor: "gray", color: "white" }}>Reset</button>
-                    <button onClick={handleApply} style={{ padding: "10px", backgroundColor: "green", color: "white" }}>Apply</button>
-                  </div>
-                )}
               </>
             )}
           />
