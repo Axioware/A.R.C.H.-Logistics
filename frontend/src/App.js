@@ -111,13 +111,9 @@ function App() {
     {/* <GlobalStyles /> */}
     <Router>  
       <Routes>
-<<<<<<< HEAD
-        <Route path="/moiz" element={<Moiz />} />
-=======
 
         {/* Dummy Pages */}
-        {/* <Route path="/moiz" element={<Moiz />} /> */}
->>>>>>> 934f9ac4b0790e8f084d6ffcaf99affef6c02c92
+        <Route path="/moiz" element={<Moiz />} />
         <Route path="/asad" element={<Asad />} />
         <Route path="/omer" element={<Omer />} />
         <Route path="/rauf" element={<Rauf />} /> 

@@ -37,15 +37,16 @@ export default function TableTop({
       </style>
 
       <div className="table-top-container">
-        <PageHeading
-          text={heading_text}
-          text_color={[0, 0, 0]} // Black text color
-          sidebar_color={[23, 23, 23]} // Sidebar color
-          width="auto" // Auto width to align properly
-          height="auto" // Auto height
-          sidebar_width="5px" // Increased sidebar width for visibility
-          sidebar_height="35px" // Set sidebar height explicitly
-        />
+      <PageHeading
+  text={heading_text}
+  text_color={[0, 0, 0]} // Black text color
+  sidebar_color={[0, 0, 0]} // Black sidebar color
+  width="auto" // Auto width to align properly
+  height="auto" // Auto height
+  sidebar_width="5px" // Increased sidebar width for visibility
+  sidebar_height="35px" // Set sidebar height explicitly
+/>
+
 
         <div className="row-container1">
           <FilterButton
