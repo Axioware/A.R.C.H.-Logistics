@@ -6,8 +6,8 @@ from .models import *
 from rest_framework import status
 from .helpers import UserPagination
 from django.db.models import Q
-from django.db import transaction
-from Arch_Logistics.helpers import authenticate_client, authenticate_manager, authenticate_VA, make_superuser, get_extended_field, authenticate_clearance_level
+from django.db import transaction, OperationalError
+from Arch_Logistics.helpers import get_extended_field, authenticate_clearance_level
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django_tenants.utils import schema_context
@@ -19,7 +19,7 @@ def users(request):
     user = request.user
     tenant = request.tenant
     if authenticate_clearance_level(user, [1, 2]):
-        return Response({'errors': "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'errors': "Unauthorized - Insufficient clearance level"}, status=status.HTTP_403_FORBIDDEN)
 
     if request.method == "GET":
         clearance_level = request.query_params.get('clearance_level')
@@ -28,6 +28,14 @@ def users(request):
         active = request.query_params.get('is_active')
         warehouses = request.query_params.get('warehouses')
         all_data = request.query_params.get('all', 'false').lower() == 'true'
+
+        if clearance_level:
+            try:
+                clearance_level = int(clearance_level)
+                if clearance_level not in [1, 2, 3, 4]:
+                    return Response({"error": "Invalid clearance level"}, status=status.HTTP_400_BAD_REQUEST)
+            except ValueError:
+                return Response({"error": "Clearance level must be an integer"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Access control
         try:
@@ -47,7 +55,8 @@ def users(request):
                         Q(first_name__icontains=search) | 
                         Q(last_name__icontains=search)
                     )
-
+                if not queryset.exists():
+                    return Response({"error": "No users found matching the criteria"}, status=status.HTTP_404_NOT_FOUND)
 
             # Manual data construction
             result = [
@@ -82,9 +91,10 @@ def users(request):
                 return paginator.get_paginated_response(page)
             return Response({'user_data': result}, status=status.HTTP_200_OK)
 
+        except OperationalError as e:
+            return Response({"error": "Database connection error", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as e:
-            # General exception handling
-            return Response({"error": str(e), "status": "error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": "An unexpected error occurred", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     with schema_context(tenant.schema_name):
         if request.method == "POST":
