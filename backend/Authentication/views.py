@@ -1,7 +1,4 @@
-from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
-from django.http import JsonResponse, HttpResponse
-from django.core.serializers import serialize
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
@@ -9,22 +6,12 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.models import User
-# from  import *
-from rest_framework import status, pagination
+from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from django.conf import settings
-from django.db.models import Q, Sum, F
-from django.db import transaction
-from Arch_Logistics.helpers import authenticate_client, authenticate_manager, authenticate_owner, authenticate_VA, make_superuser, authenticate_prep
-from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
-from django.utils.dateparse import parse_datetime
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django_tenants.utils import schema_context
-
+from Users.models import UsersExtended, OTP
 
 
 # Create your views here.
@@ -117,33 +104,33 @@ def change_password(request):
     
 
 
-from django_tenants.utils import schema_context
-from django.contrib.auth import authenticate
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from django.views.decorators.csrf import csrf_exempt
+# from django_tenants.utils import schema_context
+# from django.contrib.auth import authenticate
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from rest_framework import status
+# from django.views.decorators.csrf import csrf_exempt
 
 
-@csrf_exempt
-def check_user_in_testing(request):
-    if request.method == 'POST':
-        username = request.POST.get('username') or request.GET.get('username')
-        password = request.POST.get('password') or request.GET.get('password')
+# @csrf_exempt
+# def check_user_in_testing(request):
+#     if request.method == 'POST':
+#         username = request.POST.get('username') or request.GET.get('username')
+#         password = request.POST.get('password') or request.GET.get('password')
 
-        print(username, password)
-        if not username or not password:
-            return JsonResponse({'error': 'Username and password are required.'}, status=400)
+#         print(username, password)
+#         if not username or not password:
+#             return JsonResponse({'error': 'Username and password are required.'}, status=400)
 
-        try:
-            with schema_context('testing'):
-                a = TenantUser.objects.get(username=username)
-                print(a)
-                user = authenticate(request, username=username, password=password)
-                if user is not None:
-                    return JsonResponse({'exists': True, 'message': 'User authenticated successfully.'})
-                else:
-                    return JsonResponse({'exists': False, 'message': 'Invalid credentials or user not found.'})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+#         try:
+#             with schema_context('testing'):
+#                 a = TenantUser.objects.get(username=username)
+#                 print(a)
+#                 user = authenticate(request, username=username, password=password)
+#                 if user is not None:
+#                     return JsonResponse({'exists': True, 'message': 'User authenticated successfully.'})
+#                 else:
+#                     return JsonResponse({'exists': False, 'message': 'Invalid credentials or user not found.'})
+#         except Exception as e:
+#             return JsonResponse({'error': str(e)}, status=500)
+#     return JsonResponse({'error': 'Invalid request method'}, status=405)
