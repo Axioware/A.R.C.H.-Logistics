@@ -4,10 +4,10 @@ from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.models import User
 from .models import *
 from rest_framework import status
-from .helpers import UserPagination,authenticate_clearance_level
+from .helpers import UserPagination
 from django.db.models import Q
 from django.db import transaction
-from Arch_Logistics.helpers import authenticate_client, authenticate_manager, authenticate_VA, make_superuser, authenticate_prep, get_extended_field
+from Arch_Logistics.helpers import authenticate_client, authenticate_manager, authenticate_VA, make_superuser, get_extended_field, authenticate_clearance_level
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django_tenants.utils import schema_context
@@ -18,8 +18,6 @@ from django_tenants.utils import schema_context
 def users(request):
     user = request.user
     tenant = request.tenant
-    clearance_level = request.query_params.get('clearance_level') 
-    
     if authenticate_clearance_level(user, [1, 2]):
         return Response({'errors': "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -33,9 +31,8 @@ def users(request):
 
         # Access control
         try:
-            # Use schema_context to ensure queries are tenant-aware
-            with schema_context(tenant.schema_name):  # Explicitly set schema context
-                queryset = User.objects.filter(extended__tenant=tenant).select_related('extended')
+            with schema_context(tenant.schema_name):  
+                queryset = User.objects.all().select_related('extended')
 
                 if clearance_level:
                     queryset = queryset.filter(extended__clearance_level=int(clearance_level))
@@ -54,7 +51,7 @@ def users(request):
 
             # Manual data construction
             result = [
-                {
+                {   
                     'id': user.id,
                     'username': user.username,
                     'first_name': user.first_name,
@@ -71,11 +68,10 @@ def users(request):
                     'address': getattr(user.extended, 'address', None),
                     'llc_name': getattr(user.extended, 'llc_name', None),
                     'billing_type': getattr(user.extended, 'billing_type', None),
-                    'warehouses': list(getattr(user.extended, 'warehouses', []).values_list('id', flat=True))
+                    'warehouses': list(getattr(user.extended, 'warehouses', []).values_list('warehouse_id', flat=True))
                 }
                 for user in queryset
             ]
-
             if all_data:
                 return Response({"results": result, "count": len(result)}, status=status.HTTP_200_OK)
         
@@ -103,7 +99,7 @@ def users(request):
         errors = {}
         warehouses = data.get('warehouses', [])
 
-        if authenticate_clearance_level(user, 4) and not warehouses:
+        if authenticate_clearance_level(user, [4]) and not warehouses:
             errors['warehouses'] = "warehouses are required for clients."
 
         username = data.get('username', '')
@@ -118,44 +114,48 @@ def users(request):
 
         if not username:
             errors['username'] = "Username is required."
-            
+        else:
+            # Check if the username already exists
+            if User.objects.filter(username=username).exists():
+                errors['username'] = "Username already exists."
+
         if not password:
             errors['password'] = "Password is required." 
-        
+
         if not first_name:
             errors['first_name'] = "First name is required."
-            
+
         if not clearance_level:
             errors['clearance_level'] = "Clearance level is required."
-        
+
         if email:
             try:
                 validate_email(email)
             except ValidationError:
                 errors['email'] = "Invalid email format."
-        
+
         if phone and (not phone.isdigit() or not (6 <= len(phone) <= 15)):
             errors['phone'] = "Phone number must be between 6 and 15 digits."
-        
+
         if authenticate_clearance_level(user, [4]) and not llc_name:
             errors['llc_name'] = "LLC name is required."
-        
+
         if data.get('zip', ''):
             if not data.get('zip', '').isdigit() or len(data.get('zip', '')) > 5:
                 errors['zip'] = "ZIP must be at least 5 digits long."
-        
+
         if tax_id:
             if not tax_id.isdigit() or len(tax_id) < 8:
                 errors['tax_id'] = "Tax ID must be 8 digits long."
         elif clearance_level == 4:
             errors['tax_id'] = "Tax ID is required."
-        
+
         if email2:
             try:
                 validate_email(email2)
             except ValidationError:
                 errors['email2'] = "Invalid secondary email format."
-                
+
         if errors:
             return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -186,36 +186,34 @@ def users(request):
                 extended.state = data.get('state', '')
                 extended.zip = data.get('zip', '')
                 extended.billing_type = data.get('billing_type', UsersExtended.BillingTypeChoices.MONTHLY)
-                extended.tenant = tenant  # Ensure tenant is set
                 if warehouses:
-                    valid_warehouses = Warehouse.objects.filter(tenant=tenant, id__in=warehouses)
+                    valid_warehouses = Warehouse.objects.filter(warehouse_id__in=warehouses)
                     if len(warehouses) != valid_warehouses.count():
                         return Response({"error": "Invalid warehouses for this tenant"}, status=status.HTTP_400_BAD_REQUEST)
                     extended.warehouses.set(valid_warehouses)
                 extended.save()
 
                 return Response({"success": "New user created successfully"}, status=status.HTTP_201_CREATED)
-        
+
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response({"error": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-
 @api_view(['GET', 'DELETE', 'PUT'])
 @permission_classes([IsAuthenticated])
 def user_by_id(request, id):
     user = request.user
-    tenant = request.tenant  # Get the tenant context
+    tenant = request.tenant
 
     if request.method == "GET":
         try:
-            main_user = User.objects.get(id=id, tenant=tenant)  # Ensure tenant-specific query
-            target_user = UsersExtended.objects.get(id=id, tenant=tenant)
+            main_user = User.objects.get(id=id)
+            target_user = UsersExtended.objects.get(id=id)
         except (UsersExtended.DoesNotExist, User.DoesNotExist):
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        if user.extended.role not in ['Owner', 'Manager', 'Virtual Assistants']:
+        if authenticate_clearance_level(user, [1, 2, 3]):
             return Response({"error": "Unauthorized - Insufficient permissions"}, status=status.HTTP_403_FORBIDDEN)
 
         user_data = {
@@ -235,7 +233,7 @@ def user_by_id(request, id):
             'state': get_extended_field(main_user, 'state'),
             'zip': get_extended_field(main_user, 'zip'),
             'phone': get_extended_field(main_user, 'phone'),
-            'warehouses': get_extended_field(main_user, 'warehouses')
+            'warehouses': list(target_user.warehouses.values_list('warehouse_id', flat=True))
         }
 
         return Response({'user_data': user_data}, status=status.HTTP_200_OK)
@@ -245,13 +243,7 @@ def user_by_id(request, id):
         role = data.get('role')
 
         # Authorization checks based on role and tenant context
-        if authenticate_VA(user) and (role == "Owner" or role == "Manager"):
-            return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-        if authenticate_manager(user) and role == "Owner":
-            return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-        if authenticate_client(user):
-            return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-        if authenticate_prep(user):
+        if authenticate_clearance_level(user, [1, 2]):
             return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
         #------------------------------------------------------------ Validation ---------------------------------------------------------

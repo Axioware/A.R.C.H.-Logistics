@@ -14,10 +14,10 @@ from django.conf import settings
 # Create your models here.
 class UsersExtended(models.Model):
     CLEARANCE_CHOICES = [
-        (1, 'Level 1'),
-        (2, 'Level 2'),
-        (3, 'Level 3'),
-        (4, 'Level 4'),
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
     ]
 
     class BillingTypeChoices(models.TextChoices):
@@ -32,7 +32,8 @@ class UsersExtended(models.Model):
         choices=CLEARANCE_CHOICES, 
         null=False, 
         blank=False, 
-        verbose_name="Clearance Level"
+        verbose_name="Clearance Level",
+        default=1
     )
     tax_id = models.CharField(max_length=15, blank=True, null=True, verbose_name="Tax ID")
     address = models.CharField(max_length=255, default=None, verbose_name="Address", blank=True, null=True)

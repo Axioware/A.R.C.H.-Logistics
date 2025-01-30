@@ -8,16 +8,11 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken
 from django.utils import timezone
 from rest_framework import status, pagination
-# from .models import CustomUser  # Ensure this import points to wherever your CustomUser model is defined
 from django.contrib.auth.models import User
-# from  import UsersExtended
-# import pytz
-# from datetime import datetime
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_tenants.utils import schema_context
 from django_tenants.models import TenantMixin
 from django.core.exceptions import ObjectDoesNotExist
-
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_tenants.utils import schema_context
 from django.contrib.auth import get_user_model
@@ -69,22 +64,6 @@ class CustomJWTAuthentication(JWTAuthentication):
                 raise InvalidToken('Invalid Token.')
         return validated_token
 
-
-def authenticate_owner(user):
-    return user.extended.role == "Owner"
-
-def authenticate_manager(user):
-    return user.extended.role == "Manager"
-
-def authenticate_client(user):
-    return user.extended.role == "Client"
-
-def authenticate_VA(user):
-    return user.extended.role == "Virtual Assistant"
-
-def authenticate_prep(user):
-    return user.extended.role == "Prep Team"
-
 def make_superuser(username):
     try:
         user = User.objects.get(username=username)
@@ -121,3 +100,6 @@ class UserPagination(pagination.PageNumberPagination):
     page_size = 50
     page_size_query_param = 'page_size'
     max_page_size = 100
+    
+def authenticate_clearance_level(user, levels):
+    return user.extended.clearance_level not in levels
