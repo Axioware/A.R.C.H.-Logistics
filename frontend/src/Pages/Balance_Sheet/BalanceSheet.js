@@ -7,6 +7,7 @@ import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
 // import mainFunctions from "../../Assets/JS/script";
+import FilterOptionsBalance from "../../Components/Filter/FilterOptionsBalanceSheet"
 
 export default function All_Users() {
 
@@ -116,15 +117,11 @@ export default function All_Users() {
         />
 
         <div style={mainStyles.tableBackground}>
-          <TableTop
-            heading_text={'Balances'}
+        <TableTop
+            heading_text={'All Users'}
             search_function={getData}
             filter_function={() => {}}   
-            filters={(
-              <>
-                <button onClick={toggleDropdown}>Filter</button>
-              </>
-            )}
+            content={FilterOptionsBalance}
           />
 
           <TableContent
