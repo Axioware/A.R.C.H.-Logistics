@@ -8,6 +8,7 @@ import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
 // import mainFunctions from "../../Assets/JS/script";
+import FilterOptionsTransaction from "../../Components/Filter/FilterOptionsTransaction"
 
 export default function All_Users() {
   const [data, setData] = useState([]);
@@ -128,14 +129,10 @@ export default function All_Users() {
           </div>
 
           <TableTop
-            heading_text={'Transaction'}
+            heading_text={'All Users'}
             search_function={getData}
-            filter_function={() => {}}    
-            filters={(
-              <>
-                <button onClick={toggleDropdown}>Filter</button>
-              </>
-            )}
+            filter_function={() => {}}   
+            content={FilterOptionsTransaction}
           />
 
           <TableContent
