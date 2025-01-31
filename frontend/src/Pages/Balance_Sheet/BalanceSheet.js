@@ -6,7 +6,6 @@ import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
-// import mainFunctions from "../../Assets/JS/script";
 import FilterOptionsBalance from "../../Components/Filter/FilterOptionsBalanceSheet"
 
 export default function All_Users() {
@@ -24,11 +23,9 @@ export default function All_Users() {
     return storedState === null ? true : JSON.parse(storedState);
   });
 
-  // State for filters
   const [billingType, setBillingType] = useState('All');
   const [userStatus, setUserStatus] = useState('All');
   
-  // State to toggle the dropdown visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const getData = async () => {
@@ -93,7 +90,6 @@ export default function All_Users() {
     console.log("Filters applied:", { billingType, userStatus });
   };
 
-  // Toggle dropdown visibility on filter button click
   const toggleDropdown = () => {
     console.log("Dropdown toggled");
     setIsDropdownOpen(!isDropdownOpen);

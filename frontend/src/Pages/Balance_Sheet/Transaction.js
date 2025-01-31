@@ -7,7 +7,6 @@ import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
-// import mainFunctions from "../../Assets/JS/script";
 import FilterOptionsTransaction from "../../Components/Filter/FilterOptionsTransaction"
 
 export default function All_Users() {
@@ -24,14 +23,11 @@ export default function All_Users() {
     return storedState === null ? true : JSON.parse(storedState);
   });
 
-  // State for filters
   const [billingType, setBillingType] = useState('All');
   const [userStatus, setUserStatus] = useState('All');
   
-  // State to toggle the dropdown visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Get the current location from react-router
   const location = useLocation();
 
   const getData = async () => {
@@ -78,7 +74,6 @@ export default function All_Users() {
     }
   };
 
-  // Handle Reset and Apply for filters
   const handleReset = () => {
     setBillingType('All');
     setUserStatus('All');
@@ -88,7 +83,6 @@ export default function All_Users() {
     console.log("Filters applied:", { billingType, userStatus });
   };
 
-  // Toggle dropdown visibility on filter button click
   const toggleDropdown = () => {
     console.log("Dropdown toggled");
     setIsDropdownOpen(!isDropdownOpen);
@@ -164,11 +158,10 @@ const styles = {
   },
 };
 
-// Add the CSS for the AddButton component
 const addButtonStyles = {
   addButton: {
-    color: 'white', // default text color
-    backgroundColor: 'black', // default background color
+    color: 'white', 
+    backgroundColor: 'black', 
     width: 'auto',
     height: 'auto',
     border: 'none',

@@ -4,18 +4,13 @@ const FilterOptionUserManagement = ({ billing, user, ware, setbill, setuser, set
   const [billingType, setBillingType] = useState(billing);
   const [userStatus, setUserStatus] = useState(user);
   const [warehouse, setWarehouse] = useState(ware);
-  const [isApplied, setIsApplied] = useState(false); // State to track if "Apply" is clicked
+  const [isApplied, setIsApplied] = useState(false);
 
   const handleFilterChange = (type, option) => {
-    console.log('Filter changed: Type - ${type}, Option - ${option}');
-
-    if (type === 'Billing Type') {
-      setbill(option);
-    } else if (type === "User Status") {
-      setuser(option);
-    } else if (type === "Warehouses") {
-      setware(option);
-    }
+    console.log(`Filter changed: Type - ${type}, Option - ${option}`);
+    if (type === 'Billing Type') setbill(option);
+    else if (type === "User Status") setuser(option);
+    else if (type === "Warehouses") setware(option);
   };
 
   const handleReset = () => {
@@ -25,12 +20,12 @@ const FilterOptionUserManagement = ({ billing, user, ware, setbill, setuser, set
     setBillingType("All");
     setUserStatus("All");
     setWarehouse("All");
-    setIsApplied(false); // Reset the apply button state
+    setIsApplied(false);
     console.log("Filters reset to default values.");
   };
 
   const handleApply = () => {
-    setIsApplied(true); // Set the button to "applied" state
+    setIsApplied(true);
     console.log("Filters applied:", { billingType, userStatus, warehouse });
   };
 
@@ -58,7 +53,7 @@ const FilterOptionUserManagement = ({ billing, user, ware, setbill, setuser, set
           <div className="mb-4">
             <label className="block mb-2 mr-8 font-medium text-gray-700">User Status</label>
             <select
-              className="w-full p-2 border rounded-md shadow-sm transition duration-200 "
+              className="w-full p-2 border rounded-md shadow-sm transition duration-200"
               value={userStatus}
               onChange={(e) => {
                 setUserStatus(e.target.value);
@@ -75,7 +70,7 @@ const FilterOptionUserManagement = ({ billing, user, ware, setbill, setuser, set
         <div className="mb-4">
           <label className="block mb-2 font-medium text-gray-700">Warehouses</label>
           <select
-            className="w-full p-2 border rounded-md shadow-sm transition duration-200 "
+            className="w-full p-2 border rounded-md shadow-sm transition duration-200"
             value={warehouse}
             onChange={(e) => {
               setWarehouse(e.target.value);
@@ -90,13 +85,13 @@ const FilterOptionUserManagement = ({ billing, user, ware, setbill, setuser, set
 
         <div className="button-container">
           <button
-            className="reset-btn bg-gray-500 hover:bg-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+            className="reset-btn font-semibold py-2 px-4 rounded-lg transition duration-200"
             onClick={handleReset}
           >
             Reset
           </button>
           <button
-            className="apply-btn bg-black hover:bg-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+            className="apply-btn font-semibold py-2 px-4 rounded-lg transition duration-200"
             onClick={handleApply}
           >
             Apply
@@ -127,6 +122,21 @@ const FilterOptionUserManagement = ({ billing, user, ware, setbill, setuser, set
           gap: 12px;
         }
 
+        .apply-btn {
+          background-color: #171717;
+          color: white;
+        }
+
+        .apply-btn:hover {
+          background-color: white;
+          color: black;
+        }
+
+        .reset-btn {
+          background-color: #e6e6e6;
+          color: black;
+        }
+
         select {
           width: 100%;
           padding: 8px;
@@ -142,16 +152,14 @@ const FilterOptionUserManagement = ({ billing, user, ware, setbill, setuser, set
           color: black;
         }
 
-        /* Styling options */
         select option {
           background-color: white;
           color: black;
         }
 
-        /* Hover effect for options */
         select option:hover {
-          background-color: black !important; /* Ensure only option's background changes */
-          color: white !important; /* Change text color to white on hover */
+          background-color: black !important;
+          color: white !important;
         }
 
         label {
