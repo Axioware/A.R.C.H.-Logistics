@@ -118,7 +118,7 @@ export default function All_Users() {
 
         <div style={mainStyles.tableBackground}>
         <TableTop
-            heading_text={'All Users'}
+            heading_text={'Balance Sheet'}
             search_function={getData}
             filter_function={() => {}}   
             content={FilterOptionsBalance}

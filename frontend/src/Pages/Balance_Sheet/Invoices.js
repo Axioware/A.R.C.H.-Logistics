@@ -8,6 +8,7 @@ import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
 // import mainFunctions from "../../Assets/JS/script";
+import FilterOptionsInvoices from "../../Components/Filter/FilterOptionsInvoices"
 
 export default function All_Users() {
   const [data, setData] = useState([]);
@@ -129,12 +130,8 @@ export default function All_Users() {
           <TableTop
             heading_text={'Invoices'}
             search_function={getData}
-            filter_function={() => {}}    
-            filters={(
-              <>
-                <button onClick={toggleDropdown}>Filter</button>
-              </>
-            )}
+            filter_function={() => {}}   
+            content={FilterOptionsInvoices}
           />
 
           <TableContent

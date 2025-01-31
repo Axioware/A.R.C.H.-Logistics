@@ -129,7 +129,7 @@ export default function All_Users() {
           </div>
 
           <TableTop
-            heading_text={'All Users'}
+            heading_text={'Transaction'}
             search_function={getData}
             filter_function={() => {}}   
             content={FilterOptionsTransaction}
