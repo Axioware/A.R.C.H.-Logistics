@@ -4,10 +4,10 @@ from django.urls import path, include
 
 
 urlpatterns = [
-    path('api/services/', views.service_category, name='services'),
-    path('api/single-service/<int:pk>/', views.service_category_detail, name='list_received'),
-    path('api/categories/', views.order_category, name='categories'),
-    # path('api/single-category/<int:id>/', views.list_received, name='list_received'),
-    path('api/bins/', views.bins, name='bins'),
-    path('api/bins/<int:id>', views.single_bin, name='single-bin'),
-] 
+    path('api/orders/', views.orders, name='orders'),
+    path('api/single-order/<int:pk>/', views.order_detail, name='list_received'),
+    path('api/locations/', views.Locations, name='bins'),
+    path('api/locations/<int:id>', views.single_location, name='single-bin'),
+    path('api/warehouse/', views.warehouse, name='warehouse'),
+    path('api/warehouse/<int:id>/', views.warehouse_detail, name='warehouse_detail')
+]

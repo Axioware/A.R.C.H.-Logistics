@@ -3,24 +3,24 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-class Services(models.Model):
-    SERVICE_CATEGORY_CHOICES = [
+class Orders(models.Model):
+    ORDERS_CATEGORY_CHOICES = [
         ('FBA', 'FBA'),
         ('FBM', 'FBM'),
         ('Storage', 'Storage'),
         ('Other', 'Other'),
     ]
     
-    service_id = models.AutoField(primary_key=True)
+    order_id = models.AutoField(primary_key=True)
     category = models.CharField(
         max_length=10, 
-        choices=SERVICE_CATEGORY_CHOICES, 
+        choices=ORDERS_CATEGORY_CHOICES, 
     )
-    service_name = models.CharField(max_length=20)
-    service_charge = models.DecimalField(max_digits=10, decimal_places=2) 
+    order_name = models.CharField(max_length=20)
+    order_charge = models.DecimalField(max_digits=10, decimal_places=2) 
 
     def __str__(self):
-        return f"{self.service_name} - ({self.category})"
+        return f"{self.order_name} - ({self.category})"
 
 
 # class InventoryChargeChoices(models.TextChoices):

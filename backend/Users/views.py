@@ -20,28 +20,27 @@ def users(request):
     tenant = request.tenant
     if authenticate_clearance_level(user, [1, 2]):
         return Response({'errors': "Unauthorized - Insufficient clearance level"}, status=status.HTTP_403_FORBIDDEN)
+    with schema_context(tenant.schema_name):  
+        if request.method == "GET":
+            clearance_level = request.query_params.get('clearance_level')
+            billing_type = request.query_params.get('billing_type')
+            search = request.query_params.get('search')
+            active = request.query_params.get('is_active')
+            warehouses = request.query_params.get('warehouses')
+            all_data = request.query_params.get('all', 'false').lower() == 'true'
 
-    if request.method == "GET":
-        clearance_level = request.query_params.get('clearance_level')
-        billing_type = request.query_params.get('billing_type')
-        search = request.query_params.get('search')
-        active = request.query_params.get('is_active')
-        warehouses = request.query_params.get('warehouses')
-        all_data = request.query_params.get('all', 'false').lower() == 'true'
+            if clearance_level:
+                try:
+                    clearance_level = int(clearance_level)
+                    if clearance_level not in [1, 2, 3, 4]:
+                        return Response({"error": "Invalid clearance level"}, status=status.HTTP_400_BAD_REQUEST)
+                except ValueError:
+                    return Response({"error": "Clearance level must be an integer"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if clearance_level:
+            # Access control
             try:
-                clearance_level = int(clearance_level)
-                if clearance_level not in [1, 2, 3, 4]:
-                    return Response({"error": "Invalid clearance level"}, status=status.HTTP_400_BAD_REQUEST)
-            except ValueError:
-                return Response({"error": "Clearance level must be an integer"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Access control
-        try:
-            with schema_context(tenant.schema_name):  
                 queryset = User.objects.all().select_related('extended')
-
                 if clearance_level:
                     queryset = queryset.filter(extended__clearance_level=int(clearance_level))
                 if billing_type:
@@ -58,43 +57,43 @@ def users(request):
                 if not queryset.exists():
                     return Response({"error": "No users found matching the criteria"}, status=status.HTTP_404_NOT_FOUND)
 
-            # Manual data construction
-            result = [
-                {   
-                    'id': user.id,
-                    'username': user.username,
-                    'first_name': user.first_name,
-                    'last_name': user.last_name,
-                    'email': user.email,
-                    'is_active': user.is_active,
-                    'tax_id': getattr(user.extended, 'tax_id', None),
-                    'phone': getattr(user.extended, 'phone', None),
-                    'state': getattr(user.extended, 'state', None),
-                    'city': getattr(user.extended, 'city', None),
-                    'zip': getattr(user.extended, 'zip', None),
-                    'clearance_level': getattr(user.extended, 'clearance_level', None),
-                    'email2': getattr(user.extended, 'email2', None),
-                    'address': getattr(user.extended, 'address', None),
-                    'llc_name': getattr(user.extended, 'llc_name', None),
-                    'billing_type': getattr(user.extended, 'billing_type', None),
-                    'warehouses': list(getattr(user.extended, 'warehouses', []).values_list('warehouse_id', flat=True))
-                }
-                for user in queryset
-            ]
-            if all_data:
-                return Response({"results": result, "count": len(result)}, status=status.HTTP_200_OK)
-        
-            # Pagination
-            paginator = UserPagination()
-            page = paginator.paginate_queryset(result, request)
-            if page is not None:
-                return paginator.get_paginated_response(page)
-            return Response({'user_data': result}, status=status.HTTP_200_OK)
+                # Manual data construction
+                result = [
+                    {   
+                        'id': user.id,
+                        'username': user.username,
+                        'first_name': user.first_name,
+                        'last_name': user.last_name,
+                        'email': user.email,
+                        'is_active': user.is_active,
+                        'tax_id': getattr(user.extended, 'tax_id', None),
+                        'phone': getattr(user.extended, 'phone', None),
+                        'state': getattr(user.extended, 'state', None),
+                        'city': getattr(user.extended, 'city', None),
+                        'zip': getattr(user.extended, 'zip', None),
+                        'clearance_level': getattr(user.extended, 'clearance_level', None),
+                        'email2': getattr(user.extended, 'email2', None),
+                        'address': getattr(user.extended, 'address', None),
+                        'llc_name': getattr(user.extended, 'llc_name', None),
+                        'billing_type': getattr(user.extended, 'billing_type', None),
+                        'warehouses': list(getattr(user.extended, 'warehouses', []).values_list('warehouse_id', flat=True))
+                    }
+                    for user in queryset
+                ]
+                if all_data:
+                    return Response({"results": result, "count": len(result)}, status=status.HTTP_200_OK)
 
-        except OperationalError as e:
-            return Response({"error": "Database connection error", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        except Exception as e:
-            return Response({"error": "An unexpected error occurred", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                # Pagination
+                paginator = UserPagination()
+                page = paginator.paginate_queryset(result, request)
+                if page is not None:
+                    return paginator.get_paginated_response(page)
+                return Response({'user_data': result}, status=status.HTTP_200_OK)
+
+            except OperationalError as e:
+                return Response({"error": "Database connection error", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            except Exception as e:
+                return Response({"error": "An unexpected error occurred", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     with schema_context(tenant.schema_name):
         if request.method == "POST":
@@ -103,7 +102,7 @@ def users(request):
 
             # Access control
             if authenticate_clearance_level(user, [1, 2]):
-                return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'errors': "Unauthorized - Insufficient clearance level"}, status=status.HTTP_403_FORBIDDEN)
 
             #------------------------------------------------------------ Validation ---------------------------------------------------------
             errors = {}
@@ -220,7 +219,8 @@ def user_by_id(request, id):
         if request.method == "GET":
             try:
                 main_user = User.objects.get(id=id)
-                target_user = UsersExtended.objects.get(id=id)
+                # target_user = UsersExtended.objects.get(username=main_user.username)
+                # print("fsdklfjsdlfjsdl")
             except (UsersExtended.DoesNotExist, User.DoesNotExist):
                 return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -238,13 +238,14 @@ def user_by_id(request, id):
                 'address': get_extended_field(main_user, 'address'),
                 'llc_name': get_extended_field(main_user, 'llc_name'),
                 'billing_type': get_extended_field(main_user, 'billing_type'),
-                'role': get_extended_field(main_user, 'role'),
+                'clearance_level': get_extended_field(main_user, 'clearance_level'),
                 'email2': get_extended_field(main_user, 'email2'),
                 'city': get_extended_field(main_user, 'city'),
                 'state': get_extended_field(main_user, 'state'),
                 'zip': get_extended_field(main_user, 'zip'),
                 'phone': get_extended_field(main_user, 'phone'),
-                'warehouses': list(target_user.warehouses.values_list('warehouse_id', flat=True))
+                'warehouses': list(main_user.extended.warehouses.all().values_list('warehouse_id', flat=True))
+
             }
 
             return Response({'user_data': user_data}, status=status.HTTP_200_OK)
@@ -255,7 +256,7 @@ def user_by_id(request, id):
 
             # Authorization checks based on role and tenant context
             if authenticate_clearance_level(user, [1, 2]):
-                return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({"error": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
 
             #------------------------------------------------------------ Validation ---------------------------------------------------------
             errors = {}
@@ -267,11 +268,7 @@ def user_by_id(request, id):
             llc_name = data.get('llc_name', '')
             tax_id = data.get('tax_id', '')
             email2 = data.get('email2', '')
-            is_active = data.get('is_active', '')
-
-            if not is_active:
-                errors['is_active'] = "is_active is required."
-
+        
             if not first_name:
                 errors['first_name'] = "First name is required."
 
@@ -310,7 +307,7 @@ def user_by_id(request, id):
             #------------------------------------------------------------ Validation ---------------------------------------------------------
 
             try:
-                target_user = User.objects.get(id=id, tenant=tenant)  # Ensure tenant-specific query
+                target_user = User.objects.get(id=id)  # Ensure tenant-specific query
                 target_extended = target_user.extended
 
                 # Update user and extended fields
@@ -340,7 +337,7 @@ def user_by_id(request, id):
                     if data.get('email2') is not None:
                         target_extended.email2 = data.get('email2')
                     if data.get('warehouses') is not None:
-                        target_extended.warehouses = data.get('warehouses')
+                        target_extended.warehouses.set(data.get('warehouses'))
 
                     # Save changes
                     target_user.save()
@@ -359,10 +356,10 @@ def user_by_id(request, id):
 
             # Authorization checks based on role and tenant context
             if authenticate_clearance_level(user, [1, 2, 3]):
-                return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({"error": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
 
             try:
-                target_user = User.objects.get(id=id, tenant=tenant)  # Ensure tenant-specific query
+                target_user = User.objects.get(id=id)
                 target_user.delete()
                 return Response({'success': "User deleted"}, status=status.HTTP_200_OK)
             except User.DoesNotExist:

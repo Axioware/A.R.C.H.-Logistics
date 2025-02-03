@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from Structures.models import Services
 from Inventory.models import Item
 from Orders.models import Orders, SubOrders
 import os
@@ -61,5 +60,5 @@ class Charges(models.Model):
 
 class CustomRates(models.Model):
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_id_custom_rates")
-    service_id = models.ForeignKey(Services, on_delete=models.CASCADE, related_name="service_id_custom_rates")
+    service_id = models.ForeignKey(Orders, on_delete=models.CASCADE, related_name="service_id_custom_rates")
     custom_charge = models.DecimalField(max_digits=12, decimal_places=2)

@@ -1,14 +1,14 @@
 from django.db import models
 from Users.models import User
 from Inventory.models import Item, Inventory
-from Structures.models import Services, Locations
+from Structures.models import Locations, Orders
 from django.utils import timezone
 from django.conf import settings
 
-# Create your models here.
-class Orders(models.Model):
-    order_id = models.CharField(max_length=50, primary_key=True)
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
+# # Create your models here.
+# class Orders(models.Model):
+#     order_id = models.CharField(max_length=50, primary_key=True)
+#     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
 
 class SubOrders(models.Model): #TODO Completed Orders
 
@@ -23,22 +23,22 @@ class SubOrders(models.Model): #TODO Completed Orders
     ]
     
     def pdf_directory_path_fnksu(self, name):
-        return 'fnsku/{0}_{1}_{2}_{3}_{4}'.format(self.order_id, self.item_id, self.service_id, self.sub_order_id, name)
+        return 'fnsku/{0}_{1}_{2}_{3}_{4}'.format(self.order_id, self.item_id, self.order_id, self.sub_order_id, name)
     
     def pdf_directory_path_additional(self):
-        return 'fnsku/{0}_{1}_{2}_{3}_additional'.format(self.order_id, self.item_id, self.sub_order_id, self.service_id)
+        return 'fnsku/{0}_{1}_{2}_{3}_additional'.format(self.order_id, self.item_id, self.sub_order_id, self.order_id)
     
     def pdf_directory_path_fba(self):
-        return 'fba/{0}_{1}_{2}_{3}'.format(self.order_id, self.item_id, self.service_id, self.sub_order_id)
+        return 'fba/{0}_{1}_{2}_{3}'.format(self.order_id, self.item_id, self.order_id, self.sub_order_id)
 
     sub_order_id = models.CharField(max_length=100, primary_key=True)
     order_id = models.ForeignKey(Orders, on_delete=models.DO_NOTHING)
     item_id = models.ManyToManyField(Item, related_name="item_id_sub_order")
-    service_id = models.ForeignKey(Services, on_delete=models.PROTECT, related_name="service_id_sub_order")
+    order_id = models.ForeignKey(Orders, on_delete=models.PROTECT, related_name="order_id_sub_order")
     location_id = models.ForeignKey(Locations, on_delete=models.SET_NULL, null=True, blank=True)
     no_bundles = models.IntegerField(default=None, null=True, blank=True)
     bundle_quantity = models.IntegerField(default=None, null=True, blank=True)
-    additional_service = models.CharField(max_length=40, blank=True, null=True)
+    additional_order = models.CharField(max_length=40, blank=True, null=True)
     additional_format = models.CharField(max_length=40, blank=True, null=True)
     additional_format_text = models.CharField(max_length=100, blank=True, null=True, default=None)
     additional_format_file = models.FileField(upload_to=pdf_directory_path_additional, blank=True, null=True, default=None)
@@ -49,7 +49,7 @@ class SubOrders(models.Model): #TODO Completed Orders
     fnsku_label = models.FileField(upload_to=pdf_directory_path_fnksu, blank=True, null=True, default=None)
     box_label = models.FileField(upload_to=pdf_directory_path_fba, blank=True, null=True, default=None)
     placed_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
-    active_service_start_date = models.DateTimeField(blank=True, null=True)
+    active_order_start_date = models.DateTimeField(blank=True, null=True)
     state = models.CharField(max_length=50, null=True, blank=True)
     phase = models.CharField(max_length=15, choices=PHASE_CHOICES, null=True)
     # from_inventory = models.BooleanField(default=False, blank=True, null=True)
