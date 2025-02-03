@@ -7,8 +7,7 @@ import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
-// import mainFunctions from "../../Assets/JS/script";
-import FilterOptionsInvoices from "../../Components/Filter/FilterOptionsInvoices"
+import FilterOptionsInvoices from "../../Components/Filter/FilterOptionsInvoices";
 
 export default function All_Users() {
   const [data, setData] = useState([]);
@@ -17,7 +16,7 @@ export default function All_Users() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
-  const [clearance, setclearance] = useState(1);
+  const [clearance, setClearance] = useState(1);
 
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
@@ -41,7 +40,7 @@ export default function All_Users() {
     if (response && response.error) {
       switch (response.error) {
         case 400:
-          setErrorCode(401);
+          setErrorCode(400);
           break;
         case 401:
           setErrorCode(401);
@@ -117,13 +116,15 @@ export default function All_Users() {
               text="Transaction"
               text_color={[255, 255, 255]}  // White text color
               path='/transaction'
-              background_color="black"     // Black background color
+              // background_color="black"     // Black background color
+              style={addButtonStyles.addButton}
             />
             <AddButton
               text="Invoice"
               text_color={[0, 0, 0]}       // Black text color
               path='/invoices'
               background_color="white"     // White background color
+              style={addButtonStyles.addButton}
             />
           </div>
 
@@ -158,7 +159,7 @@ const styles = {
     display: 'flex',            // Align children horizontally
     gap: '10px',                // Add spacing between buttons
     marginBottom: '20px',       // Optional margin for spacing
-    justifyContent: 'flex-start', // Align buttons to the left
+    // justifyContent: 'flex-start', // Align buttons to the left
     width: '100%',              // Ensure it takes up the full available width
   },
 };
@@ -172,13 +173,17 @@ const addButtonStyles = {
     height: 'auto',
     border: 'none',
     borderRadius: '5px',
-    padding: '10px',
+    padding: '10px 20px',
     cursor: 'pointer',
     fontSize: '1rem',
     textAlign: 'center',
-    boxSizing: 'border-box',
-    transition: 'all 0.3s ease',
+    display: 'flex',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // boxSizing: 'border-box',
+    // transition: 'all 0.3s ease',
     boxShadow: '0px 10px 10px rgba(0, 0, 0, 0.1)',
+    
   },
   addButtonHover: {
     backgroundColor: 'rgba(255, 255, 255, 0.8)',

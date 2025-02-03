@@ -6,7 +6,6 @@ import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
-// import mainFunctions from "../../Assets/JS/script";
 import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement"
 
 export default function All_Users() {

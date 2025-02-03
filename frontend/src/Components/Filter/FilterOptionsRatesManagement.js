@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, setware }) => {
+const FilterOptionsRatesManagement = ({ billing, user, ware, setbill, setuser, setware }) => {
   const [billingType, setBillingType] = useState(billing);
   const [userStatus, setUserStatus] = useState(user);
   const [warehouse, setWarehouse] = useState(ware);
@@ -170,4 +170,4 @@ const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, se
   );
 };
 
-export default FilterOptionsUserManagement;
+export default FilterOptionsRatesManagement;

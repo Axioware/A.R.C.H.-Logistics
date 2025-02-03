@@ -7,7 +7,7 @@ const FilterOptionsTransaction = ({ billing, user, ware, setbill, setuser, setwa
   const [isApplied, setIsApplied] = useState(false); // State to track if "Apply" is clicked
 
   const handleFilterChange = (type, option) => {
-    console.log('Filter changed: Type - ${type}, Option - ${option}');
+    console.log(`Filter changed: Type - ${type}, Option - ${option}`);
 
     if (type === 'Billing Type') {
       setbill(option);
@@ -90,13 +90,13 @@ const FilterOptionsTransaction = ({ billing, user, ware, setbill, setuser, setwa
 
         <div className="button-container">
           <button
-            className="reset-btn bg-gray-500 hover:bg-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+            className="reset-btn bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
             onClick={handleReset}
           >
             Reset
           </button>
           <button
-            className="apply-btn bg-black hover:bg-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+            className="apply-btn bg-black hover:bg-white hover:text-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
             onClick={handleApply}
           >
             Apply
@@ -146,12 +146,6 @@ const FilterOptionsTransaction = ({ billing, user, ware, setbill, setuser, setwa
         select option {
           background-color: white;
           color: black;
-        }
-
-        /* Hover effect for options */
-        select option:hover {
-          background-color: black !important; /* Ensure only option's background changes */
-          color: white !important; /* Change text color to white on hover */
         }
 
         label {
