@@ -64,6 +64,9 @@ export default function AddButton({
             transition: all 0.3s ease; /* Smooth hover effect */
             // border: 2px solid black;
             box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+            display:flex;
+            white-space: nowrap;
+
           }
 
           .add-button:hover {

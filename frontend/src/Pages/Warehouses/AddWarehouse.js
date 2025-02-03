@@ -6,13 +6,24 @@ import PageHeading from '../../Components/Table_Components/PageHeading';
 import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
 import { important, position } from "polished";
+import mainStyles from "../../Assets/CSS/styles";
+import SideBar from "../../Components/General/Sidebar";
+import { important, position } from "polished";
 
 const AddLocation = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted'); 
+    console.log('Form submitted'); 
     alert('Warehouse added successfully!');
   };
+
+  const [clearance, setclearance] = useState(1);
+  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
+      const storedState = localStorage.getItem("sidebarclosed");
+      return storedState === null ? true : JSON.parse(storedState);
+    });
+  
 
   const [clearance, setclearance] = useState(1);
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
@@ -27,14 +38,23 @@ const AddLocation = () => {
       backgroundColor:'f7f6f6',
   },
 
+      padding: "10px 0px 50px 0px",
+      backgroundColor:'f7f6f6',
+  },
+
   form: {
+      position:'relative',
+      alignSelf:'flex-start',
       position:'relative',
       alignSelf:'flex-start',
       display: 'grid',
       gridTemplateColumns: '1fr 1fr 1fr 1fr', // Two columns
       gap: '20px', // Space between fields
       // border: '2px solid red',
+      // border: '2px solid red',
       marginLeft:'20px',
+      marginRight:'30px',
+      gap:'20px',
       marginRight:'30px',
       gap:'20px',
       marginTop:'35px',
@@ -46,11 +66,22 @@ const AddLocation = () => {
     marginTop:"10px",
   },
   
+
+  select: {
+
+    marginLeft:"40px",
+    marginTop:"10px",
+  },
+  
   buttonContainer: {
+      // border: '2px solid black',
+      alignSelf:'flex-end',
       // border: '2px solid black',
       alignSelf:'flex-end',
       display: 'flex',
       flexDirection: 'row',
+      width:'250px',
+      gap: '20px',
       width:'250px',
       gap: '20px',
       marginTop: '20px',
@@ -61,10 +92,43 @@ const AddLocation = () => {
     // border: '2px solid purple',
     marginLeft:'20px',
     marginTop:'15px',
+  headingcontainer:{
+    alignSelf: 'flex-start',
+    // border: '2px solid purple',
+    marginLeft:'20px',
+    marginTop:'15px',
 
   },
 
+
   PageHeading:{
+    marginLeft:'10px',
+    marginTop:'25px',  
+  },
+
+  RoleContainer: {
+    alignSelf: 'flex-end',
+    marginTop:'10px',  
+    marginLeft:"10px",
+  },
+
+  label: {
+    marginTop:'10px',  
+    marginLeft:"20px",
+    display:'block',
+    fontWeight:'700px',
+  },
+
+  select: {
+    marginTop:'15px',  
+    marginLeft:"10px",
+    display:'block',
+    width:'260px',
+    height:'45px',
+    borderRadius:'10px',
+    border: '1px solid lightgrey',
+    boxShadow: '1px 1px 1px 1px lightgrey',
+  },
     marginLeft:'10px',
     marginTop:'25px',  
   },
@@ -95,6 +159,14 @@ const AddLocation = () => {
   };
   
   return (
+  <div>
+      {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      ) : (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      )}
+        
+      <div style={mainStyles.centerContent(isSidebarClosed)}>
   <div>
       {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
         <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
@@ -144,4 +216,4 @@ const AddLocation = () => {
   );
 };
 
-export default AddLocation;
+export default AddWarehouse;

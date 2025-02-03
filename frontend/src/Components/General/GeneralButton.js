@@ -1,37 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const GeneralButton = ({
   text, 
-  text_color = [255, 255, 255], // Default text color: white
-  button_color = [23, 23, 23], // Default button color: dark
+  text_color = [255, 255, 255],
+  button_color = [23, 23, 23],
   name,
   id, 
   font_size,
-  submit = false, // Default button type (false for a standard button)
+  submit = false,
   width,  
   height, 
   border,
-  func = () => {}, // Default function: no-op
+  func = () => {},
 }) => {
-  // Function to safely handle RGB array and convert it to a CSS string
+  const [isHovered, setIsHovered] = useState(false);
+
   const toRGBString = (colorArray) => {
-    // Check if it's an array and has exactly three elements
     if (Array.isArray(colorArray) && colorArray.length === 3) {
       return `rgb(${colorArray.join(', ')})`;
     }
-    // Fallback if not a valid array
-    return 'rgb(255, 255, 255)'; // default to white if there's an issue
+    return 'rgb(255, 255, 255)';
   };
 
   const buttonStyle = {
-    backgroundColor: toRGBString(button_color),
-    color: toRGBString(text_color),
+    backgroundColor: isHovered ? toRGBString(text_color) : toRGBString(button_color),
+    color: isHovered ? toRGBString(button_color) : toRGBString(text_color),
     width,
     height,
     border: border ? `2px solid ${border}` : 'none',
     borderRadius: '5px',
     cursor: 'pointer',
-    fontSize: font_size || '16px' // Provide a sensible default for fontSize
+    fontSize: font_size || '16px',
+    transition: 'all 0.3s ease' // Smooth transition for hover effect
   };
 
   return (
@@ -40,7 +40,9 @@ const GeneralButton = ({
       type={submit ? "submit" : "button"}
       name={name}
       id={id}
-      onClick={func} // Attach the function to the onClick event
+      onClick={func}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {text}
     </button>

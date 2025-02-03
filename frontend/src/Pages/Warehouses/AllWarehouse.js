@@ -1,22 +1,38 @@
 import React, { useState, useEffect } from "react";
-import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
 import NavPath from '../../Components/General/NavPath';
-import archlogo from '../../Assets/Images/logo1.png';
 import TableContent from '../../Components/Table_Components/TableContent';
 import TableTop from '../../Components/Table_Components/TableTop';
 import fetchData from '../../utils/fetch_data';
+import AddButton from '../../Components/Table_Components/AddButton';
+import SideBar from '../../Components/General/Sidebar';
+import mainStyles from "../../Assets/CSS/styles";
+// import mainFunctions from "../../Assets/JS/script";
+import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement"
 
-export default function All_Users() {
+export default function AllWarehouse() {
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [clearance, setclearance] = useState(1);
 
-  const fetchUsers = async () => {
-    const url = `https://api.example.com/users?page=${currentPage}`;
+  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
+    const storedState = localStorage.getItem("sidebarclosed");
+    return storedState === null ? true : JSON.parse(storedState);
+  });
+
+  // State for filters
+  const [billingType, setBillingType] = useState('All');
+  const [userStatus, setUserStatus] = useState('All');
+  
+  // State to toggle the dropdown visibility
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const getData = async () => {
+    const url = `https://api.example.com/users?page=${currentPage}&billingType=${billingType}&userStatus=${userStatus}`;
     const response = await fetchData(setLoading, setSuccess, url);
 
     if (response && response.error) {
@@ -44,7 +60,15 @@ export default function All_Users() {
   };
 
   useEffect(() => {
-    fetchUsers();
+    // if (!mainFunctions.generalValidate()) {
+      
+    // } 
+    // if (!mainFunctions.employeeValidate()) {
+
+    // }
+    // var data = mainFunctions.getUserData();
+    // setclearance(data.clearance);
+    getData();
   }, [currentPage]);
 
   const handleNext = () => {
@@ -59,114 +83,69 @@ export default function All_Users() {
     }
   };
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+  // Handle Reset and Apply for filters
+  const handleReset = () => {
+    setBillingType('All');
+    setUserStatus('All');
   };
 
-  const styles = {
-    mainContent: {
-      flex: 1,
-      padding: "10px",
-      transition: "margin-left 0.5s ease",
-      marginLeft: isSidebarOpen ? "18%" : "4%",
-      '@media (max-width: 768px)': {
-        marginLeft: isSidebarOpen ? "18%" : "4%", 
-      },
-      '@media (max-width: 480px)': {
-        marginLeft: "0%", 
-      },
-    },
-    container: {
-      width: "95%",
-      margin: "20px 0px 0px 0px", 
-      '@media (max-width: 768px)': {
-        width: "100%",
-        padding: "0 10px",
-      },
-      '@media (max-width: 480px)': {
-        padding: "0 5px", 
-      },
-    },
-    lightGreyBackground: {
-      backgroundColor: '#f7f6f6',
-      padding: '20px 0px 40px 60px',
-      borderRadius: '8px',
-      minHeight: '10vh',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '95%',
-      margin: '20px 0px 0px 0px',
-      boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
-      '@media (max-width: 768px)': {
-        width: "100%", 
-        padding: '15px', 
-      },
-      '@media (max-width: 480px)': {
-        padding: '10px', // Further reduce padding for very small screens
-      },
-    },
+  const handleApply = () => {
+    console.log("Filters applied:", { billingType, userStatus });
+  };
+
+  // Toggle dropdown visibility on filter button click
+  const toggleDropdown = () => {
+    console.log("Dropdown toggled");
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
     <div>
-      <NavBarWithSidebar
-        text_color={[255, 255, 255]}
-        logo={archlogo}
-        company_name="A.R.C.H Labs"
-        username="Owner"
-        icons={[
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-        ]}
-        names={[
-          ["User Management", "All User", "Add User"],
-          ["Management", "Add Order", "Delete Order"],
-          ["Inventory", "Add Item", "Delete Item"],
-        ]}
-        routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
-        sidebar_width="14%"
-        sidebar_height="100vh"
-        toggleSidebar_func={toggleSidebar}
-        isSidebarOpen_p={isSidebarOpen}
-      />
+      {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      ) : (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      )}
+      <div style={mainStyles.centerContent(isSidebarClosed)}>
 
-      <div style={styles.mainContent}>
         <NavPath
-          text={["Setting", "WareHouses"]}
-          paths={["/setting", "/warehouses"]}
+          text={["Home", "All Warehouses"]}
+          paths={["/home", "/warehouses"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
-          width="95%"
+          width="100%"
           height="50px"
         />
 
-        <div style={styles.lightGreyBackground}>
+        <AddButton
+          text="Add Warehouse"
+          text_color={[255, 255, 255]}
+          path='/add-warehouse'
+          width="auto"
+        />
 
-          <TableTop 
-          heading_text={'WareHouses'}
+        <div style={mainStyles.tableBackground}>
+          <TableTop
+            heading_text={'All Warehouse'}
+            search_function={getData}
+            filter_function={() => {}}   
+            content={filterOptionUser}
           />
 
           <TableContent
-            table_headings={['Tax ID', 'Name', 'Country', 'Balance', 'State', 'City', 'Email', 'Phone']}
+            table_headings={['ID', 'Name', 'Country', 'State', 'City', 'Email', 'Phone']}
             last_column={true}
             loading={loading}
             success={success}
             prev_button={handlePrev}
             next_button={handleNext}
-            fetchData={fetchUsers}
+            fetchData={getData}
             data={data}
             currentPage={currentPage}
             totalPages={totalPages}
           />
-
         </div>
       </div>
     </div>
   );
-  
-}
-
-
+}  
