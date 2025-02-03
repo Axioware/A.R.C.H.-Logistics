@@ -1,194 +1,138 @@
-import React, { useState } from "react";
-import GeneralField from '../../Components/General/GeneralField'; // Ensure this is the correct path and exported as default
-import GeneralButton from '../../Components/General/GeneralButton'; // Ensure this is the correct path and exported as default
-import NavBarWithSidebar from '../../Components/General/TopSideNavBar'; // Ensure this is the correct path and exported as default
-import archlogo from '../../Assets/Images/logo1.png';
-import NavPath from '../../Components/General/NavPath'; // Ensure this is the correct path and exported as default
-import PageHeading from '../../Components/Table_Components/PageHeading'; // Ensure this is the correct path and exported as default
-import Forbidden from '../../Components/Error_Components/Forbidden'; // Ensure this is the correct path and exported as default
-import SessionExpiredModal from '../../Components/Modals/SessionExpired'; // Ensure this is the correct path and exported as default
-
-const SuccessModal = ({ message, onClose }) => (
-  <div className="modal success-modal">
-    <div className="modal-content">
-      <h2>Success</h2>
-      <p>{message}</p>
-      <button className="close-btn" onClick={onClose}>Close</button>
-    </div>
-  </div>
-);
+import React, { useState, useEffect } from "react";
+import GeneralField from '../../Components/General/GeneralField';
+import GeneralButton from '../../Components/General/GeneralButton';
+import NavPath from '../../Components/General/NavPath';
+import PageHeading from '../../Components/Table_Components/PageHeading';
+import mainStyles from "../../Assets/CSS/styles";
+import SideBar from "../../Components/General/Sidebar";
+import { important, position } from "polished";
 
 const AddLocation = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [sessionExpired, setSessionExpired] = useState(false);
-  const [forbidden, setForbidden] = useState(false);
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch('/api/add-location', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}), // Dummy payload
-      });
-
-      const result = await response.json();
-
-      if (response.status === 401) {
-        setSessionExpired(true);
-      } else if (response.status === 403) {
-        setForbidden(true);
-      } else if (response.status === 400) {
-        setError(result.error);
-      } else if (response.status >= 500) {
-        setError('Internal Server Error');
-      } else if (response.status >= 200 && response.status < 300) {
-        setSuccess(true);
-      }
-    } catch (err) {
-      setError('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-    }
+    console.log('Form submitted'); 
+    alert('Warehouse added successfully!');
   };
 
-  const handleCancel = () => {
-    window.history.back();
-  };
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  const [clearance, setclearance] = useState(1);
+  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
+      const storedState = localStorage.getItem("sidebarclosed");
+      return storedState === null ? true : JSON.parse(storedState);
+    });
+  
 
   const styles = {
     mainContent: {
-      flex: 1,
-      padding: "10px",
-      transition: "margin-left 0.5s ease",
-      marginLeft: isSidebarOpen ? "18%" : "4%",
-      marginRight: "4%",
-      height: "80%",
-    },
-    
-    form: {
+      padding: "10px 0px 50px 0px",
+      backgroundColor:'f7f6f6',
+  },
+
+  form: {
+      position:'relative',
+      alignSelf:'flex-start',
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr 1fr 1fr',
-      gap: '20px',
-    },
-    container: {
-      backgroundColor: '#f7f6f6',
-      padding: '20px',
-      borderRadius: '8px',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      height: '100%',
-      boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
-    },
-    buttonContainer: {
-      border: '2px solid #F5F5F5',
+      gridTemplateColumns: '1fr 1fr 1fr 1fr', // Two columns
+      gap: '20px', // Space between fields
+      // border: '2px solid red',
+      marginLeft:'6px',
+      marginRight:'30px',
+      gap:'20px',
+      marginTop:'35px',
+  },
+
+  select: {
+
+    marginLeft:"40px",
+    marginTop:"10px",
+  },
+  
+  buttonContainer: {
+      // border: '2px solid black',
+      alignSelf:'flex-end',
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'flex-end',
-      width: '100%',
-      gap: '10px',
+      width:'250px',
+      gap: '20px',
       marginTop: '20px',
-    },
-    heading: {
-      marginBottom: '20px',
-    },
+      lineHeight:'40px',
+  },
+  headingcontainer:{
+    alignSelf: 'flex-start',
+    // border: '2px solid purple',
+    marginLeft:'20px',
+    marginTop:'15px',
+
+  },
+
+  PageHeading:{
+    marginLeft:'10px',
+    marginTop:'25px',  
+  },
+
+  RoleContainer: {
+    alignSelf: 'flex-end',
+    marginTop:'10px',  
+    marginLeft:"10px",
+  },
+
+  label: {
+    marginTop:'10px',  
+    marginLeft:"20px",
+    display:'block',
+    fontWeight:'700px',
+  },
+
+  select: {
+    marginTop:'15px',  
+    marginLeft:"10px",
+    display:'block',
+    width:'260px',
+    height:'45px',
+    borderRadius:'10px',
+    border: '1px solid lightgrey',
+    boxShadow: '1px 1px 1px 1px lightgrey',
+  },
   };
-
+  
   return (
-    <div>
-      <NavBarWithSidebar
-        text_color={[255, 255, 255]}
-        logo={archlogo}
-        company_name="A.R.C.H Labs"
-        username="Owner"
-        icons={[
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-        ]}
-        names={[
-          ["User Management", "All User", "Add User"],
-          ["Management", "Add Order", "Delete Order"],
-          ["Inventory", "Add Item", "Delete Item"],
-        ]}
-        routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
-        sidebar_width="14%"
-        sidebar_height="100vh"
-        toggleSidebar_func={toggleSidebar}
-        isSidebarOpen_p={isSidebarOpen}
-      />
+  <div>
+      {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      ) : (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      )}
+        
+      <div style={mainStyles.centerContent(isSidebarClosed)}>
+        <div style={styles.mainContent}>
+          <NavPath
+            text={['Home', 'All Locations', 'Add Location']}
+            paths={['/home', '/all-location', '/add-location']}
+            text_color={[255, 255, 255]}
+            background_color={[23, 23, 23]}
+            hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
+            width="100%"
+            height="50px"
+          />
+          
+          <div id="tableBackground" style={mainStyles.tableBackground}>
 
-      <div style={styles.mainContent}>
-        <NavPath
-          text={['Setting', 'Location', 'Add Location']}
-          paths={['/home', '/add-location', '/add-location']}
-          text_color={[255, 255, 255]}
-          background_color={[23, 23, 23]}
-          hyperlink_size={[["10%", "55%"], ["40%", "50%"], ["4%", "4%"]]}
-          width="100%"
-          height="50px"
-        />
-
-        <div style={styles.container}>
-          <div style={styles.heading}>
+          <div id="headingcontainer" style={styles.headingcontainer}>
             <PageHeading text="Add Location" />
           </div>
 
-          <form style={styles.form} onSubmit={handleSubmit}>
-            <GeneralField
-              label="Name *"
-              field_type="text"
-              hint="Enter the name of the location (e.g., Warehouse A)"
-              required
-            />
-            <GeneralField
-              label="Type *"
-              field_type="text"
-              hint="Select the type of location"
-              required
-            />
-            <GeneralField
-              label="Warehouse *"
-              field_type="text"
-              hint="Enter the warehouse name (e.g., Main Warehouse)"
-              required
-            />
-          </form>
-
-          <div id="buttonContainer" style={styles.buttonContainer}>
-            <GeneralButton 
-              text="Cancel" 
-              width="120px" 
-              height="40px" 
-              button_color={["230", "230", "230"]} 
-              text_color={["0", "0", "0"]} 
-              func={handleCancel}
-            />
-            <GeneralButton 
-              text="Add" 
-              type="submit" 
-              width="120px" 
-              height="40px" 
-              disabled={loading}
-            />
+            <form id="form" style={styles.form} onSubmit={handleSubmit}>
+            <GeneralField label="Name" field_type="text" hint="Enter location name" required={true}/>
+            <GeneralField label="Type" field_type="text" hint="Select the type of location" required={true} />
+            <GeneralField label="Warehouse" field_type="text" hint="Enter the warehouse name" required={true} />
+              
+            </form>
+            <div id="buttonContainer" style={styles.buttonContainer}>
+                  <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]}  text_color={["0", "0", "0"]}   />
+                  <GeneralButton text="Add" type="submit" width="100px" height="100%" />
+            </div>
           </div>
         </div>
       </div>
-
-      {success && <SuccessModal message="Location Added Successfully" onClose={() => (window.location.href = '/add-warehouses')} />}
     </div>
   );
 };

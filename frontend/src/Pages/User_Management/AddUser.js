@@ -33,6 +33,7 @@ const AddUser = () => {
       // border: '2px solid white',
       marginLeft:'20px',
       marginTop:'35px',
+      marginRight:'100px',
   },
 
   select: {
@@ -43,30 +44,20 @@ const AddUser = () => {
 
   buttonContainer: {
     // border: '2px solid white',
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      height:'70%', // Ensure container extends full width
-      gap: '10px',
-      marginTop: '20px',
-      lineHeight:'40px',
-  },
-
-  container:{
-    // border: '2px solid black',
-    borderRadius:'8px',
-    backgroundColor :"#F5F5F5",
-    padding: '20px',
-    gap: '10px',
-    boxShadow: '2px 2px 2px 2px lightgrey',
-    marginLeft:'10px',
+    alignSelf:'flex-end',
+    display: 'flex',
+    flexDirection: 'row',
+    width:'250px',
+    gap: '20px',
+    marginTop: '20px',
+    lineHeight:'40px',
   },
 
   headingcontainer:{
-    // border: '2px solid white',
-    marginLeft:'30px',
-    marginTop:'24px',
-
+    alignSelf: 'flex-start',
+    // border: '2px solid purple',
+    marginLeft:'20px',
+    marginTop:'15px',
   },
 
   PageHeading:{
@@ -75,11 +66,13 @@ const AddUser = () => {
   },
 
   RoleContainer: {
+    alignSelf: 'flex-start',
     marginTop:'10px',  
     marginLeft:"10px",
   },
 
   label: {
+
     marginTop:'10px',  
     marginLeft:"20px",
     display:'block',
@@ -119,7 +112,9 @@ const AddUser = () => {
           />
 
           
-          <div id="container" style={styles.container}>
+          {/* <div id="container" style={styles.container}> */}
+          <div id="tableBackground" style={mainStyles.tableBackground}>
+
 
           <div id="headingcontainer" style={styles.headingcontainer}>
             <PageHeading text="Add User" />
@@ -155,8 +150,8 @@ const AddUser = () => {
              
           </form>
             <div id="buttonContainer" style={styles.buttonContainer}>
-                  <GeneralButton text="Cancel" width="10%" height="100%" button_color={["230", "230", "230"]}  text_color={["0", "0", "0"]}   />
-                  <GeneralButton text="Add" type="submit" width="10%" height="100%" />
+              <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]}  text_color={["0", "0", "0"]}   />
+              <GeneralButton text="Add" type="submit" width="100px" height="100%" />
             </div>
           </div>
         </div>
