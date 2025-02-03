@@ -1,9 +1,7 @@
-from rest_framework import status, pagination
+from rest_framework import pagination
 from django.contrib.auth.models import User
 from Users.models import UsersExtended
 # Dimension
-import pytz
-from datetime import datetime
 
 
 def update_user(username, phone, email2, role, tax_id, address, billing_type, llc_name, state, city, zip):

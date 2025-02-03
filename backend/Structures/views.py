@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import *
 from Arch_Logistics.helpers import *
-import json
 from django.db import OperationalError, transaction
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt

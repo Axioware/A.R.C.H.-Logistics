@@ -1,9 +1,7 @@
 from django.db import models
-from Users.models import User
 from Inventory.models import Item, Inventory
 from Structures.models import Locations, Orders
 from django.utils import timezone
-from django.conf import settings
 
 # # Create your models here.
 # class Orders(models.Model):
