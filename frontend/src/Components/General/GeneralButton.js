@@ -7,7 +7,7 @@ const GeneralButton = ({
   name,
   id, 
   font_size,
-  submit = false,
+  submit = true,
   width,  
   height, 
   border,

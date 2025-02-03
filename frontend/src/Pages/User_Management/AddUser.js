@@ -56,11 +56,11 @@ const AddUser = () => {
     const requestBody = { ...formData, clearance_level: clearance };
     console.log("Request Body:", requestBody);
   
-    fetch("http://127.0.0.1:8000/users/api/users/", {
+    fetch("http://test-domain.localhost:8000/users/api/users/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+        "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4NjMwMzQ5LCJpYXQiOjE3Mzg2MTk1NDksImp0aSI6IjQwYWJhN2E1NzlhNDRhOGI4N2Y4OGJjMTQyYTI4YzM3IiwidXNlcl9pZCI6MTh9.x662a-bGZYea8xlGswZXuOGqAjEQk7tUsYSBbvDzj5Y`
       },
       body: JSON.stringify(requestBody)
     })
@@ -81,7 +81,7 @@ const AddUser = () => {
       alert("An error occurred while adding the user.");
     });
   };
-  
+
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
     return storedState === null ? true : JSON.parse(storedState);
@@ -182,11 +182,11 @@ const AddUser = () => {
               <GeneralField label="Tax ID" field_type="text" hint="Tax ID/EIN (e.g., 123456)" required={true} name="tax_id" onChange={handleInputChange} />
               <GeneralField label="Password" field_type="text" hint="Enter Password" name="password" onChange={handleInputChange} />
               <GeneralField label="Retype Password" field_type="text" hint="Re-Type Password" name="retype_password" onChange={handleInputChange} />
+              <div id="buttonContainer" style={styles.buttonContainer}>
+                <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
+                <GeneralButton text="Add" type="submit" submit={true} width="100px" height="100%" />
+              </div>
             </form>
-            <div id="buttonContainer" style={styles.buttonContainer}>
-              <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-              <GeneralButton text="Add" type="submit" width="100px" height="100%" />
-            </div>
           </div>
         </div>
       </div>
