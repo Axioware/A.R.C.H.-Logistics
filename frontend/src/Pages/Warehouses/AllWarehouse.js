@@ -25,14 +25,14 @@ export default function AllWarehouse() {
   });
 
   // State for filters
-  const [billingType, setBillingType] = useState('All');
-  const [userStatus, setUserStatus] = useState('All');
+  // const [billingType, setBillingType] = useState('All');
+  // const [userStatus, setUserStatus] = useState('All');
   
   // State to toggle the dropdown visibility
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const getData = async () => {
-    const url = `https://api.example.com/users?page=${currentPage}&billingType=${billingType}&userStatus=${userStatus}`;
+    const url = `https://api.example.com/users?page=${currentPage}`;
     const response = await fetchData(setLoading, setSuccess, url);
 
     if (response && response.error) {
@@ -84,20 +84,20 @@ export default function AllWarehouse() {
   };
 
   // Handle Reset and Apply for filters
-  const handleReset = () => {
-    setBillingType('All');
-    setUserStatus('All');
-  };
+  // const handleReset = () => {
+  //   setBillingType('All');
+  //   setUserStatus('All');
+  // };
 
-  const handleApply = () => {
-    console.log("Filters applied:", { billingType, userStatus });
-  };
+  // const handleApply = () => {
+  //   console.log("Filters applied:", { billingType, userStatus });
+  // };
 
   // Toggle dropdown visibility on filter button click
-  const toggleDropdown = () => {
-    console.log("Dropdown toggled");
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+  // const toggleDropdown = () => {
+  //   console.log("Dropdown toggled");
+  //   setIsDropdownOpen(!isDropdownOpen);
+  // };
 
   return (
     <div>
@@ -128,7 +128,7 @@ export default function AllWarehouse() {
           <TableTop
             heading_text={'All Warehouse'}
             search_function={getData}
-            filter_function={() => {}}   
+            // filter_function={() => {}}   
             content={filterOptionUser}
           />
 

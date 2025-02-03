@@ -26,6 +26,7 @@ import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 //Location Management
 import AddLocation from './Pages/Locations/AddLocation';
 import EditLocation from './Pages/Locations/EditLocation';
+import AllLocation from './Pages/Locations/AllLocation';
 
 //Components
 import BoxContent from './Components/General/BoxContent';
@@ -49,6 +50,7 @@ import AddInventory from "./Pages/Inventory/AddInventory";
 
 //Orders
 import ActiveOrder from './Pages/Order/ActiveOrder';
+import PendingOrder from './Pages/Order/PendingOrder';
 import BoxesToBeShipped from './Pages/Order/BoxesToBeShipped';
 import OrderDetails from './Pages/Order/OrderDetails';
 import OrderHistory from './Pages/Order/OrderHistory';
@@ -137,7 +139,8 @@ function App() {
 
         {/* Location Management */}
         <Route path="/add-location" element={<AddLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
-        <Route path="/edit-location" element={<EditLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />      
+        <Route path="/edit-location" element={<EditLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} /> 
+        <Route path="/all-location" element={<AllLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />     
         
         {/* User_Management */}
         <Route path="/users" element={<AllUsers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
@@ -172,6 +175,7 @@ function App() {
 
         {/* Orders */}
         <Route path="/active-order" element={<ActiveOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/pending-order" element={<PendingOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/boxes-to-be-shipped" element={<BoxesToBeShipped />} />      */}
         {/* <Route path="/order-details" element={<OrderDetails />} /> */}
         <Route path="/order-history" element={<OrderHistory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
