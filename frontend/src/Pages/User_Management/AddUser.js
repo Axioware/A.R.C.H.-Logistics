@@ -126,7 +126,7 @@ const AddUser = () => {
         <select name="Dropdown" id="Dropdown" style={styles.select}>
             <option value="Client">Client</option>
             <option value="Prep-Team">Prep-Team</option>
-            <option value="VA's">VA's</option>
+            <option value="VA">VA</option>
             <option value="Others">Others</option>
             </select>
         </div>
