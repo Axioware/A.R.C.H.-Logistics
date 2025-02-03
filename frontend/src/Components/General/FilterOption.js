@@ -1,188 +1,120 @@
 import React, { useState } from "react";
 
-const FilterOption = ({ billing, user, ware, setbill, setuser, setware }) => {
-  const [billingType, setBillingType] = useState(billing);
-  const [userStatus, setUserStatus] = useState(user);
-  const [warehouse, setWarehouse] = useState(ware);
-  const [isApplied, setIsApplied] = useState(false); // State to track if "Apply" is clicked
+// Function to convert RGB array to 'rgb(r, g, b)' string
+function rgbArrayToString(rgbArray) {
+  if (Array.isArray(rgbArray) && rgbArray.length === 3) {
+    const [r, g, b] = rgbArray;
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+  return "rgb(0, 0, 0)"; // Default color if input is invalid
+}
 
-  const handleFilterChange = (type, option) => {
-    console.log(`Filter changed: Type - ${type}, Option - ${option}`);
+export default function FilterOption({
+  text = "Category",
+  text_color = [255, 255, 255],
+  background_color = [23, 23, 23],
+  width = "150px", // Set default width instead of "auto"
+  height = "45px",
+  options = ["FBA", "FBM", "Others"],
+  selectedCategory,
+  setSelectedCategory,
+}) {
+  // Convert colors to CSS string format
+  const textColor = rgbArrayToString(text_color);
+  const buttonColor = rgbArrayToString(background_color);
+  const [isVisible, setIsVisible] = useState(false);
 
-    if (type === 'Billing Type') {
-      setbill(option);
-    } else if (type === "User Status") {
-      setuser(option);
-    } else if (type === "Warehouses") {
-      setware(option);
-    }
-  };
+  function show() {
+    setIsVisible(!isVisible);
+  }
 
-  const handleReset = () => {
-    setbill("All");
-    setuser("All");
-    setware("All");
-    setBillingType("All");
-    setUserStatus("All");
-    setWarehouse("All");
-    setIsApplied(false); // Reset the apply button state
-    console.log("Filters reset to default values.");
-  };
-
-  const handleApply = () => {
-    setIsApplied(true); // Set the button to "applied" state
-    console.log("Filters applied:", { billingType, userStatus, warehouse });
-  };
+  function handleSelect(option) {
+    setSelectedCategory(option);
+    setIsVisible(false);
+  }
 
   return (
-    <div style={{ zIndex: '60' }}>
-      <div className="filter-container">
-        <div className="filters-row">
-          <div className="mb-4">
-            <label className="block mb-2 font-medium text-gray-700">Billing Type</label>
-            <select
-              className="w-full p-2 border rounded-md shadow-sm transition duration-200"
-              value={billingType}
-              onChange={(e) => {
-                setBillingType(e.target.value);
-                handleFilterChange("Billing Type", e.target.value);
-              }}
-            >
-              <option value="All">All</option>
-              <option value="Daily">Daily</option>
-              <option value="Bimonthly">Bimonthly</option>
-              <option value="Monthly">Monthly</option>
-            </select>
-          </div>
+    <div style={{ position: "relative", display: "inline-block" }}>
+      <button className="filter-button" onClick={show}>
+        {selectedCategory || text}
+      </button>
 
-          <div className="mb-4">
-            <label className="block mb-2 mr-8 font-medium text-gray-700">User Status</label>
-            <select
-              className="w-full p-2 border rounded-md shadow-sm transition duration-200 "
-              value={userStatus}
-              onChange={(e) => {
-                setUserStatus(e.target.value);
-                handleFilterChange("User Status", e.target.value);
-              }}
-            >
-              <option value="All">All</option>
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <label className="block mb-2 font-medium text-gray-700">Warehouses</label>
-          <select
-            className="w-full p-2 border rounded-md shadow-sm transition duration-200 "
-            value={warehouse}
-            onChange={(e) => {
-              setWarehouse(e.target.value);
-              handleFilterChange("Warehouses", e.target.value);
-            }}
-          >
-            <option value="All">All</option>
-            <option value="Warehouse 1">Warehouse 1</option>
-            <option value="Warehouse 2">Warehouse 2</option>
-          </select>
-        </div>
-
-        <div className="button-container">
-          <button
-            className="reset-btn bg-gray-500 hover:bg-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-            onClick={handleReset}
-          >
-            Reset
-          </button>
-          <button
-            className="apply-btn bg-black hover:bg-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-            onClick={handleApply}
-          >
-            Apply
-          </button>
-        </div>
+      <div
+        className="content"
+        style={{
+          display: isVisible ? "block" : "none",
+          position: "absolute",
+          top: "100%",
+          left: "0",
+          zIndex: 1000,
+          backgroundColor: "white",
+          border: "1px solid #ccc",
+          borderRadius: "5px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          marginTop: "5px",
+          width: "300px",
+        }}
+      >
+        <ul className="dropdown-list">
+          {options.map((option) => (
+            <li key={option} onClick={() => handleSelect(option)}>
+              {option}
+            </li>
+          ))}
+        </ul>
       </div>
 
-     <style jsx>{`
-  .filter-container {
-    padding: 20px;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    margin: auto;
-    background-color: white;
-  }
+      <style>
+        {`
+          .filter-button {
+            color: ${textColor};
+            background-color: ${buttonColor};
+            font-size: 1rem;
+            border: 2px solid ${textColor};
+            transition: all 0.3s ease;
+            width: ${width}; /* Fixed width to prevent resizing */
+            height: ${height};
+            min-width: 120px; /* Ensures the button never shrinks too much */
+            border-radius: 5px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            outline: none;
+            margin: 0px;
+            text-align: center;
+            white-space: nowrap; /* Prevents text from wrapping */
+            overflow: hidden; /* Prevents text overflow */
+            text-overflow: ellipsis; /* Adds '...' if text is too long */
+          }
 
-  .filters-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-  }
+          .filter-button:hover {
+            background-color: ${textColor};
+            color: ${buttonColor};
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+          }
 
-  .button-container {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-  }
+          .filter-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+          }
 
-  select {
-    width: 100%;
-    padding: 8px;
-    border-radius: 6px;
-    margin-bottom: 12px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    color: black;
-  }
+          .dropdown-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+          }
 
-  select:focus {
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.5);
-    color: black;
-  }
+          .dropdown-list li {
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+          }
 
-  label {
-    font-weight: bold;
-    margin-bottom: 8px;
-    display: block;
-    color: #4a5568;
-  }
-
-  .mb-4 {
-    margin-bottom: 16px;
-  }
-
-  .reset-btn:focus,
-  .apply-btn:focus {
-    outline: none;
-    box-shadow: none;
-  }
-
-  .reset-btn:active,
-  .apply-btn:active {
-    transform: scale(0.98);
-  }
-
-  /* Dropdown styling */
-  select option {
-    background-color: white;
-    color: black;
-  }
-
-  /* Change hover and focus color to black */
-  select option:hover,
-  select option:focus {
-    background-color: black !important;
-    color: white !important;
-  }
-    
-
-  
-  
-`}</style>
-
+          .dropdown-list li:hover {
+            background: #f0f0f0;
+          }
+        `}
+      </style>
     </div>
   );
-};
-
-export default FilterOption;
+}

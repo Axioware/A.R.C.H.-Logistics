@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
+import FilterDropdown from '../../Components/General/FilterDropdown';
 import NavPath from '../../Components/General/NavPath';
 import PageHeading from '../../Components/Table_Components/PageHeading';
 import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
-import { important, position } from "polished";
+import { border, important, position } from "polished";
 
-const AddLocation = () => {
+const SetRates = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted'); 
@@ -26,26 +27,18 @@ const AddLocation = () => {
       padding: "10px 0px 50px 0px",
       backgroundColor:'f7f6f6',
   },
-
   form: {
       position:'relative',
       alignSelf:'flex-start',
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr 1fr 1fr', // Two columns
+      gridTemplateColumns: '1fr 1fr 1fr 1fr ', // Two columns
       gap: '20px', // Space between fields
       // border: '2px solid red',
       marginLeft:'20px',
       marginRight:'30px',
-      gap:'20px',
+      gap:'35px',
       marginTop:'35px',
   },
-
-  select: {
-
-    marginLeft:"40px",
-    marginTop:"10px",
-  },
-  
   buttonContainer: {
       // border: '2px solid black',
       alignSelf:'flex-end',
@@ -58,39 +51,46 @@ const AddLocation = () => {
   },
   headingcontainer:{
     alignSelf: 'flex-start',
-    // border: '2px solid purple',
+    // border: '2px solid black',
     marginLeft:'20px',
     marginTop:'15px',
-
   },
-
   PageHeading:{
-    marginLeft:'10px',
-    marginTop:'25px',  
+    // border:'4px solid red',
+    // marginLeft:'10px',
+    // marginTop:'20px',  
   },
-
-  RoleContainer: {
-    alignSelf: 'flex-end',
-    marginTop:'10px',  
-    marginLeft:"10px",
+  label: {  
+    display: "flex",
+    flexDirection: "column",
+    // border:'4px solid purple',
+    gap: "5px",
+    // marginTop:"10px",
+    // marginLeft:"20px",
+    // display:'block',
+    // fontWeight:'700px',
+    // width:'12px',
   },
-
-  label: {
-    marginTop:'10px',  
-    marginLeft:"20px",
-    display:'block',
-    fontWeight:'700px',
-  },
-
   select: {
-    marginTop:'15px',  
-    marginLeft:"10px",
-    display:'block',
-    width:'260px',
-    height:'45px',
-    borderRadius:'10px',
-    border: '1px solid lightgrey',
-    boxShadow: '1px 1px 1px 1px lightgrey',
+    // border:'4px solid pink',
+    // marginTop:'6px',  
+    // marginLeft:"2px",
+    // display:'block',
+    // width:'260px',
+    // height:'45px',
+    // borderRadius:'10px',
+    // border: '1px solid lightgrey',
+    // boxShadow: '1px 1px 1px 1px lightgrey',
+
+    width: "260px",
+    height: "45px",
+    borderRadius: "10px",
+    border: "1px solid lightgrey",
+    boxShadow: "1px 1px 1px 1px lightgrey",
+    padding: "10px",
+    fontSize: "16px",
+    cursor: "pointer",
+    outline: "none",
   },
   };
   
@@ -105,8 +105,8 @@ const AddLocation = () => {
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={styles.mainContent}>
           <NavPath
-            text={['Home', 'All Locations', 'Add Location']}
-            paths={['/home', '/all-location', '/add-location']}
+            text={['Home', 'Settings', 'Set Rates']}
+            paths={['/home', '/settings', '/set-rates']}
             text_color={[255, 255, 255]}
             background_color={[23, 23, 23]}
             hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
@@ -114,16 +114,33 @@ const AddLocation = () => {
             height="50px"
           />
           
-          <div id="tableBackground" style={mainStyles.tableBackground}>
+           <div id="tableBackground" style={mainStyles.tableBackground}> 
 
           <div id="headingcontainer" style={styles.headingcontainer}>
-            <PageHeading text="Add Location" />
+            <PageHeading text="Set Rates" />
           </div>
-
+            
             <form id="form" style={styles.form} onSubmit={handleSubmit}>
-            <GeneralField label="Name" field_type="text" hint="Enter location name" required={true}/>
-            <GeneralField label="Type" field_type="text" hint="Select the type of location" required={true} />
-            <GeneralField label="Warehouse" field_type="text" hint="Enter the warehouse name" required={true} />
+           
+           <div id="label container" style={styles.labelcontainer}>
+            <label htmlFor="Dropdown" style={styles.label}>Service</label>
+            <FilterDropdown
+              text={["FBA", "FBM", "Storage", "Others"]}
+              text_color={[0, 0, 0]}
+              selected={["FBA"]}  // Default selected option
+              background_color={[255, 255, 255]}
+              hover_color={[200, 200, 200]}
+              selected_color={[150, 150, 150]}
+              func={(option) => console.log("Selected:", option)}
+              radio={true} // Only one option can be selected
+              border_radius="10px"
+              width={["260px"]}
+              height="45px"
+
+            />
+            </div>
+           
+            <GeneralField label="Custom Charge" field_type="text" hint="Enter the Charge for Service" required={true} />             
               
             </form>
             <div id="buttonContainer" style={styles.buttonContainer}>
@@ -133,8 +150,8 @@ const AddLocation = () => {
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   );
 };
 
-export default AddLocation;
+export default SetRates;

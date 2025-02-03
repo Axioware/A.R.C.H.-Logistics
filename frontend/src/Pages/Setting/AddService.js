@@ -6,7 +6,7 @@ import NavPath from '../../Components/General/NavPath';
 import PageHeading from '../../Components/Table_Components/PageHeading';
 import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
-import { important, position } from "polished";
+import { border, important, position } from "polished";
 
 const AddService = () => {
   const handleSubmit = (e) => {
@@ -34,7 +34,7 @@ const AddService = () => {
       gridTemplateColumns: '1fr 1fr 1fr 1fr ', // Two columns
       gap: '20px', // Space between fields
       // border: '2px solid red',
-      marginLeft:'6px',
+      marginLeft:'20px',
       marginRight:'30px',
       gap:'35px',
       marginTop:'35px',
@@ -51,15 +51,20 @@ const AddService = () => {
   },
   headingcontainer:{
     alignSelf: 'flex-start',
-    // border: '2px solid purple',
+    // border: '2px solid black',
     marginLeft:'20px',
     marginTop:'15px',
   },
   PageHeading:{
-    marginLeft:'10px',
-    marginTop:'20px',  
+    // border:'4px solid red',
+    // marginLeft:'10px',
+    // marginTop:'20px',  
   },
   label: {  
+    display: "flex",
+    flexDirection: "column",
+    // border:'4px solid purple',
+    gap: "5px",
     // marginTop:"10px",
     // marginLeft:"20px",
     // display:'block',
@@ -67,14 +72,25 @@ const AddService = () => {
     // width:'12px',
   },
   select: {
-    marginTop:'6px',  
-    marginLeft:"2px",
-    display:'block',
-    width:'260px',
-    height:'45px',
-    borderRadius:'10px',
-    border: '1px solid lightgrey',
-    boxShadow: '1px 1px 1px 1px lightgrey',
+    // border:'4px solid pink',
+    // marginTop:'6px',  
+    // marginLeft:"2px",
+    // display:'block',
+    // width:'260px',
+    // height:'45px',
+    // borderRadius:'10px',
+    // border: '1px solid lightgrey',
+    // boxShadow: '1px 1px 1px 1px lightgrey',
+
+    width: "260px",
+    height: "45px",
+    borderRadius: "10px",
+    border: "1px solid lightgrey",
+    boxShadow: "1px 1px 1px 1px lightgrey",
+    padding: "10px",
+    fontSize: "16px",
+    cursor: "pointer",
+    outline: "none",
   },
   };
   
@@ -98,7 +114,7 @@ const AddService = () => {
             height="50px"
           />
           
-          <div id="tableBackground" style={mainStyles.tableBackground}>
+           <div id="tableBackground" style={mainStyles.tableBackground}> 
 
           <div id="headingcontainer" style={styles.headingcontainer}>
             <PageHeading text="Add Service" />
@@ -106,8 +122,10 @@ const AddService = () => {
             
             <form id="form" style={styles.form} onSubmit={handleSubmit}>
            
+           <div id="label container" style={styles.labelcontainer}>
+            <label htmlFor="Dropdown" style={styles.label}>Category</label>
             <FilterDropdown
-              text={["FBA", "FBM", "Others"]}
+              text={["FBA", "FBM", "Storage", "Others"]}
               text_color={[0, 0, 0]}
               selected={["FBA"]}  // Default selected option
               background_color={[255, 255, 255]}
@@ -120,7 +138,7 @@ const AddService = () => {
               height="45px"
 
             />
-             <label htmlFor="Dropdown" style={styles.label}>Category</label>
+            </div>
            
             <GeneralField label="Name" field_type="text" hint="Enter name of Service" required={true} />
             <GeneralField label="Service Charge" field_type="text" hint="Enter the Charge for Service" required={true} />             
@@ -133,7 +151,7 @@ const AddService = () => {
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   );
 };
 

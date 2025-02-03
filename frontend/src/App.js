@@ -57,6 +57,7 @@ import Bin from './Pages/Setting/Bin';
 import Category from './Pages/Setting/Category';
 import Service from './Pages/Setting/Service';
 import AddService from './Pages/Setting/AddService';
+import SetRates from "./Pages/Setting/SetRates";
 
 import test from './Assets/Images/SearchIcon.png'
 import test2 from './Assets/Images/user-solid.svg'
@@ -155,7 +156,7 @@ function App() {
         <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/service" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-service" element={<AddService menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-
+        <Route path="/set-rates" element={<SetRates menuItems={menuItems} toggleExpand={toggleExpand}/>} />
 
         {/* Modals */}
         <Route path="/test" element={<Forbidden />} />
