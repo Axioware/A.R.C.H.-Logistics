@@ -6,7 +6,7 @@ import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
-// import mainFunctions from "../../Assets/JS/script";
+import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement"
 
 export default function All_Users() {
 
@@ -108,8 +108,8 @@ export default function All_Users() {
       <div style={mainStyles.centerContent(isSidebarClosed)}>
 
         <NavPath
-          text={["Home", "User Management"]}
-          paths={["/home", "/users"]}
+          text={["Home", "All Inventory"]}
+          paths={["/home", "/all-inventory"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
           width="100%"
@@ -117,49 +117,17 @@ export default function All_Users() {
         />
 
         <AddButton
-          text="Add User"
+          text="Add Inventory"
           text_color={[255, 255, 255]}
-          path='/add-user'
+          path='/add-inventory'
         />
 
         <div style={mainStyles.tableBackground}>
           <TableTop
-            heading_text={'All Users'}
+            heading_text={'All Inventory'}
             search_function={getData}
             filter_function={() => {}}   
-            filters={(
-              <>
-                <button onClick={toggleDropdown}>Filter</button>
-
-                {isDropdownOpen && (
-                  <div style={{ display: "flex", flexDirection: "column", marginTop: "10px", border: "1px solid black", backgroundColor: "white" }}>
-                    <select
-                      value={billingType}
-                      onChange={(e) => setBillingType(e.target.value)}
-                      style={{ width: "150px", height: "40px", marginBottom: "10px" }}
-                    >
-                      <option value="All">All Billing Types</option>
-                      <option value="Daily">Daily</option>
-                      <option value="Bimonthly">Bimonthly</option>
-                      <option value="Monthly">Monthly</option>
-                    </select>
-
-                    <select
-                      value={userStatus}
-                      onChange={(e) => setUserStatus(e.target.value)}
-                      style={{ width: "150px", height: "40px", marginBottom: "10px" }}
-                    >
-                      <option value="All">All User Status</option>
-                      <option value="Active">Active</option>
-                      <option value="Inactive">Inactive</option>
-                    </select>
-
-                    <button onClick={handleReset} style={{ padding: "10px", backgroundColor: "gray", color: "white" }}>Reset</button>
-                    <button onClick={handleApply} style={{ padding: "10px", backgroundColor: "green", color: "white" }}>Apply</button>
-                  </div>
-                )}
-              </>
-            )}
+            content={filterOptionUser}
           />
 
           <TableContent
