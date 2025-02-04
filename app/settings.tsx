@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import CardWithButtons from "../components/CardWithButtons"; // Assuming CardWithButtons is in the same directory
 
 export default function Settings() {
@@ -18,7 +18,8 @@ export default function Settings() {
         <CardWithButtons
           title="Settings"
           button1={{
-            icon: "person",
+            icon: "account",
+            iconFamily: "MaterialCommunityIcons",
             text: "Account Information",
             onPress: () => console.log("Settings pressed"),
             visible: true,
@@ -26,8 +27,16 @@ export default function Settings() {
           button2={{
             icon: "lock",
             text: "Change Password",
+            iconFamily: "Feather",
             onPress: () => console.log("Change Password Pressed"),
             visible: true,
+          }}
+          button3={{
+            icon: "lock",
+            text: "Change Password",
+            iconFamily: "Feather",
+            onPress: () => console.log("Change Password Pressed"),
+            visible: false,
           }}
         />
       </View>
