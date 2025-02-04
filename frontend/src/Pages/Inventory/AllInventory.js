@@ -6,7 +6,7 @@ import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
-import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement"
+import FilterOptionsInventory from "../../Components/Filter/FilterOptionsInventory"
 
 export default function All_Users() {
 
@@ -127,7 +127,7 @@ export default function All_Users() {
             heading_text={'All Inventory'}
             search_function={getData}
             filter_function={() => {}}   
-            content={filterOptionUser}
+            content={FilterOptionsInventory}
           />
 
           <TableContent
