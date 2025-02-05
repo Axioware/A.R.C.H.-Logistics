@@ -67,33 +67,154 @@ const LoginForm = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  const styles = {
+    container: {
+      display: 'flex',
+      flexDirection: 'row',
+      width: '100%',
+      maxWidth: '900px',
+      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      borderRadius: '10px',
+      overflow: 'hidden',
+      fontFamily: 'Arial, sans-serif',
+      margin: '5% auto', // Center container vertically and horizontally
+    },
+    logoContainer: {
+      backgroundColor: '#000',
+      color: '#fff',
+      width: '60%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    logoImage: {
+      maxWidth: '80%',
+      height: 'auto',
+    },
+    loginContainer: {
+      width: '40%',
+      padding: '30px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+    heading: {
+      fontSize: '1.8rem',
+      marginBottom: '20px',
+      color: '#333',
+      textAlign: 'center',
+      fontWeight: 'bold',
+      lineHeight: '1.5',
+    },
+    inputGroup: {
+      marginBottom: '20px',
+      width: '100%',
+    },
+    errorText: {
+      display: 'none',
+      color: '#ff4d4d',
+      fontSize: '0.9rem',
+      marginTop: '5px',
+      textAlign: 'left',
+    },
+    errorMessage: {
+      color: '#ff4d4d',
+      backgroundColor: '#ffe6e6',
+      padding: '10px',
+      borderRadius: '5px',
+      marginBottom: '15px',
+      border: '1px solid #ff9999',
+      fontSize: '1rem',
+      textAlign: 'center',
+    },
+    footer: {
+      textAlign: 'center',
+      marginTop: '20px',
+      fontSize: '0.9rem',
+      color: '#555',
+    },
+    footerLink: {
+      color: '#2c5b97',
+      textDecoration: 'none',
+      cursor: 'pointer',
+    },
+    buttonContainer: {
+      display: 'flex',
+      justifyContent: 'center'
+      // marginRight: '10%',
+    },
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', maxWidth: '900px', backgroundColor: 'rgba(255, 255, 255, 0.9)', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', borderRadius: '10px', overflow: 'hidden', fontFamily: 'Arial, sans-serif', margin: '5% auto' }}>
-      <div style={{ backgroundColor: '#000', color: '#fff', width: '60%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <img src={arch} alt="ARCH Logo" style={{ maxWidth: '80%', height: 'auto' }} />
+    <div style={styles.container}>
+      <div style={styles.logoContainer}>
+        <img
+          src={arch}
+          alt="ARCH Logo"
+          style={styles.logoImage}
+        />
       </div>
-      <div style={{ width: '40%', padding: '30px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <h2 style={{ fontSize: '1.8rem', marginBottom: '20px', color: '#333', textAlign: 'center', fontWeight: 'bold', lineHeight: '1.5' }}>Login to Your Account</h2>
+      <div style={styles.loginContainer}>
+        <h2 style={styles.heading}>Login to Your Account</h2>
         <form onSubmit={handleLogin}>
-          <div style={{ marginBottom: '20px', width: '100%' }}>
+          <div style={styles.inputGroup}>
             <label htmlFor="username">Username:</label>
-            <GeneralField type="text" id="username" placeholder="Username" hint="Enter Username" value={username} func={handleInputChange(setUsername)} width="100%" />
+            <GeneralField
+              type="text"
+              id="username"
+              placeholder="Username"
+              hint="Enter Username"
+              value={username}
+              func={handleInputChange(setUsername)}
+              width="100%"
+            />
+            <span id="usernameError" style={styles.errorText}>
+              Please enter a username.
+            </span>
           </div>
-          <div style={{ marginBottom: '20px', width: '100%', position: 'relative' }}>
+          <div style={styles.inputGroup}>
             <label htmlFor="password">Password:</label>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <GeneralField field_type={showPassword ? "text" : "password"} id="password" placeholder="Password" hint="Enter Password" value={password} func={handleInputChange(setPassword)} />
+            <GeneralField
+              field_type={showPassword ? "text" : "password"} 
+              id="password" 
+              placeholder="Password" 
+              hint="Enter Password" 
+              value={password} 
+              func={handleInputChange(setPassword)}
+            />
               <span onClick={togglePasswordVisibility} style={{ cursor: 'pointer', position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', fontSize: '1.2rem' }}>
-                
-              </span>
-            </div>
+            </span>
           </div>
-          {errorMessage && <div style={{ color: '#ff4d4d', backgroundColor: '#ffe6e6', padding: '10px', borderRadius: '5px', marginBottom: '15px', border: '1px solid #ff9999', fontSize: '1rem', textAlign: 'center' }}>{errorMessage}</div>}
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <GeneralButton text="Login" id="loginbutton" width="100%" func={handleLogin} height="40px" border="8px" disabled={isSubmitting} />
+          {errorMessage && <div style={styles.errorMessage}>{errorMessage}</div>}
+          <div style={styles.buttonContainer}>
+            <GeneralButton
+              text="Login"
+              id="loginbutton"
+              width="100%"
+              func={handleLogin}
+              height="40px"
+              border = '8px'
+            />
           </div>
         </form>
+        <div style={styles.footer}>
+          <p>
+            Forgot your password?{' '}
+            <span style={styles.footerLink}>
+              Click here
+            </span>
+          </p>
+          <p>A.R.C.H. Labs © Copyright 2025</p>
+          <div>
+            <a
+              href="https://prepprime.com/contact-us-2/"
+              style={styles.footerLink}
+            >
+              Contact Us
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
