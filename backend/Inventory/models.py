@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from Structures.models import Locations, Orders
+from Structures.models import Locations
+# from Orders.models import Orders
 from django.utils import timezone
 from django.conf import settings
 # Create your models here.
@@ -38,7 +39,7 @@ class Inventory(models.Model):
     no_bundles = models.IntegerField()
     date_added = models.DateTimeField(default=timezone.now)
     boxes = models.IntegerField(default=0)
-    charge_by = models.ForeignKey(Orders, on_delete=models.SET_NULL, verbose_name="Charge By", null=True)
+    # charge_by = models.ForeignKey(Orders, on_delete=models.SET_NULL, verbose_name="Charge By", null=True)
     pallet = models.BooleanField(default=False)
 
 class BundleInventory(models.Model): #TODO PACK SIZE AND SO ON. 

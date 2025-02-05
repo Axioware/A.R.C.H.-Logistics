@@ -1,8 +1,9 @@
 .vscode/
 backend/media/fnsku/*
 backend/media/trackings/*
+archlogistics/
 prep/
 backend/static/invoices/*
 backend/Users/tests/
 backend/backend_env
-arch_backend/*
+arch_backend/

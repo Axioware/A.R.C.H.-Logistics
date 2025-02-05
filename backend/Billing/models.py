@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from Inventory.models import Item
+# from Inventory.models import Item
 from Orders.models import Orders, SubOrders
 import os
 from datetime import datetime

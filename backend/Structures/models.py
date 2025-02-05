@@ -1,25 +1,10 @@
 from django.db import models
 
 # Create your models here.
-class Orders(models.Model):
-    ORDERS_CATEGORY_CHOICES = [
-        ('FBA', 'FBA'),
-        ('FBM', 'FBM'),
-        ('Storage', 'Storage'),
-        ('Other', 'Other'),
-    ]
-    
-    order_id = models.AutoField(primary_key=True)
-    category = models.CharField(
-        max_length=10, 
-        choices=ORDERS_CATEGORY_CHOICES, 
-    )
-    order_name = models.CharField(max_length=20)
-    order_charge = models.DecimalField(max_digits=10, decimal_places=2) 
-
-    def __str__(self):
-        return f"{self.order_name} - ({self.category})"
-
+class Services(models.Model):
+    service_id = models.AutoField(primary_key=True)
+    service_name = models.CharField(max_length=50, null=False)
+    service_charge = models.FloatField(default=0.0)
 
 # class InventoryChargeChoices(models.TextChoices):
 #     icc_id = models.AutoField(primary_key=True)
