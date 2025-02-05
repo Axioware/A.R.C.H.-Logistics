@@ -66,6 +66,11 @@ const LoginForm = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleForgotPassword = () => {
+    navigate('/forgot-password');
+  };
+  
   const styles = {
     container: {
       display: 'flex',
@@ -200,7 +205,7 @@ const LoginForm = () => {
         <div style={styles.footer}>
           <p>
             Forgot your password?{' '}
-            <span style={styles.footerLink}>
+            <span style={styles.footerLink} onClick={handleForgotPassword}>
               Click here
             </span>
           </p>
