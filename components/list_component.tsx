@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -9,61 +9,54 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
+
+interface Product {
+  id: number;
+  name: string;
+  image: string;
+}
 
 interface ProductListProps {
   title: string;
+  searchPlaceholder?: string;
+  products: Product[];
+  searchQuery: string;
+  setSearchQuery: (text: string) => void;
+  loading: boolean;
+  loadMore: () => void;
+  isFetching: boolean;
 }
 
-const ProductListComponent: React.FC<ProductListProps> = ({ title }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState<
-    { id: number; name: string; image: string }[]
-  >([]);
-  const [page, setPage] = useState(1);
-  const [isFetching, setIsFetching] = useState(false);
-
-  useEffect(() => {
-    fetchProducts(page);
-  }, [page]);
-
-  const fetchProducts = (pageNum: number) => {
-    if (isFetching) return;
-    setIsFetching(true);
-    setLoading(pageNum === 1);
-
-    setTimeout(() => {
-      const newProducts = Array.from({ length: 10 }, (_, i) => ({
-        id: (pageNum - 1) * 10 + i + 1,
-        name: `Product ${(pageNum - 1) * 10 + i + 1}`,
-        image: "https://via.placeholder.com/100",
-      }));
-      setProducts((prev) => [...prev, ...newProducts]);
-      setIsFetching(false);
-      setLoading(false);
-    }, 1500);
-  };
-
-  const loadMore = () => {
-    if (!isFetching) setPage((prev) => prev + 1);
-  };
-
+const ProductListComponent: React.FC<ProductListProps> = ({
+  title,
+  searchPlaceholder = "Search product",
+  products,
+  searchQuery,
+  setSearchQuery,
+  loading,
+  loadMore,
+  isFetching,
+}) => {
   return (
     <View style={styles.container}>
-      {/* Card with Title, Product Count, Search Bar, and Loading Spinner */}
+      {/* Card with Title, Search Bar, and Loading Indicator */}
       <View style={styles.card}>
         <View style={styles.titleContainer}>
-          <Text style={styles.titleBar}></Text>
           <Text style={styles.title}>
             {title} <Text style={styles.productCount}>({products.length})</Text>
           </Text>
         </View>
         <View style={styles.searchBar}>
-          <AntDesign name="search1" size={18} color="black" style={styles.searchIcon} />
+          <AntDesign
+            name="search1"
+            size={18}
+            color="black"
+            style={styles.searchIcon}
+          />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search product"
+            placeholder={searchPlaceholder}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -76,12 +69,25 @@ const ProductListComponent: React.FC<ProductListProps> = ({ title }) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.productItem}>
-            <Image source={{ uri: item.image }} style={styles.productImage} />
+            {/* Container for the image */}
+            <View style={styles.imageContainer}>
+              <Image
+                source={
+                  typeof item.image === "string" ? { uri: item.image } : item.image
+                }
+                style={styles.productImage}
+                resizeMode="contain" // Ensures the image covers the container
+              />
+            </View>
             <Text style={styles.productName}>{item.name}</Text>
           </View>
         )}
         ListFooterComponent={() => (
-          <TouchableOpacity style={styles.loadMoreButton} onPress={loadMore}>
+          <TouchableOpacity
+            style={styles.loadMoreButton}
+            onPress={loadMore}
+            disabled={isFetching}
+          >
             <Text style={styles.loadMoreText}>
               {isFetching ? "Loading..." : "Load More"}
             </Text>
@@ -106,11 +112,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 8,
   },
-  titleBar: {
-    fontSize: 20,
-    color: "black",
-    marginRight: 8,
-  },
   title: { fontSize: 18, fontWeight: "bold" },
   productCount: { fontSize: 16, color: "gray" },
   searchBar: {
@@ -121,9 +122,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
   },
-  searchIcon: {
-    marginRight: 8,
-  },
+  searchIcon: { marginRight: 8 },
   searchInput: { flex: 1, paddingHorizontal: 8 },
   productItem: {
     flexDirection: "row",
@@ -133,7 +132,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",
   },
-  productImage: { width: 50, height: 50, borderRadius: 8, marginRight: 10 },
+  imageContainer: {
+    width: 100,
+    height: 75,
+    borderRadius: 8,
+    overflow: "hidden", // Ensures the image is clipped to the container
+    marginRight: 10,
+  },
+  productImage: {
+    width: "100%",
+    height: "100%",
+  },
   productName: { fontSize: 16, flex: 1 },
   loadMoreButton: {
     padding: 12,
