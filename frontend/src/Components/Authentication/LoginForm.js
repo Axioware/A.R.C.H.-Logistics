@@ -30,7 +30,7 @@ const LoginForm = () => {
     }
   
     try {
-      const response = await fetch('http://asad.localhost:8000/auth/api/token/', {
+      const response = await fetch('http://test-domain.localhost:8000/auth/api/token/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -47,7 +47,6 @@ const LoginForm = () => {
         const data = await response.json();
         localStorage.setItem('accessToken', data.access);
         localStorage.setItem('refreshToken', data.refresh);
-        alert('Login successful');
         navigate('/dashboard');
       }
     } catch (error) {
