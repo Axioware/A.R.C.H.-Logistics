@@ -102,8 +102,8 @@ export default function All_Users() {
       )}
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <NavPath
-          text={["Home", "Balance Sheet", "Invoice"]}
-          paths={["/home", "/balance-sheet", "/invoices"]}
+          text={["Home",  "Invoice"]}
+          paths={["/home",  "/invoices"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
           width="100%"
