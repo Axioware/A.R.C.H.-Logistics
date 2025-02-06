@@ -1,6 +1,4 @@
-// import { borderColor } from 'polished';
 import React from 'react';
-// import AddButton from '../../Components/Table_Components/AddButton';
 import GeneralButton from '../../Components/General/GeneralButton';
 
 const LargeModal = ({ 
@@ -23,8 +21,8 @@ const LargeModal = ({
       bottom: 0,
       backgroundColor: 'rgba(0,0,0,0.5)',
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: 'center', // Center vertically
+      justifyContent: 'center', // Center horizontally
       zIndex: 1000,
       opacity: 0,
       animation: 'fadeIn 0.3s forwards'
@@ -32,12 +30,16 @@ const LargeModal = ({
     modal: {
       backgroundColor: '#fff',
       borderRadius: '8px',
-      width: '50%',
+      width: '20%',
       maxWidth: '600px',
+      height: 'auto', // Adjusted to auto so content can fit
       padding: '20px',
       boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
       transform: 'scale(0.9)',
-      animation: 'scaleIn 0.3s forwards'
+      animation: 'scaleIn 0.3s forwards',
+      display: 'flex', 
+      flexDirection: 'column',  // Ensures header, content, and footer are stacked vertically
+      justifyContent: 'center', // Center content within the modal
     },
     header: {
       borderBottom: '1px solid LightGrey',
@@ -62,7 +64,6 @@ const LargeModal = ({
       gap: '10px'
     },
     buttonContainer: {
-         //borderTop: '2px Solid Black',
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'flex-end',
@@ -84,11 +85,10 @@ const LargeModal = ({
           {content}
         </div>
         <div style={styles.footer}>
-        <div id="buttonContainer" style={styles.buttonContainer}>
-                  {/* <GeneralButton text="Cancel" width="50px" height="30px" button_color={["230", "230", "230"]}  text_color={["0", "0", "0"]} onClick={onClose}  /> */}
-                  <GeneralButton text="Okay" width="80px" height="30px" onClick={onSave} />
-            </div>
-       </div>
+          <div id="buttonContainer" style={styles.buttonContainer}>
+            <GeneralButton text="Okay" width="80px" height="30px" onClick={onSave} />
+          </div>
+        </div>
       </div>
       <style>
         {`
