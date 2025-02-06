@@ -1,37 +1,39 @@
 import React, { useState } from "react";
+import Select from 'react-select';
 
 const FilterOptionsInvoices = ({ billing, user, ware, setbill, setuser, setware }) => {
   const [billingType, setBillingType] = useState(billing);
   const [userStatus, setUserStatus] = useState(user);
   const [warehouse, setWarehouse] = useState(ware);
-  const [isApplied, setIsApplied] = useState(false); // State to track if "Apply" is clicked
 
-  const handleFilterChange = (type, option) => {
-    console.log(`Filter changed: Type - ${type}, Option - ${option}`);
+  const billingOptions = [
+    { value: 'All', label: 'All' },
+    { value: 'Daily', label: 'Daily' },
+    { value: 'Bimonthly', label: 'Bimonthly' },
+    { value: 'Monthly', label: 'Monthly' }
+  ];
 
+  const userStatusOptions = [
+    { value: 'All', label: 'All' },
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' }
+  ];
+
+  const warehouseOptions = [
+    { value: 'All', label: 'All' },
+    { value: 'Warehouse 1', label: 'Warehouse 1' },
+    { value: 'Warehouse 2', label: 'Warehouse 2' }
+  ];
+
+  const handleChange = (type, selectedOption) => {
+    const value = selectedOption ? selectedOption.value : 'All';
     if (type === 'Billing Type') {
-      setbill(option);
-    } else if (type === "User Status") {
-      setuser(option);
-    } else if (type === "Warehouses") {
-      setware(option);
+      setbill(value);
+    } else if (type === 'User Status') {
+      setuser(value);
+    } else if (type === 'Warehouses') {
+      setware(value);
     }
-  };
-
-  const handleReset = () => {
-    setbill("All");
-    setuser("All");
-    setware("All");
-    setBillingType("All");
-    setUserStatus("All");
-    setWarehouse("All");
-    setIsApplied(false); // Reset the apply button state
-    console.log("Filters reset to default values.");
-  };
-
-  const handleApply = () => {
-    setIsApplied(true); // Set the button to "applied" state
-    console.log("Filters applied:", { billingType, userStatus, warehouse });
   };
 
   return (
@@ -40,64 +42,97 @@ const FilterOptionsInvoices = ({ billing, user, ware, setbill, setuser, setware 
         <div className="filters-row">
           <div className="mb-4">
             <label className="block mb-2 font-medium text-gray-700">Billing Type</label>
-            <select
-              className="w-full p-2 border rounded-md shadow-sm transition duration-200"
-              value={billingType}
-              onChange={(e) => {
-                setBillingType(e.target.value);
-                handleFilterChange("Billing Type", e.target.value);
+            <Select
+              options={billingOptions}
+              value={billingOptions.find(option => option.value === billingType)}
+              onChange={(selectedOption) => handleChange('Billing Type', selectedOption)}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  marginBottom: '12px',
+                  borderColor: '#e2e8f0', // Same border as in the <select> element
+                  boxShadow: 'none', // To match no shadow effect
+                }),
+                option: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: state.isSelected || state.isFocused ? 'black' : 'white',
+                  color: state.isSelected || state.isFocused ? 'white' : 'black',
+                  cursor: 'pointer',
+                })
               }}
-            >
-              <option value="All">All</option>
-              <option value="Daily">Daily</option>
-              <option value="Bimonthly">Bimonthly</option>
-              <option value="Monthly">Monthly</option>
-            </select>
+            />
           </div>
 
           <div className="mb-4">
-            <label className="block mb-2 mr-8 font-medium text-gray-700">User Status</label>
-            <select
-              className="w-full p-2 border rounded-md shadow-sm transition duration-200 "
-              value={userStatus}
-              onChange={(e) => {
-                setUserStatus(e.target.value);
-                handleFilterChange("User Status", e.target.value);
+            <label className="block mb-2 font-medium text-gray-700">User Status</label>
+            <Select
+              options={userStatusOptions}
+              value={userStatusOptions.find(option => option.value === userStatus)}
+              onChange={(selectedOption) => handleChange('User Status', selectedOption)}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  marginBottom: '12px',
+                  borderColor: '#e2e8f0',
+                  boxShadow: 'none',
+                }),
+                option: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: state.isSelected || state.isFocused ? 'black' : 'white',
+                  color: state.isSelected || state.isFocused ? 'white' : 'black',
+                  cursor: 'pointer',
+                })
               }}
-            >
-              <option value="All">All</option>
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
+            />
           </div>
         </div>
 
         <div className="mb-4">
           <label className="block mb-2 font-medium text-gray-700">Warehouses</label>
-          <select
-            className="w-full p-2 border rounded-md shadow-sm transition duration-200 "
-            value={warehouse}
-            onChange={(e) => {
-              setWarehouse(e.target.value);
-              handleFilterChange("Warehouses", e.target.value);
+          <Select
+            options={warehouseOptions}
+            value={warehouseOptions.find(option => option.value === warehouse)}
+            onChange={(selectedOption) => handleChange('Warehouses', selectedOption)}
+            styles={{
+              control: (provided) => ({
+                ...provided,
+                width: '100%',
+                padding: '8px',
+                borderRadius: '6px',
+                marginBottom: '12px',
+                borderColor: '#e2e8f0',
+                boxShadow: 'none',
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                backgroundColor: state.isSelected || state.isFocused ? 'black' : 'white',
+                color: state.isSelected || state.isFocused ? 'white' : 'black',
+                cursor: 'pointer',
+              })
             }}
-          >
-            <option value="All">All</option>
-            <option value="Warehouse 1">Warehouse 1</option>
-            <option value="Warehouse 2">Warehouse 2</option>
-          </select>
+          />
         </div>
 
         <div className="button-container">
           <button
             className="reset-btn bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-            onClick={handleReset}
+            onClick={() => {
+              setbill('All');
+              setuser('All');
+              setware('All');
+            }}
           >
             Reset
           </button>
           <button
             className="apply-btn bg-black hover:bg-white hover:text-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-            onClick={handleApply}
+            onClick={() => console.log("Filters applied")}
           >
             Apply
           </button>
@@ -125,27 +160,6 @@ const FilterOptionsInvoices = ({ billing, user, ware, setbill, setuser, setware 
           display: flex;
           justify-content: flex-end;
           gap: 12px;
-        }
-
-        select {
-          width: 100%;
-          padding: 8px;
-          border-radius: 6px;
-          margin-bottom: 12px;
-          transition: border-color 0.2s, box-shadow 0.2s;
-          color: black;
-          background-color: white;
-        }
-
-        select:focus {
-          box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.5);
-          color: black;
-        }
-
-        /* Styling options */
-        select option {
-          background-color: white;
-          color: black;
         }
 
         label {

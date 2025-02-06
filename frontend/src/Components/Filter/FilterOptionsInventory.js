@@ -1,34 +1,40 @@
 import React, { useState } from "react";
+import Select from 'react-select';
 
 const FilterOptionsInventory = ({ quantity, location, category, setQuantity, setLocation, setCategory }) => {
-  const [quantityRange, setQuantityRange] = useState(quantity);
-  const [selectedLocation, setSelectedLocation] = useState(location);
-  const [selectedCategory, setSelectedCategory] = useState(category);
+  const [quantityValue, setQuantityValue] = useState(quantity);
+  const [locationValue, setLocationValue] = useState(location);
+  const [categoryValue, setCategoryValue] = useState(category);
 
-  const handleFilterChange = (type, option) => {
-    console.log(`Filter changed: Type - ${type}, Option - ${option}`);
+  const quantityOptions = [
+    { value: '<10', label: '<10' },
+    { value: '<50', label: '<50' },
+    { value: '<100', label: '<100' },
+    { value: '<500', label: '<500' },
+    { value: '>500', label: '>500' }
+  ];
 
-    if (type === 'Quantity Range') {
-      setQuantity(option);
-    } else if (type === "Location") {
-      setLocation(option);
-    } else if (type === "Category") {
-      setCategory(option);
+  const categoryOptions = [
+    { value: 'FBA', label: 'FBA' },
+    { value: 'FBM', label: 'FBM' },
+    { value: 'Storage', label: 'Storage' },
+    { value: 'Other', label: 'Other' }
+  ];
+
+  // Assuming `locationOptions` will be fetched from the backend
+  const locationOptions = [
+    
+  ];
+
+  const handleChange = (type, selectedOption) => {
+    const value = selectedOption ? selectedOption.value : 'All';
+    if (type === 'Quantity') {
+      setQuantity(value);
+    } else if (type === 'Location') {
+      setLocation(value);
+    } else if (type === 'Category') {
+      setCategory(value);
     }
-  };
-
-  const handleReset = () => {
-    setQuantity("All");
-    setLocation("All");
-    setCategory("All");
-    setQuantityRange("All");
-    setSelectedLocation("All");
-    setSelectedCategory("All");
-    console.log("Filters reset to default values.");
-  };
-
-  const handleApply = () => {
-    console.log("Filters applied:", { quantityRange, selectedLocation, selectedCategory });
   };
 
   return (
@@ -36,73 +42,104 @@ const FilterOptionsInventory = ({ quantity, location, category, setQuantity, set
       <div className="filter-container">
         <div className="filters-row">
           <div className="mb-4">
-            <label className="block mb-2 font-medium text-gray-700">Quantity Range</label>
-            <select
-              className="w-full p-2 border rounded-md shadow-sm transition duration-200"
-              value={quantityRange}
-              onChange={(e) => {
-                setQuantityRange(e.target.value);
-                handleFilterChange("Quantity Range", e.target.value);
+            <label className="block mb-2 font-medium text-gray-700">Quantity</label>
+            <Select
+              options={quantityOptions}
+              value={quantityOptions.find(option => option.value === quantityValue)}
+              onChange={(selectedOption) => handleChange('Quantity', selectedOption)}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  marginBottom: '12px',
+                  borderColor: '#e2e8f0',
+                  boxShadow: 'none',
+                }),
+                option: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: state.isSelected || state.isFocused ? 'black' : 'white',
+                  color: state.isSelected || state.isFocused ? 'white' : 'black',
+                  cursor: 'pointer',
+                })
               }}
-            >
-              <option value="All">All</option>
-              <option value="<10">&lt;10</option>
-              <option value="<50">&lt;50</option>
-              <option value="<100">&lt;100</option>
-              <option value="<500">&lt;500</option>
-              <option value=">500">&gt;500</option>
-            </select>
+            />
           </div>
 
           <div className="mb-4">
-            <label className="block mb-2 mr-12 font-medium text-gray-700">Location</label>
-            <select
-              className="w-full p-2 border rounded-md shadow-sm transition duration-200"
-              value={selectedLocation}
-              onChange={(e) => {
-                setSelectedLocation(e.target.value);
-                handleFilterChange("Location", e.target.value);
+            <label className="block mb-2 font-medium text-gray-700">Location</label>
+            <Select
+              options={locationOptions}
+              value={locationOptions.find(option => option.value === locationValue)}
+              onChange={(selectedOption) => handleChange('Location', selectedOption)}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '6px',
+                  marginBottom: '12px',
+                  borderColor: '#e2e8f0',
+                  boxShadow: 'none',
+                }),
+                option: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: state.isSelected || state.isFocused ? 'black' : 'white',
+                  color: state.isSelected || state.isFocused ? 'white' : 'black',
+                  cursor: 'pointer',
+                })
               }}
-            >
-              <option value="All">All</option>
-              {/* Options should be dynamically filled from backend */}
-            </select>
+            />
           </div>
         </div>
 
         <div className="mb-4">
           <label className="block mb-2 font-medium text-gray-700">Category</label>
-          <select
-            className="w-full p-2 border rounded-md shadow-sm transition duration-200"
-            value={selectedCategory}
-            onChange={(e) => {
-              setSelectedCategory(e.target.value);
-              handleFilterChange("Category", e.target.value);
+          <Select
+            options={categoryOptions}
+            value={categoryOptions.find(option => option.value === categoryValue)}
+            onChange={(selectedOption) => handleChange('Category', selectedOption)}
+            styles={{
+              control: (provided) => ({
+                ...provided,
+                width: '100%',
+                padding: '8px',
+                borderRadius: '6px',
+                marginBottom: '12px',
+                borderColor: '#e2e8f0',
+                boxShadow: 'none',
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                backgroundColor: state.isSelected || state.isFocused ? 'black' : 'white',
+                color: state.isSelected || state.isFocused ? 'white' : 'black',
+                cursor: 'pointer',
+              })
             }}
-          >
-            <option value="All">All</option>
-            <option value="FBA">FBA</option>
-            <option value="FBM">FBM</option>
-            <option value="Storage">Storage</option>
-            <option value="Other">Other</option>
-          </select>
+          />
         </div>
 
         <div className="button-container">
           <button
             className="reset-btn bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-            onClick={handleReset}
+            onClick={() => {
+              setQuantity('All');
+              setLocation('All');
+              setCategory('All');
+            }}
           >
             Reset
           </button>
           <button
             className="apply-btn bg-black hover:bg-white hover:text-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-            onClick={handleApply}
+            onClick={() => console.log("Filters applied")}
           >
             Apply
           </button>
         </div>
       </div>
+
       <style jsx>{`
         .filter-container {
           padding: 20px;
@@ -124,27 +161,6 @@ const FilterOptionsInventory = ({ quantity, location, category, setQuantity, set
           display: flex;
           justify-content: flex-end;
           gap: 12px;
-        }
-
-        select {
-          width: 100%;
-          padding: 8px;
-          border-radius: 6px;
-          margin-bottom: 12px;
-          transition: border-color 0.2s, box-shadow 0.2s;
-          color: black;
-          background-color: white;
-        }
-
-        select:focus {
-          box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.5);
-          color: black;
-        }
-
-        /* Styling options */
-        select option {
-          background-color: white;
-          color: black;
         }
 
         label {

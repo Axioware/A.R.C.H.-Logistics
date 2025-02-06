@@ -1,27 +1,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Function to convert RGB array to 'rgb(r, g, b)' string
 // Function to convert RGB array or string to 'rgb(r, g, b)' string
 function rgbArrayToString(color) {
   if (Array.isArray(color) && color.length === 3) {
     const [r, g, b] = color;
     return `rgb(${r}, ${g}, ${b})`;
   } else if (typeof color === 'string') {
-    // If it's a valid color string like 'black' or 'white', return it directly
-    return color;
+    return color; // If it's a valid color string like 'black' or 'white', return it directly
   }
   return 'rgb(0, 0, 0)'; // Default color if input is invalid
 }
-
 
 export default function AddButton({
   text,
   text_color,
   path,
   background_color,
-  width = '135px', // Default width
-  height = '45px', // Default height
+  width = '135px',
+  height = '45px',
 }) {
   const navigate = useNavigate();
 
@@ -31,8 +28,8 @@ export default function AddButton({
   return (
     <div className="add-button-container">
       <button
-        className={`add-button`}
-        onClick={() => navigate(path)} // Redirect to the given path when clicked
+        className="add-button"
+        onClick={() => navigate(path)}
       >
         {text}
       </button>
@@ -41,12 +38,12 @@ export default function AddButton({
         {`
           .add-button-container {
             display: flex;
-            justify-content: flex-end; /* Align button to the right on larger screens */
+            justify-content: flex-end;
             align-items: center;
-            height: 8vh; /* Adjust as necessary */
-            margin: 0px; /* Add some vertical spacing if needed */
+            height: 8vh;
+            margin: 0px;
             font-weight: bold;
-            padding: 10px 0px 10px 10px; /* Add some padding for smaller screens */
+            padding: 10px 0px 10px 10px;
           }
 
           .add-button {
@@ -61,38 +58,38 @@ export default function AddButton({
             font-size: 1rem;
             text-align: center;
             box-sizing: border-box;
-            transition: all 0.3s ease; /* Smooth hover effect */
-            // border: 2px solid black;
-            box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
-            display:flex;
+            transition: all 0.3s ease;
+            box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center; /* Centers text vertically */
+            justify-content: center; /* Centers text horizontally */
             white-space: nowrap;
-
           }
 
           .add-button:hover {
-            background-color: rgba(255, 255, 255, 0.8); /* Change background on hover */
-            color: black; /* Text color changes to black on hover */
-            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+            background-color: rgba(255, 255, 255, 0.8);
+            color: black;
+            box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
           }
 
           /* Responsive styles */
           @media (max-width: 768px) {
             .add-button-container {
-              justify-content: center; /* Center button on smaller screens */
+              justify-content: center;
             }
 
             .add-button {
-              width: 120px; /* Make button smaller on mobile */
+              width: 120px;
               height: 40px;
-              font-size: 0.5rem; /* Slightly smaller text */
+              font-size: 0.9rem;
             }
           }
 
           @media (max-width: 480px) {
             .add-button {
-              width: 100px; /* Further reduce button size */
+              width: 100px;
               height: 35px;
-              font-size: 0.8rem; /* Further reduce font size */
+              font-size: 0.8rem;
             }
           }
         `}
