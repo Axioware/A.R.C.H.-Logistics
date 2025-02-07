@@ -40,3 +40,6 @@ class Locations(models.Model):
 
     def __str__(self):
         return f"{self.location_name} - ({self.warehouse_id})"
+    
+class Services(models.Model):
+    id = models.AutoField(primary_key=True)
