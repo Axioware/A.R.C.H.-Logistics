@@ -88,7 +88,8 @@ const OtpForm = () => {
 
       if (response.ok) {
         localStorage.removeItem("reset_email");
-        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("refresh_token", data.refresh_token);
         navigate("/reset-password");
       } else {
         setError(data.message || "Invalid OTP. Please try again.");
@@ -101,90 +102,99 @@ const OtpForm = () => {
   };
 
   const styles = `
-    .field-input {
-      text-align: center;
-    }
-    .otpContainer {
-      width: 50%;
-      padding: 60px;
-      display: flex;
-      flexDirection: column;
-      justifyContent: center;
-      position: relative;
-      textAlign: center;
-      ...responsiveStyles.otpContainer;
-      lineHeight: 50px;
-    }
-    backArrow: {
-      position: "absolute";
-      top: "10px";
-      left: "10px";
-      fontSize: "1.75rem";
-      color: "#2c5b97";
-      textDecoration: "none";
-    }
-    heading: {
-      fontSize: "1.75rem";
-      marginBottom: "15px";
-      position: "relative";
-      color: "#333";
-      fontWeight: "bold";
-     
-    }
-    paragraph: {
-      fontSize: "0.875rem";
-      marginBottom: "30px";
-      color: "#666";
-      textAlign: "center";
-    }
-    otpInputGroup: {
-      display: flex;
-      justifyContent: "center";
-      gap: "10px";
-      textAlign:"center";
-    }
-    otpInput: {
-      width: "50px";
-      height: "50px";
-      border: "1px solid #ccc";
-      borderRadius: "10px";
-      fontSize: "24px";
-      textAlign: "center";
-      ...responsiveStyles.otpInput;
-    }
-    otpButton: {
-      width: "50%";
-      padding: "15px";
-      backgroundColor: "#2c5b97";
-      color: "white";
-      border: "none";
-      borderRadius: "10px";
-      fontSize: "1rem";
-      cursor: "pointer";
-      marginTop: "20px";
-      ...responsiveStyles.otpButton;
-    }
-    errorMessage: {
-      color: "red";
-      marginTop: "5px";
-      textAlign: "left";
-    }
-    footer: {
-      textAlign: "center";
-      marginTop: "30px";
-      fontSize: "0.875rem";
-      color: "#555";
-    }
-    terms: {
-      textAlign: "center";
-      marginTop: "10px";
-      fontSize: "0.75rem";
-    }
-    link: {
-      color: "#2c5b97";
-      textDecoration: "none";
-    }
-  `;
+  .otpContainer {
+    width: 50%;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    line-height: 50px;
+  }
+
+  .backArrow {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.75rem;
+    color: #2c5b97;
+    text-decoration: none;
+  }
+
+  .heading {
+    font-size: 1.75rem;
+    margin-bottom: 15px;
+    position: relative;
+    color: #333;
+    font-weight: bold;
+  }
+
+  .paragraph {
+    font-size: 0.875rem;
+    margin-bottom: 30px;
+    color: #666;
+    text-align: center;
+  }
+
+  .otpInputGroup {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .otpInput {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 24px;
+    text-align: center;
+    line-height: 50px; /* Ensures text is vertically centered */
+  }
+
+  .otpButton {
+    width: 50%;
+    padding: 15px;
+    background-color: #2c5b97;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+
+  .errorMessage {
+    color: red;
+    margin-top: 5px;
+    text-align: left;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.875rem;
+    color: #555;
+  }
+
+  .terms {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.75rem;
+  }
+
+  .link {
+    color: #2c5b97;
+    text-decoration: none;
+  }
+
+  .field-input {
+    text-align: center;
+  }
+`;
+
 
   return (
     <>
@@ -198,8 +208,8 @@ const OtpForm = () => {
         Enter the OTP code sent to <br />
         <b>{email}</b>
       </p>
-      <form onSubmit={handleSubmit}>
-        <div className={"otpInputGroup field-input"}>
+      <form className={"centerAlignContent"} onSubmit={handleSubmit}>
+        <div className={"otpInputGroup"}>
           {otp.map((digit, index) => (
             <GeneralField
               key={index}
