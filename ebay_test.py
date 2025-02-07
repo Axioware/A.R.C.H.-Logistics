@@ -1,120 +1,59 @@
-# import requests
-# import json
-# import os
-# from requests.auth import HTTPBasicAuth
-# import logging
+import requests
+import base64
+import webbrowser
 
-# # Configure logging
-# logging.basicConfig(level=logging.INFO)
+# eBay Sandbox Credentials
+CLIENT_ID = "SyedHass-AR-SBX-41d19c42d-926cb907"
+CLIENT_SECRET = "SBX-1d19c42ded8b-32a0-41eb-a629-9a3e"
+REDIRECT_URI = "Syed_Hassan_Ul_-SyedHass-AR-SBX-pilvw" 
+EBAY_ENV = "sandbox"  # Use 'sandbox' for testing, 'production' for live use
 
-# # eBay API credentials (load from environment variables)
-# CLIENT_ID = 'SyedHass-AR-SBX-41d19c42d-926cb907'
-# CLIENT_SECRET = 'SBX-1d19c42ded8b-32a0-41eb-a629-9a3e'
-# BASE_URL = 'https://api.sandbox.ebay.com/sell/inventory/v1/'
-# TOKEN_URL = 'https://api.sandbox.ebay.com/identity/v1/oauth2/token'
+# eBay OAuth URLs (Sandbox)
+AUTH_URL = f"https://auth.sandbox.ebay.com/oauth2/authorize"
+TOKEN_URL = "https://api.sandbox.ebay.com/identity/v1/oauth2/token"
 
-# # Global variable to store the access token
-# ACCESS_TOKEN = None
+# OAuth Scope (modify if needed)
+SCOPE = "https://api.ebay.com/oauth/api_scope"
 
-# # Function to retrieve or refresh the access token
-# def get_access_token():
-#     global ACCESS_TOKEN
-#     logging.info("Requesting new access token...")
+def get_auth_code():
+    """Step 1: Open eBay OAuth Authorization URL in browser"""
+    auth_link = f"{AUTH_URL}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code&scope={SCOPE}"
+    
+    print(f"Open this URL in your browser and log in:\n{auth_link}")
+    
+    # Automatically open the browser
+    webbrowser.open(auth_link)
+    
+    # Prompt user to enter authorization code manually
+    auth_code = input("\nPaste the authorization code here: ").strip()
+    return auth_code
 
-#     data = {
-#         'grant_type': 'client_credentials',
-#         'scope': 'https://api.ebay.com/oauth/api_scope/sell.inventory'
-#     }
+def get_access_token(auth_code):
+    """Step 2: Exchange Authorization Code for Access Token"""
+    credentials = f"{CLIENT_ID}:{CLIENT_SECRET}"
+    encoded_credentials = base64.b64encode(credentials.encode()).decode()
 
-#     headers = {
-#         'Content-Type': 'application/x-www-form-urlencoded'
-#     }
+    headers = {
+        "Authorization": f"Basic {encoded_credentials}",
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    data = {
+        "grant_type": "authorization_code",
+        "code": auth_code,
+        "redirect_uri": REDIRECT_URI
+    }
 
-#     response = requests.post(
-#         TOKEN_URL,
-#         headers=headers,
-#         auth=HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET),
-#         data=data
-#     )
+    response = requests.post(TOKEN_URL, headers=headers, data=data)
+    token_info = response.json()
 
-#     if response.status_code == 200:
-#         token_data = response.json()
-#         ACCESS_TOKEN = token_data['access_token']
-#         logging.info("Access token retrieved successfully.")
-#         return ACCESS_TOKEN
-#     else:
-#         logging.error(f"Failed to get token: {response.status_code} - {response.text}")
-#         raise Exception("Unable to retrieve access token.")
+    if "access_token" in token_info:
+        print("\n✅ Access Token Retrieved Successfully!")
+        print(f"Access Token: {token_info['access_token']}")
+        print(f"Expires in: {token_info['expires_in']} seconds")
+    else:
+        print("\n❌ Error retrieving access token:", token_info)
 
-# # Helper function to handle API requests
-# def api_request(method, endpoint, payload=None):
-#     global ACCESS_TOKEN
-#     if not ACCESS_TOKEN:
-#         get_access_token()
-
-#     url = f"{BASE_URL}{endpoint}"
-#     headers = {
-#         'Authorization': f'Bearer {ACCESS_TOKEN}',
-#         'Content-Type': 'application/json',
-#     }
-
-#     try:
-#         if method.upper() == 'GET':
-#             response = requests.get(url, headers=headers)
-#         elif method.upper() == 'POST':
-#             response = requests.post(url, headers=headers, data=json.dumps(payload))
-#         else:
-#             raise ValueError("Unsupported method. Use 'GET' or 'POST'.")
-
-#         if response.status_code == 401:  # Token expired or invalid
-#             logging.warning("Access token expired. Refreshing token...")
-#             get_access_token()
-#             return api_request(method, endpoint, payload)  # Retry with new token
-
-#         response.raise_for_status()
-#         return response.json()
-
-#     except requests.exceptions.RequestException as e:
-#         logging.error(f"API request failed: {e}")
-#         return None
-
-# # Test GET Inventory Item
-# def get_inventory_item(sku):
-#     endpoint = f"inventory_item/{sku}"
-#     response = api_request('GET', endpoint)
-#     if response:
-#         print(json.dumps(response, indent=4))
-
-# # Test POST (Create or Update) Inventory Item
-# def create_inventory_item(sku, data):
-#     endpoint = f"inventory_item/{sku}"
-#     response = api_request('POST', endpoint, payload=data)
-#     if response:
-#         print(json.dumps(response, indent=4))
-
-# if __name__ == "__main__":
-#     test_sku = 'test-sku-001'
-
-#     # Sample data for inventory item
-#     inventory_data = {
-#         "availability": {
-#             "shipToLocationAvailability": {
-#                 "quantity": 100
-#             }
-#         },
-#         "condition": "NEW",
-#         "product": {
-#             "title": "Test Product",
-#             "description": "This is a test product for eBay API.",
-#             "aspects": {
-#                 "Brand": ["Generic"],
-#                 "Type": ["Test Type"]
-#             }
-#         }
-#     }
-
-#     print("Creating/Updating Inventory Item...")
-#     create_inventory_item(test_sku, inventory_data)
-
-#     print("Fetching Inventory Item...")
-#     get_inventory_item(test_sku)
+if __name__ == "__main__":
+    auth_code = get_auth_code()
+    if auth_code:
+        get_access_token(auth_code)

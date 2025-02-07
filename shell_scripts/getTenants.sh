@@ -8,7 +8,7 @@ if [ ! -f "manage.py" ]; then
 fi
 
 # Execute the Python script in the Django shell
-python manage.py shell <<EOF
+python3 manage.py shell <<EOF
 from TenantsManagement.models import Client, Domain  # Adjust model paths to your project
 
 # Fetch and print tenants and their domains

@@ -12,22 +12,25 @@ from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from Users.models import UsersExtended, OTP
-
+from django.contrib.auth import get_user_model
 
 # Create your views here.
 
 @api_view(['POST'])
 def send_otp(request):
     email = request.data.get('email')
-    
-    user = settings.AUTH_USER_MODEL.objects.filter(email=email).first()
-    if user == None:
+
+    # Get user model dynamically
+    User = get_user_model()
+    user = User.objects.filter(email=email).first()
+
+    if user is None:
         user = UsersExtended.objects.filter(email2=email).first()
-    
-    if user == None:
+
+    if user is None:
         return Response({"error": "User with this email does not exist."}, status=400)
 
-    # Generate OTP and its expiration
+    # Generate OTP and expiration
     otp_code = OTP.generate_otp()[:5]
     expires_at = timezone.now() + timedelta(minutes=10)
 
@@ -38,13 +41,12 @@ def send_otp(request):
     send_mail(
         'Your OTP Code',
         f'Your OTP code is: {otp_code}',
-        'prepprime@logistics.com',
+        'ulhaqhassan2@gmail.com',
         [email],
         fail_silently=False,
     )
 
     return Response({"message": "OTP sent to email."}, status=200)
-
 
 @api_view(['POST'])
 def verify_otp(request):
@@ -88,20 +90,19 @@ def logout(request):
 @permission_classes([IsAuthenticated])
 def change_password(request):
     password = request.data.get('password')
+    
     if not password:
         return Response({"error": "Password is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-    try:
-        # Updating the password
-        request.user.password = make_password(password)
-        request.user.save()
-        
-        logout(request)
+    # Update password securely
+    user = request.user
+    user.set_password(password)  # Securely update password
+    user.save()
 
-        return Response({"message": "Password updated"}, status=status.HTTP_200_OK)
-    except User.DoesNotExist:
-        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-    
+    # Logout the user
+    logout(request)
+
+    return Response({"message": "Password updated successfully"}, status=status.HTTP_200_OK)
 
 
 # from django_tenants.utils import schema_context
