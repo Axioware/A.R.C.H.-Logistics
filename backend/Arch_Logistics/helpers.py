@@ -3,7 +3,7 @@ from Users.models import UsersExtended
 from Billing.models import  CustomRates
 import pytz
 from datetime import datetime
-from datetime import timezone as time
+from datetime import timezone as time, UTC
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken
 from django.utils import timezone
@@ -59,7 +59,7 @@ class CustomJWTAuthentication(JWTAuthentication):
         user_id = validated_token['user_id']
         user = User.objects.get(id=user_id)
         if user.extended.last_logout:
-            token_iat = timezone.datetime.fromtimestamp(validated_token['iat'], tz=time.utc)
+            token_iat = timezone.datetime.fromtimestamp(validated_token['iat'], tz=UTC)
             if token_iat < user.extended.last_logout:
                 raise InvalidToken('Invalid Token.')
         return validated_token

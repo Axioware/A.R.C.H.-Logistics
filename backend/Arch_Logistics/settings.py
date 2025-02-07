@@ -66,6 +66,17 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 ]
 
+# SIMPLE_JWT = {
+#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+#     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+#     "ROTATE_REFRESH_TOKENS": True,
+#     "BLACKLIST_AFTER_ROTATION": True,  # Enables blacklisting
+#     "AUTH_HEADER_TYPES": ("Bearer",),
+#     "SIGNING_KEY": SECRET_KEY,
+#     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+#     "TOKEN_BLACKLIST_ENABLED": True,  # Ensure this is True
+# }
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'Arch_Logistics.helpers.CustomJWTAuthentication',
@@ -134,6 +145,7 @@ TENANT_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.staticfiles',
+    'rest_framework_simplejwt.token_blacklist',
     # 'myapp.houses',
 )
 

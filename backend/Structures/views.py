@@ -143,98 +143,26 @@ def single_location(request, location_id):
     
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
-def orders(request):
-    user = request.user
+def services(request):
+    """API for retrieving and creating services"""
 
     if request.method == 'GET':
-        category_param = request.query_params.get('category', None)
-        if category_param:
-            order_list = Orders.objects.filter(category=category_param).values('order_id', 'category', 'order_name', 'order_charge')
-        else:
-            order_list = Orders.objects.all().values('order_id', 'category', 'order_name', 'order_charge')
-
-        return Response(list(order_list), status=status.HTTP_200_OK)
+        services_list = Services.objects.values('service_id', 'service_name', 'service_charge')
+        return Response(list(services_list), status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
-        if not authenticate_clearance_level(user, [1, 2]):
+        if not authenticate_clearance_level(request.user, [1]):  # Only Owner/Manager can add services
             return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
 
         data = request.data
-        order_id = data.get('order_id')
-        order_name = data.get('order_name')
-        order_charge = data.get('order_charge')
+        service_name = data.get('service_name')
+        service_charge = data.get('service_charge', 0.0)
 
-        if not order_id or not order_name or not order_charge:
-            return Response({"error": "All fields (order_id, order_name, order_charge) are required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not service_name:
+            return Response({"error": "Service name is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            order = Orders.objects.get(order_id=order_id)
-        except ObjectDoesNotExist:
-            return Response({"error": "Invalid order_id, Order not found"}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Create new order entry
-        new_order = Orders.objects.create(
-            order_id=order.order_id,
-            category=order.category,
-            order_name=order_name,
-            order_charge=order_charge
-        )
-
-        return Response({"message": "Order created successfully", "order_id": new_order.order_id}, status=status.HTTP_201_CREATED)
-
-        
-@api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated])
-def order_detail(request, pk):
-    user = request.user
-
-    try:
-        # Fetch the specific order instance
-        order = Orders.objects.get(order_id=pk)
-    except Orders.DoesNotExist:
-        return Response({"error": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        # Return the details of the specific order
-        return Response({
-            'order_id': order.order_id,
-            'category': order.category,
-            'order_name': order.order_name,
-            'order_charge': order.order_charge
-        }, status=status.HTTP_200_OK)
-
-    elif request.method == 'PUT':
-        # Ensure the user is authorized to update
-        if authenticate_clearance_level(user, [1, 2]):
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
-
-        try:
-            data = request.data
-            order_name = data.get('order_name')
-            order_charge = data.get('order_charge')
-
-            if not order_charge:
-                return Response({"error": "Field 'order_charge' is required."}, status=status.HTTP_400_BAD_REQUEST)
-
-            # Update order details
-            order.order_name = order_name if order_name else order.order_name
-            order.order_charge = order_charge
-            order.save()
-
-            return Response({'message': 'Order updated successfully.'}, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    elif request.method == 'DELETE':
-        # Ensure the user is authorized to delete
-        if authenticate_clearance_level(user, [1, 2]):
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
-
-        # Delete the order
-        order.delete()
-        return Response({"message": "Order deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
-
+        new_service = Services.objects.create(service_name=service_name, service_charge=service_charge)
+        return Response({"message": "Service created", "service_id": new_service.service_id}, status=status.HTTP_201_CREATED)
 
 @csrf_exempt
 @api_view(['GET', 'POST'])

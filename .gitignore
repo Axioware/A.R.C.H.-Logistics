@@ -1,9 +1,11 @@
 .vscode/
 backend/media/fnsku/*
 backend/media/trackings/*
-archlogistics/
+archlogistics
 prep/
 backend/static/invoices/*
 backend/Users/tests/
 backend/backend_env
 arch_backend/
+backend/**/migrations/* 
+!backend/**/migrations/__init__.py
