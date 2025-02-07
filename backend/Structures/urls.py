@@ -3,7 +3,7 @@ from django.urls import path
 
 
 urlpatterns = [
-    path('api/orders/', views.orders, name='orders'),
+    path('api/services/', views.services, name='orders'),
     path('api/single-order/<int:pk>/', views.order_detail, name='list_received'),
     path('api/locations/', views.Locations, name='bins'),
     path('api/locations/<int:id>', views.single_location, name='single-bin'),
