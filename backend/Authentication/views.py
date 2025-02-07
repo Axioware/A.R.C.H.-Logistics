@@ -9,10 +9,10 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from django.conf import settings
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from Users.models import UsersExtended, OTP
 from django.contrib.auth import get_user_model
+from django.contrib.auth import logout as django_logout
 
 # Create your views here.
 
@@ -76,33 +76,54 @@ def verify_otp(request):
 @permission_classes([IsAuthenticated])
 def logout(request):
     try:
+        # Store logout timestamp
         request.user.extended.last_logout = timezone.now()
         request.user.extended.save()
-        refresh_token = request.data.get('refresh')
-        token = RefreshToken(refresh_token)
-        token.blacklist()
-    except TokenError as e:
-        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Get refresh token from request
+        refresh_token = request.data.get('refresh_token')
+        if refresh_token:
+            token = RefreshToken(refresh_token)
+            token.blacklist()  # Blacklist the refresh token
+        else:
+            return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    except TokenError:
+        return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Log the user out from Django session
+    django_logout(request)
 
     return Response({"message": "Logged out successfully"}, status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['POST']) #TODO TEST
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_password(request):
     password = request.data.get('password')
-    
+
     if not password:
         return Response({"error": "Password is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Update password securely
+    # Update the user's password securely
     user = request.user
-    user.set_password(password)  # Securely update password
+    user.set_password(password)
     user.save()
 
-    # Logout the user
-    logout(request)
+    # Blacklist the user's refresh token
+    refresh_token = request.data.get("refresh_token")
+    if refresh_token:
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()  # Blacklist token to invalidate it
+        except TokenError:
+            return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response({"message": "Password updated successfully"}, status=status.HTTP_200_OK)
+    # Log out the user from Django session
+    django_logout(request)
+
+    return Response({"message": "Password updated successfully and user logged out"}, status=status.HTTP_200_OK)
 
 
 # from django_tenants.utils import schema_context
