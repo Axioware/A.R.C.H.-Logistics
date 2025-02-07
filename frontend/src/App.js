@@ -43,17 +43,17 @@ import Forbidden from './Components/Error_Components/Forbidden';
 
 //Inventory
 import AllInventory from './Pages/Inventory/AllInventory';
+import AddInventory from "./Pages/Inventory/AddInventory";
 import ByDateInventory from './Pages/Inventory/ByDateInventory';
 import CombineInventory from './Pages/Inventory/CombineInventory';
-import AddInventory from "./Pages/Inventory/AddInventory";
 
 
 //Orders
 import ActiveOrder from './Pages/Order/ActiveOrder';
 import PendingOrder from './Pages/Order/PendingOrder';
+import OrderHistory from './Pages/Order/OrderHistory';
 import BoxesToBeShipped from './Pages/Order/BoxesToBeShipped';
 import OrderDetails from './Pages/Order/OrderDetails';
-import OrderHistory from './Pages/Order/OrderHistory';
 import ViewTracking from './Pages/Order/ViewTracking';
 
 //Settings
@@ -157,29 +157,28 @@ function App() {
 
         {/* Settings */}
         <Route path="/rates-management" element={<RatesManagement menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        
-        <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/service" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/add-service" element={<AddService menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/set-rates" element={<SetRates menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+        {/* <Route path="/service" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+        {/* <Route path="/add-service" element={<AddService menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+        {/* <Route path="/set-rates" element={<SetRates menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
         {/* Modals */}
         <Route path="/test" element={<Forbidden />} />
 
         {/* Inventory  */}
         <Route path="/all-items" element={<AllInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/by-date-inventory" element={<ByDateInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/inventory-overview" element={<CombineInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-inventory" element={<AddInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        {/* <Route path="/by-date-inventory" element={<ByDateInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+        {/* <Route path="/inventory-overview" element={<CombineInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
 
         {/* Orders */}
         <Route path="/active-order" element={<ActiveOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/pending-order" element={<PendingOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        {/* <Route path="/boxes-to-be-shipped" element={<BoxesToBeShipped />} />      */}
-        {/* <Route path="/order-details" element={<OrderDetails />} /> */}
         <Route path="/order-history" element={<OrderHistory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/view-tracking" element={<ViewTracking menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        {/* <Route path="/order-details" element={<OrderDetails />} /> */}
+        {/* <Route path="/boxes-to-be-shipped" element={<BoxesToBeShipped />} />      */}
+        {/* <Route path="/view-tracking" element={<ViewTracking menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
         
       </Routes>
