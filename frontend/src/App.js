@@ -29,7 +29,6 @@ import EditLocation from './Pages/Locations/EditLocation';
 import AllLocation from './Pages/Locations/AllLocation';
 
 //Components
-import BoxContent from './Components/General/BoxContent';
 import Spinner from "./Components/General/Spinner";
 
 //Payment Management
@@ -147,7 +146,6 @@ function App() {
         <Route path="/add-user" element={<AddUser menuItems={menuItems} toggleExpand={toggleExpand}/>} />
 
         {/* Components */}
-        <Route path="/content" element={<BoxContent />} />
         <Route path="/spinner" element={<Spinner />} />
         
         {/* Payment Section */}
@@ -158,7 +156,7 @@ function App() {
         {/* Settings */}
         <Route path="/rates-management" element={<RatesManagement menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
-        {/* <Route path="/service" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+        <Route path="/service" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-service" element={<AddService menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/set-rates" element={<SetRates menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 

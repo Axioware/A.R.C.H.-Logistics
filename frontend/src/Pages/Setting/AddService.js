@@ -105,8 +105,8 @@ const AddService = () => {
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={styles.mainContent}>
           <NavPath
-            text={['Home', 'All Services', 'Add Services']}
-            paths={['/home', '/services', '/add-service']}
+            text={['Home', 'Service', 'Add Services']}
+            paths={['/home', '/service', '/add-service']}
             text_color={[255, 255, 255]}
             background_color={[23, 23, 23]}
             hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
@@ -127,7 +127,6 @@ const AddService = () => {
             <FilterDropdown
               text={["FBA", "FBM", "Storage", "Others"]}
               text_color={[0, 0, 0]}
-              selected={["FBA"]}  // Default selected option
               background_color={[255, 255, 255]}
               hover_color={[200, 200, 200]}
               selected_color={[150, 150, 150]}
@@ -136,6 +135,7 @@ const AddService = () => {
               border_radius="10px"
               width={["260px"]}
               height="45px"
+              selected={[]}
 
             />
             </div>
