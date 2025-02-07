@@ -5,6 +5,7 @@ import NavPath from '../../Components/General/NavPath';
 import PageHeading from '../../Components/Table_Components/PageHeading';
 import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
+import DropDown from "../../Components/General/DropDown";
 
 
 const AddUser = () => {
@@ -20,6 +21,11 @@ const AddUser = () => {
       return storedState === null ? true : JSON.parse(storedState);
     });
   
+    const [warehouse, setWarehouse] = useState('');
+
+    const handleSelectWarehouse = (value) => {
+      setWarehouse(value);
+    };
 
   const styles = {
     mainContent: {
@@ -34,6 +40,7 @@ const AddUser = () => {
       marginLeft:'20px',
       marginTop:'35px',
       marginRight:'100px',
+      alignSelf:'flex-start',
   },
 
   select: {
@@ -119,6 +126,7 @@ const AddUser = () => {
           <div id="headingcontainer" style={styles.headingcontainer}>
             <PageHeading text="Add User" />
           </div>
+        
         <div id="RoleContainer" style={styles.RoleContainer}>
 
         <label htmlFor="Dropdown" style={styles.label}>Role</label>
@@ -132,6 +140,13 @@ const AddUser = () => {
         </div>
 
           <form id="form" style={styles.form} onSubmit={handleSubmit}>
+          <DropDown 
+                label="Warehouse"
+                data={["Primary", "Secondary", "Others"]}
+                onSelect={handleSelectWarehouse}
+                width="330px"
+                height="45px"
+              />
           <GeneralField label="LLC Name" field_type="text" hint="Enter Company name" required={true}/>
           <GeneralField label="First Name" field_type="text" hint="First Name (e.g. , John)" />
           <GeneralField label="Last Name" field_type="text" hint="Last Name (e.g. , Doe)" />

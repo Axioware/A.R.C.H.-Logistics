@@ -159,7 +159,7 @@ function App() {
         <Route path="/rates-management" element={<RatesManagement menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
         {/* <Route path="/service" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
-        {/* <Route path="/add-service" element={<AddService menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+        <Route path="/add-service" element={<AddService menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/set-rates" element={<SetRates menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
         {/* Modals */}
