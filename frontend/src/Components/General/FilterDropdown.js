@@ -4,6 +4,7 @@ import styled from 'styled-components';
 const StyledDropdown = styled.div`
   position: relative;
   width: fit-content;
+  margin-top:10px;
 
   .dropdown-toggle {
     cursor: pointer;
@@ -11,7 +12,7 @@ const StyledDropdown = styled.div`
     background-color: rgb(${props => props.backgroundColor});
     color: rgb(${props => props.textColor});
     border-radius: ${props => props.borderRadius};
-    width: ${props => props.width[0]}; /* Assuming all buttons are the same width */
+    width: ${props => props.width[0]};
     border: none;
     display: flex;
     justify-content: space-between;
@@ -65,7 +66,7 @@ const StyledDropdown = styled.div`
 const FilterDropdown = ({
   text,
   text_color,
-  selected,
+  selected=[],
   background_color,
   hover_color,
   selected_color,
@@ -91,10 +92,14 @@ const FilterDropdown = ({
       } else {
         setSelectedOptions([...selectedOptions, option]);
       }
+      
     }
     func(option); // Callback function when an option is selected
     if (radio) setShowDropdown(false); // Close dropdown if radio is true
   };
+
+  // Displaying the selected options as text on the dropdown button
+  const displayText = selectedOptions.length > 0 ? selectedOptions.join(', ') : 'Select Options';
 
   return (
     <StyledDropdown
@@ -107,7 +112,7 @@ const FilterDropdown = ({
       height={height}
     >
       <button className="dropdown-toggle" onClick={handleToggleDropdown}>
-        Select Options
+        {displayText}
         <svg viewBox="0 0 20 20" width="20" height="20">
           <path fill="currentColor" d="M5 8l5 5 5-5H5z" />
         </svg>
