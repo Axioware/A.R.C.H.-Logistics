@@ -30,17 +30,24 @@ export default function Dashboard() {
     return null;
   }
 
+  // Get screen height for dynamic logo sizing
+  const screenHeight = Dimensions.get("window").height;
+  const logoHeight = screenHeight * 0.07; // 7% of screen height, adjust as needed
+  const profileHeight = screenHeight * 0.07;
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Top Section */}
       <View style={styles.topSection}>
-        <Image source={require("../../assets/logo.png")} style={styles.logo} />
+        <Image source={require("../../assets/logo.png")} 
+        style={[styles.logo, { height: logoHeight}]}
+        resizeMode="contain" />
 
         {/* Profile Button */}
         <TouchableOpacity style={styles.profileButton}>
           <Image
             source={{ uri: "https://via.placeholder.com/50x50.png?text= " }} // Grey placeholder
-            style={styles.profileImage}
+            style={[styles.profileImage, { height: profileHeight}]}
           />
         </TouchableOpacity>
       </View>
@@ -125,10 +132,9 @@ const styles = StyleSheet.create({
     position: "relative",      // Needed for the absolute profile button
   },
   logo: {
-    width: width * 0.7, // Logo is 50% of screen width
-    height: width * 0.2,
-    aspectRatio: 2, // Adjust the height proportionally
-    resizeMode: "contain",
+    width: '40%', // Adjust the width of the logo
+    alignSelf: 'center', // Center the logo horizontally
+    marginBottom: 10, // Space between logo and content
   },
   profileButton: {
     position: "absolute",

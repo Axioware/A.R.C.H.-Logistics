@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet,Dimensions, SafeAreaView } from 'react-native';
 import Card from '../components/Card';
 import Footer from '../components/Footer';
 import LoginButton from '../components/LoginButton';
@@ -18,60 +18,75 @@ export default function OtpVerification() {
     console.log('Submit button pressed');
   };
 
+  // Get screen height for dynamic logo sizing
+    const screenHeight = Dimensions.get("window").height;
+    const logoHeight = screenHeight * 0.07;
+
   return (
-    <View style={styles.container}>
-      {/* Logo */}
-      <Image source={require('../assets/logo.png')} style={styles.logo} />
-
-      {/* Parent Card */}
-      <Card imageSource={require('../assets/otp.png')}>
-        <View style={styles.otpContainer}>
-          <OtpInput
-            numberOfDigits={5}
-            focusColor="green"
-            focusStickBlinkingDuration={500}
-            onTextChange={handleOtpChange}
-            onFilled={handleOtpFilled}
-            hideStick={true}
-            textInputProps={{
-              accessibilityLabel: 'One-Time Password',
-            }}
-            theme={{
-              containerStyle: styles.otpContainerStyle,
-              pinCodeContainerStyle: styles.pinCodeContainer,
-              pinCodeTextStyle: styles.pinCodeText,
-              focusStickStyle: styles.focusStick,
-              focusedPinCodeContainerStyle: styles.activePinCodeContainer,
-            }}
-          />
-        </View>
-
-        {/* Submit Button */}
-        <LoginButton
-          title="Submit OTP"
-          onPress={handleSubmit}
-        //   style={styles.loginButton}
+    <SafeAreaView style={styles.safeAreaContainer}>
+      <View style={styles.container}>
+        {/* Logo */}
+        {/* Logo */}
+        <Image
+          source={require('../assets/logo.png')}
+          style={[styles.logo, { height: logoHeight }]}
+          resizeMode="contain"
         />
-      </Card>
 
-      {/* Footer */}
-      <Footer />
-    </View>
+        {/* Parent Card */}
+        <Card imageSource={require('../assets/otp.png')}>
+          <View style={styles.otpContainer}>
+            <OtpInput
+              numberOfDigits={5}
+              focusColor="green"
+              focusStickBlinkingDuration={500}
+              onTextChange={handleOtpChange}
+              onFilled={handleOtpFilled}
+              hideStick={true}
+              textInputProps={{
+                accessibilityLabel: 'One-Time Password',
+              }}
+              theme={{
+                containerStyle: styles.otpContainerStyle,
+                pinCodeContainerStyle: styles.pinCodeContainer,
+                pinCodeTextStyle: styles.pinCodeText,
+                focusStickStyle: styles.focusStick,
+                focusedPinCodeContainerStyle: styles.activePinCodeContainer,
+              }}
+            />
+          </View>
+
+          {/* Submit Button */}
+          <LoginButton
+            title="Submit OTP"
+            onPress={handleSubmit}
+          //   style={styles.loginButton}
+          />
+        </Card>
+
+        {/* Footer */}
+        <Footer />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeAreaContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#f8f9fa',
+    justifyContent: 'flex-start', // Ensure content starts from the top
+    alignItems: 'center', // Center everything horizontally
     paddingHorizontal: 20,
+    paddingTop: 0, // Adjust top padding if needed
   },
   logo: {
-    width: 275,
-    height: 85,
-    marginTop: 20,
+    width: '60%', // Adjust the width of the logo
+    alignSelf: 'center', // Center the logo horizontally
+    marginBottom: 20, // Space between logo and content
   },
   otpContainer: {
     width: '100%',

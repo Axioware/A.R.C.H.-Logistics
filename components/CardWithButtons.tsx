@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginVertical: 8,
     borderRadius: 8,
+    elevation: 1,
   },
   buttonText: {
     flex: 1,

@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import CardWithButtons from "../components/CardWithButtons"; // Assuming CardWithButtons is in the same directory
 
-export default function Settings() {
+export default function InventoryCount() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -16,26 +16,26 @@ export default function Settings() {
 
         {/* Profile Card with Reusable Component */}
         <CardWithButtons
-          title="Settings"
+          title="Inventory Count"
           button1={{
-            icon: "account",
-            iconFamily: "MaterialCommunityIcons",
-            text: "Account Information",
-            onPress: () => console.log("Settings pressed"),
+            icon: "stepforward",
+            iconFamily: "AntDesign",
+            text: "Count Product",
+            onPress: () => console.log("Search Products pressed"),
             visible: true,
           }}
           button2={{
-            icon: "lock",
-            text: "Change Password",
-            iconFamily: "Feather",
-            onPress: () => console.log("Change Password Pressed"),
+            icon: "location",
+            iconFamily: "EvilIcons",
+            text: "Count Locations",
+            onPress: () => console.log("Search by Location pressed"),
             visible: true,
           }}
           button3={{
-            icon: "lock",
-            text: "Change Password",
-            iconFamily: "Feather",
-            onPress: () => console.log("Change Password Pressed"),
+            icon: "stepforward",
+            iconFamily: "AntDesign",
+            text: "Inventory Count",
+            onPress: () => console.log("Inventory Count pressed"),
             visible: false,
           }}
         />
@@ -62,5 +62,26 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
     color: "#333",
+  },
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 10,
+    marginTop: "auto",
+  },
+  logoutText: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: "#333",
+    fontWeight: "bold",
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
   },
 });
