@@ -11,7 +11,7 @@ class Command(BaseCommand):
             name = "Global Tenant"
             paid_until = "2026-01-01"
             on_trial = True
-            tenant_domain = "global.localhost"
+            tenant_domain = "global.a-r-c-h-logistics.onrender.com"
 
             # Create tenant
             tenant, created = Client.objects.get_or_create(
