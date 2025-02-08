@@ -35,6 +35,7 @@ import Spinner from "./Components/General/Spinner";
 import BalanceSheet from './Pages/Balance_Sheet/BalanceSheet';
 import Transaction from './Pages/Balance_Sheet/Transaction';
 import Invoices from './Pages/Balance_Sheet/Invoices';
+import InvoicesDetails from './Pages/Balance_Sheet/Invoicedetails';
 import RatesManagement from './Pages/Custom_Rates/RatesManagement';
 
 //Modals
@@ -152,6 +153,7 @@ function App() {
         <Route path="/balance-sheet" element={<BalanceSheet menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/transaction" element={<Transaction menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/invoices" element={<Invoices menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/invoices-details" element={<InvoicesDetails menuItems={menuItems} toggleExpand={toggleExpand}/>} />
 
         {/* Settings */}
         <Route path="/rates-management" element={<RatesManagement menuItems={menuItems} toggleExpand={toggleExpand}/>} />

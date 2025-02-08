@@ -9,7 +9,7 @@ import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
 import FilterOptionsInvoices from "../../Components/Filter/FilterOptionsInvoices";
 
-export default function All_Users() {
+export default function Invoices() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
