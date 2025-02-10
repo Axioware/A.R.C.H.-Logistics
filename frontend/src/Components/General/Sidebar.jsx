@@ -160,13 +160,25 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
 
       <style jsx>{`
         @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+        @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Kumar+One&family=Montserrat:ital,wght@0,100..900;1,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet");
 
         * {
           margin: 0;
           padding: 0;
           box-sizing: border-box;
-          font-family: "Poppins", sans-serif;
+        //  font-family: "DM Sans", serif;
+          font-family: "PT Sans", serif;
+          // font-family: "Be Vietnam Pro";
         }
+
+        //@font-face {
+        //     font-family: 'abc';
+        //     src: url('../../Assets/fonts/Be_Vietnam_Pro/BeVietnamPro-BoldItalic.ttf') format('woff2'),
+        //      //  url('/fonts/MyFont.woff') format('woff'),
+        //      //  url('/fonts/MyFont.ttf') format('truetype');
+        //     font-weight: normal;
+        //     font-style: normal;
+        // }
 
         .sidebar {
           position: fixed;
