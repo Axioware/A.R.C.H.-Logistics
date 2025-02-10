@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
-import PrepPrimeLogo from '../../Assets/Images/Login/PrepPrimeLogo.jpg';
 import BackgroundImage from '../../Assets/Images/Login/background.jpg';
 import arch from '../../Assets/Images/archlabs.jpg';
 
@@ -13,10 +12,15 @@ const ResetPassword = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    // Function to update state from GeneralField
+    const handleInputChange = (field, value) => {
+        console.log(`Updating ${field} with value:`, value); // Debug log
+        setFormData((prev) => ({ ...prev, [field]: value }));
     };
+
+    useEffect(() => {
+        console.log("Form Data Updated:", formData); // Debugging state updates
+    }, [formData]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,23 +36,32 @@ const ResetPassword = () => {
         }
 
         const btn = document.getElementById('resetbtn');
-        btn.style.backgroundColor = 'grey'
-        btn.disabled = true; 
+        btn.style.backgroundColor = 'grey';
+        btn.disabled = true;
 
         // Disable fields and button
         setIsSubmitting(true);
         setErrorMessage("");
 
         try {
-            // Sample API call
-            const response = await fetch("/api/reset-password", {
+            const accessToken = localStorage.getItem("access_token");
+            const refreshToken = localStorage.getItem("refresh_token");
+
+            const response = await fetch("http://asad.localhost:8000/auth/api/reset-password/", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ password: formData.newPassword }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify({ 
+                    password: formData.newPassword, 
+                    refresh_token: refreshToken
+                }),
             });
 
             if (response.status === 200) {
-                localStorage.setItem("token", null);
+                localStorage.removeItem("access_token");
+                localStorage.removeItem("refresh_token");
                 navigate("/login");
             } else if (response.status === 400) {
                 setErrorMessage("Please choose a different password.");
@@ -59,148 +72,116 @@ const ResetPassword = () => {
             setErrorMessage("An unexpected error occurred. Please try again.");
         } finally {
             setIsSubmitting(false);
-            btn.style.backgroundColor = '#1e1e1e'
+            btn.style.backgroundColor = '#1e1e1e';
             btn.disabled = false;
         }
     };
 
     return (
-        <>
-            {/* Add font-face styles */}
-            <style>
-                {`
-                    @font-face {
-                        font-family: 'Konkhmer Sleokchher';
-                        src: url('../../Assets/Fonts/Konkhmer Sleokchher.ttf') format('truetype');
-                    }
-                    body {
-                        font-family: 'Konkhmer Sleokchher', sans-serif;
-                    }
-                `}
-            </style>
-
+        <div
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+                backgroundColor: "#e0e0e0",
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${BackgroundImage})`,
+                backgroundSize: "cover",
+                filter: "saturate(0.8)",
+            }}
+        >
             <div
                 style={{
                     display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100vh",
-                    backgroundColor: "#e0e0e0",
-                    backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${BackgroundImage})`,
-                    backgroundSize: "cover",
-                    filter: "saturate(0.8)",
+                    width: "900px",
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "10px",
+                    overflow: "hidden",
                 }}
             >
                 <div
                     style={{
+                        backgroundColor: "#000",
+                        color: "#fff",
+                        width: "60%",
+                        padding: "20px",
                         display: "flex",
-                        width: "900px",
-                        backgroundColor: "rgba(255, 255, 255, 0.9)",
-                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                        borderRadius: "10px",
-                        overflow: "hidden",
+                        justifyContent: "center",
+                        alignItems: "center",
                     }}
                 >
-                    <div
+                    <img
+                        src={arch}
+                        alt="ARCH Logo"
+                        style={{ maxWidth: "80%", height: "auto" }}
+                    />
+                </div>
+                <div
+                    style={{
+                        width: "40%",
+                        padding: "40px",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                    }}
+                >
+                    <h2
                         style={{
-                            backgroundColor: "#000",
-                            color: "#fff",
-                            width: "60%",
-                            padding: "20px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
+                            fontSize: "28px",
+                            marginBottom: "16%",
+                            color: "#333",
+                            marginLeft: "11%",
+                            fontWeight: "bold",
+                            wordSpacing: "1px",
                         }}
                     >
-                        <img
-                            src={arch}
-                            alt="ARCH Logo"
-                            style={{ maxWidth: "80%", height: "auto" }}
-                        />
-                    </div>
-                    <div
-                        style={{
-                            width: "40%",
-                            padding: "40px",
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            fontFamily: "Konkhmer Sleokchher, sans-serif", // Apply the font
-                        }}
-                    >
-                        <a
-                            href="/frontend/Templates/Authentication/ForgotPassword.html"
-                            style={{
-                                position: "absolute",
-                                top: "10px",
-                                left: "10px",
-                                fontSize: "28px",
-                                color: "#2c5b97",
-                                textDecoration: "none",
-                                fontFamily: "Konkhmer Sleokchher, sans-serif", // Apply the font
-                            }}
-                        >
-                            ←
-                        </a>
-                        <h2
-                            style={{
-                                fontSize: "28px",
-                                marginBottom: "16%",
-                                color: "#333",
-                                marginLeft: "11%",
-                                fontWeight: "bold",
-                                wordSpacing: "1px",
-                                fontFamily: "Konkhmer Sleokchher, sans-serif", // Apply the font
-                            }}
-                        >
-                            Reset Password
-                        </h2>
-                        <form method="POST" onSubmit={handleSubmit}>
-                            <div style={{ marginBottom: "20px", fontWeight: "lighter",fontSize: "14px", color: "#333", }}>
-                                <GeneralField
-                                    hint={"Password"}
-                                    type="password"
-                                    id="password"
-                                    placeholder="New Password"
-                                    label="New Password"
-                                    name="newPassword"
-                                    func={handleInputChange}
-                                    value={formData.newPassword}
-                                    width={"100%"}
-                                />
-                            </div>
-                            <div style={{ marginBottom: "20px", fontWeight: "Normal", fontSize: "14px", color: "#333", }}>
-                                <GeneralField
-                                    hint={"Re enter Password"}
-                                    type="password"
-                                    id="confirmPassword"
-                                    placeholder="Confirm Password"
-                                    label="Confirm Password"
-                                    name="confirmPassword"
-                                    func={handleInputChange}
-                                    value={formData.confirmPassword}
-
-                                    
-                                    
-                                />
-                            </div>
-                            <p style={{ color: "red" }}>{errorMessage}</p>
-                            <GeneralButton
-                                label="Reset"
-                                id="resetbtn"
-                                // className="login-btn"
-                                text="Reset"
+                        Reset Password
+                    </h2>
+                    <form method="POST" onSubmit={handleSubmit}>
+                        <div style={{ marginBottom: "20px", fontSize: "14px", color: "#333" }}>
+                            <GeneralField
+                                label="New Password"
+                                field_type="password"
+                                name="newPassword"
+                                id="newPassword"
+                                hint="Enter new password"
+                                func={(value) => handleInputChange("newPassword", value)}
+                                value={formData.newPassword}
+                                required={true}
                                 width="100%"
-                                height="40px"
-                                border='8px'
-                                func={handleSubmit}
-                                isSubmitting={isSubmitting}
+                                maxLength={50}
                             />
-                        </form>
-                    </div>
+                        </div>
+                        <div style={{ marginBottom: "20px", fontSize: "14px", color: "#333" }}>
+                            <GeneralField
+                                label="Confirm Password"
+                                field_type="password"
+                                name="confirmPassword"
+                                id="confirmPassword"
+                                hint="Re-enter new password"
+                                func={(value) => handleInputChange("confirmPassword", value)}
+                                value={formData.confirmPassword}
+                                required={true}
+                                width="100%"
+                                maxLength={50}
+                            />
+                        </div>
+                        <p style={{ color: "red" }}>{errorMessage}</p>
+                        <GeneralButton
+                            label="Reset"
+                            id="resetbtn"
+                            text="Reset"
+                            width="100%"
+                            height="40px"
+                            border="8px"
+                            func={handleSubmit}
+                            isSubmitting={isSubmitting}
+                        />
+                    </form>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
