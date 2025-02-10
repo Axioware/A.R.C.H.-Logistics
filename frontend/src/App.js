@@ -176,7 +176,7 @@ function App() {
         <Route path="/active-order" element={<ActiveOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/pending-order" element={<PendingOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/order-history" element={<OrderHistory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        {/* <Route path="/order-details" element={<OrderDetails />} /> */}
+        <Route path="/order-details" element={<OrderDetails />} />
         {/* <Route path="/boxes-to-be-shipped" element={<BoxesToBeShipped />} />      */}
         {/* <Route path="/view-tracking" element={<ViewTracking menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 

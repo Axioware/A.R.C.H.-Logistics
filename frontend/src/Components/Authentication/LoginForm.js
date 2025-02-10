@@ -30,7 +30,7 @@ const LoginForm = () => {
     }
   
     try {
-      const response = await fetch('http://asad.localhost:8000/auth/api/token/', {
+      const response = await fetch('http://moiz.localhost:8000/auth/api/token/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
