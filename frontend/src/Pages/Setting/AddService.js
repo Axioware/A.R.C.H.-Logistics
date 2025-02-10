@@ -122,24 +122,6 @@ const AddService = () => {
             
             <form id="form" style={styles.form} onSubmit={handleSubmit}>
            
-           <div id="label container" style={styles.labelcontainer}>
-            <label htmlFor="Dropdown" style={styles.label}>Category</label>
-            <FilterDropdown
-              text={["FBA", "FBM", "Storage", "Others"]}
-              text_color={[0, 0, 0]}
-              background_color={[255, 255, 255]}
-              hover_color={[200, 200, 200]}
-              selected_color={[150, 150, 150]}
-              func={(option) => console.log("Selected:", option)}
-              radio={true} // Only one option can be selected
-              border_radius="10px"
-              width={["260px"]}
-              height="45px"
-              selected={[]}
-
-            />
-            </div>
-           
             <GeneralField label="Name" field_type="text" hint="Enter name of Service" required={true} />
             <GeneralField label="Service Charge" field_type="text" hint="Enter the Charge for Service" required={true} />             
               
