@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     'Users',
     'Structures',
     'rest_framework_simplejwt.token_blacklist',
+    'django_extensions',
+    'django.contrib.admindocs',
 ]
 
 # SIMPLE_JWT = {
@@ -146,6 +148,8 @@ TENANT_APPS = (
     'django.contrib.auth',
     'django.contrib.staticfiles',
     'rest_framework_simplejwt.token_blacklist',
+    'django_extensions',
+    'django.contrib.admindocs',
     # 'myapp.houses',
 )
 

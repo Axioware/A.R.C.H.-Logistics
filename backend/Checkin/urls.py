@@ -1,12 +1,8 @@
-from django.contrib import admin
-from . import views
-from django.urls import path, include
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from django.urls import path
+from .views import *
 
 urlpatterns = [
-    # path('api/checkin/', views.checkin, name="checkin"),
-    # path('api/checkin/<int:pk>/', views.checkin_detail, name="checkin detail"),
+    path("tasks/", task_list_create, name="task-list-create"),
+    path("completed-tasks/", completed_tasks_list_create, name="completed-tasks-list-create"),
+    path("timesheet/", timesheet_list_create, name="timesheet-list-create"),
 ]

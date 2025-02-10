@@ -190,6 +190,7 @@ def users(request):
                     extended.tax_id = tax_id
                     extended.email2 = email2
                     extended.llc_name = llc_name
+                    extended.last_logout = None
                     extended.address = data.get('address', '')
                     extended.city = data.get('city', '')
                     extended.state = data.get('state', '')
