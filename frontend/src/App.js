@@ -17,6 +17,7 @@ import Otp from './Pages/Authentication/Otp';
 //User Management
 import AllUsers from './Pages/User_Management/AllUsers';
 import AddUser from './Pages/User_Management/AddUser';
+import EditUser from './Pages/User_Management/EditUser';
 
 //Warehouse Management
 import AllWarehouse from './Pages/Warehouses/AllWarehouse';
@@ -145,6 +146,7 @@ function App() {
         {/* User_Management */}
         <Route path="/users" element={<AllUsers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-user" element={<AddUser menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/edit-user" element={<EditUser menuItems={menuItems} toggleExpand={toggleExpand}/>} />
 
         {/* Components */}
         <Route path="/spinner" element={<Spinner />} />
