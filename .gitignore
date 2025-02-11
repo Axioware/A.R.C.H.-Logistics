@@ -9,4 +9,6 @@ backend/Users/tests/
 backend/backend_env
 arch_backend/
 backend/**/migrations/* 
+backend/**/__pycache__/*
 !backend/**/migrations/__init__.py
+backend/Arch_Logistics/.env
