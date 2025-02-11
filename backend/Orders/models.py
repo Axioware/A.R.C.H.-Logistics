@@ -73,7 +73,7 @@ class SubOrders(models.Model):
     
 
 class SubOrderFile(models.Model):
-    sub_order_id = models.ForeignKey(SubOrders, on_delete=models.CASCADE)
+    order_id = models.ForeignKey(Orders, on_delete=models.CASCADE)
     file = models.FileField(upload_to='labels/', blank=True, null=True, default=None)
     format = models.CharField(max_length=100, blank=True, null=True) #A4, A3. Custom
     text = models.CharField(max_length=100, blank=True, null=True, default=None) #Text on label
