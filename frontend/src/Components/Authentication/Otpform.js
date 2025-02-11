@@ -78,7 +78,7 @@ const OtpForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://asad.localhost:8000/auth/api/verotp/", {
+      const response = await fetch(`http://${process.env.REACT_APP_TENANT_NAME}/auth/api/verotp/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp: otpValue }),

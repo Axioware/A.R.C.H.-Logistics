@@ -21,9 +21,8 @@ const Forgotpasspage = () => {
     }
 
     setIsSubmitting(true);
-
     try {
-      const response = await fetch('http://asad.localhost:8000/auth/api/genotp/', {
+      const response = await fetch(`http://${process.env.REACT_APP_TENANT_NAME}/auth/api/genotp/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
