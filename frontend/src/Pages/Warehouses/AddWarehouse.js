@@ -94,13 +94,13 @@ const AddWarehouse = () => {
 
             <form style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "20px", marginLeft: "20px", marginRight: "30px", marginTop: "35px" }} onSubmit={handleSubmit}>
               <GeneralField label="Name" field_type="text" hint="Enter warehouse name" name="warehouse_name" value={warehouseData.warehouse_name} func={handleChange} />
-              <GeneralField label="Country" field_type="text" hint="Country (e.g., USA)" name="country" value={warehouseData.country} onChange={handleChange} />
-              <GeneralField label="State" field_type="text" hint="State (e.g., Texas)" name="state" value={warehouseData.state} onChange={handleChange} />
-              <GeneralField label="City" field_type="text" hint="City (e.g., Stafford)" name="city" value={warehouseData.city} onChange={handleChange} />
-              <GeneralField label="Address" field_type="text" hint="Full address" name="address" value={warehouseData.address} onChange={handleChange} />
-              <GeneralField label="Zip Code" field_type="text" hint="Zip code" name="zip_code" value={warehouseData.zip_code} onChange={handleChange} />
-              <GeneralField label="Email" field_type="email" hint="Email address (e.g., example@mail.com)" name="email" value={warehouseData.email} onChange={handleChange} />
-              <GeneralField label="Phone" field_type="tel" hint="Phone number (e.g., +1 275-432-345)" name="phone" value={warehouseData.phone} onChange={handleChange} />
+              <GeneralField label="Country" field_type="text" hint="Country (e.g., USA)" name="country" value={warehouseData.country} func={handleChange} />
+              <GeneralField label="State" field_type="text" hint="State (e.g., Texas)" name="state" value={warehouseData.state} func={handleChange} />
+              <GeneralField label="City" field_type="text" hint="City (e.g., Stafford)" name="city" value={warehouseData.city} func={handleChange} />
+              <GeneralField label="Address" field_type="text" hint="Full address" name="address" value={warehouseData.address} func={handleChange} />
+              <GeneralField label="Zip Code" field_type="text" hint="Zip code" name="zip_code" value={warehouseData.zip_code} func={handleChange} />
+              <GeneralField label="Email" field_type="email" hint="Email address (e.g., example@mail.com)" name="email" value={warehouseData.email} func={handleChange} />
+              <GeneralField label="Phone" field_type="tel" hint="Phone number (e.g., +1 275-432-345)" name="phone" value={warehouseData.phone} func={handleChange} />
 
               <div style={{ alignSelf: "flex-end", display: "flex", flexDirection: "row", width: "250px", gap: "20px", marginTop: "20px", lineHeight: "40px" }}>
                 <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
