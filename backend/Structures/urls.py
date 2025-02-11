@@ -8,4 +8,4 @@ urlpatterns = [
     path('api/locations/<int:id>', views.single_location, name='single-bin'),
     path('api/warehouse/', views.warehouse, name='warehouse'),
     path('api/warehouse/<int:id>/', views.warehouse_detail, name='warehouse_detail')
-]
+]   
