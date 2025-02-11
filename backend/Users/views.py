@@ -72,6 +72,8 @@ def users(request):
                         'city': getattr(user.extended, 'city', None),
                         'zip': getattr(user.extended, 'zip', None),
                         'clearance_level': getattr(user.extended, 'clearance_level', None),
+                        'last_logout': getattr(user.extended, 'last_logout', None),
+                        'date_created': getattr(user.extended, 'date_created', None),
                         'email2': getattr(user.extended, 'email2', None),
                         'address': getattr(user.extended, 'address', None),
                         'llc_name': getattr(user.extended, 'llc_name', None),
@@ -95,7 +97,6 @@ def users(request):
             except Exception as e:
                 return Response({"error": "An unexpected error occurred", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    with schema_context(tenant.schema_name):
         if request.method == "POST":
             data = request.data
             clearance_level = data.get('clearance_level')
@@ -190,6 +191,8 @@ def users(request):
                     extended.tax_id = tax_id
                     extended.email2 = email2
                     extended.llc_name = llc_name
+                    extended.date_created = timezone.now()
+                    extended.last_logout = None
                     extended.address = data.get('address', '')
                     extended.city = data.get('city', '')
                     extended.state = data.get('state', '')
@@ -239,6 +242,8 @@ def user_by_id(request, id):
                 'llc_name': get_extended_field(main_user, 'llc_name'),
                 'billing_type': get_extended_field(main_user, 'billing_type'),
                 'clearance_level': get_extended_field(main_user, 'clearance_level'),
+                'last_logout': get_extended_field(main_user, 'last_logout'),
+                'date_created': get_extended_field(main_user, 'date_created'),
                 'email2': get_extended_field(main_user, 'email2'),
                 'city': get_extended_field(main_user, 'city'),
                 'state': get_extended_field(main_user, 'state'),
@@ -252,9 +257,8 @@ def user_by_id(request, id):
     
         elif request.method == "PUT":
             data = request.data
-            role = data.get('role')
 
-            # Authorization checks based on role and tenant context
+            # Authorization checks based on clearance_level and tenant context
             if authenticate_clearance_level(user, [1, 2]):
                 return Response({"error": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -262,7 +266,6 @@ def user_by_id(request, id):
             errors = {}
 
             first_name = data.get('first_name', '')
-            last_name = data.get('last_name', '')
             email = data.get('email', '')
             phone = data.get('phone', '')
             llc_name = data.get('llc_name', '')
@@ -280,19 +283,14 @@ def user_by_id(request, id):
 
             if phone and not phone.isdigit():
                 errors['phone'] = "Phone number must contain only digits."
-            elif len(phone) > 15 or len(phone) < 8:
-                errors['phone'] = "Phone number must be between 8 and 15 digits long."
 
-            if role == "Client" and not llc_name:
+            if authenticate_clearance_level(user, [1, 2, 3]) and not llc_name:
                 errors['llc_name'] = "LLC name is required."
 
-            if not data.get('zip', '').isdigit() or len(data.get('zip', '')) != 5:
-                errors['zip'] = "ZIP must be exactly 5 digits long."
+            if not data.get('zip', '').isdigit():
+                errors['zip'] = "ZIP must be digits"
 
-            if tax_id:
-                if not (5 < len(tax_id) < 20):
-                    errors['tax_id'] = "Tax ID must be greater than 5, and less than 20 digits long."
-            elif role == "Client":    
+            if not tax_id and  authenticate_clearance_level(user, [1, 2, 3]):
                 errors['tax_id'] = "Tax ID is required."
 
             if email2:
@@ -352,9 +350,8 @@ def user_by_id(request, id):
 
         elif request.method == "DELETE":
             data = request.data
-            role = data.get('role')
 
-            # Authorization checks based on role and tenant context
+            # Authorization checks based on clearance_level and tenant context
             if authenticate_clearance_level(user, [1, 2, 3]):
                 return Response({"error": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
 
@@ -367,32 +364,3 @@ def user_by_id(request, id):
             except Exception as e:
                 return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def reset_password(request):
-    user = request.user
-    data = request.data
-
-    with schema_context(request.tenant.schema_name):
-        if not user:
-            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
-    
-    current_password = data.get('current_password')
-    new_password = data.get('new_password')
-
-    # Validate input
-    if not current_password or not new_password:
-        return Response({"error": "Both current and new passwords are required."}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Verify current password
-    if not user.check_password(current_password):
-        return Response({"error": "Current password is incorrect."}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Set the new password
-    try:
-        user.set_password(new_password)
-        user.save()
-        return Response({"success": "Password has been updated successfully."}, status=status.HTTP_200_OK)
-    except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

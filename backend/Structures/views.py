@@ -145,24 +145,28 @@ def single_location(request, location_id):
 @permission_classes([IsAuthenticated])
 def services(request):
     """API for retrieving and creating services"""
+    tenant=request.tenant
+    try:
+        with schema_context(tenant.schema_name):
+            if request.method == 'GET':
+                services_list = Services.objects.values('service_id', 'service_name', 'service_charge')
+                return Response(list(services_list), status=status.HTTP_200_OK)
 
-    if request.method == 'GET':
-        services_list = Services.objects.values('service_id', 'service_name', 'service_charge')
-        return Response(list(services_list), status=status.HTTP_200_OK)
+            elif request.method == 'POST':
+                if not authenticate_clearance_level(request.user, [1]):  # Only Owner/Manager can add services
+                    return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
 
-    elif request.method == 'POST':
-        if not authenticate_clearance_level(request.user, [1]):  # Only Owner/Manager can add services
-            return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+                data = request.data
+                service_name = data.get('service_name')
+                service_charge = data.get('service_charge', 0.0)
 
-        data = request.data
-        service_name = data.get('service_name')
-        service_charge = data.get('service_charge', 0.0)
+                if not service_name:
+                    return Response({"error": "Service name is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not service_name:
-            return Response({"error": "Service name is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-        new_service = Services.objects.create(service_name=service_name, service_charge=service_charge)
-        return Response({"message": "Service created", "service_id": new_service.service_id}, status=status.HTTP_201_CREATED)
+                new_service = Services.objects.create(service_name=service_name, service_charge=service_charge)
+                return Response({"message": "Service created", "service_id": new_service.service_id}, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @csrf_exempt
 @api_view(['GET', 'POST'])

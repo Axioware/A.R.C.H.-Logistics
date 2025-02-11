@@ -10,10 +10,10 @@ from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from django.conf import settings
 from rest_framework_simplejwt.exceptions import TokenError
-from Users.models import UsersExtended, OTP
+from Users.models import UsersExtended
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout as django_logout
-
+from .models import OTP
 # Create your views here.
 
 @api_view(['POST'])

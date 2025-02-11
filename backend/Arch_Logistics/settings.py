@@ -16,6 +16,7 @@ import os
 import dj_database_url
 from dotenv import load_dotenv
 
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -68,6 +69,8 @@ INSTALLED_APPS = [
     'Users',
     'Structures',
     'rest_framework_simplejwt.token_blacklist',
+    'django_extensions',
+    'django.contrib.admindocs',
 ]
 
 # SIMPLE_JWT = {
@@ -150,6 +153,8 @@ TENANT_APPS = (
     'django.contrib.auth',
     'django.contrib.staticfiles',
     'rest_framework_simplejwt.token_blacklist',
+    'django_extensions',
+    'django.contrib.admindocs',
     # 'myapp.houses',
 )
 
@@ -263,12 +268,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # settings.py
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ulhaqhassan2@gmail.com'  # Replace with your Gmail
-EMAIL_HOST_PASSWORD = 'cdpz tptp bpwc aerq'  # Replace with App Password
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
