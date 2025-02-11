@@ -153,7 +153,7 @@ def services(request):
                 return Response(list(services_list), status=status.HTTP_200_OK)
 
             elif request.method == 'POST':
-                if not authenticate_clearance_level(request.user, [1]):  # Only Owner/Manager can add services
+                if authenticate_clearance_level(request.user, [1, 2]):
                     return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
 
                 data = request.data
