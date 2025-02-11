@@ -47,6 +47,7 @@ const LoginForm = () => {
         const data = await response.json();
         localStorage.setItem('accessToken', data.access);
         localStorage.setItem('refreshToken', data.refresh);
+        console.log(localStorage.getItem('accessToken'));
         navigate('/dashboard');
       }
     } catch (error) {

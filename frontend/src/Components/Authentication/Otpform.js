@@ -88,8 +88,8 @@ const OtpForm = () => {
 
       if (response.ok) {
         localStorage.removeItem("reset_email");
-        localStorage.setItem("access_token", data.access_token);
-        localStorage.setItem("refresh_token", data.refresh_token);
+        localStorage.setItem("access_token", data.access);
+        localStorage.setItem("refresh_token", data.refresh);
         navigate("/reset-password");
       } else {
         setError(data.message || "Invalid OTP. Please try again.");
