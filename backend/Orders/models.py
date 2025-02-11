@@ -51,7 +51,7 @@ class SubOrders(models.Model):
     no_bundles = models.IntegerField(default=None, null=True, blank=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     active = models.BooleanField(default=False, null=True, blank=True)
-    order_placed_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
+    # order_placed_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
     order_start_date = models.DateTimeField(blank=True, null=True)
     # state = models.CharField(max_length=50, null=True, blank=True)
     phase = models.CharField(max_length=15, choices=PHASE_CHOICES, null=True)
