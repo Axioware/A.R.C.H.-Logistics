@@ -140,16 +140,6 @@ export default function InvoicesDetails() {
                 </div>
               </div>
             </div>}
-
-          {/* <div style={styles.totalContainer}>
-            <div style={styles.totalCharge}>
-              <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span>
-            </div>
-            <div style={styles.buttonWrapper}>
-              <GeneralButton text="Cancel" width="145px" height="42px" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-              <GeneralButton text="Mark As Paid" type="submit" width="145px" height="42px" />
-            </div>
-          </div> */}
         </div>
 
 
@@ -164,13 +154,8 @@ export default function InvoicesDetails() {
 
           <div style={styles.headerContainer}>
             <div style={styles.invoiceDetails}>
-              {/* <span><strong>LLC Name:</strong> {LLCName}</span> */}
-              {/* <span><strong>Order ID:</strong> {OrderID}</span> */}
             </div>
             <div style={styles.buttonWrapper}>
-              {/* <ModalOpener text="Print" text_color={[255, 255, 255]} func={AddCharge}/> */}
-              {/* <ModalOpener text="Download" text_color={[255, 255, 255]} func={AddCharge} /> */}
-              {/* <ModalOpener text="Upload" text_color={[255, 255, 255]} func={AddCharge} /> */}
             </div>
           </div>
 
@@ -237,16 +222,6 @@ export default function InvoicesDetails() {
                 </div>
               </div>
             </div>}
-
-          {/* <div style={styles.totalContainer}>
-            <div style={styles.totalCharge}>
-              <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span>
-            </div>
-            <div style={styles.buttonWrapper}>
-              <GeneralButton text="Cancel" width="145px" height="42px" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-              <GeneralButton text="Mark As Paid" type="submit" width="145px" height="42px" />
-            </div>
-          </div> */}
         </div>
 
 
@@ -255,13 +230,8 @@ export default function InvoicesDetails() {
 
           <div style={styles.headerContainer}>
             <div style={styles.invoiceDetails}>
-              {/* <span><strong>LLC Name:</strong> {LLCName}</span> */}
-              {/* <span><strong>Order ID:</strong> {OrderID}</span> */}
             </div>
             <div style={styles.buttonWrapper}>
-              {/* <ModalOpener text="Print" text_color={[255, 255, 255]} func={AddCharge}/> */}
-              {/* <ModalOpener text="Download" text_color={[255, 255, 255]} func={AddCharge} /> */}
-              {/* <ModalOpener text="Upload" text_color={[255, 255, 255]} func={AddCharge} /> */}
             </div>
           </div>
 
@@ -269,10 +239,12 @@ export default function InvoicesDetails() {
           <table style={styles.table}>
             <thead>
               <tr>
+              <th style={styles.th}></th>
                 <th style={styles.th}>BoxQuantity</th>
-                <th style={styles.th}>ProductName</th>
-                <th style={styles.th}>Service</th>
-                <th style={styles.th}>Dimensions</th>
+                <th style={styles.th}>Product Name (Services)</th>
+                <th style={styles.th}>Quantity</th>
+                <th style={styles.th}>Dimensions (L,H,W)</th>
+                <th style={styles.th}>Weight</th>
               </tr>
             </thead>
             <tbody>
@@ -320,124 +292,7 @@ export default function InvoicesDetails() {
                 </div>
               </div>
             </div>}
-
-          {/* <div style={styles.totalContainer}>
-            <div style={styles.totalCharge}>
-              <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span>
-            </div>
-            <div style={styles.buttonWrapper}>
-              <GeneralButton text="Cancel" width="145px" height="42px" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-              <GeneralButton text="Mark As Paid" type="submit" width="145px" height="42px" />
-            </div>
-          </div> */}
         </div>
-
-
-
-
-
-
-        
-        <div style={mainStyles.tableBackground}>
-          <PageHeading text='Charges' text_color={[0, 0, 0]} width='100%' height='auto' />
-
-          <div style={styles.headerContainer}>
-            <div style={styles.invoiceDetails}>
-              {/* <span><strong>LLC Name:</strong> {LLCName}</span> */}
-              {/* <span><strong>Order ID:</strong> {OrderID}</span> */}
-            </div>
-            <div style={styles.buttonWrapper}>
-              {/* <ModalOpener text="Print" text_color={[255, 255, 255]} func={AddCharge}/> */}
-              {/* <ModalOpener text="Download" text_color={[255, 255, 255]} func={AddCharge} /> */}
-              {/* <ModalOpener text="Upload" text_color={[255, 255, 255]} func={AddCharge} /> */}
-            </div>
-          </div>
-
-          {/* Updated Table */}
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.th}>Product Name</th>
-                <th style={styles.th}>Service</th>
-                <th style={styles.th}>BundleQuantity</th>
-                <th style={styles.th}>Quantity</th>
-                <th style={styles.th}>Packing Instruction</th>
-                <th style={styles.th}>Start Date</th>
-                <th style={styles.th}>EndDate</th>
-                <th style={styles.th}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Charges.map((row, index) => (
-                <tr key={index}>
-                  <td style={styles.td}>
-                    {row.ProductName.map((r, i) => (
-                        <span key={i}>
-                        {i + 1}{"."} {r.pname} <br />
-                        </span>
-                    ))}
-                  </td>
-                  <td style={styles.td}>
-                    {row.ProductName.map((r, i) => (
-                        <div key={i}>
-                        {r.sname.map((a, z) => (
-                            <span key={z}>
-                            {i + 1}{"."} {a.name} <br />
-                            </span>
-                        ))}
-                        </div>
-                    ))}
-                    </td>
-                  <td style={styles.td}>{row.BundleQuantity}</td>
-                  <td style={styles.td}>{row.Quantity}</td>
-                  <td style={styles.td}>{row.PackingInstruction}</td>
-                  <td style={styles.td}>{row.StartDate}</td>
-                  <td style={styles.td}>{row.EndDate}</td>
-                  <td style={styles.td}>{row.Status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {showModal && 
-          <div style={styles.modalOverlay}>
-              <div style={styles.modal}>
-                <h2 style={styles.modalTitle}>Add Charge</h2>
-
-                <label style={styles.label}>Amount</label>
-                <input type="text" style={styles.input} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="$0.00" />
-
-                <label style={styles.label}>Notes</label>
-                <input type="text" style={styles.input} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Extra Services" />
-
-                <div style={styles.buttonContainer}>
-                  <button style={styles.cancelButton} onClick={() => setShowModal(false)}>Cancel</button>
-                  <button style={styles.confirmButton} onClick={handleAddCharge}>Add Charge</button>
-                </div>
-              </div>
-            </div>}
-
-          {/* <div style={styles.totalContainer}>
-            <div style={styles.totalCharge}>
-              <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span>
-            </div>
-            <div style={styles.buttonWrapper}>
-              <GeneralButton text="Cancel" width="145px" height="42px" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-              <GeneralButton text="Mark As Paid" type="submit" width="145px" height="42px" />
-            </div>
-          </div> */}
-        </div>
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -446,12 +301,9 @@ export default function InvoicesDetails() {
 
           <div style={styles.headerContainer}>
             <div style={styles.invoiceDetails}>
-              <span><strong>LLC Name:</strong> {LLCName}</span>
-              <span><strong>Order ID:</strong> {OrderID}</span>
             </div>
             <div style={styles.buttonWrapper}>
               <ModalOpener text="Add Charge" text_color={[255, 255, 255]} func={AddCharge}/>
-              <ModalOpener text="Add Discount" text_color={[255, 255, 255]} func={AddCharge} />
             </div>
           </div> 
 
@@ -510,11 +362,10 @@ export default function InvoicesDetails() {
 
           <div style={styles.totalContainer}>
             <div style={styles.totalCharge}>
-              <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span>
             </div>
             <div style={styles.buttonWrapper}>
-              <GeneralButton text="Cancel" width="145px" height="42px" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-              <GeneralButton text="Mark As Paid" type="submit" width="145px" height="42px" />
+              <GeneralButton text="Cancel Order" width="145px" height="42px" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
+              <GeneralButton text="Mark As Completed" type="submit" width="145px" height="42px" />
             </div>
           </div>
         </div>

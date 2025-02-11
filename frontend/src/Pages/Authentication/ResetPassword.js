@@ -46,8 +46,10 @@ const ResetPassword = () => {
         try {
             const accessToken = localStorage.getItem("access_token");
             const refreshToken = localStorage.getItem("refresh_token");
-
-            const response = await fetch("http://asad.localhost:8000/auth/api/reset-password/", {
+            console.log("Access Token:", accessToken);
+            console.log("Refresh Token:", refreshToken);
+            console.log("Form Data:", formData);
+            const response = await fetch(`http://${process.env.REACT_APP_TENANT_NAME}/auth/api/reset-password/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

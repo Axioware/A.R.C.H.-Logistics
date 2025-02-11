@@ -30,7 +30,7 @@ const LoginForm = () => {
     }
   
     try {
-      const response = await fetch('http://asad.localhost:8000/auth/api/token/', {
+      const response = await fetch(`http://${process.env.REACT_APP_TENANT_NAME}/auth/api/token/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -46,7 +46,8 @@ const LoginForm = () => {
       } else {
         const data = await response.json();
         localStorage.setItem('accessToken', data.access);
-        // localStorage.setItem('refreshToken', data.refresh);
+        localStorage.setItem('refreshToken', data.refresh);
+        console.log(localStorage.getItem('accessToken'));
         navigate('/dashboard');
       }
     } catch (error) {

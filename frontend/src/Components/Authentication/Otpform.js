@@ -78,7 +78,7 @@ const OtpForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://asad.localhost:8000/auth/api/verotp/", {
+      const response = await fetch(`http://${process.env.REACT_APP_TENANT_NAME}/auth/api/verotp/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp: otpValue }),
@@ -88,8 +88,8 @@ const OtpForm = () => {
 
       if (response.ok) {
         localStorage.removeItem("reset_email");
-        localStorage.setItem("access_token", data.access_token);
-        localStorage.setItem("refresh_token", data.refresh_token);
+        localStorage.setItem("access_token", data.access);
+        localStorage.setItem("refresh_token", data.refresh);
         navigate("/reset-password");
       } else {
         setError(data.message || "Invalid OTP. Please try again.");
