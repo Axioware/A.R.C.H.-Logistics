@@ -50,6 +50,8 @@ const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, se
                 control: (provided) => ({
                   ...provided,
                   width: '100%',
+                  minWidth: '120px',
+                  maxWidth: '120px',
                   padding: '8px',
                   borderRadius: '6px',
                   marginBottom: '12px',

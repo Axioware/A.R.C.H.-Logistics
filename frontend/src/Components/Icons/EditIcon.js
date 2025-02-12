@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import stat from "../../Assets/Images/icons8-edit-30.png";
-import dyn from "../../Assets/Images/icons8-edit.gif";
+import dyn from "../../Assets/Images/icons8-edit-unscreen.gif";
 
-const EditIcon = ({ path, args }) => {
+const EditIcon = ({ path }) => {
   const [hovered, setHovered] = useState(false);
   const [first, setFirst] = useState(false);
   const navigate = useNavigate(); // React Router hook for navigation
 
   const handleClick = () => {
-    const queryParams = new URLSearchParams(args).toString(); // Convert args to query string
-    navigate(`${path}?${queryParams}`); // Navigate with query params
+    navigate(`/${path}`); // Navigate with query params
   };
 
   return (
@@ -29,8 +28,10 @@ const EditIcon = ({ path, args }) => {
       }}
       onClick={handleClick} // Handle click for navigation
       style={{
-        width: "50px",
-        height: "50px",
+        alignSelf: "right",
+        alignItems: "right",
+        width: "30px",
+        height: "30px",
         cursor: "pointer",
       }}
     />
