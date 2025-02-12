@@ -1,66 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import NavPath from '../../Components/General/NavPath';
-import TableContent from '../../Components/Table_Components/TableContent';
-import fetchData from '../../utils/fetch_data';
-import AddButton from '../../Components/Table_Components/AddButton';
-import ModalOpener from "../../Components/Table_Components/ModalOpener";
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
 import PageHeading from "../../Components/Table_Components/PageHeading";
 import GeneralButton from '../../Components/General/GeneralButton';
 import { FaTrash } from "react-icons/fa";
+import ModalOpener from "../../Components/Table_Components/ModalOpener";
 
 export default function InvoicesDetails() {
-
   const [data, setData] = useState([
-    { BoxNo: "1", BoxQuantity: "52", ProductName: "Xyz", Quantity: "546", Dimensions: "12x54x65", Weight: "187" }
+    { 
+      BoxNo: "1", 
+      BoxQuantity: "52", 
+      Products: [{ ProductName: "Xyz", Quantity: "546" }, { ProductName: "Xyz", Quantity: "546" }], 
+      Dimensions: "12x54x65", 
+      Weight: "187" 
+    }
   ]);
-  const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(null);
-  const [errorCode, setErrorCode] = useState(null);
-  const [clearance, setClearance] = useState(1);
-  const [LLCName, setLLCName] = useState("Prep Prime");
-  const [OrderID, setOrderID] = useState("XCV82SL7");
-//   const [TotalCharge, setTotalCharge] = useState(27235);
-  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
-    const storedState = localStorage.getItem("sidebarclosed");
-    return storedState === null ? true : JSON.parse(storedState);
-  });
-
 
   const [boxQuantity, setBoxQuantity] = useState("");
-  const [product, setProduct] = useState("");
-  const [unitQuantity, setUnitQuantity] = useState("");
-  
+  const [length, setLength] = useState("");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [products, setProducts] = useState([{ product: "", quantity: "" }]);
+
   const handleAddBox = () => {
-    console.log("Box added with details:", { boxQuantity, product, unitQuantity });
+    const newBox = {
+      BoxNo: (data.length + 1).toString(), // Auto-increment BoxNo
+      BoxQuantity: boxQuantity,
+      Products: products.map(p => ({ ProductName: p.product, Quantity: p.quantity })), // Map products to the correct format
+      Dimensions: `${length}x${height}x${width}`,
+      Weight: weight,
+    };
+
+    // Add new box data to the existing table
+    setData([...data, newBox]);
+
+    // Reset input fields and close modal
+    resetModal();
   };
-  
 
-  
-    const [showModal, setShowModal] = useState(false); // Modal state
-    const [chargeType, setChargeType] = useState("Service Fee");
-    const [amount, setAmount] = useState("");
-    const [notes, setNotes] = useState("");
+  const resetModal = () => {
+    setBoxQuantity("");
+    setLength("");
+    setWidth("");
+    setHeight("");
+    setWeight("");
+    setProducts([{ product: "", quantity: "" }]); // Reset products
+    setShowModal(false); // Close modal
+  };
 
+  const handleProductChange = (index, field, value) => {
+    const updatedProducts = [...products];
+    updatedProducts[index][field] = value;
+    setProducts(updatedProducts);
+  };
 
-    const handleAddCharge = () => {
-        setData([...data, { product: "New Item", service: chargeType, date: new Date().toLocaleDateString(), amount: `$${amount}`, notes }]);
-        setShowModal(false); // Close modal
-      };
-    
-      const AddCharge = () => {
-        setShowModal(true); // Close modal
-        console.log('ygygyg');
-      };
-
-  const chargeOptions = ["Service Fee", "Extra Services", "Late Fee", "Custom Charge"];
-
-  useEffect(() => {
-    // Fetch data logic here if needed
-  }, [currentPage]);
+  const handleAddProductField = () => {
+    setProducts([...products, { product: "", quantity: "" }]);
+  };
 
   const handleDelete = (index) => {
     setData(data.filter((_, i) => i !== index));
@@ -68,9 +68,8 @@ export default function InvoicesDetails() {
 
   return (
     <div>
-      <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
-      <div style={mainStyles.centerContent(isSidebarClosed)}>
-
+      <SideBar sidebar_state={true} set_sidebar_state={() => {}} />
+      <div style={mainStyles.centerContent(true)}>
         <NavPath
           text={["Home", "Order Details", "Add Box Dimensions"]}
           paths={["/home", "/order-details", "/add-dimension"]}
@@ -85,11 +84,11 @@ export default function InvoicesDetails() {
 
           <div style={styles.headerContainer}>
             <div style={styles.invoiceDetails}>
-              <span><strong>LLC Name:</strong> {LLCName}</span>
-              <span><strong>Order ID:</strong> {OrderID}</span>
+              <span><strong>LLC Name:</strong> Prep Prime</span>
+              <span><strong>Order ID:</strong> XCV82SL7</span>
             </div>
             <div style={styles.buttonWrapper}>
-                             <ModalOpener text="Add Box" text_color={[255, 255, 255]} func={AddCharge} />
+              <ModalOpener text="Add Box" text_color={[255, 255, 255]} func={() => setShowModal(true)} />
             </div>
           </div>
 
@@ -99,7 +98,7 @@ export default function InvoicesDetails() {
               <tr>
                 <th style={styles.th}>Box No</th>
                 <th style={styles.th}>Box Quantity</th>
-                <th style={styles.th}>Product Name ( Services )</th>
+                <th style={styles.th}>Products</th>
                 <th style={styles.th}>Quantity</th>
                 <th style={styles.th}>Dimensions ( L , H , W )</th>
                 <th style={styles.th}>Weight</th>
@@ -111,8 +110,16 @@ export default function InvoicesDetails() {
                 <tr key={index}>
                   <td style={styles.td}>{row.BoxNo}</td>
                   <td style={styles.td}>{row.BoxQuantity}</td>
-                  <td style={styles.td}>{row.ProductName}</td>
-                  <td style={styles.td}>{row.Quantity}</td>
+                  <td style={styles.td}>
+                    {row.Products.map((product, i) => (
+                      <div key={i}>{product.ProductName}</div>
+                    ))}
+                  </td>
+                  <td style={styles.td}>
+                    {row.Products.map((product, i) => (
+                      <div key={i}>{product.Quantity}</div>
+                    ))}
+                  </td>
                   <td style={styles.td}>{row.Dimensions}</td>
                   <td style={styles.td}>{row.Weight}</td>
                   <td style={styles.td}>
@@ -123,93 +130,101 @@ export default function InvoicesDetails() {
             </tbody>
           </table>
 
-
           {showModal && (
-  <div style={styles.modalOverlay}>
-    <div style={styles.modal}>
-      <h2 style={styles.modalTitle}>Add Box</h2>
+            <div style={styles.modalOverlay}>
+              <div style={styles.modal}>
+                <h2 style={styles.modalTitle}>Add Box</h2>
 
-      {/* Box Quantity, Length, Width, Height, Weight in the same row */}
-      <div style={styles.rowContainer}>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Box Quantity <span style={{ color: 'red' }}>*</span></label>
-          <input
-            type="number"
-            style={styles.input}
-            value={boxQuantity}
-            onChange={(e) => setBoxQuantity(e.target.value)}
-          />
-        </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Length</label>
-          <input
-            type="number"
-            style={styles.input}
-            placeholder="Length"
-          />
-        </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Width</label>
-          <input
-            type="number"
-            style={styles.input}
-            placeholder="Width"
-          />
-        </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Height</label>
-          <input
-            type="number"
-            style={styles.input}
-            placeholder="Height"
-          />
-        </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Weight</label>
-          <input
-            type="number"
-            style={styles.input}
-            placeholder="Weight"
-          />
-        </div>
-      </div>
+                {/* Box Quantity, Length, Width, Height, Weight in the same row */}
+                <div style={styles.rowContainer}>
+                  <div style={styles.inputGroup}>
+                    <label style={styles.label}>Box Quantity <span style={{ color: 'red' }}>*</span></label>
+                    <input
+                      type="number"
+                      style={styles.input}
+                      value={boxQuantity}
+                      onChange={(e) => setBoxQuantity(e.target.value)}
+                    />
+                  </div>
+                  <div style={styles.inputGroup}>
+                    <label style={styles.label}>Length</label>
+                    <input
+                      type="number"
+                      style={styles.input}
+                      value={length}
+                      onChange={(e) => setLength(e.target.value)}
+                    />
+                  </div>
+                  <div style={styles.inputGroup}>
+                    <label style={styles.label}>Width</label>
+                    <input
+                      type="number"
+                      style={styles.input}
+                      value={width}
+                      onChange={(e) => setWidth(e.target.value)}
+                    />
+                  </div>
+                  <div style={styles.inputGroup}>
+                    <label style={styles.label}>Height</label>
+                    <input
+                      type="number"
+                      style={styles.input}
+                      value={height}
+                      onChange={(e) => setHeight(e.target.value)}
+                    />
+                  </div>
+                  <div style={styles.inputGroup}>
+                    <label style={styles.label}>Weight</label>
+                    <input
+                      type="number"
+                      style={styles.input}
+                      value={weight}
+                      onChange={(e) => setWeight(e.target.value)}
+                    />
+                  </div>
+                </div>
 
-      <div style={styles.rowContainer}>
-  <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
-    <label style={styles.label}>Product (Service)</label>
-    <select
-      style={styles.dropdown}
-      value={product}
-      onChange={(e) => setProduct(e.target.value)}
-    >
-      <option value="5">5</option>
-    </select>
-  </div>
-  <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
-    <label style={styles.label}>Unit Quantity</label>
-    <input
-      type="number"
-      style={styles.input}
-      value={unitQuantity}
-      onChange={(e) => setUnitQuantity(e.target.value)}
-    />
-  </div>
-</div>
-      {/* Add Another Product Link */}
-      <p style={styles.addProduct}>+ Add Another Product</p>
+                {products.map((item, index) => (
+                  <div key={index} style={styles.rowContainer}>
+                    <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
+                      <label style={styles.label}>Product (Service)</label>
+                      <select
+                        style={styles.dropdown}
+                        value={item.product}
+                        onChange={(e) => handleProductChange(index, "product", e.target.value)}
+                      >
+                        <option value="5">5</option>
+                      </select>
+                    </div>
+                    <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
+                      <label style={styles.label}>Unit Quantity</label>
+                      <input
+                        type="number"
+                        style={styles.input}
+                        value={item.quantity}
+                        onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                ))}
 
-      {/* Cancel and Add Box Buttons */}
-      <div style={styles.buttonContainer}>
-        <button style={styles.cancelButton} onClick={() => setShowModal(false)}>
-          Cancel
-        </button>
-        <button style={styles.confirmButton} onClick={handleAddBox}>
-          Add Box
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+                <p style={styles.addProduct} onClick={handleAddProductField}>
+                  + Add Another Product
+                </p>
+
+                {/* Cancel and Add Box Buttons */}
+                <div style={styles.buttonContainer}>
+                  <button style={styles.cancelButton} onClick={resetModal}>
+                    Cancel
+                  </button>
+                  <button style={styles.confirmButton} onClick={handleAddBox}>
+                    Add Box
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div style={styles.totalContainer}>
             <div style={styles.totalCharge}>
               {/* <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span> */}
@@ -225,192 +240,149 @@ export default function InvoicesDetails() {
   );
 }
 
-  const styles = {
-    headerContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      width: '100%',
-      marginBottom: '15px',
-      padding: '10px 0',
-    },
-    invoiceDetails: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '5px',
-      alignItems: 'flex-start',
-      fontSize: '1.2rem',
-      fontFamily: "'abc'",
-    },
-    totalContainer: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      width: '100%',
-      marginBottom: '20px',
-      padding: '10px 0',
-    },
-    totalCharge: {
-      fontSize: '1.5rem',
-      fontWeight: 'bold',
-      display: 'flex',
-      gap: '20px',
-    },
-    buttonWrapper: {
-      display: 'flex',
-      gap: '10px',
-      justifyContent: 'flex-end',
-      marginRight: '30px',
-    },
-    table: {
-      width: "98%",
-      borderCollapse: "collapse",
-      marginBottom: "20px",
-      textAlign: "left",
-      marginRight: '30px',
-    },
-    th: {
-      background: "#000",
-      color: "#fff",
-      fontWeight: "bold",
-      padding: "12px",
-      borderBottom: "2px solid #ddd",
-      textAlign: "left",
-    },
-    td: {
-      padding: "12px",
-      borderBottom: "1px solid #ddd",
-      textAlign: "left",
-    },
-    deleteIcon: {
-      cursor: "pointer",
-      color: "red",
-      fontSize: "18px",
-    },
-    modalOverlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      modal: {
-        backgroundColor: '#fff',
-        padding: '20px',
-        borderRadius: '8px',
-        width: '35%',
-      },
-      modalTitle: {
-        marginBottom: '20px',
-      },
-      label: {
-        display: 'block',
-        marginBottom: '5px',
-      },
-      input: {
-        width: '100%',
-        padding: '8px',
-        marginBottom: '10px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
-      },
-      disabledInput: {
-        width: '100%',
-        padding: '8px',
-        marginBottom: '10px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
-        backgroundColor: '#f0f0f0',
-      },
-      dimensionContainer: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: '10px',
-      },
-      dropdown: {
-        width: '100%',
-        padding: '8px',
-        marginBottom: '10px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
-      },
-      addProduct: {
-        color: 'blue',
-        cursor: 'pointer',
-        marginBottom: '10px',
-      },
-
-      rowContainer: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        gap: '10px',
-        marginBottom: '10px',
-      },
-      inputGroup: {
-        flex: 1,  // Makes all inputs equal width
-        display: 'flex',
-        flexDirection: 'column',
-      },
-
-      rowContainer: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        gap: '10px',
-        marginBottom: '10px',
-      },
-      inputGroup: {
-        display: 'flex',
-        flexDirection: 'column',
-      },
-      productServiceGroup: {
-        flex: 3, // 75% width
-      },
-      unitQuantityGroup: {
-        flex: 1, // 25% width
-      },
-      dropdown: {
-        width: '100%',
-        padding: '8px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
-      },
-      input: {
-        width: '100%',
-        padding: '8px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
-      },
-      
-      buttonContainer: {
-        display: 'flex',
-        justifyContent: 'flex-end', // Aligns buttons to the right
-        marginTop: '20px',
-      },
-      cancelButton: {
-        backgroundColor: '#ccc',
-        color: '#000',
-        border: 'none',
-        padding: '10px 15px',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        marginRight: '10px', // Space between buttons
-      },
-      confirmButton: {
-        backgroundColor: 'black',
-        color: 'white',
-        border: '1px solid black',
-        padding: '10px 15px',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        transition: '0.3s',
-      },
-      confirmButtonHover: {
-        backgroundColor: 'white',
-        color: 'black',
-      },
-      
-  };
+const styles = {
+  headerContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: '15px',
+    padding: '10px 0',
+  },
+  invoiceDetails: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '5px',
+    alignItems: 'flex-start',
+    fontSize: '1.2rem',
+    fontFamily: "'abc'",
+  },
+  totalContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: '20px',
+    padding: '10px 0',
+  },
+  totalCharge: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    display: 'flex',
+    gap: '20px',
+  },
+  buttonWrapper: {
+    display: 'flex',
+    gap: '10px',
+    justifyContent: 'flex-end',
+    marginRight: '30px',
+  },
+  table: {
+    width: "98%",
+    borderCollapse: "collapse",
+    marginBottom: "20px",
+    textAlign: "left",
+    marginRight: '30px',
+  },
+  th: {
+    background: "#000",
+    color: "#fff",
+    fontWeight: "bold",
+    padding: "12px",
+    borderBottom: "2px solid #ddd",
+    textAlign: "left",
+  },
+  td: {
+    padding: "12px",
+    borderBottom: "1px solid #ddd",
+    textAlign: "left",
+  },
+  deleteIcon: {
+    cursor: "pointer",
+    color: "red",
+    fontSize: "18px",
+  },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modal: {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '8px',
+    width: '35%',
+  },
+  modalTitle: {
+    marginBottom: '20px',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '5px',
+  },
+  input: {
+    width: '100%',
+    padding: '8px',
+    marginBottom: '10px',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+  },
+  dropdown: {
+    width: '100%',
+    padding: '8px',
+    marginBottom: '10px',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+  },
+  addProduct: {
+    color: 'blue',
+    cursor: 'pointer',
+    marginBottom: '10px',
+  },
+  rowContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: '10px',
+    marginBottom: '10px',
+  },
+  inputGroup: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  productServiceGroup: {
+    flex: 3,
+  },
+  unitQuantityGroup: {
+    flex: 1,
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: '20px',
+  },
+  cancelButton: {
+    backgroundColor: '#ccc',
+    color: '#000',
+    border: 'none',
+    padding: '10px 15px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginRight: '10px',
+  },
+  confirmButton: {
+    backgroundColor: 'black',
+    color: 'white',
+    border: '1px solid black',
+    padding: '10px 15px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    transition: '0.3s',
+  },
+};
