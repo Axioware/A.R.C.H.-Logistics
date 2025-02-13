@@ -38,11 +38,12 @@ export default function All_Users() {
     if (userStatus) params.append('userStatus', userStatus);
     if (warehouse) params.append('warehouse', warehouse);
     if (search) params.append('search', search);
+    if (currentPage) params.append('page', currentPage);
   
     // Set the updated endpoint
     setEndpoint(`api/users/${params.toString() ? '?' + params.toString() : ''}`);
     console.log('hello' + endpoint);
-  }, [billingType, userStatus, warehouse, search]); // Dependencies to trigger the effect
+  }, [billingType, userStatus, warehouse, search, currentPage]); // Dependencies to trigger the effect
   
 
   // const filteredUsers = filterOptionUser(billing={billingType}, user={userStatus}, ware={warehouse}, setbill={setBillingType}, setuser={setUserStatus}, setware={setWarehouse});
@@ -89,7 +90,7 @@ export default function All_Users() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const getData = async () => {
-    const url = `https://api.example.com/users?page=${currentPage}&billingType=${billingType}&userStatus=${userStatus}`;
+    const url = `https://api.example.com/${endpoint}`;
     const response = await fetchData(setLoading, setSuccess, url);
 
     if (response && response.error) {
@@ -238,7 +239,7 @@ export default function All_Users() {
                 <SearchBar
                   hint="Search..."
                   field_color={[255, 255, 255]} // White background
-                  // setSearch={se}
+                  setSearch={setSearch}
                   // function={search_function} // Function to call on search
                   width="300px" // Set width explicitly
                   height="50px" // Set height for input field
