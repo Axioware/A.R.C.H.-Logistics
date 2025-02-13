@@ -1,221 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import GeneralField from '../../Components/General/GeneralField';
-import GeneralButton from '../../Components/General/GeneralButton';
-import BackgroundImage from '../../Assets/Images/Login/background.jpg';
-import arch from '../../Assets/Images/ARCH_Labs Logo white.png';
+import React from 'react';
 
-const ResetPassword = () => {
-  const [formData, setFormData] = useState({ newPassword: '', confirmPassword: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showPassword, setShowPassword] = useState({ newPassword: false, confirmPassword: false }); // State for password visibility
-  const navigate = useNavigate();
+const GeneralField = ({
+  label,
+  label_position = 'top',
+  hint,
+  field_type = 'text', // Default to 'text' if no type is passed
+  name,
+  width,
+  height,
+  func = () => {}, // Default function: no-op
+  id,
+  label_id,
+  label_text,
+  maxLength, // New prop for max length
+  required = false,
+}) => {
+  const styles = `
+  .field-input:hint{
+    color: #999; /* Light gray for a subtle look */
+    font-style: italic; /* Italicize hint text to differentiate from input text */
+    font-size: 0.9em; /* Slightly smaller font size to keep focus on the input values */
+    padding-left: 5px; /
+  
 
-  // Function to update state from GeneralField
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  // Function to toggle password visibility
-  const togglePasswordVisibility = (field) => {
-    setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validate fields
-    if (!formData.newPassword || !formData.confirmPassword) {
-      setErrorMessage('All fields are required.');
-      return;
+  }
+     .field-container {
+      display: flex;
+      flex-direction: ${label_position === 'left' ? 'row' : 'column'};
+      align-items: ${label_position === 'left' ? 'center' : 'flex-start'};
+      width: 100%;
+      gap: 8px;
+      margin-bottom: 16px;
     }
-    if (formData.newPassword !== formData.confirmPassword) {
-      setErrorMessage('Passwords do not match.');
-      return;
+    .field-label {
+      font-weight: light;
+      text-align: ${label_position === 'left' ? 'right' : 'left'};
+      white-space: ${label_position === 'left' ? 'nowrap' : 'normal'};
+      min-width: ${label_position === 'left' ? '20%' : 'auto'};
+    }
+    .field-input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px; /* Increased border radius for a more professional look */
+      box-sizing: border-box;
+      width: ${width};
+      height: ${height};
+      transition: border-color 0.3s, box-shadow 0.3s; /* Optional: Smooth focus effect */
+    }
+    .field-input:focus {
+      border-color: #007bff; /* Change border color on focus */
+      outline: none;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.25); /* Subtle shadow for focus */
+    }
+    .field-input.required {
+     border-color: #d9534f; /* Red border color to indicate required fields */
     }
 
-    const btn = document.getElementById('resetbtn');
-    btn.style.backgroundColor = 'grey';
-    btn.disabled = true;
-
-    // Disable fields and button
-    setIsSubmitting(true);
-    setErrorMessage('');
-
-    try {
-      const accessToken = localStorage.getItem('access_token');
-      const refreshToken = localStorage.getItem('refresh_token');
-      const response = await fetch(`http://${process.env.REACT_APP_TENANT_NAME}/auth/api/reset-password/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          password: formData.newPassword,
-          refresh_token: refreshToken,
-        }),
-      });
-
-      if (response.status === 200) {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        navigate('/login');
-      } else if (response.status === 400) {
-        setErrorMessage('Please choose a different password.');
-      } else if (response.status >= 500) {
-        setErrorMessage('Server error. Please try again.');
-      }
-    } catch (error) {
-      setErrorMessage('An unexpected error occurred. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-      btn.style.backgroundColor = '#1e1e1e';
-      btn.disabled = false;
+    .field-label.required::after {
+    content: '*';
+    color: #d9534f; /* Red asterisk to indicate required fields */
+    margin-left: 4px; /* Spacing between the label and the asterisk */
     }
-  };
+
+
+    #${label_id}{ color: red; display: none; }
+  `;
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        backgroundColor: '#e0e0e0',
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${BackgroundImage})`,
-        backgroundSize: 'cover',
-        filter: 'saturate(0.8)',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          width: '900px',
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          borderRadius: '10px',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: '#000',
-            color: '#fff',
-            width: '60%',
-            padding: '20px',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <img
-            src={arch}
-            alt="ARCH Logo"
-            style={{ maxWidth: '80%', height: 'auto' }}
-          />
-        </div>
-        <div
-          style={{
-            width: '40%',
-            padding: '40px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <h2
-            style={{
-              fontSize: '28px',
-              marginBottom: '16%',
-              color: '#333',
-              marginLeft: '11%',
-              fontWeight: 'bold',
-              wordSpacing: '1px',
-            }}
-          >
-            Reset Password
-          </h2>
-          <form method="POST" onSubmit={handleSubmit}>
-            <div style={{ marginBottom: '20px', fontSize: '14px', color: '#333' }}>
-              <GeneralField
-                label="New Password"
-                field_type={showPassword.newPassword ? 'text' : 'password'} // Toggle password visibility
-                name="newPassword"
-                id="newPassword"
-                hint="Enter new password"
-                func={(value) => handleInputChange('newPassword', value)}
-                value={formData.newPassword}
-                required={true}
-                width="100%"
-                maxLength={50}
-              />
-              <button
-                type="button"
-                style={{
-                  position: 'absolute',
-                  right: '10px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  cursor: 'pointer',
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '1.2em',
-                  color: '#666',
-                }}
-                onClick={() => togglePasswordVisibility('newPassword')}
-              >
-                {showPassword.newPassword ? '👁️' : '👁️‍🗨️'}
-              </button>
-            </div>
-            <div style={{ marginBottom: '20px', fontSize: '14px', color: '#333' }}>
-              <GeneralField
-                label="Confirm Password"
-                field_type={showPassword.confirmPassword ? 'text' : 'password'} // Toggle password visibility
-                name="confirmPassword"
-                id="confirmPassword"
-                hint="Re-enter new password"
-                func={(value) => handleInputChange('confirmPassword', value)}
-                value={formData.confirmPassword}
-                required={true}
-                width="100%"
-                maxLength={50}
-              />
-              <button
-                type="button"
-                style={{
-                  position: 'absolute',
-                  right: '10px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  cursor: 'pointer',
-                  background: 'none',
-                  border: 'none',
-                  fontSize: '1.2em',
-                  color: '#666',
-                }}
-                onClick={() => togglePasswordVisibility('confirmPassword')}
-              >
-                {showPassword.confirmPassword ? '👁️' : '👁️‍🗨️'}
-              </button>
-            </div>
-            <p style={{ color: 'red' }}>{errorMessage}</p>
-            <GeneralButton
-              label="Reset"
-              id="resetbtn"
-              text="Reset"
-              width="100%"
-              height="40px"
-              border="8px"
-              func={handleSubmit}
-              isSubmitting={isSubmitting}
-            />
-          </form>
-        </div>
-      </div>
+    <div className={`field-container ${label_position === 'left' ? 'left' : ''}`}>
+      <style>{styles}</style>
+      {label && (
+          <label htmlFor={name} className={`field-label ${required ? 'required' : ''}`}>
+          {label}
+        </label>
+      )}
+      <input
+        type={field_type}
+        name={name}
+        id={id}
+        placeholder={hint}
+        className={`field-input`} // Apply modified class name for input
+        onChange={(e) => func(e)} // Ensure func is always a function
+        maxLength={maxLength} // Set the max length
+        required={required} // Set the HTML5 required attribute
+      />
+      <p id={label_id}>{label_text}</p>
     </div>
   );
 };
 
-export default ResetPassword;
+export default GeneralField;
