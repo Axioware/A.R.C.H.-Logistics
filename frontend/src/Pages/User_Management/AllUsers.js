@@ -6,17 +6,55 @@ import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
-import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement"
+import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement";
+import EditIcon from "../../Components/Icons/EditIcon";
 
 export default function All_Users() {
 
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(false);
+  const [data, setData] = useState([{id: '1', name:'abc', email:'abc@gmail.com', role: 'client'},
+    {id: '1', name:'abc', email:'abc@gmail.com', role: 'client'}]);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
   const [clearance, setclearance] = useState(1);
+  const [billingType, setBillingType] = useState('');
+  const [userStatus, setUserStatus] = useState('');
+  const [warehouse, setWarehouse] = useState('');
+
+  // const filteredUsers = filterOptionUser(billing={billingType}, user={userStatus}, ware={warehouse}, setbill={setBillingType}, setuser={setUserStatus}, setware={setWarehouse});
+
+  const table_function = () => {
+    console.log('adhashduas');
+    return data.map((row, index) => (
+      <tr key={index}>
+        <td>{row.id}</td>
+        <td>{row.name}</td>
+        <td>{row.email}</td>
+        <td>{row.role}</td>
+        <td style={{ display: "flex", padding: '15px 15px 15px 0px', marginRight:"15px", justifyContent: "right"}}>
+      <EditIcon path={`edit-user/?id=${row.id}`}/>
+    </td>
+
+      </tr>
+    ));
+  };
+
+  const table_width_function = () => {
+    console.log('adhashduas');
+    return (
+      <colgroup>
+        <col style={{ width: "10%" }} />
+        <col style={{ width: "20%" }} />
+        <col style={{ width: "30%" }} />
+        <col style={{ width: "30%" }} />
+        <col style={{ width: "10%" }} />  
+      </colgroup>
+    );
+  };
+
+  
 
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
@@ -24,8 +62,8 @@ export default function All_Users() {
   });
 
   // State for filters
-  const [billingType, setBillingType] = useState('All');
-  const [userStatus, setUserStatus] = useState('All');
+  // const [billingType, setBillingType] = useState('All');
+  // const [userStatus, setUserStatus] = useState('All');
   
   // State to toggle the dropdown visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -127,11 +165,11 @@ export default function All_Users() {
             heading_text={'All Users'}
             search_function={getData}
             filter_function={() => {}}   
-            content={filterOptionUser}
+            content={<filterOptionUser billing={billingType} user={userStatus} ware={warehouse} setbill={setBillingType} setuser={setUserStatus} setware={setWarehouse}/>}
           />
 
           <TableContent
-            table_headings={['ID', 'Name', 'Email', 'Role', 'Actions']}
+            table_headings={['ID', 'Name', 'Email', 'Role']}
             last_column={true}
             loading={loading}
             success={success}
@@ -139,6 +177,8 @@ export default function All_Users() {
             next_button={handleNext}
             fetchData={getData}
             data={data}
+            table_width_function={table_width_function}
+            table_function = {table_function}
             currentPage={currentPage}
             totalPages={totalPages}
           />

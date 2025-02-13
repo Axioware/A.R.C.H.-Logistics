@@ -12,8 +12,10 @@ export default function TableContent({
       currentPage,
       totalPages,
       data,
+      table_function,
       loading,
-      success
+      success,
+      table_width_function
     }) {
 
   const handleSort = (column) => {
@@ -36,6 +38,8 @@ export default function TableContent({
           data={data}
           loading={loading}
           success={success}
+          table_width_function={table_width_function}
+          table_function = {table_function}
           last_column={last_column}
           handleRefresh={handleRefresh}
         />

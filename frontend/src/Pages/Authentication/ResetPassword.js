@@ -14,7 +14,7 @@ const ResetPassword = () => {
 
     // Function to update state from GeneralField
     const handleInputChange = (field, value) => {
-        console.log(`Updating ${field} with value:`, value); // Debug log
+        console.log(`Updating ${field} with value:`+ value); // Debug log
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
 

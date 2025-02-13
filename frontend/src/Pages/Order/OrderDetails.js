@@ -9,8 +9,11 @@ import mainStyles from "../../Assets/CSS/styles";
 import PageHeading from "../../Components/Table_Components/PageHeading";
 import GeneralButton from '../../Components/General/GeneralButton';
 import { FaTrash } from "react-icons/fa";
+import FilterButton from '../../Components/Table_Components/FilterButton';
+import FilterOptionsDownload from "../../Components/Filter/FilterOptionsDownload"
+import FilterOptionsPrint from "../../Components/Filter/FilterOptionsPrint"
 
-export default function InvoicesDetails() {
+export default function Orderdetails() {
 
 
     const [Label, setLabel] = useState([
@@ -43,10 +46,11 @@ export default function InvoicesDetails() {
   const [OrderID, setOrderID] = useState("XCV82SL7");
   const [TotalCharge, setTotalCharge] = useState(27235);
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
-    const storedState = localStorage.getItem("sidebarclosed");
+  const storedState = localStorage.getItem("sidebarclosed");
     return storedState === null ? true : JSON.parse(storedState);
   });
   const [showModal, setShowModal] = useState(false); // Modal state
+  const [showLabelModal, setShowLabelModal] = useState(false); // Modal state
   const [chargeType, setChargeType] = useState("Service Fee");
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
@@ -58,11 +62,41 @@ export default function InvoicesDetails() {
     setShowModal(false); // Close modal
   };
 
+  const [custom, setCustom] = useState("");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [textOnLabel, setTextOnLabel] = useState("");
+  
+  const handleUpload = () => {
+    console.log("Upload File clicked");
+  };
+
+  const [openDropdown, setOpenDropdown] = useState(null); // null means no dropdown is open
+
+  const handleFilterButtonClick = (dropdownName) => {
+    if (openDropdown === dropdownName) {
+      setOpenDropdown(null); // Close the dropdown if it's already open
+    } else {
+      setOpenDropdown(dropdownName); // Open the clicked dropdown
+    }
+  };
+  
+  const handleAddLabel = () => {
+    console.log("Add Label clicked", { custom, width, height, textOnLabel });
+  };
+  
+  
   const AddCharge = () => {
     setShowModal(true); // Close modal
     console.log('ygygyg');
   };
 
+
+  const AddLabel = () => {
+    setShowLabelModal(true); // Close modal
+    console.log('ygygyg');
+  };
+  
   useEffect(() => {
     // Fetch data logic here if needed
   }, [currentPage]);
@@ -95,10 +129,33 @@ export default function InvoicesDetails() {
               {/* <span><strong>Order ID:</strong> {OrderID}</span> */}
             </div>
             <div style={styles.buttonWrapper}>
-              <ModalOpener text="Print" text_color={[255, 255, 255]} func={AddCharge}/>
-              <ModalOpener text="Download" text_color={[255, 255, 255]} func={AddCharge} />
-              <ModalOpener text="Upload" text_color={[255, 255, 255]} func={AddCharge} />
-            </div>
+  <FilterButton
+    text="Print"
+    text_color={[255, 255, 255]} // White text color
+    background_color={[23, 23, 23]} // Dark background
+    filter_function={() => {}}   
+    content={FilterOptionsPrint}
+    width="150px" // Set width explicitly
+    height="50px" // Set height explicitly
+    style={styles.filterButton} // Add this to enforce consistent styling
+  />
+  <FilterButton
+    text="Download"
+    text_color={[255, 255, 255]} // White text color
+    background_color={[23, 23, 23]} // Dark background
+    filter_function={() => {}}   
+    content={FilterOptionsDownload}
+    width="150px" // Set width explicitly
+    height="50px" // Set height explicitly
+    style={styles.filterButton} // Add this to enforce consistent styling
+  />
+  <ModalOpener 
+    text="Add Label" 
+    text_color={[255, 255, 255]} 
+    func={AddLabel} 
+    style={styles.modalOpener} // Add this to enforce consistent styling
+  />
+</div>
           </div>
 
           {/* Updated Table */}
@@ -123,31 +180,51 @@ export default function InvoicesDetails() {
             </tbody>
           </table>
 
-          {showModal && 
-          <div style={styles.modalOverlay}>
-              <div style={styles.modal}>
-                <h2 style={styles.modalTitle}>Add Charge</h2>
+        {showLabelModal && 
+  <div style={styles.modalOverlay}>
+    <div style={styles.modal}>
+      <h2 style={styles.modalTitle}>Add Label</h2>
 
-                <label style={styles.label}>Amount</label>
-                <input type="text" style={styles.input} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="$0.00" />
-
-                <label style={styles.label}>Notes</label>
-                <input type="text" style={styles.input} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Extra Services" />
-
-                <div style={styles.buttonContainer}>
-                  <button style={styles.cancelButton} onClick={() => setShowModal(false)}>Cancel</button>
-                  <button style={styles.confirmButton} onClick={handleAddCharge}>Add Charge</button>
-                </div>
-              </div>
-            </div>}
+      {/* Row for Format, Width, and Height */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+        {/* Format - 50% width */}
+        <div style={{ flex: 2 }}> {/* 50% of the row */}
+          <label style={styles.label}>Format</label>
+          <select style={styles.input} value={custom} onChange={(e) => setCustom(e.target.value)}>
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+          </select>
         </div>
 
+        {/* Width - 25% width */}
+        <div style={{ flex: 1 }}> {/* 25% of the row */}
+          <label style={styles.label}>Width</label>
+          <input type="text" style={styles.input} value={width} onChange={(e) => setWidth(e.target.value)} placeholder="Width" />
+        </div>
 
+        {/* Height - 25% width */}
+        <div style={{ flex: 1 }}> {/* 25% of the row */}
+          <label style={styles.label}>Height</label>
+          <input type="text" style={styles.input} value={height} onChange={(e) => setHeight(e.target.value)} placeholder="Height" />
+        </div>
+      </div>
 
+      {/* Text field */}
+      <label style={styles.label}>Text</label>
+      <input type="text" style={styles.input} value={textOnLabel} onChange={(e) => setTextOnLabel(e.target.value)} placeholder="Text On Label" />
 
+      {/* Upload button */}
+      <button style={styles.uploadButton} onClick={handleUpload}>Upload File</button>
 
-
-
+      {/* Cancel and Confirm buttons */}
+      <div style={styles.buttonContainer}>
+        <button style={styles.cancelButton} onClick={() => setShowLabelModal(false)}>Cancel</button>
+        <button style={styles.confirmButton} onClick={handleAddLabel}>Add Label</button>
+      </div>
+    </div>
+  </div>
+}
+</div>
 
         <div style={mainStyles.tableBackground}>
           <PageHeading text='Services' text_color={[0, 0, 0]} width='100%' height='auto' />
@@ -204,24 +281,6 @@ export default function InvoicesDetails() {
               ))}
             </tbody>
           </table>
-
-          {showModal && 
-          <div style={styles.modalOverlay}>
-              <div style={styles.modal}>
-                <h2 style={styles.modalTitle}>Add Charge</h2>
-
-                <label style={styles.label}>Amount</label>
-                <input type="text" style={styles.input} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="$0.00" />
-
-                <label style={styles.label}>Notes</label>
-                <input type="text" style={styles.input} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Extra Services" />
-
-                <div style={styles.buttonContainer}>
-                  <button style={styles.cancelButton} onClick={() => setShowModal(false)}>Cancel</button>
-                  <button style={styles.confirmButton} onClick={handleAddCharge}>Add Charge</button>
-                </div>
-              </div>
-            </div>}
         </div>
 
 
@@ -273,28 +332,8 @@ export default function InvoicesDetails() {
                 </tr>
               ))}
             </tbody>
-          </table>
-
-          {showModal && 
-          <div style={styles.modalOverlay}>
-              <div style={styles.modal}>
-                <h2 style={styles.modalTitle}>Add Charge</h2>
-
-                <label style={styles.label}>Amount</label>
-                <input type="text" style={styles.input} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="$0.00" />
-
-                <label style={styles.label}>Notes</label>
-                <input type="text" style={styles.input} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Extra Services" />
-
-                <div style={styles.buttonContainer}>
-                  <button style={styles.cancelButton} onClick={() => setShowModal(false)}>Cancel</button>
-                  <button style={styles.confirmButton} onClick={handleAddCharge}>Add Charge</button>
-                </div>
-              </div>
-            </div>}
+          </table>        
         </div>
-
-
 
         <div style={mainStyles.tableBackground}>
           <PageHeading text='Order Details' text_color={[0, 0, 0]} width='100%' height='auto' />
@@ -516,6 +555,121 @@ export default function InvoicesDetails() {
       fontSize: "16px",
       fontWeight: "500",
       transition: "background 0.3s ease",
+    },
+    buttonWrapper: {
+      display: 'flex',
+      flexDirection: 'row', // Ensure buttons are in the same row
+      alignItems: 'center', // Align buttons vertically in the center
+      gap: '10px', // Add some space between buttons
+      justifyContent: 'flex-end', // Align buttons to the right
+      marginRight: '30px',
+    },
+    filterButton: {
+      height: '50px', // Ensure consistent height
+      display: 'flex',
+      alignItems: 'center', // Center content vertically
+      justifyContent: 'center', // Center content horizontally
+    },
+    modalOpener: {
+      height: '50px', // Ensure consistent height
+      display: 'flex',
+      alignItems: 'center', // Center content vertically
+      justifyContent: 'center', // Center content horizontally
+    },
+    modalOverlay: { 
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(0, 0, 0, 0.5)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 1000,
+    },
+    modal: {
+      background: "#fff",
+      padding: "25px",
+      borderRadius: "12px",
+      width: "450px",
+      boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
+      textAlign: "center",
+      position: "relative",
+    },
+    modalTitle: {
+      marginBottom: "20px",
+      fontSize: "26px",
+      fontWeight: "bolder",
+      color: "#333",
+    },
+    label: {
+      display: "block",
+      textAlign: "left",
+      marginBottom: "8px",
+      fontSize: "22px",
+      fontWeight: "500",
+      color: "#555",
+    },
+    input: {
+      width: "100%",
+      padding: "12px",
+      marginBottom: "18px",
+      border: "1px solid #ccc",
+      borderRadius: "6px",
+      fontSize: "16px",
+      outline: "none",
+      transition: "border 0.3s ease",
+    },
+    uploadButton: {
+      backgroundColor: "black",
+      color: "white",
+      border: "none",
+      padding: "12px 18px",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontSize: "16px",
+      fontWeight: "500",
+      transition: "background 0.3s ease",
+      marginTop: "10px",
+      width: "100%",
+    },
+    
+    
+    // uploadButton:hover {
+    //   background-color: "white",
+    //   color: "black",
+    // },
+
+    buttonContainer: {
+      display: "flex",
+      justifyContent: "flex-end",
+      gap: "12px",
+      marginTop: "15px",
+    },
+    cancelButton: {
+      backgroundColor: "#ccc",
+      color: "#333",
+      border: "none",
+      padding: "12px 18px",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontSize: "16px",
+      fontWeight: "500",
+      transition: "background 0.3s ease",
+    },
+    confirmButton: {
+      backgroundColor: "#000",
+      color: "#fff",
+      border: "none",
+      padding: "12px 18px",
+      borderRadius: "6px",
+      cursor: "pointer",
+      fontSize: "16px",
+      fontWeight: "500",
+      transition: "background 0.3s ease",
+
+      
     },
   };
   
