@@ -7,123 +7,131 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.models import User
 from rest_framework import status
-from django.contrib.auth.hashers import make_password
-from django.conf import settings
 from rest_framework_simplejwt.exceptions import TokenError
 from Users.models import UsersExtended
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout as django_logout
 from .models import OTP
+from django_tenants.utils import schema_context
+
+
 # Create your views here.
 
 @api_view(['POST'])
 def send_otp(request):
-    email = request.data.get('email')
+    with schema_context(request.tenant):
 
-    # Get user model dynamically
-    User = get_user_model()
-    user = User.objects.filter(email=email).first()
+        email = request.data.get('email')
 
-    if user is None:
-        user = UsersExtended.objects.filter(email2=email).first()
+        # Get user model dynamically
+        User = get_user_model()
+        user = User.objects.filter(email=email).first()
 
-    if user is None:
-        return Response({"error": "User with this email does not exist."}, status=400)
+        if user is None:
+            user = UsersExtended.objects.filter(email2=email).first()
 
-    # Generate OTP and expiration
-    otp_code = OTP.generate_otp()[:5]
-    expires_at = timezone.now() + timedelta(minutes=10)
+        if user is None:
+            return Response({"error": "User with this email does not exist."}, status=400)
 
-    # Save OTP to database
-    OTP.objects.create(user=user, otp=otp_code, expires_at=expires_at)
+        # Generate OTP and expiration
+        otp_code = OTP.generate_otp()[:5]
+        expires_at = timezone.now() + timedelta(minutes=10)
 
-    # Send OTP via email
-    send_mail(
-        'Your OTP Code',
-        f'Your OTP code is: {otp_code}',
-        'ulhaqhassan2@gmail.com',
-        [email],
-        fail_silently=False,
-    )
+        # Save OTP to database
+        OTP.objects.create(user=user, otp=otp_code, expires_at=expires_at)
 
-    return Response({"message": "OTP sent to email."}, status=200)
+        # Send OTP via email
+        send_mail(
+            'Your OTP Code',
+            f'Your OTP code is: {otp_code}',
+            'ulhaqhassan2@gmail.com',
+            [email],
+            fail_silently=False,
+        )
+
+        return Response({"message": "OTP sent to email."}, status=200)
 
 @api_view(['POST'])
 def verify_otp(request):
-    email = request.data.get('email')
-    otp_code = request.data.get('otp')
+    with schema_context(request.tenant):
 
-    try:
-        user = User.objects.get(email=email)
-        otp = OTP.objects.filter(user=user, otp=otp_code).latest('created_at')
-    except (User.DoesNotExist, OTP.DoesNotExist):
-        return Response({"error": "Invalid OTP or user."}, status=400)
+        email = request.data.get('email')
+        otp_code = request.data.get('otp')
 
-    if otp.is_expired():
-        return Response({"error": "OTP has expired."}, status=400)
+        try:
+            user = User.objects.get(email=email)
+            otp = OTP.objects.filter(user=user, otp=otp_code).latest('created_at')
+        except (User.DoesNotExist, OTP.DoesNotExist):
+            return Response({"error": "Invalid OTP or user."}, status=400)
 
-    # Create JWT tokens
-    refresh = RefreshToken.for_user(user)
-    access_token = str(refresh.access_token)
-    refresh_token = str(refresh)
+        if otp.is_expired():
+            return Response({"error": "OTP has expired."}, status=400)
 
-    return Response({
-        "access": access_token,
-        "refresh": refresh_token
-    }, status=200)
+        # Create JWT tokens
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+        refresh_token = str(refresh)
+
+        return Response({
+            "access": access_token,
+            "refresh": refresh_token
+        }, status=200)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout(request):
-    try:
-        # Store logout timestamp
-        request.user.extended.last_logout = timezone.now()
-        request.user.extended.save()
+    with schema_context(request.tenant):
 
-        # Get refresh token from request
-        refresh_token = request.data.get('refresh_token')
-        if refresh_token:
-            token = RefreshToken(refresh_token)
-            token.blacklist()  # Blacklist the refresh token
-        else:
-            return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            # Store logout timestamp
+            request.user.extended.last_logout = timezone.now()
+            request.user.extended.save()
 
-    except TokenError:
-        return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+            # Get refresh token from request
+            refresh_token = request.data.get('refresh_token')
+            if refresh_token:
+                token = RefreshToken(refresh_token)
+                token.blacklist()  # Blacklist the refresh token
+            else:
+                return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        except TokenError:
+            return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
 
     # Log the user out from Django session
-    django_logout(request)
+        django_logout(request)
 
-    return Response({"message": "Logged out successfully"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Logged out successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_password(request):
-    password = request.data.get('password')
-
-    if not password:
-        return Response({"error": "Password is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Update the user's password securely
-    user = request.user
-    user.set_password(password)
-    user.save()
-
-    # Blacklist the user's refresh token
-    refresh_token = request.data.get("refresh_token")
-    if refresh_token:
-        try:
-            token = RefreshToken(refresh_token)
-            token.blacklist()  # Blacklist token to invalidate it
-        except TokenError:
-            return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-    # Log out the user from Django session
-    django_logout(request)
-
-    return Response({"message": "Password updated successfully and user logged out"}, status=status.HTTP_200_OK)
+    with schema_context(request.tenant):
+        password = request.data.get('password')
+    
+        if not password:
+            return Response({"error": "Password is required"}, status=status.HTTP_400_BAD_REQUEST)
+    
+        # Update the user's password securely
+        user = request.user
+        user.set_password(password)
+        user.save()
+    
+        # Blacklist the user's refresh token
+        refresh_token = request.data.get("refresh_token")
+        if refresh_token:
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()  # Blacklist token to invalidate it
+            except TokenError:
+                return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+    
+        # Log out the user from Django session
+        django_logout(request)
+    
+        return Response({"message": "Password updated successfully and user logged out"}, status=status.HTTP_200_OK)
 
 
 # from django_tenants.utils import schema_context

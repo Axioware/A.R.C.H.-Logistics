@@ -72,13 +72,14 @@ class SubOrders(models.Model):
         return f"Sub Order ID - {self.sub_order_id}"
     
 
-class SubOrderFile(models.Model):
+class OrderFile(models.Model):
     sub_order_id = models.ForeignKey(SubOrders, on_delete=models.CASCADE)
     file = models.FileField(upload_to='labels/', blank=True, null=True, default=None)
     format = models.CharField(max_length=100, blank=True, null=True) #A4, A3. Custom
     text = models.CharField(max_length=100, blank=True, null=True, default=None) #Text on label
     format_width = models.IntegerField(blank=True, null=True, default=0)
     format_height = models.IntegerField(blank=True, null=True, default=0)
+    type = models.CharField(max_length=50, blank=True, null=True, default=None)
 
 class SubOrderItem(models.Model): #Bundle Orders or Mixed SKUs
     sub_order_id = models.ForeignKey(SubOrders, on_delete=models.CASCADE)
