@@ -9,7 +9,7 @@ import ModalOpener from "../../Components/Table_Components/ModalOpener";
 
 export default function InvoicesDetails() {
   const [data, setData] = useState([
-    { product: "Apple", service: "Prep", date: "12/12/2012", amount: "$987", notes: "" }
+    { product: "Apple", service: "Prep", date: "12/12/2012", amount: "$987", notes: "abdul moiz noman" }
   ]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -28,6 +28,9 @@ export default function InvoicesDetails() {
   const [chargeType, setChargeType] = useState("Service Fee");
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
+  const [editingIndex, setEditingIndex] = useState(null); // Track which row is being edited
+  const [editingNotes, setEditingNotes] = useState(""); // Track the current value of the notes being edited
+  
 
   const chargeOptions = ["Service Fee", "Extra Services", "Late Fee", "Custom Charge"];
 
@@ -103,13 +106,32 @@ export default function InvoicesDetails() {
                   <td style={styles.td}>{row.date}</td>
                   <td style={styles.td}>{row.amount}</td>
                   <td style={styles.td}>
-                    <input
-                      type="text"
-                      value={row.notes}
-                      onChange={() => {}}
-                      style={styles.notesInput} // Apply the specific style here
-                    />
-                  </td>
+  {editingIndex === index ? (
+    <input
+      type="text"
+      value={editingNotes}
+      onChange={(e) => setEditingNotes(e.target.value)}
+      onBlur={() => {
+        const newData = [...data];
+        newData[index].notes = editingNotes;
+        setData(newData);
+        setEditingIndex(null);
+      }}
+      style={styles.notesInput}
+      autoFocus
+    />
+  ) : (
+    <span
+      onClick={() => {
+        setEditingIndex(index);
+        setEditingNotes(row.notes);
+      }}
+      style={row.notes ? {} : { color: '#999', fontStyle: 'italic' }} // Add placeholder styling
+    >
+      {row.notes || "Add notes..."} {/* Display placeholder if notes are empty */}
+    </span>
+  )}
+</td>
                   <td style={styles.td}>
                     <FaTrash style={styles.deleteIcon} onClick={() => handleDelete(index)} />
                   </td>

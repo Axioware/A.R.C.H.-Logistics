@@ -33,7 +33,7 @@ export default function Orderdetails() {
     ]);
 
     const [data, setData] = useState([
-        // { product: "Apple", service: "Prep", date: "12/12/2012", amount: "$987", notes: "" }
+        { product: "Apple", service: "Prep", date: "12/12/2012", amount: "$987", notes: "" }
     ]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -495,11 +495,14 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
       autoFocus
     />
   ) : (
-    <span onClick={() => {
-      setEditingIndex(index);
-      setEditingNotes(row.notes);
-    }}>
-      {row.notes}
+    <span
+      onClick={() => {
+        setEditingIndex(index);
+        setEditingNotes(row.notes);
+      }}
+      style={row.notes ? {} : { color: '#999', fontStyle: 'italic' }} // Add placeholder styling
+    >
+      {row.notes || "Add notes..."} {/* Display placeholder if notes are empty */}
     </span>
   )}
 </td>
