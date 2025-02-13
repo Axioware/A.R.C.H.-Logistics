@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
 import BackgroundImage from '../../Assets/Images/Login/background.jpg';
-import arch from '../../Assets/Images/archlabs.jpg';
+import arch from '../../Assets/Images/ARCH_Labs Logo white.png';
 
 const ResetPassword = () => {
     const [formData, setFormData] = useState({ newPassword: "", confirmPassword: "" });

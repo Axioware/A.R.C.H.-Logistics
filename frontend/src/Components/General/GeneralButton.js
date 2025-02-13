@@ -11,9 +11,11 @@ const GeneralButton = ({
   width,  
   height, 
   border,
+  disabled = false,
   func = () => {},
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [disableds, setIsDisableds] = useState({disabled});
 
   const toRGBString = (colorArray) => {
     if (Array.isArray(colorArray) && colorArray.length === 3) {
@@ -23,8 +25,8 @@ const GeneralButton = ({
   };
 
   const buttonStyle = {
-    backgroundColor: isHovered ? toRGBString(text_color) : toRGBString(button_color),
-    color: isHovered ? toRGBString(button_color) : toRGBString(text_color),
+    backgroundColor: disabled ? "#808080" : isHovered ? toRGBString(text_color) : toRGBString(button_color),
+    color: disabled ? "#000000" : isHovered ? toRGBString(button_color) : toRGBString(text_color),
     width,
     height,
     border: border ? `2px solid ${border}` : 'none',
@@ -43,6 +45,7 @@ const GeneralButton = ({
       onClick={func}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      disabled={disabled}
     >
       {text}
     </button>

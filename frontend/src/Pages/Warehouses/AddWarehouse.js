@@ -39,7 +39,7 @@ const AddWarehouse = () => {
 
     try {
       const response = await fetch(
-        "http://moiz.localhost:8000/structures/api/warehouse/",
+        `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/warehouse/`,
         {
           method: "POST",
           headers: {

@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from "react";
-import GeneralField from '../../Components/General/GeneralField';
-import GeneralButton from '../../Components/General/GeneralButton';
-import FilterDropdown from '../../Components/General/FilterDropdown';
-import NavPath from '../../Components/General/NavPath';
-import PageHeading from '../../Components/Table_Components/PageHeading';
+import React, { useState, useRef } from "react";
+import GeneralField from "../../Components/General/GeneralField";
+import GeneralButton from "../../Components/General/GeneralButton";
+import NavPath from "../../Components/General/NavPath";
+import PageHeading from "../../Components/Table_Components/PageHeading";
 import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
 
 const AddService = () => {
   const [formData, setFormData] = useState({
     service_name: "",
-    service_charge: ""
+    service_charge: "",
   });
+
+  const formRef = useRef(null); // Reference for the form
 
   const handleInputChange = (value, name) => {
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -24,33 +25,43 @@ const AddService = () => {
     e.preventDefault();
     console.log("Submitting form data:", formData);
 
-    const token = localStorage.getItem("access_token");
-    console.log(token) // Fetch JWT token from local storage
+    const token = localStorage.getItem("access_token"); // Fetch JWT token from local storage
 
     if (!token) {
       alert("Authentication error! Please log in.");
       return;
     }
-
+    console.log(formData)
     try {
-      const response = await fetch("http://asad.localhost:8000/structures/api/services/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
-      });
+      const response = await fetch(
+        `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/services/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const result = await response.json();
 
       if (response.ok) {
         alert("Service added successfully!");
-        setFormData({ service_name: "", service_charge: "" }); // Reset form after successful submission
+        setFormData({ service_name: "", service_charge: "" }); // Reset form after success
       } else {
-        alert("Failed to add service.");
+        alert(result.message || "Failed to add service.");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("An error occurred while adding service.");
+    }
+  };
+
+  const handleExternalSubmit = () => {
+    if (formRef.current) {
+      formRef.current.requestSubmit(); // Properly trigger form submission
     }
   };
 
@@ -62,17 +73,16 @@ const AddService = () => {
   const styles = {
     mainContent: {
       padding: "10px 0px 50px 0px",
-      // backgroundColor: "#f7f6f6"
     },
     form: {
       position: "relative",
       alignSelf: "flex-start",
       display: "grid",
       gridTemplateColumns: "1fr 1fr", // Two columns
-      // gap: "35px",
-      // marginLeft: "20px",
-      // marginRight: "30px",
-      marginTop: "35px"
+      gap: "35px",
+      marginLeft: "20px",
+      marginRight: "30px",
+      marginTop: "35px",
     },
     buttonContainer: {
       alignSelf: "flex-end",
@@ -82,18 +92,20 @@ const AddService = () => {
       gap: "20px",
       marginTop: "20px",
       lineHeight: "40px",
-      
     },
     headingContainer: {
       alignSelf: "flex-start",
       marginLeft: "20px",
-      marginTop: "15px"
-    }
+      marginTop: "15px",
+    },
   };
 
   return (
     <div>
-      <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      <SideBar
+        sidebar_state={isSidebarClosed}
+        set_sidebar_state={setIsSidebarClosed}
+      />
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={styles.mainContent}>
           <NavPath
@@ -101,7 +113,11 @@ const AddService = () => {
             paths={["/home", "/service", "/add-service"]}
             text_color={[255, 255, 255]}
             background_color={[23, 23, 23]}
-            hyperlink_size={[["10%", "55%"], ["40%", "50%"], ["4%", "4%"]]}
+            hyperlink_size={[
+              ["10%", "55%"],
+              ["40%", "50%"],
+              ["4%", "4%"],
+            ]}
             width="100%"
             height="50px"
           />
@@ -111,14 +127,14 @@ const AddService = () => {
               <PageHeading text="Add Service" />
             </div>
 
-            <form id="form" style={styles.form} onSubmit={handleSubmit}>
+            <form id="form" style={styles.form} onSubmit={handleSubmit} ref={formRef}>
               <GeneralField
                 label="Name"
                 field_type="text"
                 hint="Enter name of Service"
                 required={true}
                 name="service_name"
-                func={(value) => handleInputChange(value, "service_name")}
+                func={(e) => handleInputChange(e.target.value, e.target.name)}
                 value={formData.service_name}
               />
               <GeneralField
@@ -127,10 +143,12 @@ const AddService = () => {
                 hint="Enter the Charge for Service"
                 required={true}
                 name="service_charge"
-                func={(value) => handleInputChange(value, "service_charge")}
+                func={(e) => handleInputChange(e.target.value, e.target.name)}
                 value={formData.service_charge}
               />
-               <div id="buttonContainer" style={styles.buttonContainer}>
+            </form>
+
+            <div id="buttonContainer" style={styles.buttonContainer}>
               <GeneralButton
                 text="Cancel"
                 width="100px"
@@ -138,11 +156,13 @@ const AddService = () => {
                 button_color={["230", "230", "230"]}
                 text_color={["0", "0", "0"]}
               />
-              <GeneralButton text="Add" type="submit" width="100px" height="100%" />
+              <GeneralButton
+                text="Add"
+                width="100px"
+                height="100%"
+                func={handleExternalSubmit} // Fixed button submission
+              />
             </div>
-            </form>
-
-           
           </div>
         </div>
       </div>

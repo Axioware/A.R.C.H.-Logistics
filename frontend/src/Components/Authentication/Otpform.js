@@ -64,11 +64,15 @@ const OtpForm = () => {
       document.getElementById(`otp-${index}`).focus();
     }
   };
+  const handleInputChange = (setter) => (value) => {
+    setter(value.target.value);
+    setIsSubmitting(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const otpValue = otp.join("");
-
+console.log(otpValue)
     if (otpValue.length !== 5) {
       setError("Please enter a valid 5-digit OTP.");
       return;
@@ -219,7 +223,7 @@ const OtpForm = () => {
               maxLength={1}
               width="50px"
               height="50px"
-              func={(value) => handleChange(index, value)}
+              func={(value) => handleInputChange(index, value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               disabled={isSubmitting}
               className={{ ..."otpInput", textAlign: "center" }} // Center the input text
