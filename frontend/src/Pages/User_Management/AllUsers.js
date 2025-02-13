@@ -8,6 +8,10 @@ import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
 import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement";
 import EditIcon from "../../Components/Icons/EditIcon";
+import PageHeading from "../../Components/Table_Components/PageHeading";
+import SearchBar from "../../Components/Table_Components/SearchBar";
+import FilterButton from "../../Components/Table_Components/FilterButton";
+import FilterOptionsUserManagement from "../../Components/Filter/FilterOptionUserManagement";
 
 export default function All_Users() {
 
@@ -22,11 +26,29 @@ export default function All_Users() {
   const [billingType, setBillingType] = useState('');
   const [userStatus, setUserStatus] = useState('');
   const [warehouse, setWarehouse] = useState('');
+  const [search, setSearch] = useState('');
+
+  const [endpoint, setEndpoint] = useState('api/users/');
+
+  useEffect(() => {
+    // Construct query parameters
+    const params = new URLSearchParams();
+  
+    if (billingType) params.append('billingType', billingType);
+    if (userStatus) params.append('userStatus', userStatus);
+    if (warehouse) params.append('warehouse', warehouse);
+    if (search) params.append('search', search);
+    if (currentPage) params.append('page', currentPage);
+  
+    // Set the updated endpoint
+    setEndpoint(`api/users/${params.toString() ? '?' + params.toString() : ''}`);
+    console.log('hello' + endpoint);
+  }, [billingType, userStatus, warehouse, search, currentPage]); // Dependencies to trigger the effect
+  
 
   // const filteredUsers = filterOptionUser(billing={billingType}, user={userStatus}, ware={warehouse}, setbill={setBillingType}, setuser={setUserStatus}, setware={setWarehouse});
 
   const table_function = () => {
-    console.log('adhashduas');
     return data.map((row, index) => (
       <tr key={index}>
         <td>{row.id}</td>
@@ -42,7 +64,6 @@ export default function All_Users() {
   };
 
   const table_width_function = () => {
-    console.log('adhashduas');
     return (
       <colgroup>
         <col style={{ width: "10%" }} />
@@ -69,7 +90,7 @@ export default function All_Users() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const getData = async () => {
-    const url = `https://api.example.com/users?page=${currentPage}&billingType=${billingType}&userStatus=${userStatus}`;
+    const url = `https://api.example.com/${endpoint}`;
     const response = await fetchData(setLoading, setSuccess, url);
 
     if (response && response.error) {
@@ -137,6 +158,31 @@ export default function All_Users() {
   };
 
   return (
+    <>
+    <style>
+        {`
+          .table-top-container {
+            display: flex;
+            justify-content: space-between; /* Space between heading and buttons */
+            align-items: center; /* Align items vertically */
+            width: 95%;
+            margin: 20px auto 20px 30px; /* Add margin to the right */
+            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+          }
+
+          .row-container1 {
+            display: flex;
+            justify-content: flex-end; /* Align buttons to the right */
+            align-items: center;
+            gap: 20px; /* Add spacing between FilterButton and SearchBar */
+          }
+
+          .page-heading {
+            flex-grow: 1; /* Allow the heading to take up space on the left */
+          }
+        `}
+      </style>
+
     <div>
       {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
         <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
@@ -161,12 +207,46 @@ export default function All_Users() {
         />
 
         <div style={mainStyles.tableBackground}>
-          <TableTop
+          {/* <TableTop
             heading_text={'All Users'}
             search_function={getData}
-            filter_function={() => {}}   
-            content={<filterOptionUser billing={billingType} user={userStatus} ware={warehouse} setbill={setBillingType} setuser={setUserStatus} setware={setWarehouse}/>}
-          />
+            // filter_function={() => {}}   
+            // content={<filterOptionUser billing={billingType} user={userStatus} ware={warehouse} setbill={setBillingType} setuser={setUserStatus} setware={setWarehouse}/>}
+          /> */}
+
+          <div className="table-top-container">
+              <PageHeading
+                text={'jhdjsahdja'}
+                text_color={[0, 0, 0]} // Black text color
+                sidebar_color={[0, 0, 0]} // Black sidebar color
+                width="auto" // Auto width to align properly
+                height="auto" // Auto height
+                sidebar_width="5px" // Increased sidebar width for visibility
+                sidebar_height="35px" // Set sidebar height explicitly
+              />
+      
+              <div className="row-container1">
+                <FilterButton
+                  text="+ Filter By"
+                  text_color={[255, 255, 255]} // White text color
+                  background_color={[23, 23, 23]} // Dark background
+                  // function={filter_function} // Function to call on button click
+                  content={<FilterOptionsUserManagement setbill={setBillingType} setuser={setUserStatus} setware={setWarehouse} user={userStatus} billing={billingType} ware={warehouse}/>}
+                  width="150px" // Set width explicitly
+                  height="50px" // Set height explicitly
+                />
+      
+                <SearchBar
+                  hint="Search..."
+                  field_color={[255, 255, 255]} // White background
+                  setSearch={setSearch}
+                  // function={search_function} // Function to call on search
+                  width="300px" // Set width explicitly
+                  height="50px" // Set height for input field
+                />
+            </div>
+          </div>
+
 
           <TableContent
             table_headings={['ID', 'Name', 'Email', 'Role']}
@@ -185,5 +265,6 @@ export default function All_Users() {
         </div>
       </div>
     </div>
+    </>
   );
 }  

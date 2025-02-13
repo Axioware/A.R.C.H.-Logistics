@@ -15,7 +15,7 @@ export default function SearchBar({
   hint,
   field_color,
   class_name = '',
-  function: handleSearch,
+  setSearch,
   width = 'auto',
   height = 'auto',
   icon
@@ -31,7 +31,7 @@ export default function SearchBar({
   // Handle search button click
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleSearch(searchText); 
+      setSearch(searchText); 
     }
   };
 

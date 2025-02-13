@@ -29,12 +29,17 @@ export default function InvoicesDetails() {
   const handleAddBox = () => {
     const newBox = {
       BoxNo: (data.length + 1).toString(), // Auto-increment BoxNo
-      BoxQuantity: boxQuantity,
-      Products: products.map(p => ({ ProductName: p.product, Quantity: p.quantity })), // Map products to the correct format
+      BoxQuantity: boxQuantity,Products: products.map(p => ({
+        ProductName: p.product || "Unknown Product", // Default value if empty
+        Quantity: p.quantity || "0", // Default value if empty
+      })),
+      
       Dimensions: `${length}x${height}x${width}`,
       Weight: weight,
     };
 
+
+    
     // Add new box data to the existing table
     setData([...data, newBox]);
 
@@ -193,7 +198,9 @@ export default function InvoicesDetails() {
                         value={item.product}
                         onChange={(e) => handleProductChange(index, "product", e.target.value)}
                       >
-                        <option value="5">5</option>
+                        <option value="">Select Product</option> {/* Default placeholder */}
+                        <option value="Xyz1">Xyz1</option>
+                        <option value="Xyz2">Xyz2</option>
                       </select>
                     </div>
                     <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
