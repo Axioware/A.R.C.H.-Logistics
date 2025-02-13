@@ -71,36 +71,84 @@ const LoginForm = () => {
   const handleForgotPassword = () => {
     navigate('/forgot-password');
   };
-  
+
   const styles = {
-    mainContent: {
-      padding: "10px 0px 50px 0px",
-      backgroundColor: "#f7f6f6"
+    container: {
+      display: 'flex',
+      flexDirection: 'row',
+      width: '100%',
+      maxWidth: '900px',
+      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      borderRadius: '10px',
+      overflow: 'hidden',
+      fontFamily: 'Arial, sans-serif',
+      margin: '5% auto', // Center container vertically and horizontally
     },
-    form: {
-      position: "relative",
-      alignSelf: "flex-start",
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr", // Two columns
-      gap: "35px",
-      marginLeft: "20px",
-      marginRight: "30px",
-      marginTop: "35px"
+    logoContainer: {
+      backgroundColor: '#000',
+      color: '#fff',
+      width: '60%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    logoImage: {
+      maxWidth: '80%',
+      height: 'auto',
+    },
+    loginContainer: {
+      width: '40%',
+      padding: '30px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+    heading: {
+      fontSize: '1.8rem',
+      marginBottom: '20px',
+      color: '#333',
+      textAlign: 'center',
+      fontWeight: 'bold',
+      lineHeight: '1.5',
+    },
+    inputGroup: {
+      marginBottom: '20px',
+      width: '100%',
+    },
+    errorText: {
+      display: 'none',
+      color: '#ff4d4d',
+      fontSize: '0.9rem',
+      marginTop: '5px',
+      textAlign: 'left',
+    },
+    errorMessage: {
+      color: '#ff4d4d',
+      backgroundColor: '#ffe6e6',
+      padding: '10px',
+      borderRadius: '5px',
+      marginBottom: '15px',
+      border: '1px solid #ff9999',
+      fontSize: '1rem',
+      textAlign: 'center',
+    },
+    footer: {
+      textAlign: 'center',
+      marginTop: '20px',
+      fontSize: '0.9rem',
+      color: '#555',
+    },
+    footerLink: {
+      color: '#2c5b97',
+      textDecoration: 'none',
+      cursor: 'pointer',
     },
     buttonContainer: {
-      alignSelf: "flex-end",
-      display: "flex",
-      flexDirection: "row",
-      width: "250px",
-      gap: "20px",
-      marginTop: "20px",
-      lineHeight: "40px"
+      display: 'flex',
+      justifyContent: 'center'
+      // marginRight: '10%',
     },
-    headingContainer: {
-      alignSelf: "flex-start",
-      marginLeft: "20px",
-      marginTop: "15px"
-    }
   };
 
   return (
