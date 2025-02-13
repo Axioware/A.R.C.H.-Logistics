@@ -49,7 +49,7 @@ const EditProductScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-
+''''''
       {/* Product Details Section */}
       {selectedTab === "product" && (
         <View style={styles.content}>

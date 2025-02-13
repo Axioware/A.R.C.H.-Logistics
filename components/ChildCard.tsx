@@ -1,16 +1,21 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import TextInputField from './TextInputField';
 import LoginButton from './LoginButton';
 
 interface ChildCardProps {
   title: string;
-  inputFields: { placeholder: string, secureTextEntry?: boolean }[];
+  inputFields: { 
+    placeholder: string; 
+    secureTextEntry?: boolean; 
+    value?: string; // ✅ Added value property
+    onChangeText?: (text: string) => void; // ✅ Added onChangeText property
+  }[];
   onLoginPress: () => void;
-  buttonText: string;
+  buttonText: string | React.ReactNode;
   showForgotPassword: boolean;
   forgotPasswordText?: string;
-  onForgotPasswordPress?: () => void; // Function to navigate to Forgot Password page
+  onForgotPasswordPress?: () => void;
 }
 
 export default function ChildCard({
@@ -64,7 +69,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   forgotPassword: {
-    color: '#00000',
+    color: '#000',
     fontSize: 14,
     marginTop: 10,
     alignSelf: 'flex-start',

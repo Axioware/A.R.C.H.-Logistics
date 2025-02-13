@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 interface LoginButtonProps {
   onPress: () => void;
-  title: string;
+  title: string | React.ReactNode;
 }
 
 const LoginButton: React.FC<LoginButtonProps> = ({ onPress, title }) => {
