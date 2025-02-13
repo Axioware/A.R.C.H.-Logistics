@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import NavPath from '../../Components/General/NavPath';
-import TableContent from '../../Components/Table_Components/TableContent';
-import fetchData from '../../utils/fetch_data';
-import AddButton from '../../Components/Table_Components/AddButton';
+// import TableContent from '../../Components/Table_Components/TableContent';
+// import fetchData from '../../utils/fetch_data';
+// import AddButton from '../../Components/Table_Components/AddButton';
 import ModalOpener from "../../Components/Table_Components/ModalOpener";
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
@@ -15,11 +16,9 @@ import FilterOptionsPrint from "../../Components/Filter/FilterOptionsPrint"
 
 export default function Orderdetails() {
 
-
-    const [Label, setLabel] = useState([
-        { LabelType: "FBA", Name: "Abdul Moiz Noman"  }
-      ]);
-
+  const [Label, setLabel] = useState([
+    // { LabelType: "FBA", Name: "Abdul Moiz Noman", FileURL: "" } // Example initial data
+  ]);
 
       const [Services, setServices] = useState([
         { ProductName: [{pname:"Apple", sname: [{name: 'prep'}, {name: 'label'}]}, {pname:'orange', sname: [{name: 'bundling'}]}], BundleQuantity: "4", Quantity: "70", PackingInstruction: "Handle Carefully Fargile", StartDate: "12/12/2012", EndDate: "12/12/2012", Status: "Completed"}
@@ -34,7 +33,7 @@ export default function Orderdetails() {
     ]);
 
     const [data, setData] = useState([
-        { product: "Apple", service: "Prep", date: "12/12/2012", amount: "$987", notes: "" }
+        // { product: "Apple", service: "Prep", date: "12/12/2012", amount: "$987", notes: "" }
     ]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -54,22 +53,54 @@ export default function Orderdetails() {
   const [chargeType, setChargeType] = useState("Service Fee");
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
+  const [editingIndex, setEditingIndex] = useState(null); // Track which row is being edited
+const [editingNotes, setEditingNotes] = useState(""); // Track the current value of the notes being edited
 
-  const chargeOptions = ["Service Fee", "Extra Services", "Late Fee", "Custom Charge"];
-
-  const handleAddCharge = () => {
-    setData([...data, { product: "New Item", service: chargeType, date: new Date().toLocaleDateString(), amount: `$${amount}`, notes }]);
-    setShowModal(false); // Close modal
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Completed":
+        return { color: "green", fontWeight: "bold" };
+      case "Inprogress":
+        return { color: "yellow", fontWeight: "bold" };
+      case "Inactive":
+        return { color: "red", fontWeight: "bold" };
+      default:
+        return { color: "black" };
+    }
   };
+
+  const resetModalValues = () => {
+    setCustom(""); 
+    setWidth(""); 
+    setHeight(""); 
+    setTextOnLabel(""); 
+    setSelectedFile(null); // Ensure file input is also cleared
+  };
+  
+  const handleAddLabel = () => {
+    if (!custom || !width || !height || !selectedFile) {
+      alert("Please select a file and fill in all fields before adding a label.");
+      return;
+    }
+  
+    const fileURL = URL.createObjectURL(selectedFile); // Ensure this is inside the function
+  
+    setLabel([...Label, { LabelType: custom, Name: selectedFile.name, FileURL: fileURL }]);
+  
+    resetModalValues();
+    setSelectedFile(null);
+    setShowLabelModal(false);
+  };
+  
 
   const [custom, setCustom] = useState("");
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
   const [textOnLabel, setTextOnLabel] = useState("");
   
-  const handleUpload = () => {
-    console.log("Upload File clicked");
-  };
+  // const handleUpload = () => {
+  //   console.log("Upload File clicked");
+  // };
 
   const [openDropdown, setOpenDropdown] = useState(null); // null means no dropdown is open
 
@@ -80,18 +111,10 @@ export default function Orderdetails() {
       setOpenDropdown(dropdownName); // Open the clicked dropdown
     }
   };
-  
-  const handleAddLabel = () => {
-    console.log("Add Label clicked", { custom, width, height, textOnLabel });
-  };
-  
-  
-  const AddCharge = () => {
-    setShowModal(true); // Close modal
-    console.log('ygygyg');
-  };
 
 
+  
+  
   const AddLabel = () => {
     setShowLabelModal(true); // Close modal
     console.log('ygygyg');
@@ -102,9 +125,62 @@ export default function Orderdetails() {
   }, [currentPage]);
 
   const handleDelete = (index) => {
-    setData(data.filter((_, i) => i !== index));
+    setLabel(Label.filter((_, i) => i !== index));
   };
 
+  const [selectedFile, setSelectedFile] = useState(null);  // Track uploaded file
+  const fileInputRef = useRef(null);  // Reference for file input
+
+  // Handle file upload
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setTextOnLabel(file.name); // Set file name as label text
+    }
+  };
+
+  const handleUpload = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  
+  const handleCancel = () => {
+    resetModalValues(); // Reset all input fields
+    setSelectedFile(null); // Clear file selection
+    setShowLabelModal(false); // Close modal
+  };
+
+  
+    const chargeOptions = ["Service Fee", "Extra Services", "Late Fee", "Custom Charge"];
+  
+    const handleAddCharge = () => {
+      setData([...data, { product: "New Item", service: chargeType, date: new Date().toLocaleDateString(), amount: `$${amount}`, notes }]);
+      resetModal(); // Reset modal and close it
+    };
+  
+    const resetModal = () => {
+      setChargeType("Service Fee"); // Reset charge type
+      setAmount(""); // Reset amount
+      setNotes(""); // Reset notes
+      setShowModal(false); // Close modal
+    };
+  
+    const AddCharge = () => {
+      setShowModal(true); // Open modal
+    };
+  
+    useEffect(() => {
+      // Fetch data logic here if needed
+    }, [currentPage]);
+  
+    const handleDeletes = (index) => {
+      setData(data.filter((_, i) => i !== index));
+    };
+
+  
   return (
     <div>
       <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
@@ -129,36 +205,35 @@ export default function Orderdetails() {
               {/* <span><strong>Order ID:</strong> {OrderID}</span> */}
             </div>
             <div style={styles.buttonWrapper}>
-  <FilterButton
-    text="Print"
-    text_color={[255, 255, 255]} // White text color
-    background_color={[23, 23, 23]} // Dark background
-    filter_function={() => {}}   
-    content={FilterOptionsPrint}
-    width="150px" // Set width explicitly
-    height="50px" // Set height explicitly
-    style={styles.filterButton} // Add this to enforce consistent styling
-  />
-  <FilterButton
-    text="Download"
-    text_color={[255, 255, 255]} // White text color
-    background_color={[23, 23, 23]} // Dark background
-    filter_function={() => {}}   
-    content={FilterOptionsDownload}
-    width="150px" // Set width explicitly
-    height="50px" // Set height explicitly
-    style={styles.filterButton} // Add this to enforce consistent styling
-  />
-  <ModalOpener 
-    text="Add Label" 
-    text_color={[255, 255, 255]} 
-    func={AddLabel} 
-    style={styles.modalOpener} // Add this to enforce consistent styling
-  />
-</div>
+            <FilterButton
+              text="Print"
+              text_color={[255, 255, 255]} // White text color
+              background_color={[23, 23, 23]} // Dark background
+              filter_function={() => {}}   
+              content={FilterOptionsPrint}
+              width="150px" // Set width explicitly
+              height="50px" // Set height explicitly
+              style={styles.filterButton} // Add this to enforce consistent styling
+            />
+            <FilterButton
+              text="Download"
+              text_color={[255, 255, 255]} // White text color
+              background_color={[23, 23, 23]} // Dark background
+              filter_function={() => {}}   
+              content={FilterOptionsDownload}
+              width="150px" // Set width explicitly
+              height="50px" // Set height explicitly
+              style={styles.filterButton} // Add this to enforce consistent styling
+            />
+            <ModalOpener 
+              text="Add Label" 
+              text_color={[255, 255, 255]} 
+              func={AddLabel} 
+              style={styles.modalOpener} // Add this to enforce consistent styling
+            />
+          </div>
           </div>
 
-          {/* Updated Table */}
           <table style={styles.table}>
             <thead>
               <tr>
@@ -171,7 +246,15 @@ export default function Orderdetails() {
               {Label.map((row, index) => (
                 <tr key={index}>
                   <td style={styles.td}>{row.LabelType}</td>
-                  <td style={styles.td}>{row.Name}</td>
+                  <td style={styles.td}>
+                    {row.FileURL ? (
+                      <a href={row.FileURL} target="_blank" rel="noopener noreferrer" style={styles.link}>
+                        {row.Name}
+                      </a>
+                    ) : (
+                      row.Name
+                    )}
+                  </td>
                   <td style={styles.td}>
                     <FaTrash style={styles.deleteIcon} onClick={() => handleDelete(index)} />
                   </td>
@@ -179,51 +262,79 @@ export default function Orderdetails() {
               ))}
             </tbody>
           </table>
-
-        {showLabelModal && 
+       {showLabelModal && 
   <div style={styles.modalOverlay}>
     <div style={styles.modal}>
       <h2 style={styles.modalTitle}>Add Label</h2>
 
       {/* Row for Format, Width, and Height */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
-        {/* Format - 50% width */}
-        <div style={{ flex: 2 }}> {/* 50% of the row */}
-          <label style={styles.label}>Format</label>
-          <select style={styles.input} value={custom} onChange={(e) => setCustom(e.target.value)}>
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-          </select>
-        </div>
+  {/* Format - 50% width */}
+  <div style={{ flex: 2 }}>
+    <label style={styles.label}>Format</label>
+    <select 
+      style={styles.input} 
+      value={custom} 
+      onChange={(e) => setCustom(e.target.value)}
+    >
+      <option value="option1">Option 1</option>
+      <option value="option2">Option 2</option>
+    </select>
+  </div>
 
-        {/* Width - 25% width */}
-        <div style={{ flex: 1 }}> {/* 25% of the row */}
-          <label style={styles.label}>Width</label>
-          <input type="text" style={styles.input} value={width} onChange={(e) => setWidth(e.target.value)} placeholder="Width" />
-        </div>
-
-        {/* Height - 25% width */}
-        <div style={{ flex: 1 }}> {/* 25% of the row */}
-          <label style={styles.label}>Height</label>
-          <input type="text" style={styles.input} value={height} onChange={(e) => setHeight(e.target.value)} placeholder="Height" />
-        </div>
+  {/* Conditionally render Width and Height when Option 2 is selected */}
+  {custom === "option2" && (
+    <>
+      {/* Width - 25% width */}
+      <div style={{ flex: 1 }}>
+        <label style={styles.label}>Width</label>
+        <input 
+          type="text" 
+          style={styles.input} 
+          value={width} 
+          onChange={(e) => setWidth(e.target.value)} 
+          placeholder="Width" 
+        />
       </div>
 
+      {/* Height - 25% width */}
+      <div style={{ flex: 1 }}>
+        <label style={styles.label}>Height</label>
+        <input 
+          type="text" 
+          style={styles.input} 
+          value={height} 
+          onChange={(e) => setHeight(e.target.value)} 
+          placeholder="Height" 
+        />
+      </div>
+    </>
+  )}
+</div>
       {/* Text field */}
       <label style={styles.label}>Text</label>
       <input type="text" style={styles.input} value={textOnLabel} onChange={(e) => setTextOnLabel(e.target.value)} placeholder="Text On Label" />
 
-      {/* Upload button */}
-      <button style={styles.uploadButton} onClick={handleUpload}>Upload File</button>
+      {/* File Upload */}
+      <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
+                />
+                <button style={styles.uploadButton} onClick={() => fileInputRef.current.click()}>
+                  Upload File {selectedFile ? `(${selectedFile.name})` : ""}
+                </button>
 
-      {/* Cancel and Confirm buttons */}
-      <div style={styles.buttonContainer}>
-        <button style={styles.cancelButton} onClick={() => setShowLabelModal(false)}>Cancel</button>
-        <button style={styles.confirmButton} onClick={handleAddLabel}>Add Label</button>
+                {/* Cancel and Confirm buttons */}
+                <div style={styles.buttonContainer}>
+                  <button style={styles.cancelButton} onClick={handleCancel}>Cancel</button>
+                  <button style={styles.confirmButton} onClick={handleAddLabel}>Add Label</button>
       </div>
     </div>
   </div>
 }
+
 </div>
 
         <div style={mainStyles.tableBackground}>
@@ -276,7 +387,7 @@ export default function Orderdetails() {
                   <td style={styles.td}>{row.PackingInstruction}</td>
                   <td style={styles.td}>{row.StartDate}</td>
                   <td style={styles.td}>{row.EndDate}</td>
-                  <td style={styles.td}>{row.Status}</td>
+                  <td style={{ ...styles.td, ...getStatusColor(row.Status) }}>{row.Status}</td>
                 </tr>
               ))}
             </tbody>
@@ -336,15 +447,18 @@ export default function Orderdetails() {
         </div>
 
         <div style={mainStyles.tableBackground}>
-          <PageHeading text='Order Details' text_color={[0, 0, 0]} width='100%' height='auto' />
+          <PageHeading text='Invoices Details' text_color={[0, 0, 0]} width='100%' height='auto' />
 
           <div style={styles.headerContainer}>
             <div style={styles.invoiceDetails}>
+              <span><strong>LLC Name:</strong> {LLCName}</span>
+              <span><strong>Order ID:</strong> {OrderID}</span>
             </div>
             <div style={styles.buttonWrapper}>
-              <ModalOpener text="Add Charge" text_color={[255, 255, 255]} func={AddCharge}/>
+              <ModalOpener text="Add Charge" text_color={[255, 255, 255]} func={AddCharge} />
+              <ModalOpener text="Add Discount" text_color={[255, 255, 255]} func={AddCharge} />
             </div>
-          </div> 
+          </div>
 
           {/* Updated Table */}
           <table style={styles.table}>
@@ -365,46 +479,81 @@ export default function Orderdetails() {
                   <td style={styles.td}>{row.service}</td>
                   <td style={styles.td}>{row.date}</td>
                   <td style={styles.td}>{row.amount}</td>
-                 <td style={styles.td}>
-  <input
-    type="text"
-    value={row.notes}
-    onChange={() => {}}
-    style={styles.notesInput} // Apply the specific style here
-  />
+                  <td style={styles.td}>
+  {editingIndex === index ? (
+    <input
+      type="text"
+      value={editingNotes}
+      onChange={(e) => setEditingNotes(e.target.value)}
+      onBlur={() => {
+        const newData = [...data];
+        newData[index].notes = editingNotes;
+        setData(newData);
+        setEditingIndex(null);
+      }}
+      style={styles.notesInput}
+      autoFocus
+    />
+  ) : (
+    <span onClick={() => {
+      setEditingIndex(index);
+      setEditingNotes(row.notes);
+    }}>
+      {row.notes}
+    </span>
+  )}
 </td>
                   <td style={styles.td}>
-                    <FaTrash style={styles.deleteIcon} onClick={() => handleDelete(index)} />
+                    <FaTrash style={styles.deleteIcon} onClick={() => handleDeletes(index)} />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
 
-          {showModal && 
-          <div style={styles.modalOverlay}>
+          {showModal && (
+            <div style={styles.modalOverlay}>
               <div style={styles.modal}>
                 <h2 style={styles.modalTitle}>Add Charge</h2>
 
+
                 <label style={styles.label}>Amount</label>
-                <input type="text" style={styles.input} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="$0.00" />
+                <input
+                  type="text"
+                  style={styles.input}
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="$0.00"
+                />
 
                 <label style={styles.label}>Notes</label>
-                <input type="text" style={styles.input} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Extra Services" />
+                <input
+                  type="text"
+                  style={styles.input}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Extra Services"
+                />
 
                 <div style={styles.buttonContainer}>
-                  <button style={styles.cancelButton} onClick={() => setShowModal(false)}>Cancel</button>
-                  <button style={styles.confirmButton} onClick={handleAddCharge}>Add Charge</button>
+                  <button style={styles.cancelButton} onClick={resetModal}>
+                    Cancel
+                  </button>
+                  <button style={styles.confirmButton} onClick={handleAddCharge}>
+                    Add Charge
+                  </button>
                 </div>
               </div>
-            </div>}
+            </div>
+          )}
 
           <div style={styles.totalContainer}>
             <div style={styles.totalCharge}>
+              {/* <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span> */}
             </div>
             <div style={styles.buttonWrapper}>
-              <GeneralButton text="Cancel Order" width="145px" height="42px" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-              <GeneralButton text="Mark As Completed" type="submit" width="145px" height="42px" />
+              <GeneralButton text="Cancel" width="145px" height="42px" button_color={["230", "230", "230"]} text_color={["0", "0", 0]} />
+              <GeneralButton text="Mark As Paid" type="submit" width="145px" height="42px" />
             </div>
           </div>
         </div>
@@ -669,6 +818,15 @@ export default function Orderdetails() {
       fontWeight: "500",
       transition: "background 0.3s ease",
 
+      notesInput: {
+        width: "100%",
+        padding: "5px",
+        border: "1px solid #ccc",
+        borderRadius: "4px",
+        background: "#fff",
+        fontSize: "1rem",
+        outline: "none",
+      },
       
     },
   };

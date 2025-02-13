@@ -125,7 +125,7 @@ export default function InvoicesDetails() {
                       <div key={i}>{product.Quantity}</div>
                     ))}
                   </td>
-                  <td style={styles.td}>{row.Dimensions}</td>
+                  <td style={styles.td}>{row.Dimensions.replace(/x/g, " x ")}</td>
                   <td style={styles.td}>{row.Weight}</td>
                   <td style={styles.td}>
                     <FaTrash style={styles.deleteIcon} onClick={() => handleDelete(index)} />
