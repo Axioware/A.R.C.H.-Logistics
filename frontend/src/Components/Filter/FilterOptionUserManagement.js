@@ -28,13 +28,19 @@ const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, se
   const handleChange = (type, selectedOption) => {
     const value = selectedOption ? selectedOption.value : 'All';
     if (type === 'Billing Type') {
-      setbill(value);
+      setBillingType(value);
     } else if (type === 'User Status') {
-      setuser(value);
+      setUserStatus(value);
     } else if (type === 'Warehouses') {
-      setware(value);
+      setWarehouse(value);
     }
   };
+
+  const apply_function = () => {
+    setbill(billingType);
+    setuser(userStatus);
+    setware(warehouse);
+  }
 
   return (
     <div style={{ zIndex: '60' }}>
@@ -125,6 +131,9 @@ const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, se
           <button
             className="reset-btn bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
             onClick={() => {
+              setBillingType("All");
+              setUserStatus("All");
+              setWarehouse("All");
               setbill('All');
               setuser('All');
               setware('All');
@@ -134,7 +143,7 @@ const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, se
           </button>
           <button
             className="apply-btn bg-black hover:bg-white hover:text-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
-            onClick={() => console.log("Filters applied")}
+            onClick={() => apply_function()}
           >
             Apply
           </button>

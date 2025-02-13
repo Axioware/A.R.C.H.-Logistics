@@ -14,7 +14,7 @@ export default function FilterButton({
   text_color,
   background_color,
   function: handleClick,
-  content: Content,
+  content,
   width = 'auto',
   height
 }) {
@@ -49,7 +49,7 @@ export default function FilterButton({
         marginTop: '5px',
         width: '300px' // Increased width of the content box
       }}>
-        <Content />
+        {content}
       </div>
 
       <style>
