@@ -26,6 +26,7 @@ interface ProductListProps {
   loading: boolean;
   loadMore: () => void;
   isFetching: boolean;
+  onPressProduct: (product: Product) => void;
 }
 
 const ProductListComponent: React.FC<ProductListProps> = ({
@@ -37,10 +38,10 @@ const ProductListComponent: React.FC<ProductListProps> = ({
   loading,
   loadMore,
   isFetching,
+  onPressProduct,
 }) => {
   return (
     <View style={styles.container}>
-      {/* Card with Title, Search Bar, and Loading Indicator */}
       <View style={styles.card}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>
@@ -68,19 +69,22 @@ const ProductListComponent: React.FC<ProductListProps> = ({
         data={products}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.productItem}>
-            {/* Container for the image */}
-            <View style={styles.imageContainer}>
-              <Image
-                source={
-                  typeof item.image === "string" ? { uri: item.image } : item.image
-                }
-                style={styles.productImage}
-                resizeMode="contain" // Ensures the image covers the container
-              />
+          <TouchableOpacity onPress={() => onPressProduct(item)}>
+            <View style={styles.productItem}>
+              <View style={styles.imageContainer}>
+                <Image
+                  source={
+                    typeof item.image === "string"
+                      ? { uri: item.image }
+                      : item.image
+                  }
+                  style={styles.productImage}
+                  resizeMode="contain"
+                />
+              </View>
+              <Text style={styles.productName}>{item.name}</Text>
             </View>
-            <Text style={styles.productName}>{item.name}</Text>
-          </View>
+          </TouchableOpacity>
         )}
         ListFooterComponent={() => (
           <TouchableOpacity
@@ -136,13 +140,10 @@ const styles = StyleSheet.create({
     width: 100,
     height: 75,
     borderRadius: 8,
-    overflow: "hidden", // Ensures the image is clipped to the container
+    overflow: "hidden",
     marginRight: 10,
   },
-  productImage: {
-    width: "100%",
-    height: "100%",
-  },
+  productImage: { width: "100%", height: "100%" },
   productName: { fontSize: 16, flex: 1 },
   loadMoreButton: {
     padding: 12,
