@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
 import bg from '../../Assets/Images/Login/background.jpg';
-import arch from '../../Assets/Images/archlabs.jpg';
+import arch from '../../Assets/Images/ARCH_Labs Logo white.png';
 
 const Forgotpasspage = () => {
   const [email, setEmail] = useState('');
@@ -20,10 +20,9 @@ const Forgotpasspage = () => {
       return;
     }
 
-    setIsSubmitting(true);
-
+    setIsSubmitting(true); // Disable button during request
     try {
-      const response = await fetch('http://asad.localhost:8000/auth/api/genotp/', {
+      const response = await fetch(`http://${process.env.REACT_APP_TENANT_NAME}/auth/api/genotp/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -40,8 +39,13 @@ const Forgotpasspage = () => {
     } catch (error) {
       setErrorMessage('Something went wrong. Please try again.');
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Enable button after request completes
     }
+  };
+
+  const handleInputChange = (setter) => (value) => {
+    setter(value.target.value);
+    setIsSubmitting(false);
   };
 
   return (
@@ -118,7 +122,7 @@ const Forgotpasspage = () => {
               id="email"
               placeholder="Email"
               value={email}
-              func={setEmail}
+              func={handleInputChange(setEmail)}
               width="100%"
               disabled={isSubmitting} // Disable input during submission
               hint="johnsmith@example.com"
@@ -126,15 +130,22 @@ const Forgotpasspage = () => {
             />
             {errorMessage && <p style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</p>}
             <GeneralButton
-              text={isSubmitting ? 'Submitting...' : 'Send OTP'}
-              width="100%"
-              height="40px"
-              func={handleFormSubmit}
-              border="8px"
-              disabled={isSubmitting} // Disable button during submission
-              id="loginbtn"
-              style={{ cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
-            />
+  text={isSubmitting ? 'Submitting...' : 'Send OTP'}
+  width="100%"
+  height="40px"
+  func={!isSubmitting ? handleFormSubmit : undefined} // Prevent clicking when submitting
+  border="8px"
+  disabled={isSubmitting} // Disable button during submission
+  id="loginbtn"
+  style={{
+    cursor: 'not-allowed', // Always show disabled cursor
+    backgroundColor: '#d3d3d3', // Always grey when submitting
+    color: '#888', // Lighter text when disabled
+    pointerEvents: 'none', // Fully disables interaction, no hover effect
+  }}
+/>
+
+
           </form>
           <div style={{ textAlign: 'center', marginTop: '18%' }}>
             <p style={{ fontSize: '12px', color: '#555' }}>A.R.C.H. Labs © Copyright 2025</p>

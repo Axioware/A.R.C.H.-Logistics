@@ -48,15 +48,15 @@ export default function TableTop({
         />
 
         <div className="row-container1">
-          <FilterButton
+          {/* <FilterButton
             text="+ Filter By"
             text_color={[255, 255, 255]} // White text color
             background_color={[23, 23, 23]} // Dark background
             function={filter_function} // Function to call on button click
-            content={Content}
+            // content={<Content />}
             width="150px" // Set width explicitly
             height="50px" // Set height explicitly
-          />
+          /> */}
 
           <SearchBar
             hint="Search..."

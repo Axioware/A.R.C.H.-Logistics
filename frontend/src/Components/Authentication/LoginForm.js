@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GeneralField from '../General/GeneralField';
 import GeneralButton from '../General/GeneralButton';
-import arch from '../../Assets/Images/archlabs.jpg';
+import arch from '../../Assets/Images/ARCH_Labs Logo white.png';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -30,7 +30,7 @@ const LoginForm = () => {
     }
   
     try {
-      const response = await fetch('http://asad.localhost:8000/auth/api/token/', {
+      const response = await fetch(`http://${process.env.REACT_APP_TENANT_NAME}/auth/api/token/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -45,8 +45,9 @@ const LoginForm = () => {
         setErrorMessage(data.detail || "An error occurred. Please try again.");
       } else {
         const data = await response.json();
-        localStorage.setItem('accessToken', data.access);
-        localStorage.setItem('refreshToken', data.refresh);
+        localStorage.setItem('access_token', data.access);
+        localStorage.setItem('refresh_token', data.refresh);
+        console.log(localStorage.getItem('access_token'));
         navigate('/dashboard');
       }
     } catch (error) {
@@ -59,7 +60,7 @@ const LoginForm = () => {
   };
 
   const handleInputChange = (setter) => (value) => {
-    setter(value);
+    setter(value.target.value);
     setIsSubmitting(false);
   };
 
@@ -70,7 +71,7 @@ const LoginForm = () => {
   const handleForgotPassword = () => {
     navigate('/forgot-password');
   };
-  
+
   const styles = {
     container: {
       display: 'flex',

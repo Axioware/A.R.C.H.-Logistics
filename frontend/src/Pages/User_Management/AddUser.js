@@ -27,76 +27,7 @@ const AddUser = () => {
       setWarehouse(value);
     };
 
-  const styles = {
-    mainContent: {
-      padding: "10px 0px 50px 0px",
-  },
-
-  form: {
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr 1fr 1fr', // Two columns
-      gap: '20px', // Space between fields
-      // border: '2px solid white',
-      marginLeft:'20px',
-      marginTop:'35px',
-      marginRight:'100px',
-      alignSelf:'flex-start',
-  },
-
-  select: {
-
-    marginLeft:"40px",
-    marginTop:"10px",
-  },
-
-  buttonContainer: {
-    // border: '2px solid white',
-    alignSelf:'flex-end',
-    display: 'flex',
-    flexDirection: 'row',
-    width:'250px',
-    gap: '20px',
-    marginTop: '20px',
-    lineHeight:'40px',
-  },
-
-  headingcontainer:{
-    alignSelf: 'flex-start',
-    // border: '2px solid purple',
-    marginLeft:'20px',
-    marginTop:'15px',
-  },
-
-  PageHeading:{
-    marginLeft:'10px',
-    marginTop:'20px',  
-  },
-
-  RoleContainer: {
-    alignSelf: 'flex-start',
-    marginTop:'10px',  
-    marginLeft:"10px",
-  },
-
-  label: {
-
-    marginTop:'10px',  
-    marginLeft:"20px",
-    display:'block',
-    fontWeight:'700px',
-  },
-
-  select: {
-    marginTop:'15px',  
-    marginLeft:"10px",
-    display:'block',
-    width:'260px',
-    height:'45px',
-    borderRadius:'10px',
-    border: '1px solid lightgrey',
-    boxShadow: '1px 1px 1px 1px lightgrey',
-  },
-  };
+ 
   
   return (
       <div>
@@ -132,10 +63,10 @@ const AddUser = () => {
         <label htmlFor="Dropdown" style={styles.label}>Role</label>
 
         <select name="Dropdown" id="Dropdown" style={styles.select}>
-            <option value="Client">Client</option>
-            <option value="Prep-Team">Prep-Team</option>
-            <option value="VA's">VA's</option>
-            <option value="Others">Others</option>
+            <option value="Manager">Client</option>
+            <option value="VA">Prep-Team</option>
+            <option value="Prep-Team">VA's</option>
+            <option value="Client">Others</option>
             </select>
         </div>
 
@@ -173,6 +104,78 @@ const AddUser = () => {
       </div>
     </div>
   );
+};
+
+
+const styles = {
+  mainContent: {
+    padding: "10px 0px 50px 0px",
+},
+
+form: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr', // Two columns
+    gap: '20px', // Space between fields
+    // border: '2px solid white',
+    marginLeft:'20px',
+    marginTop:'35px',
+    marginRight:'100px',
+    alignSelf:'flex-start',
+},
+
+select: {
+
+  marginLeft:"40px",
+  marginTop:"10px",
+},
+
+buttonContainer: {
+  // border: '2px solid white',
+  alignSelf:'flex-end',
+  display: 'flex',
+  flexDirection: 'row',
+  width:'250px',
+  gap: '20px',
+  marginTop: '20px',
+  lineHeight:'40px',
+},
+
+headingcontainer:{
+  alignSelf: 'flex-start',
+  // border: '2px solid purple',
+  marginLeft:'20px',
+  marginTop:'15px',
+},
+
+PageHeading:{
+  marginLeft:'10px',
+  marginTop:'20px',  
+},
+
+RoleContainer: {
+  alignSelf: 'flex-start',
+  marginTop:'10px',  
+  marginLeft:"10px",
+},
+
+label: {
+
+  marginTop:'10px',  
+  marginLeft:"20px",
+  display:'block',
+  fontWeight:'700px',
+},
+
+select: {
+  marginTop:'15px',  
+  marginLeft:"10px",
+  display:'block',
+  width:'260px',
+  height:'45px',
+  borderRadius:'10px',
+  border: '1px solid lightgrey',
+  boxShadow: '1px 1px 1px 1px lightgrey',
+},
 };
 
 export default AddUser;

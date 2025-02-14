@@ -80,7 +80,7 @@ const GeneralField = ({
         id={id}
         placeholder={hint}
         className={`field-input`} // Apply modified class name for input
-        onChange={(e) => func(e.target.value)} // Ensure func is always a function
+        onChange={(e) => func(e)} // Ensure func is always a function
         maxLength={maxLength} // Set the max length
         required={required} // Set the HTML5 required attribute
       />

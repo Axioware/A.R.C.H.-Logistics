@@ -14,11 +14,13 @@ export default function Table({
   data,
   loading,
   success,
+  table_function,
   last_column,
   last_column_text,
   last_column_icon,
   last_column_function,
   handleRefresh,
+  table_width_function,
 }) {
   const headingBackgroundColor = rgbArrayToString(heading_background);
   const headingTextColor = rgbArrayToString(heading_color);
@@ -29,8 +31,9 @@ export default function Table({
         <div className="table-loading-spinner">
           <div className="table-spinner"></div>
         </div>
-      ) : success ? (
+      ) : true ? (
         <table className="table">
+          {table_width_function()}
           <thead>
             <tr style={{ backgroundColor: headingBackgroundColor, color: headingTextColor }}>
               {headings.map((heading, index) => (
@@ -38,11 +41,11 @@ export default function Table({
                   {heading}
                 </th>
               ))}
-              {last_column && <th>Action</th>}
+              {last_column && <th></th>}
             </tr>
           </thead>
           <tbody>
-            {data.map((row, rowIndex) => (
+            {/* {data.map((row, rowIndex) => (
               <tr key={rowIndex}>
                 {headings.map((heading, colIndex) => (
                   <td key={colIndex}>{row[heading]}</td>
@@ -66,7 +69,9 @@ export default function Table({
                   </td>
                 )}
               </tr>
-            ))}
+            ))} */}
+
+            {table_function()}
           </tbody>
         </table>
       ) : (
@@ -99,17 +104,18 @@ export default function Table({
           }
 
           .table {
-            width: 95%;
+            width: 100%;
             border-collapse: collapse;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             overflow: hidden;
+            table-layout: fixed;
           }
 
           .table th,
           .table td {
             padding: 15px;
-            text-align: left;
+            // text-align: left;
             border: none;
           }
 

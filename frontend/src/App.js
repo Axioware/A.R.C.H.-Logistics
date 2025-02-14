@@ -53,8 +53,9 @@ import CombineInventory from './Pages/Inventory/CombineInventory';
 import ActiveOrder from './Pages/Order/ActiveOrder';
 import PendingOrder from './Pages/Order/PendingOrder';
 import OrderHistory from './Pages/Order/OrderHistory';
-import BoxesToBeShipped from './Pages/Order/BoxesToBeShipped';
 import OrderDetails from './Pages/Order/OrderDetails';
+import AddDimension from './Pages/Order/AddDimension';
+import BoxesToBeShipped from './Pages/Order/BoxesToBeShipped';
 import ViewTracking from './Pages/Order/ViewTracking';
 
 //Settings
@@ -178,7 +179,8 @@ function App() {
         <Route path="/active-order" element={<ActiveOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/pending-order" element={<PendingOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/order-history" element={<OrderHistory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        {/* <Route path="/order-details" element={<OrderDetails />} /> */}
+        <Route path="/order-details" element={<OrderDetails />} />
+        <Route path="/add-dimension" element={<AddDimension />} />
         {/* <Route path="/boxes-to-be-shipped" element={<BoxesToBeShipped />} />      */}
         {/* <Route path="/view-tracking" element={<ViewTracking menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
