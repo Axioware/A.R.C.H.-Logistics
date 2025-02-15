@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "boxicons/css/boxicons.min.css";
 import UserDrop from "./UserDrop"
-import ArchLogo from "../../Assets/Images/arch_logo_for_sidebar.png"
+import ArchLogo from "../../Assets/Images/image6.png"
 import image from "../../Assets/Images/avatar-icon-human-icon-person-icon-png-favpng-CAZVS9eT4vdnRkS1dZFusMNwp.jpg"
 
 const Sidebar = ({sidebar_state, set_sidebar_state}) => {

@@ -21,7 +21,9 @@ export default function Orderdetails() {
   ]);
 
       const [Services, setServices] = useState([
-        { ProductName: [{pname:"Apple", sname: [{name: 'prep'}, {name: 'label'}]}, {pname:'orange', sname: [{name: 'bundling'}]}], BundleQuantity: "4", Quantity: "70", PackingInstruction: "Handle Carefully Fargile", StartDate: "12/12/2012", EndDate: "12/12/2012", Status: "Completed"}
+        { ProductName: [{pname:"Apple", sname: [{name: 'prep'}, {name: 'label'}]}, {pname:'orange', sname: [{name: 'bundling'}]}], BundleQuantity: "4", Quantity: "70", PackingInstruction: "Handle Carefully Fargile", StartDate: "12/12/2012", EndDate: "12/12/2012", Status: "Cancelled"},
+        { ProductName: [{pname:"Apple", sname: [{name: 'prep'}, {name: 'label'}]}, {pname:'orange', sname: [{name: 'bundling'}]}], BundleQuantity: "4", Quantity: "70", PackingInstruction: "Handle Carefully Fargile", StartDate: "12/12/2012", EndDate: "12/12/2012", Status: "Completed"},
+        { ProductName: [{pname:"Apple", sname: [{name: 'prep'}, {name: 'label'}]}, {pname:'orange', sname: [{name: 'bundling'}]}], BundleQuantity: "4", Quantity: "70", PackingInstruction: "Handle Carefully Fargile", StartDate: "12/12/2012", EndDate: "12/12/2012", Status: "In Progress"}
     ]);
 
     const [Boxes, setBoxes] = useState([
@@ -60,9 +62,11 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
     switch (status) {
       case "Completed":
         return { color: "green", fontWeight: "bold" };
-      case "Inprogress":
-        return { color: "yellow", fontWeight: "bold" };
+      case "In Progress":
+        return { color: "#D9B800", fontWeight: "bold" };
       case "Inactive":
+        return { color: "red", fontWeight: "bold" };
+      case "Cancelled":
         return { color: "red", fontWeight: "bold" };
       default:
         return { color: "black" };
