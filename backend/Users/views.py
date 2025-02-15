@@ -204,9 +204,15 @@ def users(request):
 def user_by_id(request, id):
     user = request.user
     tenant = request.tenant
+    cache_key = f"user_{tenant.schema_name}_{id}"  # Unique cache key for each tenant-user combo
 
     with schema_context(tenant.schema_name):
         if request.method == "GET":
+            
+            cached_user = cache.get(cache_key)
+            if cached_user:
+                return Response({'user_data': cached_user}, status=status.HTTP_200_OK)
+
             try:
                 main_user = User.objects.get(id=id)
                 # target_user = UsersExtended.objects.get(username=main_user.username)
@@ -239,6 +245,8 @@ def user_by_id(request, id):
                 'warehouses': list(main_user.extended.warehouses.all().values_list('warehouse_id', flat=True))
 
             }
+
+            cache.set(cache_key, user_data, timeout=600)
 
             return Response({'user_data': user_data}, status=status.HTTP_200_OK)
     
@@ -327,6 +335,8 @@ def user_by_id(request, id):
                     # Save changes
                     target_user.save()
                     target_extended.save()
+                    
+                    cache.delete(cache_key)
 
                     return Response({"success": "User updated successfully"}, status=status.HTTP_202_ACCEPTED)
         
@@ -345,6 +355,9 @@ def user_by_id(request, id):
             try:
                 target_user = User.objects.get(id=id)
                 target_user.delete()
+                
+                cache.delete(cache_key)
+                
                 return Response({'success': "User deleted"}, status=status.HTTP_200_OK)
             except User.DoesNotExist:
                 return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
