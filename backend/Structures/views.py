@@ -7,6 +7,7 @@ from Arch_Logistics.helpers import *
 from django.db import OperationalError, transaction
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
+from django.core.cache import cache
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
@@ -18,62 +19,99 @@ def locations(request):
     if authenticate_clearance_level(user, [1, 2]):
         return Response({'errors': "Unauthorized - Insufficient clearance level"}, status=status.HTTP_403_FORBIDDEN)
 
-    try:
-        with schema_context(tenant.schema_name):
-            if request.method == 'GET':
-                # Get all Locations
-                locations_list = Locations.objects.all()  # Correct model reference
-                
-                # Serialize the data
-                locations_data = [
+    with schema_context(tenant.schema_name):
+        if request.method == "GET":
+            # Generate a cache key based on request parameters
+            cache_key = f"locations_{request.query_params.urlencode()}"
+            cached_data = cache.get(cache_key)
+
+            if cached_data:
+                return Response(cached_data, status=status.HTTP_200_OK)
+
+            location_type = request.query_params.get('location_type')
+            warehouse_id = request.query_params.get('warehouse_id')
+            search = request.query_params.get('search')
+            all_data = request.query_params.get('all', 'false').lower() == 'true'
+
+            try:
+                queryset = Locations.objects.all()
+                if location_type:
+                    queryset = queryset.filter(location_type=location_type)
+                if warehouse_id:
+                    queryset = queryset.filter(warehouse_id=warehouse_id)
+                if search:
+                    queryset = queryset.filter(Q(location_name__icontains=search))
+
+                if not queryset.exists():
+                    return Response({"error": "No locations found matching the criteria"}, status=status.HTTP_404_NOT_FOUND)
+
+                result = [
                     {
                         'location_id': loc.location_id,
                         'location_type': loc.location_type,
                         'location_name': loc.location_name,
-                        'warehouse_id': loc.warehouse_id.id,  # Foreign key serialization
+                        'warehouse_id': loc.warehouse_id.id,
                     }
-                    for loc in locations_list
+                    for loc in queryset
                 ]
-                return Response(locations_data, status=status.HTTP_200_OK)
 
-            elif request.method == 'POST':
-                # Extract data from request
-                location_name = request.data.get('location_name')
-                location_type = request.data.get('location_type')
-                warehouse_id = request.data.get('warehouse_id')
+                if all_data:
+                    response_data = {"results": result, "count": len(result)}
+                    cache.set(cache_key, response_data, timeout=60)
+                    return Response(response_data, status=status.HTTP_200_OK)
 
-                # Validate required fields
-                errors = {}
-                if not location_name:
-                    errors['location_name'] = 'This field is required.'
-                if location_type not in ['Bin', 'Other']:
-                    errors['location_type'] = 'Invalid location type. Must be "Bin" or "Other".'
-                if not warehouse_id:
-                    errors['warehouse_id'] = 'This field is required.'
-                else:
-                    try:
-                        warehouse = Warehouse.objects.get(id=warehouse_id)
-                    except Warehouse.DoesNotExist:
-                        errors['warehouse_id'] = 'Warehouse not found.'
+                # Apply Pagination
+                paginator = UserPagination()
+                page = paginator.paginate_queryset(result, request)
+                if page is not None:
+                    response_data = paginator.get_paginated_response(page).data
+                    cache.set(cache_key, response_data, timeout=60)
+                    return Response(response_data, status=status.HTTP_200_OK)
 
-                if errors:
-                    return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
+                response_data = {'locations': result}
+                cache.set(cache_key, response_data, timeout=60)
+                return Response(response_data, status=status.HTTP_200_OK)
 
-                # Create and save the location
-                new_location = Locations(
-                    location_name=location_name,
-                    location_type=location_type,
-                    warehouse_id=warehouse  # Assign foreign key object
-                )
-                new_location.save()
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-                return Response(
-                    {'message': 'Location created successfully', 'location_id': new_location.location_id},
-                    status=status.HTTP_201_CREATED
-                )
+        elif request.method == "POST":
+            location_name = request.data.get('location_name')
+            location_type = request.data.get('location_type')
+            warehouse_id = request.data.get('warehouse_id')
 
-    except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            errors = {}
+            if not location_name:
+                errors['location_name'] = 'This field is required.'
+            if location_type not in ['Bin', 'Other']:
+                errors['location_type'] = 'Invalid location type. Must be "Bin" or "Other".'
+            if not warehouse_id:
+                errors['warehouse_id'] = 'This field is required.'
+            else:
+                try:
+                    warehouse = Warehouse.objects.get(id=warehouse_id)
+                except Warehouse.DoesNotExist:
+                    errors['warehouse_id'] = 'Warehouse not found.'
+
+            if errors:
+                return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Create new location
+            new_location = Locations(
+                location_name=location_name,
+                location_type=location_type,
+                warehouse_id=warehouse
+            )
+            new_location.save()
+
+            # Clear cache after inserting new location
+            cache.delete_pattern("locations_*")
+
+            return Response(
+                {'message': 'Location created successfully', 'location_id': new_location.location_id},
+                status=status.HTTP_201_CREATED
+            )
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
