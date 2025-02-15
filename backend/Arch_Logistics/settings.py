@@ -89,7 +89,14 @@ REST_FRAMEWORK = {
         'Arch_Logistics.helpers.CustomJWTAuthentication',
     ),
         'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-        'PAGE_SIZE': 10
+        'PAGE_SIZE': 20,
+    
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '50/min',  # Allow 100 requests per user per hour
+    },
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+    ]
 }
 
 MIDDLEWARE = [
@@ -250,6 +257,17 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.132.64:8001",
         # Add the URL of your frontend here
 ]
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",  # Using Redis DB index 1
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

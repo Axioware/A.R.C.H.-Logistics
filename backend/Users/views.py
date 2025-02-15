@@ -11,6 +11,8 @@ from Arch_Logistics.helpers import get_extended_field, authenticate_clearance_le
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django_tenants.utils import schema_context
+from django.core.cache import cache
+import json
 
 # Create your views here.
 @api_view(['GET', 'POST'])
@@ -18,10 +20,19 @@ from django_tenants.utils import schema_context
 def users(request):
     user = request.user
     tenant = request.tenant
+
     if authenticate_clearance_level(user, [1, 2]):
         return Response({'errors': "Unauthorized - Insufficient clearance level"}, status=status.HTTP_403_FORBIDDEN)
-    with schema_context(tenant.schema_name):  
+
+    with schema_context(tenant.schema_name):
         if request.method == "GET":
+            # Generate a cache key based on request parameters
+            cache_key = f"users_{request.query_params.urlencode()}"
+            cached_data = cache.get(cache_key)
+
+            if cached_data:
+                return Response(cached_data, status=status.HTTP_200_OK)
+
             clearance_level = request.query_params.get('clearance_level')
             billing_type = request.query_params.get('billing_type')
             search = request.query_params.get('search')
@@ -37,9 +48,7 @@ def users(request):
                 except ValueError:
                     return Response({"error": "Clearance level must be an integer"}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Access control
             try:
-
                 queryset = User.objects.all().select_related('extended')
                 if clearance_level:
                     queryset = queryset.filter(extended__clearance_level=int(clearance_level))
@@ -54,10 +63,11 @@ def users(request):
                         Q(first_name__icontains=search) | 
                         Q(last_name__icontains=search)
                     )
+
                 if not queryset.exists():
                     return Response({"error": "No users found matching the criteria"}, status=status.HTTP_404_NOT_FOUND)
 
-                # Manual data construction
+                # Convert queryset to a list for JSON serialization
                 result = [
                     {   
                         'id': user.id,
@@ -82,15 +92,23 @@ def users(request):
                     }
                     for user in queryset
                 ]
-                if all_data:
-                    return Response({"results": result, "count": len(result)}, status=status.HTTP_200_OK)
 
-                # Pagination
+                if all_data:
+                    response_data = {"results": result, "count": len(result)}
+                    cache.set(cache_key, response_data, timeout=60)  # Cache for 60 seconds
+                    return Response(response_data, status=status.HTTP_200_OK)
+
+                # Apply Pagination
                 paginator = UserPagination()
                 page = paginator.paginate_queryset(result, request)
                 if page is not None:
-                    return paginator.get_paginated_response(page)
-                return Response({'user_data': result}, status=status.HTTP_200_OK)
+                    response_data = paginator.get_paginated_response(page).data
+                    cache.set(cache_key, response_data, timeout=60)  # Cache paginated data
+                    return Response(response_data, status=status.HTTP_200_OK)
+
+                response_data = {'user_data': result}
+                cache.set(cache_key, response_data, timeout=60)  # Cache response
+                return Response(response_data, status=status.HTTP_200_OK)
 
             except OperationalError as e:
                 return Response({"error": "Database connection error", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -98,19 +116,20 @@ def users(request):
                 return Response({"error": "An unexpected error occurred", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         if request.method == "POST":
+            # Invalidate the cache when a new user is created
+            cache.clear()
+            
             data = request.data
             clearance_level = data.get('clearance_level')
 
-            # Access control
             if authenticate_clearance_level(user, [1, 2]):
                 return Response({'errors': "Unauthorized - Insufficient clearance level"}, status=status.HTTP_403_FORBIDDEN)
 
-            #------------------------------------------------------------ Validation ---------------------------------------------------------
             errors = {}
             warehouses = data.get('warehouses', [])
 
             if authenticate_clearance_level(user, [4]) and not warehouses:
-                errors['warehouses'] = "warehouses are required for clients."
+                errors['warehouses'] = "Warehouses are required for clients."
 
             username = data.get('username', '')
             first_name = data.get('first_name', '')
@@ -125,7 +144,6 @@ def users(request):
             if not username:
                 errors['username'] = "Username is required."
             else:
-                # Check if the username already exists
                 if User.objects.filter(username=username).exists():
                     errors['username'] = "Username already exists."
 
@@ -144,36 +162,11 @@ def users(request):
                 except ValidationError:
                     errors['email'] = "Invalid email format."
 
-            if phone and (not phone.isdigit() or not (6 <= len(phone) <= 15)):
-                errors['phone'] = "Phone number must be between 6 and 15 digits."
-
-            if authenticate_clearance_level(user, [4]) and not llc_name:
-                errors['llc_name'] = "LLC name is required."
-
-            if data.get('zip', ''):
-                if not data.get('zip', '').isdigit() or len(data.get('zip', '')) > 5:
-                    errors['zip'] = "ZIP must be at least 5 digits long."
-
-            if tax_id:
-                if not tax_id.isdigit() or len(tax_id) < 8:
-                    errors['tax_id'] = "Tax ID must be 8 digits long."
-            elif clearance_level == 4:
-                errors['tax_id'] = "Tax ID is required."
-
-            if email2:
-                try:
-                    validate_email(email2)
-                except ValidationError:
-                    errors['email2'] = "Invalid secondary email format."
-
             if errors:
                 return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
 
-            #------------------------------------------------------------ Validation ---------------------------------------------------------
-
             try:
                 with transaction.atomic():
-                    # Ensure the user is created within the tenant context
                     new_user = User.objects.create_user(
                         username=username,
                         first_name=first_name,
@@ -181,10 +174,9 @@ def users(request):
                         email=email,
                         password=password
                     )
-                    new_user.set_password(password)  # Properly handle password setting
+                    new_user.set_password(password)
                     new_user.save()
 
-                    # Create UsersExtended (tenant-aware)
                     extended = new_user.extended
                     extended.phone = phone
                     extended.clearance_level = clearance_level
@@ -199,18 +191,13 @@ def users(request):
                     extended.zip = data.get('zip', '')
                     extended.billing_type = data.get('billing_type', UsersExtended.BillingTypeChoices.MONTHLY)
                     if warehouses:
-                        valid_warehouses = Warehouse.objects.filter(warehouse_id__in=warehouses)
-                        if len(warehouses) != valid_warehouses.count():
-                            return Response({"error": "Invalid warehouses for this tenant"}, status=status.HTTP_400_BAD_REQUEST)
-                        extended.warehouses.set(valid_warehouses)
+                        extended.warehouses.set(Warehouse.objects.filter(warehouse_id__in=warehouses))
                     extended.save()
 
                     return Response({"success": "New user created successfully"}, status=status.HTTP_201_CREATED)
 
             except Exception as e:
                 return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        return Response({"error": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @api_view(['GET', 'DELETE', 'PUT'])
 @permission_classes([IsAuthenticated])
