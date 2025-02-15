@@ -249,6 +249,7 @@ def services(request):
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def warehouse(request):
+    """API for retrieving and creating warehouses"""
     user = request.user
     tenant = request.tenant
 
@@ -259,6 +260,14 @@ def warehouse(request):
         with schema_context(tenant.schema_name):
             if request.method == "GET":
                 search = request.query_params.get('search', None)
+                page = request.GET.get('page', 1)
+                page_size = request.GET.get('page_size', 50)
+
+                cache_key = f"warehouses_page_{page}_size_{page_size}_search_{search or 'none'}"
+                cached_data = cache.get(cache_key)
+
+                if cached_data:
+                    return Response(cached_data, status=status.HTTP_200_OK)
 
                 queryset = Warehouse.objects.all()
 
@@ -268,7 +277,10 @@ def warehouse(request):
                 if not queryset.exists():
                     return Response({"error": "No warehouses found matching the criteria"}, status=status.HTTP_404_NOT_FOUND)
 
-                result = [
+                paginator = UserPagination()
+                result_page = paginator.paginate_queryset(queryset, request)
+
+                response_data = paginator.get_paginated_response([
                     {
                         'warehouse_id': warehouse.warehouse_id,
                         'warehouse_name': warehouse.warehouse_name,
@@ -280,10 +292,11 @@ def warehouse(request):
                         'phone': warehouse.phone,
                         'email': warehouse.email
                     }
-                    for warehouse in queryset
-                ]
+                    for warehouse in result_page
+                ]).data
 
-                return Response({"warehouses": result, "count": len(result)}, status=status.HTTP_200_OK)
+                cache.set(cache_key, response_data, timeout=300)  # Cache for 5 minutes
+                return Response(response_data, status=status.HTTP_200_OK)
 
             elif request.method == "POST":
                 data = request.data
@@ -310,13 +323,17 @@ def warehouse(request):
                     email=data["email"]
                 )
 
+                # Invalidate all cached pages when a new warehouse is added
+                for key in cache.keys("warehouses_page_*"):
+                    cache.delete(key)
+
                 return Response({
                     "message": "Warehouse created successfully",
                     "warehouse_id": warehouse.warehouse_id
-                }, status=status.HTTP_200_OK)
+                }, status=status.HTTP_201_CREATED)
 
     except OperationalError as e:
-        return Response({"error": "DaItabase connection error", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({"error": "Database connection error", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     except Exception as e:
         return Response({"error": "An unexpected error occurred", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
