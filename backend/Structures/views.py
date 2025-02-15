@@ -112,7 +112,6 @@ def locations(request):
                 status=status.HTTP_201_CREATED
             )
 
-
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def single_location(request, location_id):
@@ -124,21 +123,30 @@ def single_location(request, location_id):
 
     try:
         with schema_context(tenant.schema_name):
-            # Fetch the Location by ID
-            location = Locations.objects.get(pk=location_id)
+            cache_key = f"location_{location_id}"
+            cached_location = cache.get(cache_key)
 
             if request.method == 'GET':
-                # Return the Location details
+                if cached_location:
+                    return Response(cached_location, status=status.HTTP_200_OK)
+
+                # Fetch the Location by ID
+                location = Locations.objects.get(pk=location_id)
+
                 location_data = {
                     'location_id': location.location_id,
                     'location_name': location.location_name,
                     'location_type': location.location_type,
                     'warehouse_id': location.warehouse_id.id  # Foreign key serialization
                 }
+
+                cache.set(cache_key, location_data, timeout=300)  # Cache for 5 minutes
                 return Response(location_data, status=status.HTTP_200_OK)
 
             elif request.method == 'PUT':
-                # Update the Location's name and other fields if required
+                # Fetch the Location by ID
+                location = Locations.objects.get(pk=location_id)
+
                 location_name = request.data.get('location_name')
                 location_type = request.data.get('location_type')
 
@@ -158,18 +166,27 @@ def single_location(request, location_id):
                     location.location_type = location_type
 
                 location.save()
+
+                # Invalidate cache after update
+                cache.delete(cache_key)
+
                 return Response({'message': 'Location updated successfully'}, status=status.HTTP_200_OK)
 
             elif request.method == 'DELETE':
-                # Ensure the Location can be deleted
+                # Fetch the Location by ID
+                location = Locations.objects.get(pk=location_id)
+
                 if location.warehouse_id:
                     # Check if any user is assigned to this location
-                    # Assuming you have a related User model that references Locations
                     if location.users.exists():  # If users are assigned
                         return Response({"error": "Location cannot be deleted while users are assigned to it."}, status=status.HTTP_400_BAD_REQUEST)
 
                 # Delete the Location
                 location.delete()
+
+                # Invalidate cache after deletion
+                cache.delete(cache_key)
+
                 return Response({'message': 'Location deleted successfully'}, status=status.HTTP_200_OK)
 
     except Locations.DoesNotExist:
