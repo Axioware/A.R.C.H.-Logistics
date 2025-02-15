@@ -338,8 +338,6 @@ def warehouse(request):
         return Response({"error": "An unexpected error occurred", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
-@api_view(['PUT', 'DELETE'])
-@permission_classes([IsAuthenticated])
 def warehouse_detail(request, id):
     user = request.user
     tenant = request.tenant
@@ -349,23 +347,29 @@ def warehouse_detail(request, id):
 
     try:
         with schema_context(tenant.schema_name):
-            try:
-                warehouse = Warehouse.objects.get(warehouse_id=id)
-            except Warehouse.DoesNotExist:
-                return Response({"error": "Warehouse not found"}, status=status.HTTP_404_NOT_FOUND)
+            cache_key = f"warehouse_{tenant.schema_name}_{id}"
+            warehouse_data = cache.get(cache_key)
+
+            if not warehouse_data:
+                try:
+                    warehouse = Warehouse.objects.get(warehouse_id=id)
+                    warehouse_data = {
+                        "warehouse_id": warehouse.warehouse_id,
+                        "warehouse_name": warehouse.warehouse_name,
+                        "address": warehouse.address,
+                        "city": warehouse.city,
+                        "state": warehouse.state,
+                        "country": warehouse.country,
+                        "zip_code": warehouse.zip_code,
+                        "phone": warehouse.phone,
+                        "email": warehouse.email,
+                    }
+                    cache.set(cache_key, warehouse_data, timeout=3600)  # Cache for 1 hour
+                except Warehouse.DoesNotExist:
+                    return Response({"error": "Warehouse not found"}, status=status.HTTP_404_NOT_FOUND)
 
             if request.method == "GET":
-                return Response({
-                    "warehouse_id": warehouse.warehouse_id,
-                    "warehouse_name": warehouse.warehouse_name,
-                    "address": warehouse.address,
-                    "city": warehouse.city,
-                    "state": warehouse.state,
-                    "country": warehouse.country,
-                    "zip_code": warehouse.zip_code,
-                    "phone": warehouse.phone,
-                    "email": warehouse.email,
-                }, status=status.HTTP_200_OK)
+                return Response(warehouse_data, status=status.HTTP_200_OK)
                 
             if request.method == "PUT":
                 data = request.data
@@ -390,30 +394,26 @@ def warehouse_detail(request, id):
                     warehouse.zip_code = data.get("zip_code", warehouse.zip_code)
                     warehouse.phone = data.get("phone", warehouse.phone)
                     warehouse.email = data.get("email", warehouse.email)
-
                     warehouse.save()
+
+                # Invalidate cache
+                cache.delete(cache_key)
 
                 return Response({"message": "Warehouse updated successfully"}, status=status.HTTP_200_OK)
 
             elif request.method == "DELETE":
-                with schema_context(tenant.schema_name):
-                    try:
-                        warehouse = Warehouse.objects.get(warehouse_id=id)
+                # Check if any users are assigned to this warehouse
+                if warehouse.users.exists():  # Adjust based on your model relationship
+                    return Response({"error": "Cannot delete warehouse. Users are assigned to it."}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Check if any users are assigned to this warehouse
-                        if warehouse.users.exists():  # Adjust this based on your model relationship
-                            return Response({"error": "Cannot delete warehouse. Users are assigned to it."}, status=status.HTTP_400_BAD_REQUEST)
+                # Proceed with deletion
+                with transaction.atomic():
+                    warehouse.delete()
 
-            # If no users are assigned, proceed with deletion
-                        with transaction.atomic():
-                            warehouse.delete()
+                # Invalidate cache
+                cache.delete(cache_key)
 
-                        return Response({"message": "Warehouse deleted successfully"}, status=status.HTTP_200_OK)
-
-                    except Warehouse.DoesNotExist:
-                        return Response({"error": "Warehouse not found"}, status=status.HTTP_404_NOT_FOUND)
-                    except Exception as e:
-                        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({"message": "Warehouse deleted successfully"}, status=status.HTTP_200_OK)
                     
     except OperationalError as e:
         return Response({"error": "Database connection error", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
