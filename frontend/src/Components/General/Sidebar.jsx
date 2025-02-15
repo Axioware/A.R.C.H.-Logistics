@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "boxicons/css/boxicons.min.css";
 import UserDrop from "./UserDrop"
+import ArchLogo from "../../Assets/Images/arch_logo_for_sidebar.png"
+import image from "../../Assets/Images/avatar-icon-human-icon-person-icon-png-favpng-CAZVS9eT4vdnRkS1dZFusMNwp.jpg"
 
 const Sidebar = ({sidebar_state, set_sidebar_state}) => {
   const [isSidebarClosed, setSidebarClosed] = useState(
     sidebar_state === null || sidebar_state === undefined ? true : sidebar_state
   );
-  const [openMenus, setOpenMenus] = useState({});
+  const [openMenus, setOpenMenus] = useState({other: false, order: false});
 
   const navigate = useNavigate();
 
@@ -17,17 +19,48 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
   };
 
   const toggleSubmenu = (menuName) => {
+    console.log(menuName);
+    console.log(openMenus.other);
+    console.log(openMenus.order);
     setOpenMenus((prev) => ({
       ...prev,
       [menuName]: !prev[menuName],
     }));
   };
 
+  // useEffect(() => {
+  //   const arrows = document.querySelectorAll(".arrow");
+  //   arrows.forEach((arrow) => {
+  //     arrow.addEventListener("click", (e) => {
+  //       let arrowParent = e.target.closest("li"); // Selecting the closest parent <li>
+  //       arrowParent.classList.toggle("showMenu");
+  //     });
+  //   });
+
+  //   return () => {
+  //     // Cleanup event listeners on component unmount
+  //     arrows.forEach((arrow) => {
+  //       arrow.removeEventListener("click", (e) => {
+  //         let arrowParent = e.target.closest("li");
+  //         arrowParent.classList.toggle("showMenu");
+  //       });
+  //     });
+  //   };
+  // }, []);
+
   return (
     <div className="page-container">
       <div className={`sidebar ${isSidebarClosed ? "close" : ""}`}>
         <div className="logo-details">
-          <i className="bx bxl-c-plus-plus"></i>
+          <i className="bx" style={{
+            backgroundImage: `url(${ArchLogo})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            width: "70px",
+            height: "50px",
+            // display: "inline-block",
+          }}></i>
           <span className="logo_name">A.R.C.H. Logistics</span>
         </div>
         <ul className="nav-links">
@@ -71,85 +104,81 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
             </ul>
           </li>
 
-          <li>
-            <a href="#">
-              <i className="bx bx-pie-chart-alt-2"></i>
-              <span className="link_name">Orders</span>
-            </a>
-            <ul className="sub-menu blank">
-              <li>
-                <a className="link_name" href="#">Orders</a>
-              </li>
+          <li onClick={() => toggleSubmenu("order")}>
+            <div className="iocn-link">
+              <a href="#">
+                <i className="bx bx-pie-chart-alt-2"></i>
+                <span className="link_name">Orders</span>
+              </a>
+              <i
+                className={`bx bxs-chevron-down arrow ${openMenus.order ? "show-menu order" : ""}`}
+                
+              ></i>
+            </div>
+            <ul className={`sub-menu ${openMenus.order ? "show-menu order" : ""}`}>
+              <li><a className="link_name" href="#">Orders</a></li>
+              <li><a onClick={() => navigate("/orders")}>Active Orders</a></li>
+              <li><a onClick={() => navigate("/completed-orders")}>Completed Orders</a></li>
             </ul>
           </li>
 
           <li>
-            <a href="#">
+            <a onClick={() => navigate("/invoices")}>
               <i className="bx bx-line-chart"></i>
               <span className="link_name">Invoices</span>
             </a>
             <ul className="sub-menu blank">
               <li>
-                <a className="link_name" href="#">Invoices</a>
+                <a className="link_name" onClick={() => navigate("/invoices")}>Invoices</a>
               </li>
             </ul>
           </li>
 
           <li>
             
-              <a href="#">
+              <a onClick={() => navigate("/analytics")}>
                 <i className="bx bx-plug"></i>
                 <span className="link_name">Analytics</span>
               </a>
-            <ul className={`sub-menu ${openMenus.plugins ? "showMenu" : ""}`}>
+            <ul className={`sub-menu blank`}>
               <li>
-                <a className="link_name" href="#">Analytics</a>
+                <a className="link_name" onClick={() => navigate("/analytics")}>Analytics</a>
               </li>
+            </ul>
+          </li>
+  
+          <li onClick={() => toggleSubmenu("other")}>
+            <div className="iocn-link">
+              <a href="#">
+                <i className="bx bx-cog"></i>
+                <span className="link_name">Other</span>
+              </a>
+              <i
+                className={`bx bxs-chevron-down arrow ${openMenus.other ? "show-menu other" : ""}`}
+                
+              ></i>
+            </div>
+            <ul className={`sub-menu ${openMenus.other ? "show-menu other" : ""}`}>
+              <li><a className="link_name" href="#">Other</a></li>
+              <li><a onClick={() => navigate("/locations")}>Locations</a></li>
+              <li><a onClick={() => navigate("/warehouses")}>Warehouses</a></li>
+              <li><a onClick={() => navigate("/services")}>Services</a></li>
+              {/* <li><a onClick={() => navigate("/analytics")}></a></li> */}
             </ul>
           </li>
 
           <li>
-            <div className="iocn-link">
-            <a href="#">
-              <i className="bx bx-cog"></i>
-              <span className="link_name">Other</span>
-            </a>
-            <i
-                className="bx bxs-chevron-down arrow"
-                onClick={() => toggleSubmenu("other")}
-              ></i>
-            </div>
-            <ul className="sub-menu ">
-              <li>
-                <a className="link_name" href="#">Other</a>
-              </li>
-              <li>
-                <a href="#">Locations</a>
-              </li>
-              <li>
-                <a href="#">Warehouses</a>
-              </li>
-              <li>
-                <a href="#">Services</a>
-              </li>
-              <li>
-                <a href="#">Settings</a>
-              </li>
-            </ul>
-          </li>
-
-          {/* <li>
             <div className="profile-details">
-              <div className="profile-content">
+              {/* <div className="profile-content">
                 <img src="image/profile.jpg" alt="profileImg" />
-              </div>
+              </div> */}
               <div className="name-job">
-                <div className="profile_name">Prem Shahi</div>
-                <div className="job">Web Designer</div>
+                <div className="profile_name">Powered by A.R.C.H. Labs</div>
+                {/* <div className="job">Web Designer</div> */}
               </div>
-              <i className="bx bx-log-out"></i>
+              {/* <i className="bx bx-log-out"></i> */}
             </div>
-          </li> */}
+          </li>
         </ul>
       </div>
       <section className="home-section">
@@ -258,10 +287,12 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           display: flex;
           align-items: center;
           justify-content: space-between;
+          cursor: pointer;
         }
 
         .sidebar.close .nav-links li .iocn-link {
           display: block;
+          
         }
 
         .sidebar .nav-links li i {
@@ -275,9 +306,20 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           transition: all 0.3s ease;
         }
 
-        .sidebar .nav-links li.showMenu i.arrow {
+
+        // .sidebar .nav-links li i.arrow.show-menu {
+        //   transform: rotate(-180deg);
+        // }
+
+        .sidebar .nav-links li i.arrow.show-menu.other {
           transform: rotate(-180deg);
         }
+
+        .sidebar .nav-links li i.arrow.show-menu.order {
+          transform: rotate(-180deg);
+        }
+
+        
 
         .sidebar.close .nav-links i.arrow {
           display: none;
@@ -301,6 +343,14 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           pointer-events: none;
         }
 
+        .sidebar .nav-links li .sub-menu.show-menu.other {
+          display: block;
+        }
+
+        .sidebar .nav-links li .sub-menu.show-menu.order {
+          display: block;
+        }
+
         .sidebar .nav-links li .sub-menu {
           padding: 6px 6px 14px 80px;
           margin-top: -10px;
@@ -308,9 +358,6 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           display: none;
         }
 
-        .sidebar .nav-links li.showMenu .sub-menu {
-          display: block;
-        }
 
         .sidebar .nav-links li .sub-menu a {
           color: #fff;
@@ -319,6 +366,7 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           white-space: nowrap;
           opacity: 0.6;
           transition: all 0.3s ease;
+          cursor: pointer;
         }
 
         .sidebar .nav-links li .sub-menu a:hover {
@@ -374,8 +422,8 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           width: 260px;
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          background: #1d1b31;
+          justify-content: center;
+          // background: #1d1b31;
           padding: 12px 0;
           transition: all 0.5s ease;
         }
@@ -391,6 +439,7 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
         .sidebar .profile-details .profile-content {
           display: flex;
           align-items: center;
+          justify-content: center;
         }
 
         .sidebar .profile-details img {
@@ -399,7 +448,7 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           object-fit: cover;
           border-radius: 16px;
           margin: 0 14px 0 12px;
-          background: #1d1b31;
+          // background:rgb(0, 0, 0);
           transition: all 0.5s ease;
         }
 
@@ -410,7 +459,7 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
         .sidebar .profile-details .profile_name,
         .sidebar .profile-details .job {
           color: #fff;
-          font-size: 18px;
+          font-size: 13px;
           font-weight: 500;
           white-space: nowrap;
         }
