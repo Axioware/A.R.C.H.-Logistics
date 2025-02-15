@@ -159,6 +159,7 @@ export default function All_Users() {
             width: 95%;
             margin: 20px auto 20px 30px; /* Add margin to the right */
             flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+            
           }
 
           .row-container1 {

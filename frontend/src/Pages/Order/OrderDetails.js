@@ -637,6 +637,7 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
       borderBottom: "2px solid #ddd",
       textAlign: "center", // Center align text
       width: "auto", // Respect colgroup width
+      fontFamily: "Montserrat, sans-serif"
     },
     td: {
       padding: "12px",

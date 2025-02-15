@@ -60,6 +60,8 @@ export default function NavPath({
             height: ${height || 'auto'};
             background-color: ${bgColor || 'transparent'};
             margin: 50px 0px 25px 0px;
+            fontFamily: "Playfair Display, serif"
+
           }
 
           /* Responsive styles */

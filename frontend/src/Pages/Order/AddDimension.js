@@ -312,12 +312,16 @@ const styles = {
     borderBottom: "2px solid #ddd",
     textAlign: "center", // Center align text
     width: "auto", // Respect colgroup width
+    fontFamily: "Montserrat, sans-serif"
+
   },
   td: {
     padding: "12px",
     borderBottom: "1px solid #ddd",
     textAlign: "center", // Center align text
     width: "auto", // Respect colgroup width
+    fontFamily: "Nunito, sans-serif"
+
   },
   deleteIcon: {
     cursor: "pointer",

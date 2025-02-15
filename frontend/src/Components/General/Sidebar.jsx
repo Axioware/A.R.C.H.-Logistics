@@ -200,7 +200,7 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           padding: 0;
           box-sizing: border-box;
         //  font-family: "DM Sans", serif;
-          font-family: "PT Sans", serif;
+          // font-family: "PT Sans", serif;
           // font-family: "Be Vietnam Pro";
         }
 
