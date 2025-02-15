@@ -200,12 +200,28 @@ def single_location(request, location_id):
 @permission_classes([IsAuthenticated])
 def services(request):
     """API for retrieving and creating services"""
-    tenant=request.tenant
+    tenant = request.tenant
+
     try:
         with schema_context(tenant.schema_name):
             if request.method == 'GET':
+                page = request.GET.get('page', 1)
+                page_size = request.GET.get('page_size', 50)
+                cache_key = f"services_page_{page}_size_{page_size}"
+                cached_services = cache.get(cache_key)
+
+                if cached_services:
+                    return Response(cached_services, status=status.HTTP_200_OK)
+
                 services_list = Services.objects.values('service_id', 'service_name', 'service_charge')
-                return Response(list(services_list), status=status.HTTP_200_OK)
+
+                paginator = UserPagination()
+                result_page = paginator.paginate_queryset(services_list, request)
+
+                response_data = paginator.get_paginated_response(result_page).data
+
+                cache.set(cache_key, response_data, timeout=300)  # Cache for 5 minutes
+                return Response(response_data, status=status.HTTP_200_OK)
 
             elif request.method == 'POST':
                 if authenticate_clearance_level(request.user, [1, 2]):
@@ -219,7 +235,13 @@ def services(request):
                     return Response({"error": "Service name is required"}, status=status.HTTP_400_BAD_REQUEST)
 
                 new_service = Services.objects.create(service_name=service_name, service_charge=service_charge)
+
+                # Invalidate all cached pages
+                for key in cache.keys("services_page_*"):
+                    cache.delete(key)
+
                 return Response({"message": "Service created", "service_id": new_service.service_id}, status=status.HTTP_201_CREATED)
+
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
