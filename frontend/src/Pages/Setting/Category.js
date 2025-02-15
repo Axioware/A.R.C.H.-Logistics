@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
 import NavPath from '../../Components/General/NavPath';
 import archlogo from '../../Assets/Images/logo1.png';
 import TableContent from '../../Components/Table_Components/TableContent';

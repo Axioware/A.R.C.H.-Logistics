@@ -11,8 +11,8 @@ function rgbArrayToString(rgbArray) {
 
 export default function FilterButton({
   text,
-  text_color,
-  background_color,
+  text_color = [255, 255, 255],
+  background_color = [23, 23, 23],
   function: handleClick,
   content,
   width = 'auto',

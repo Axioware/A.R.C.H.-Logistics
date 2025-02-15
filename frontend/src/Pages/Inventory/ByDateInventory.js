@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
+// import NavBarWithSidebar from '../../Components/General/TopSideNavBar';
+import Sidebar from "../../Components/General/Sidebar";
 import NavPath from '../../Components/General/NavPath';
 import archlogo from '../../Assets/Images/logo1.png';
 import TableContent from '../../Components/Table_Components/TableContent';
@@ -115,28 +116,7 @@ export default function All_Users() {
 
   return (
     <div>
-      <NavBarWithSidebar
-        text_color={[255, 255, 255]}
-        logo={archlogo}
-        company_name="A.R.C.H Labs"
-        username="Owner"
-        icons={[
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-          "https://via.placeholder.com/20",
-        ]}
-        names={[
-          ["User Management", "All User", "Add User"],
-          ["Management", "Add Order", "Delete Order"],
-          ["Inventory", "Add Item", "Delete Item"],
-        ]}
-        routes={[["/ahsan", "/app3"], ["/top1", "/top2"]]}
-        sidebar_width="14%"
-        sidebar_height="100vh"
-        toggleSidebar_func={toggleSidebar}
-        isSidebarOpen_p={isSidebarOpen}
-      />
-
+      
       <div style={styles.mainContent}>
         <NavPath
           text={["Home", "Inventory","By Date Inventory"]}

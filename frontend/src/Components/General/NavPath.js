@@ -14,8 +14,8 @@ function rgbArrayToString(rgbArray) {
 export default function NavPath({
   text,
   paths,
-  text_color,  // Array of RGB values for text color
-  background_color,  // Array of RGB values for background color
+  text_color = [255, 255, 255],  // Array of RGB values for text color
+  background_color = [23, 23, 23],  // Array of RGB values for background color
   width,
   height
 }) {

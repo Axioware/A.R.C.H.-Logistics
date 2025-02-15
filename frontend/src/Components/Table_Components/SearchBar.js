@@ -13,7 +13,7 @@ function rgbArrayToString(rgbArray) {
 
 export default function SearchBar({
   hint,
-  field_color,
+  field_color = [255, 255, 255],
   class_name = '',
   setSearch,
   width = 'auto',

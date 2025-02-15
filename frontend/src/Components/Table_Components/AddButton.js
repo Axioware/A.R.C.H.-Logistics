@@ -14,9 +14,9 @@ function rgbArrayToString(color) {
 
 export default function AddButton({
   text,
-  text_color,
+  text_color = [255, 255, 255],
   path,
-  background_color,
+  background_color = [23, 23, 23],
   width = '135px',
   height = '45px',
 }) {

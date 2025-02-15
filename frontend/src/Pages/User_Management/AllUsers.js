@@ -147,15 +147,6 @@ export default function All_Users() {
     setUserStatus('All');
   };
 
-  const handleApply = () => {
-    console.log("Filters applied:", { billingType, userStatus });
-  };
-
-  // Toggle dropdown visibility on filter button click
-  const toggleDropdown = () => {
-    console.log("Dropdown toggled");
-    setIsDropdownOpen(!isDropdownOpen);
-  };
 
   return (
     <>
@@ -194,55 +185,39 @@ export default function All_Users() {
         <NavPath
           text={["Home", "User Management"]}
           paths={["/home", "/users"]}
-          text_color={[255, 255, 255]}
-          background_color={[23, 23, 23]}
           width="100%"
           height="50px"
         />
 
         <AddButton
           text="Add User"
-          text_color={[255, 255, 255]}
           path='/add-user'
         />
 
         <div style={mainStyles.tableBackground}>
-          {/* <TableTop
-            heading_text={'All Users'}
-            search_function={getData}
-            // filter_function={() => {}}   
-            // content={<filterOptionUser billing={billingType} user={userStatus} ware={warehouse} setbill={setBillingType} setuser={setUserStatus} setware={setWarehouse}/>}
-          /> */}
 
           <div className="table-top-container">
               <PageHeading
-                text={'jhdjsahdja'}
-                text_color={[0, 0, 0]} // Black text color
-                sidebar_color={[0, 0, 0]} // Black sidebar color
-                width="auto" // Auto width to align properly
-                height="auto" // Auto height
-                sidebar_width="5px" // Increased sidebar width for visibility
-                sidebar_height="35px" // Set sidebar height explicitly
+                text={'All Users'}
+                width="auto" 
+                height="auto"
+                sidebar_width="5px"
+                sidebar_height="35px"
               />
       
               <div className="row-container1">
                 <FilterButton
                   text="+ Filter By"
-                  text_color={[255, 255, 255]} // White text color
-                  background_color={[23, 23, 23]} // Dark background
-                  // function={filter_function} // Function to call on button click
                   content={<FilterOptionsUserManagement setbill={setBillingType} setuser={setUserStatus} setware={setWarehouse} user={userStatus} billing={billingType} ware={warehouse}/>}
-                  width="150px" // Set width explicitly
-                  height="50px" // Set height explicitly
+                  width="150px"
+                  height="50px" 
                 />
       
                 <SearchBar
                   hint="Search..."
-                  field_color={[255, 255, 255]} // White background
                   setSearch={setSearch}
-                  // function={search_function} // Function to call on search
-                  width="300px" // Set width explicitly
-                  height="50px" // Set height for input field
+                  width="300px" 
+                  height="50px"
                 />
             </div>
           </div>

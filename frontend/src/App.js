@@ -54,8 +54,6 @@ import PendingOrder from './Pages/Order/PendingOrder';
 import OrderHistory from './Pages/Order/OrderHistory';
 import OrderDetails from './Pages/Order/OrderDetails';
 import AddDimension from './Pages/Order/AddDimension';
-import BoxesToBeShipped from './Pages/Order/BoxesToBeShipped';
-import ViewTracking from './Pages/Order/ViewTracking';
 
 //Settings
 

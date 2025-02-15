@@ -1,113 +1,67 @@
-import React, { useState } from 'react';
-import profileIcon from '../../Assets/Images/Login/Profile Icon.avif'; // Ensure the path to your image is correct
+import React, { useState } from "react";
+import "../../Assets/CSS/user.css"; // Ensure you have the CSS file
+// import axios from "axios"; // Import Axios for API call
+import Avatar from "../../Assets/Images/User/avatar.jpg"
+import Profile from "../../Assets/Images/User/user.png"
+import Settings from "../../Assets/Images/User/settings.png"
+import Logout from "../../Assets/Images/User/log-out.png"
+import { useNavigate } from "react-router-dom";
 
-const UserDrop = ({ userName }) => {
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
+const ProfileDropdown = ({username, id}) => {
+  const [isActive, setIsActive] = useState(false);
+  const navigate = useNavigate();
 
-  const toggleProfileDropdown = () => {
-    setDropdownVisible(!isDropdownVisible);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Ensures cookies (if used) are sent
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      navigate("/login"); // Always navigate to login
+    }
   };
 
-  const styles = {
-    container: {
-      display: 'flex',
-      alignItems: 'center',
-      position: 'absolute',
-      top: '-10px',
-      right: '17px',
-    },
-    img: {
-      width: '40px',
-      // height: '30px',
-      cursor: 'pointer',
-      padding: '30px 20px 30px 0px',
-      borderRadius: '50%', // Circle effect for profile icon
-      transition: '0.3s ease', // Smooth transition for hover effect
-    },
-    dropdownContainer: {
-      position: 'relative',
-    },
-    dropdownMenu: {
-      position: 'absolute',
-      top: '100%',
-      right: '40px',
-      background: '#fff',
-      listStyle: 'none',
-      padding: '10px 0',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      borderRadius: '5px',
-      display: isDropdownVisible ? 'block' : 'none',
-      width: '200px', // Optional: Control the width of the dropdown menu
-      zIndex: 10, // Ensure the dropdown is above other elements
-    },
-    dropdownItem: {
-      padding: '10px 20px',
-      fontSize: '14px',
-      fontWeight: '500',
-      cursor: 'pointer',
-      transition: '0.2s ease',
-       // Smooth transition on hover
-    },
-    dropdownLink: {
-      textDecoration: 'none',
-      color: '#333',
-      display: 'block', // Make the entire item clickable
-    },
-    dropdownItemHover: {
-      backgroundColor: '#f0f0f0', // Light gray background on hover
-      borderRadius: '5px',
-    },
-    imgHover: {
-      transform: 'scale(1.1)', // Slight zoom effect on hover
-    },
-    
-    
+  const menuToggle = () => {
+    setIsActive(!isActive);
   };
 
   return (
-    <div style={styles.container}>
-      {/* Username */}
-      <p style={{ marginRight: '10px', fontSize: '20px', fontWeight: '500' }}>{userName}</p>
+    <div className="action">
+      {/* Profile Image Clickable */}
+      <div className="profile" onClick={menuToggle}>
+        <img src={Profile} alt="User Avatar" />
+      </div>
 
-      {/* Profile Icon */}
-      <img
-        src={profileIcon} // Make sure this points to the correct location of your image
-        alt="Profile Icon"
-        style={styles.img}
-        onClick={toggleProfileDropdown}
-        onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')} // Hover effect for the icon
-        onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')} // Revert to normal scale
-      />
-
-      <div style={styles.dropdownContainer}>
-        {/* Dropdown Menu */}
-        <ul style={styles.dropdownMenu}>
-          <li
-            style={styles.dropdownItem}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = '#f0f0f0')} // Hover effect for items
-            onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')} // Reset hover effect
-          >
-            <a href="/edit-profile" style={styles.dropdownLink}>
-              Edit Profile
-            </a>
+      {/* Dropdown Menu */}
+      <div className={`menu ${isActive ? "active" : ""}`}>
+        <h3>
+          {username ? username : "Someone Famous"}
+        </h3>
+        <ul>
+          <li>
+            <img src={Profile} alt="User Icon" />
+            <a href="#">My profile</a>
           </li>
-          <li
-            style={styles.dropdownItem}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = '#f0f0f0')}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
-          >
-            <a href="/user-reset-password" style={styles.dropdownLink}>
-              Reset Password
-            </a>
-          </li>
-          <li
-            style={styles.dropdownItem}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = '#f0f0f0')}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = 'transparent')}
-          >
-            <a href="/" style={styles.dropdownLink}>
-              Logout
-            </a>
+          
+          
+          {/* <li>
+            <img src={Settings} alt="Settings Icon" />
+            <a href="#">Settings</a>
+          </li> */}
+          {/* <li>
+            <img src="./assets/icons/question.png" alt="Help Icon" />
+            <a href="#">Help</a>
+          </li> */}
+          <li onClick={handleLogout} style={{ cursor: "pointer" }}>
+            <img src={Logout} alt="Logout Icon" />
+            <a href="#">Logout</a>
           </li>
         </ul>
       </div>
@@ -115,4 +69,4 @@ const UserDrop = ({ userName }) => {
   );
 };
 
-export default UserDrop;
+export default ProfileDropdown;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "boxicons/css/boxicons.min.css";
+import UserDrop from "./UserDrop"
 
 const Sidebar = ({sidebar_state, set_sidebar_state}) => {
   const [isSidebarClosed, setSidebarClosed] = useState(
@@ -44,28 +45,28 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
 
           <li>
             <div className="iocn-link">
-              <a href="#">
+              <a onClick={() => navigate("/users")}>
                 <i className="bx bx-user"></i>
                 <span className="link_name">User</span>
               </a>
             </div>
             <ul className={`sub-menu blank`}>
               <li>
-                <a className="link_name" href="#">User</a>
+                <a className="link_name" onClick={() => navigate("/users")}>User</a>
               </li>
             </ul>
           </li>
 
           <li>
             <div className="iocn-link">
-              <a href="#">
+              <a onClick={() => navigate("/inventory")}>
                 <i className="bx bx-cabinet"></i>
                 <span className="link_name">Inventory</span>
               </a>
             </div>
             <ul className={`sub-menu blank`}>
               <li>
-                <a className="link_name" href="#">Inventory</a>
+                <a className="link_name" onClick={() => navigate("/inventory")}>Inventory</a>
               </li>
             </ul>
           </li>
@@ -115,7 +116,7 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
             </a>
             <i
                 className="bx bxs-chevron-down arrow"
-                onClick={() => toggleSubmenu("plugins")}
+                onClick={() => toggleSubmenu("other")}
               ></i>
             </div>
             <ul className="sub-menu ">
@@ -137,7 +138,7 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
             </ul>
           </li>
 
-          <li>
+          {/* <li>
             <div className="profile-details">
               <div className="profile-content">
                 <img src="image/profile.jpg" alt="profileImg" />
@@ -148,13 +149,16 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
               </div>
               <i className="bx bx-log-out"></i>
             </div>
-          </li>
+          </li> */}
         </ul>
       </div>
       <section className="home-section">
         <div className="home-content">
           <i className="bx bx-menu" onClick={toggleSidebar}></i>
-          <span className="text">Drop Down Sidebar</span>
+          <div className="userdrop">
+          <UserDrop />
+          {/* <span className="text">Drop Down Sidebar</span> */}
+          </div>
         </div>
       </section>
 
@@ -423,12 +427,23 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
 
         .home-section {
           position: relative;
-          background: #e4e9f7;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
           height: 15%;
           justify-content: center;
           left: 260px;
           width: calc(100% - 260px);
           transition: all 0.5s ease;
+        }
+
+        .home-section::before {
+          // content: "";
+          // position: absolute;
+          // top: 0;
+          // left: 0;
+          // width: 100%;
+          // height: 100%;
+          background: rgba(0, 0, 0, 0.1); /* Semi-transparent black overlay */
+          // pointer-events: none; /* Prevents it from interfering with clicks */
         }
 
         .sidebar.close ~ .home-section {
@@ -440,6 +455,7 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           height: 60px;
           display: flex;
           align-items: center;
+          justify-content: space-between;
           
         }
 
@@ -447,7 +463,7 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
         .home-section .home-content .text {
           color: #11101d;
           font-size: 35px;
-          justify-content: center;
+          justify-content: right;
         }
 
         .home-section .home-content .bx-menu {
@@ -456,8 +472,17 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
         }
 
         .home-section .home-content .text {
+        display: flex;
           font-size: 26px;
           font-weight: 600;
+          justify-content: flex-end;
+          margin-right: 20px;
+        }
+
+        .userdrop {
+          display: flex;
+          justify-content: flex-end;
+          z-index: 100000
         }
 
         @media (max-width: 420px) {
