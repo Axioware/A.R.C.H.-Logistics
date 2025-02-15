@@ -30,7 +30,6 @@ export default function InvoicesDetails() {
   const [notes, setNotes] = useState("");
   const [editingIndex, setEditingIndex] = useState(null); // Track which row is being edited
   const [editingNotes, setEditingNotes] = useState(""); // Track the current value of the notes being edited
-  
 
   const chargeOptions = ["Service Fee", "Extra Services", "Late Fee", "Custom Charge"];
 
@@ -88,6 +87,14 @@ export default function InvoicesDetails() {
 
           {/* Updated Table */}
           <table style={styles.table}>
+            <colgroup>
+              <col style={{ width: "18%" }} />
+              <col style={{ width: "18%" }} />
+              <col style={{ width: "20%" }} />
+              <col style={{ width: "15%" }} />
+              <col style={{ width: "24%" }} />
+              <col style={{ width: "5%" }} />
+            </colgroup>
             <thead>
               <tr>
                 <th style={styles.th}>Product</th>
@@ -106,34 +113,34 @@ export default function InvoicesDetails() {
                   <td style={styles.td}>{row.date}</td>
                   <td style={styles.td}>{row.amount}</td>
                   <td style={styles.td}>
-  {editingIndex === index ? (
-    <input
-      type="text"
-      value={editingNotes}
-      onChange={(e) => setEditingNotes(e.target.value)}
-      onBlur={() => {
-        const newData = [...data];
-        newData[index].notes = editingNotes;
-        setData(newData);
-        setEditingIndex(null);
-      }}
-      style={styles.notesInput}
-      autoFocus
-    />
-  ) : (
-    <span
-      onClick={() => {
-        setEditingIndex(index);
-        setEditingNotes(row.notes);
-      }}
-      style={row.notes ? {} : { color: '#999', fontStyle: 'italic' }} // Add placeholder styling
-    >
-      {row.notes || "Add notes..."} {/* Display placeholder if notes are empty */}
-    </span>
-  )}
-</td>
+                    {editingIndex === index ? (
+                      <input
+                        type="text"
+                        value={editingNotes}
+                        onChange={(e) => setEditingNotes(e.target.value)}
+                        onBlur={() => {
+                          const newData = [...data];
+                          newData[index].notes = editingNotes;
+                          setData(newData);
+                          setEditingIndex(null);
+                        }}
+                        style={{ ...styles.notesInput, textAlign: "center" }} // Center align input text
+                        autoFocus
+                      />
+                    ) : (
+                      <span
+                        onClick={() => {
+                          setEditingIndex(index);
+                          setEditingNotes(row.notes);
+                        }}
+                        style={row.notes ? { textAlign: "center" } : { color: '#999', fontStyle: 'italic', textAlign: "center" }} // Center align span text
+                      >
+                        {row.notes || "Add notes..."}
+                      </span>
+                    )}
+                  </td>
                   <td style={styles.td}>
-                    <FaTrash style={styles.deleteIcon} onClick={() => handleDelete(index)} />
+                    <FaTrash style={{ ...styles.deleteIcon, margin: "0 auto" }} onClick={() => handleDelete(index)} />
                   </td>
                 </tr>
               ))}
@@ -144,7 +151,6 @@ export default function InvoicesDetails() {
             <div style={styles.modalOverlay}>
               <div style={styles.modal}>
                 <h2 style={styles.modalTitle}>Add Charge</h2>
-
 
                 <label style={styles.label}>Amount</label>
                 <input
@@ -241,12 +247,14 @@ const styles = {
     fontWeight: "bold",
     padding: "12px",
     borderBottom: "2px solid #ddd",
-    textAlign: "left",
+    textAlign: "center", // Center align text
+    width: "auto", // Respect colgroup width
   },
   td: {
     padding: "12px",
     borderBottom: "1px solid #ddd",
-    textAlign: "left",
+    textAlign: "center", // Center align text
+    width: "auto", // Respect colgroup width
   },
   deleteIcon: {
     cursor: "pointer",

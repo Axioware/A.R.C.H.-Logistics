@@ -29,17 +29,15 @@ export default function InvoicesDetails() {
   const handleAddBox = () => {
     const newBox = {
       BoxNo: (data.length + 1).toString(), // Auto-increment BoxNo
-      BoxQuantity: boxQuantity,Products: products.map(p => ({
+      BoxQuantity: boxQuantity,
+      Products: products.map(p => ({
         ProductName: p.product || "Unknown Product", // Default value if empty
         Quantity: p.quantity || "0", // Default value if empty
       })),
-      
       Dimensions: `${length}x${height}x${width}`,
       Weight: weight,
     };
 
-
-    
     // Add new box data to the existing table
     setData([...data, newBox]);
 
@@ -99,13 +97,22 @@ export default function InvoicesDetails() {
 
           {/* Updated Table */}
           <table style={styles.table}>
+            <colgroup>
+              <col style={{ width: "10%" }} />
+              <col style={{ width: "15%" }} />
+              <col style={{ width: "15%" }} />
+              <col style={{ width: "15%" }} />
+              <col style={{ width: "20%" }} />
+              <col style={{ width: "10%" }} />
+              <col style={{ width: "15%" }} />
+            </colgroup>
             <thead>
               <tr>
                 <th style={styles.th}>Box No</th>
                 <th style={styles.th}>Box Quantity</th>
                 <th style={styles.th}>Products</th>
                 <th style={styles.th}>Quantity</th>
-                <th style={styles.th}>Dimensions ( L , H , W )</th>
+                <th style={styles.th}>Dimensions ( L x H x W )</th>
                 <th style={styles.th}>Weight</th>
                 <th style={styles.th}></th>
               </tr>
@@ -117,18 +124,18 @@ export default function InvoicesDetails() {
                   <td style={styles.td}>{row.BoxQuantity}</td>
                   <td style={styles.td}>
                     {row.Products.map((product, i) => (
-                      <div key={i}>{product.ProductName}</div>
+                      <div key={i} style={{ textAlign: "center" }}>{product.ProductName}</div>
                     ))}
                   </td>
                   <td style={styles.td}>
                     {row.Products.map((product, i) => (
-                      <div key={i}>{product.Quantity}</div>
+                      <div key={i} style={{ textAlign: "center" }}>{product.Quantity}</div>
                     ))}
                   </td>
                   <td style={styles.td}>{row.Dimensions.replace(/x/g, " x ")}</td>
                   <td style={styles.td}>{row.Weight}</td>
                   <td style={styles.td}>
-                    <FaTrash style={styles.deleteIcon} onClick={() => handleDelete(index)} />
+                    <FaTrash style={{ ...styles.deleteIcon, margin: "0 auto" }} onClick={() => handleDelete(index)} />
                   </td>
                 </tr>
               ))}
@@ -297,12 +304,14 @@ const styles = {
     fontWeight: "bold",
     padding: "12px",
     borderBottom: "2px solid #ddd",
-    textAlign: "left",
+    textAlign: "center", // Center align text
+    width: "auto", // Respect colgroup width
   },
   td: {
     padding: "12px",
     borderBottom: "1px solid #ddd",
-    textAlign: "left",
+    textAlign: "center", // Center align text
+    width: "auto", // Respect colgroup width
   },
   deleteIcon: {
     cursor: "pointer",
