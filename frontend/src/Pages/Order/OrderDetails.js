@@ -239,6 +239,11 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
           </div>
 
           <table style={styles.table}>
+          <colgroup>
+              <col style={{ width: "20%" }} />
+              <col style={{ width: "60%" }} />
+              <col style={{ width: "20%" }} />
+            </colgroup>
             <thead>
               <tr>
                 <th style={styles.th}>Label Type</th>
@@ -251,21 +256,32 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
                 <tr key={index}>
                   <td style={styles.td}>{row.LabelType}</td>
                   <td style={styles.td}>
-                    {row.FileURL ? (
-                      <a href={row.FileURL} target="_blank" rel="noopener noreferrer" style={styles.link}>
-                        {row.Name}
-                      </a>
-                    ) : (
-                      row.Name
-                    )}
-                  </td>
-                  <td style={styles.td}>
-                    <FaTrash style={styles.deleteIcon} onClick={() => handleDelete(index)} />
-                  </td>
+                  {row.FileURL ? (
+                    <a 
+                      href={row.FileURL} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      style={{ 
+                        ...styles.link, 
+                        textDecoration: "underline", 
+                        textDecorationColor: "blue", 
+                        color: "blue" // Ensures the text is also blue
+                      }} 
+                    >
+                      {row.Name}
+                    </a>
+                  ) : (
+                    row.Name
+                  )}
+                </td>
+
+               <td style={{ ...styles.td, display: "flex" }}>
+  <FaTrash style={{ ...styles.deleteIcon, marginLeft: "200px" }} onClick={() => handleDelete(index)} />
+</td>
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table>  
        {showLabelModal && 
   <div style={styles.modalOverlay}>
     <div style={styles.modal}>
@@ -619,12 +635,14 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
       fontWeight: "bold",
       padding: "12px",
       borderBottom: "2px solid #ddd",
-      textAlign: "left",
+      textAlign: "center", // Center align text
+      width: "auto", // Respect colgroup width
     },
     td: {
       padding: "12px",
       borderBottom: "1px solid #ddd",
-      textAlign: "left",
+      textAlign: "center", // Center align text
+      width: "auto", // Respect colgroup width
     },
     deleteIcon: {
       cursor: "pointer",
@@ -834,6 +852,8 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
         fontSize: "1rem",
         outline: "none",
       },
+      
+      
       
     },
   };

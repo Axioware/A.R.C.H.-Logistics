@@ -156,6 +156,7 @@ export default function InvoicesDetails() {
                       style={styles.input}
                       value={boxQuantity}
                       onChange={(e) => setBoxQuantity(e.target.value)}
+                      placeholder="65"
                     />
                   </div>
                   <div style={styles.inputGroup}>
@@ -165,6 +166,7 @@ export default function InvoicesDetails() {
                       style={styles.input}
                       value={length}
                       onChange={(e) => setLength(e.target.value)}
+                      placeholder="12"
                     />
                   </div>
                   <div style={styles.inputGroup}>
@@ -174,6 +176,7 @@ export default function InvoicesDetails() {
                       style={styles.input}
                       value={width}
                       onChange={(e) => setWidth(e.target.value)}
+                      placeholder="25"
                     />
                   </div>
                   <div style={styles.inputGroup}>
@@ -183,6 +186,7 @@ export default function InvoicesDetails() {
                       style={styles.input}
                       value={height}
                       onChange={(e) => setHeight(e.target.value)}
+                      placeholder="45"
                     />
                   </div>
                   <div style={styles.inputGroup}>
@@ -192,6 +196,7 @@ export default function InvoicesDetails() {
                       style={styles.input}
                       value={weight}
                       onChange={(e) => setWeight(e.target.value)}
+                      placeholder="88"
                     />
                   </div>
                 </div>
@@ -217,12 +222,13 @@ export default function InvoicesDetails() {
                         style={styles.input}
                         value={item.quantity}
                         onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
+                        placeholder="25"
                       />
                     </div>
                   </div>
                 ))}
 
-                <p style={styles.addProduct} onClick={handleAddProductField}>
+                <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
                   + Add Another Product
                 </p>
 
@@ -357,7 +363,6 @@ const styles = {
     border: '1px solid #ccc',
   },
   addProduct: {
-    color: 'blue',
     cursor: 'pointer',
     marginBottom: '10px',
   },

@@ -103,7 +103,7 @@ export default function InvoicesDetails() {
                 <th style={styles.th}>Amount</th>
                 <th style={styles.th}>Notes</th>
                 <th style={styles.th}></th>
-              </tr>
+              </tr>``
             </thead>
             <tbody>
               {data.map((row, index) => (
