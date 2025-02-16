@@ -94,8 +94,9 @@ const LoginForm = () => {
       alignItems: 'center',
     },
     logoImage: {
-      maxWidth: '80%',
-      height: 'auto',
+      aspectRatio:'unlock',
+      maxWidth: '60%',
+      height: '60%',
     },
     loginContainer: {
       width: '40%',

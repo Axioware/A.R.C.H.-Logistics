@@ -9,23 +9,123 @@ import DropDown from "../../Components/General/DropDown";
 
 
 const AddUser = () => {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted'); 
-    alert('Warehouse added successfully!');
+  const [UserData, setUserData] = useState({
+    username: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    password: "",
+    clearance_level:[],
+    llc_name: "",
+    tax_id: "",
+    email2: "",
+    address: "",
+    billing_type: "",
+    city: "",
+    state: "",
+    zip: "",
+    warehouses: []
+  });
+
+  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
+    const storedState = localStorage.getItem("sidebarclosed");
+    return storedState === null ? true : JSON.parse(storedState);
+  });
+
+  const handleChange = (e) => {
+    setUserData({ ...UserData, [e.target.name]: e.target.value });
   };
 
-  const [clearance, setclearance] = useState(1);
-  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
-      const storedState = localStorage.getItem("sidebarclosed");
-      return storedState === null ? true : JSON.parse(storedState);
-    });
-  
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    console.log('Form submitted',UserData); 
+
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      alert("You are not authorized. Please log in.");
+      return;
+    }  
+
+  try {
+    const response = await fetch(
+      `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/users/`,
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(UserData),
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("User added successfully!");
+        setUserData({
+          username: "",
+          first_name: "",
+          last_name: "",
+          email: "",
+          phone: "",
+          password: "",
+          clearance_level:[],
+          llc_name: "",
+          tax_id: "",
+          email2: "",
+          address: "",
+          billing_type: "",
+          city: "",
+          state: "",
+          zip: "",
+          warehouses: []
+        });
+      } else {
+        alert(`Error: ${data.message || "Failed to add User."}`);
+      }
+    } catch (error) {
+      alert("Failed to add User. Please try again.");
+    }
+  };
+
+  const [clearance, setclearance] = useState('');
+
     const [warehouse, setWarehouse] = useState('');
 
-    const handleSelectWarehouse = (value) => {
-      setWarehouse(value);
-    };
+    const handleSelectWarehouse = async (WarehouseName) => {
+      const token = localStorage.getItem("accessToken");  // Ensure token is defined
+        if (!token) {
+      alert("You are not authorized. Please log in.");
+        return;
+        }
+
+        try {
+          const response = await fetch(
+            `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/warehouse/?name=${encodeURIComponent(WarehouseName)}`,  // Adjusted for GET request
+            {
+              method: "GET",
+              headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log(data);  // or whatever you need to do with the data
+            setWarehouse(WarehouseName);
+          } else {
+            alert("Failed to fetch warehouse details. Please try again.");
+          }
+        } catch (error) {
+          alert("Failed to fetch warehouse details. Please try again.");
+          console.error("Error fetching warehouse:", error);
+        }
+      };
+
 
  
   
