@@ -198,36 +198,51 @@ def services(request):
     try:
         with schema_context(tenant.schema_name):
             if request.method == 'GET':
-                service_category = request.GET.get('service_category')  # Get category from request
-                all_data = request.query_params.get('all', 'false').lower() == 'true'
-                cache_key = f"services_{request.query_params.urlencode()}"
+                # Generate cache key based on request params
+                cache_key = f"services_{request.GET.urlencode()}"
                 cached_services = cache.get(cache_key)
 
                 if cached_services:
                     return Response(cached_services, status=status.HTTP_200_OK)
-                
-            
 
-                # Filtering by service_category if provided
-                services_list = Services.objects.values('service_id', 'service_name', 'service_charge')
+                # Filters
+                service_category = request.GET.get('service_category')
+                all_data = request.GET.get('all', 'false').lower() == 'true'
+
+                # Queryset & Filtering
+                queryset = Services.objects.values(
+                    'service_id', 'service_name', 'service_charge', 'service_category'
+                )
+
                 if service_category:
-                    services_list = services_list.filter(service_category=service_category)
+                    queryset = queryset.filter(service_category=service_category)
 
+                result = list(queryset)  # Convert queryset to list for pagination
+
+                # If no services found
+                if not result:
+                    return Response({"error": "No services found matching the criteria"}, status=status.HTTP_404_NOT_FOUND)
+
+                # Return all data if `all=true`
                 if all_data:
-                    response_data = {"results": services_list, "count": len(services_list)}
+                    response_data = {"results": result, "count": len(result)}
                     cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_LONG)
                     return Response(response_data, status=status.HTTP_200_OK)
 
+                # Apply Pagination
                 paginator = UserPagination()
-                result_page = paginator.paginate_queryset(services_list, request)
+                page = paginator.paginate_queryset(result, request)
+                if page is not None:
+                    response_data = paginator.get_paginated_response(page).data
+                    cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_SHORT)
+                    return Response(response_data, status=status.HTTP_200_OK)
 
-                response_data = paginator.get_paginated_response(result_page).data
-
+                response_data = {"results": result}
                 cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_SHORT)
                 return Response(response_data, status=status.HTTP_200_OK)
 
             elif request.method == 'POST':
-                if authenticate_clearance_level(request.user, [1, 2]):
+                if not authenticate_clearance_level(request.user, [1, 2]):
                     return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
 
                 data = request.data
@@ -238,17 +253,19 @@ def services(request):
                 if not service_name:
                     return Response({"error": "Service name is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-                new_service = Services.objects.create(service_name=service_name, service_charge=service_charge, service_category=service_category)
+                new_service = Services.objects.create(
+                    service_name=service_name,
+                    service_charge=service_charge,
+                    service_category=service_category
+                )
 
                 # Invalidate all cached pages
-                for key in cache.keys("services_*"):
-                    cache.delete(key)
+                cache.delete_pattern("services_*")
 
                 return Response({"message": "Service created", "service_id": new_service.service_id}, status=status.HTTP_201_CREATED)
 
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
