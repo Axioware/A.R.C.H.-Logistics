@@ -53,12 +53,12 @@ const GeneralField = ({
       box-shadow: 0 0 8px rgba(0, 123, 255, 0.25); /* Subtle shadow for focus */
     }
     .field-input.required {
-     border-color: #d9534f; /* Red border color to indicate required fields */
+     border-color: red; /* Red border color to indicate required fields */
     }
 
     .field-label.required::after {
     content: '*';
-    color: #d9534f; /* Red asterisk to indicate required fields */
+    color: red; /* Red asterisk to indicate required fields */
     margin-left: 4px; /* Spacing between the label and the asterisk */
     }
 

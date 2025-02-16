@@ -99,8 +99,10 @@ export default function Table({
           .table-wrapper {
             max-width: 100%;
             text-align: center;
-            font-family: 'Arial', sans-serif;
+            // font-family: 'Arial', sans-serif;
             margin: 10px 30px 0px 0px;
+            // fontFamily: "Playfair Display, serif"
+
           }
 
           .table {
@@ -110,6 +112,7 @@ export default function Table({
             border-radius: 10px;
             overflow: hidden;
             table-layout: fixed;
+            
           }
 
           .table th,
@@ -117,6 +120,8 @@ export default function Table({
             padding: 15px;
             // text-align: left;
             border: none;
+            // fontFamily: "Montserrat, sans-serif"
+           
           }
 
           .table th {
@@ -127,6 +132,8 @@ export default function Table({
             font-size: 14px;
             cursor: pointer;
             transition: background-color 0.3s ease, color 0.3s ease;
+            // font-family: "Montserrat, sans-serif"
+            
           }
 
           .table tr:nth-child(even) {
@@ -144,6 +151,7 @@ export default function Table({
           .table td {
             font-size: 14px;
             color: #333;
+            
           }
 
           .table-loading-spinner {

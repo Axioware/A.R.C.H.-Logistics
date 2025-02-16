@@ -66,11 +66,8 @@ export default function All_Users() {
   const table_width_function = () => {
     return (
       <colgroup>
-        <col style={{ width: "10%" }} />
-        <col style={{ width: "20%" }} />
-        <col style={{ width: "30%" }} />
-        <col style={{ width: "30%" }} />
-        <col style={{ width: "10%" }} />  
+        <col style={{ width: "45%" }} />
+        <col style={{ width: "55%" }} /> 
       </colgroup>
     );
   };
@@ -184,8 +181,8 @@ export default function All_Users() {
       <div style={mainStyles.centerContent(isSidebarClosed)}>
 
         <NavPath
-          text={["Home", "User Management"]}
-          paths={["/home", "/users"]}
+          text={["Home", "Setting", "Printers"]}
+          paths={["/home", "/setting", "/printers"]}
           width="100%"
           height="50px"
         />
@@ -199,20 +196,12 @@ export default function All_Users() {
 
           <div className="table-top-container">
               <PageHeading
-                text={'All Users'}
+                text={'Printers'}
                 width="auto" 
                 height="auto"
                 sidebar_width="5px"
                 sidebar_height="35px"
               />
-      
-              <div className="row-container1">
-                <FilterButton
-                  text="+ Filter By"
-                  content={<FilterOptionsUserManagement setbill={setBillingType} setuser={setUserStatus} setware={setWarehouse} user={userStatus} billing={billingType} ware={warehouse}/>}
-                  width="150px"
-                  height="50px" 
-                />
       
                 <SearchBar
                   hint="Search..."
@@ -220,12 +209,11 @@ export default function All_Users() {
                   width="300px" 
                   height="50px"
                 />
-            </div>
           </div>
 
 
           <TableContent
-            table_headings={['ID', 'Name', 'Email', 'Role']}
+            table_headings={['ID', 'Name']}
             last_column={true}
             loading={loading}
             success={success}

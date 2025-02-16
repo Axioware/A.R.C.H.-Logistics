@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import Select from "react-select";
 
-export default function DropDown({ label, data, width, height, onSelect }) {
+export default function DropDown({ label, data, width, height, onSelect, required=false, multi=false }) {
   const options = data.map((item) => ({ value: item, label: item }));
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
 
   const handleChange = (selectedOptions) => {
-    onSelect(selectedOptions.map(option => option.value)); // Handle multiple selected options
-    setMenuIsOpen(false); // Close the menu after selection
+    if (multi) {
+      onSelect(selectedOptions.map(option => option.value)); // Handle multiple selected options
+      setMenuIsOpen(false); // Close the menu after selection
+      document.activeElement.blur();
+    } else {
+      onSelect(selectedOptions);
+      setMenuIsOpen(false);
+      document.activeElement.blur();
+    }
   };
 
   const toggleMenu = () => {
@@ -63,12 +70,18 @@ export default function DropDown({ label, data, width, height, onSelect }) {
 
   return (
     <div>
-      {label && <div style={{ marginBottom: "5px", fontWeight: '200px', marginBottom:'10px' }}>{label}</div>}
+      {label && (
+  <div style={{ marginBottom: "10px", fontWeight: '200px' }}>
+    {label} {required && <span style={{ color: "red" }}>*</span>}
+  </div>
+)}
+
       <Select
         options={options}
         styles={customStyles}
         isSearchable={true}
-        isMulti={true} // Enable multi-selection
+        isMulti={multi} // Enable multi-selection
+        required={required}
         onChange={handleChange}
         menuIsOpen={menuIsOpen}
         onMenuOpen={toggleMenu}

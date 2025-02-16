@@ -55,16 +55,16 @@ import PendingOrder from './Pages/Order/PendingOrder';
 import OrderHistory from './Pages/Order/OrderHistory';
 import OrderDetails from './Pages/Order/OrderDetails';
 import AddDimension from './Pages/Order/AddDimension';
-import BoxesToBeShipped from './Pages/Order/BoxesToBeShipped';
-import ViewTracking from './Pages/Order/ViewTracking';
 
 //Settings
 
 import Category from './Pages/Setting/Category';
 import Service from './Pages/Services/Service';
-import AddService from './Pages/Setting/AddService';
-import SetRates from "./Pages/Setting/SetRates";
+import AddService from './Pages/Services/AddService';
+import Printers from './Pages/Setting/Printers';
+import LabelFormat from './Pages/Setting/LabelFormat';
 
+import SetRates from "./Pages/Setting/SetRates";
 import test from './Assets/Images/SearchIcon.png'
 import test2 from './Assets/Images/user-solid.svg'
 
@@ -142,7 +142,7 @@ function App() {
         {/* Location Management */}
         <Route path="/add-location" element={<AddLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
         <Route path="/edit-location" element={<EditLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} /> 
-        <Route path="/all-location" element={<AllLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />     
+        <Route path="/locations" element={<AllLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />     
         
         {/* User_Management */}
         <Route path="/users" element={<AllUsers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
@@ -153,23 +153,25 @@ function App() {
         <Route path="/spinner" element={<Spinner />} />
         
         {/* Payment Section */}
-        <Route path="/balance-sheet" element={<BalanceSheet menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/transaction" element={<Transaction menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/balance-sheets" element={<BalanceSheet menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/transactions" element={<Transaction menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/invoices" element={<Invoices menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/invoices-details" element={<InvoicesDetails menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/invoice-details" element={<InvoicesDetails menuItems={menuItems} toggleExpand={toggleExpand}/>} />
 
         {/* Settings */}
-        <Route path="/rates-management" element={<RatesManagement menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
-        <Route path="/service" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/custom-rates" element={<RatesManagement menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/services" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-service" element={<AddService menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/printers" element={<Printers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/label-format" element={<LabelFormat menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
         {/* <Route path="/set-rates" element={<SetRates menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
         {/* Modals */}
         <Route path="/test" element={<Forbidden />} />
 
         {/* Inventory  */}
-        <Route path="/all-items" element={<AllInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/all-inventory" element={<AllInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-inventory" element={<AddInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/by-date-inventory" element={<ByDateInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
         {/* <Route path="/inventory-overview" element={<CombineInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
@@ -178,7 +180,7 @@ function App() {
         {/* Orders */}
         <Route path="/active-order" element={<ActiveOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/pending-order" element={<PendingOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/order-history" element={<OrderHistory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/completed-orders" element={<OrderHistory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/order-details" element={<OrderDetails />} />
         <Route path="/add-dimension" element={<AddDimension />} />
         {/* <Route path="/boxes-to-be-shipped" element={<BoxesToBeShipped />} />      */}

@@ -68,6 +68,8 @@ export default function TableContent({
             height: 100%;
             padding: 10px;
             box-sizing: border-box;
+            // fontFamily: 'Roboto, sans-serif',
+
           }
 
           .table-wrapper {
@@ -79,6 +81,7 @@ export default function TableContent({
             margin-top: 20px;
             text-align: center;
           }
+            
         `}
       </style>
     </div>
