@@ -29,6 +29,19 @@ const mainStyles = {
         margin: '20px 0px 0px 0px',
         boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
       },
+      AddInputBackground: {
+        backgroundColor: '#f7f6f6',
+        padding: '20px 0px 40px 60px',
+        borderRadius: '8px',
+        minHeight: '10vh',
+        display: 'flex',
+        flexDirection: 'column',
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        width: '100%',
+        margin: '20px 0px 0px 0px',
+        boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
+      },
   };
   
 export default mainStyles;
