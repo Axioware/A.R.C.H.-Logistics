@@ -27,27 +27,7 @@ export default function All_Users() {
   const [userStatus, setUserStatus] = useState('');
   const [warehouse, setWarehouse] = useState('');
   const [search, setSearch] = useState('');
-
   const [endpoint, setEndpoint] = useState('api/users/');
-
-  useEffect(() => {
-    // Construct query parameters
-    const params = new URLSearchParams();
-  
-    if (billingType) params.append('billingType', billingType);
-    if (userStatus) params.append('userStatus', userStatus);
-    if (warehouse) params.append('warehouse', warehouse);
-    if (search) params.append('search', search);
-    if (currentPage) params.append('page', currentPage);
-  
-    // Set the updated endpoint
-    setEndpoint(`api/users/${params.toString() ? '?' + params.toString() : ''}`);
-    console.log('hello' + endpoint);
-  }, [billingType, userStatus, warehouse, search, currentPage]); // Dependencies to trigger the effect
-  
-
-  // const filteredUsers = filterOptionUser(billing={billingType}, user={userStatus}, ware={warehouse}, setbill={setBillingType}, setuser={setUserStatus}, setware={setWarehouse});
-
   const table_function = () => {
     return data.map((row, index) => (
       <tr key={index}>
@@ -58,8 +38,7 @@ export default function All_Users() {
         <td style={{ display: "flex", padding: '15px 15px 15px 0px', marginRight:"15px", justifyContent: "right"}}>
       <EditIcon path={`edit-user/?id=${row.id}`}/>
     </td>
-
-      </tr>
+    </tr>
     ));
   };
 
@@ -71,19 +50,11 @@ export default function All_Users() {
       </colgroup>
     );
   };
-
-  
-
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
     return storedState === null ? true : JSON.parse(storedState);
   });
 
-  // State for filters
-  // const [billingType, setBillingType] = useState('All');
-  // const [userStatus, setUserStatus] = useState('All');
-  
-  // State to toggle the dropdown visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const getData = async () => {

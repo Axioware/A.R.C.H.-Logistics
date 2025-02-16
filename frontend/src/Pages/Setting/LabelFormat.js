@@ -48,8 +48,8 @@ export default function LabelFormat() {
       <SideBar sidebar_state={true} set_sidebar_state={() => {}} />
       <div style={mainStyles.centerContent(true)}>
         <NavPath
-          text={["Home", "Order Details", "Add Box Dimensions"]}
-          paths={["/home", "/order-details", "/add-dimension"]}
+          text={["Home", "Setting", "Label Format"]}
+          paths={["/home", "/setting", "/label-format"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
           width="100%"
