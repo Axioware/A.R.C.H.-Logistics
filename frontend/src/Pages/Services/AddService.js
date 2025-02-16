@@ -5,12 +5,15 @@ import NavPath from "../../Components/General/NavPath";
 import PageHeading from "../../Components/Table_Components/PageHeading";
 import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
+import DropDown2 from "../../Components/General/DropDown2";
+import DropDown from "../../Components/General/DropDown";
 
 const AddService = () => {
   const [formData, setFormData] = useState({
     service_name: "",
     service_charge: "",
   });
+  const [selectedOption, setSelectedOption] = useState("");
 
   const formRef = useRef(null); // Reference for the form
 
@@ -78,8 +81,8 @@ const AddService = () => {
       position: "relative",
       alignSelf: "flex-start",
       display: "grid",
-      gridTemplateColumns: "1fr 1fr", // Two columns
-      gap: "35px",
+      gridTemplateColumns: "1fr 1fr 1fr", // Two columns
+      gap: "50px",
       marginLeft: "20px",
       marginRight: "30px",
       marginTop: "35px",
@@ -128,10 +131,21 @@ const AddService = () => {
             </div>
 
             <form id="form" style={styles.form} onSubmit={handleSubmit} ref={formRef}>
+
+            {/* <div className="flex justify-center items-center h-screen bg-gray-100"> */}
+              {/* <DropDown2
+                options={["Option 1", "Option 2", "Option 3"]}
+                selected={selectedOption}
+                onChange={setSelectedOption}
+              /> */}
+            {/* </div> */}
+
+            <DropDown data={['FBA', 'FBM', 'Storage', "Other"]} label={'Category'} required={true} width={'230px'} onSelect={setSelectedOption}/>
+
               <GeneralField
                 label="Name"
                 field_type="text"
-                hint="Enter name of Service"
+                hint="Bundling"
                 required={true}
                 name="service_name"
                 func={(e) => handleInputChange(e.target.value, e.target.name)}
@@ -140,7 +154,7 @@ const AddService = () => {
               <GeneralField
                 label="Service Charge"
                 field_type="text"
-                hint="Enter the Charge for Service"
+                hint="$13.0"
                 required={true}
                 name="service_charge"
                 func={(e) => handleInputChange(e.target.value, e.target.name)}
