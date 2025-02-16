@@ -60,8 +60,9 @@ import AddDimension from './Pages/Order/AddDimension';
 import Category from './Pages/Setting/Category';
 import Service from './Pages/Services/Service';
 import AddService from './Pages/Services/AddService';
-import SetRates from "./Pages/Setting/SetRates";
+import Printers from './Pages/Setting/Printers';
 
+import SetRates from "./Pages/Setting/SetRates";
 import test from './Assets/Images/SearchIcon.png'
 import test2 from './Assets/Images/user-solid.svg'
 
@@ -153,9 +154,10 @@ function App() {
 
         {/* Settings */}
         <Route path="/custom-rates" element={<RatesManagement menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
         <Route path="/services" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-service" element={<AddService menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/printers" element={<Printers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
         {/* <Route path="/set-rates" element={<SetRates menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
         {/* Modals */}
