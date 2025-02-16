@@ -168,9 +168,9 @@ export default function All_Users() {
           //   gap: 20px; /* Add spacing between FilterButton and SearchBar */
           // }
 
-          .page-heading {
-            flex-grow: 1; /* Allow the heading to take up space on the left */
-          }
+          // .page-heading {
+          //   flex-grow: 1; /* Allow the heading to take up space on the left */
+          // }
         `}
       </style>
 
@@ -196,16 +196,15 @@ export default function All_Users() {
 
         <div style={mainStyles.tableBackground}>
 
-          {/* <div className="table-top-container"> */}
+          <div style={mainStyles.tableTopContainer}>
               <PageHeading
                 text={'All Users'}
                 width="auto" 
-                height="auto"
                 sidebar_width="5px"
                 sidebar_height="35px"
               />
       
-              {/* <div className="row-container1"> */}
+              <div style={mainStyles.rowContainer}>
                 <FilterButton
                   text="+ Filter By"
                   content={<FilterOptionsUserManagement setbill={setBillingType} setuser={setUserStatus} setware={setWarehouse} user={userStatus} billing={billingType} ware={warehouse}/>} 
@@ -217,8 +216,8 @@ export default function All_Users() {
                   width="300px" 
                   height="50px"
                 />
-            {/* </div> */}
-          {/* </div> */}
+            </div>
+          </div>
 
 
           <TableContent

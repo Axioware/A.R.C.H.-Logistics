@@ -42,6 +42,22 @@ const mainStyles = {
         margin: '20px 0px 0px 0px',
         boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
       },
+
+      tableTopContainer: {
+            display: 'flex',
+            justifyContent: 'space-between', /* Space between heading and buttons */
+            alignItems: 'center', /* Align items vertically */
+            width: '100%',
+            margin: '0px 0px 0px 30px', /* Add margin to the right */
+            flexWrap: 'wrap' /* Allow items to wrap on smaller screens */
+          },
+
+      rowContainer: {
+            display: 'flex',
+            justifyContent: 'flex-end', /* Align buttons to the right */
+            alignItems: 'center',
+            gap: '20px' /* Add spacing between FilterButton and SearchBar */
+      }
   };
   
 export default mainStyles;

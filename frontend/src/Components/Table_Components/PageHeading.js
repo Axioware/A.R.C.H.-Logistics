@@ -14,7 +14,7 @@ export default function PageHeading({
   text = [0, 0, 0],
   text_color = [0, 0, 0],
   width = '100%', 
-  height = 'auto', 
+  height = '26px', 
   sidebar_color,
   font_size = '1.5rem',
   sidebar_width = '10px', 
@@ -27,13 +27,13 @@ export default function PageHeading({
 
   return (
     <div className="page-heading-container">
-      <div
+      {/* <div
         className="page-heading-sidebar"
         style={{
           backgroundColor: sidebarColor,
           width: sidebar_width,
         }}
-      ></div>
+      ></div> */}
       <h1 className="page-heading-text">{text}</h1>
 
       <style>
@@ -44,11 +44,11 @@ export default function PageHeading({
             align-items: center; /* Align items vertically */
             width: ${width};
             height: ${height};
-            border-left: 6px solid ${borderColor}; /* Use defined border color */
+            border-left: 5px solid ${borderColor}; /* Use defined border color */
           }
 
           .page-heading-sidebar {
-            height: 100%; /* Sidebar height matches container height */
+            height: 80%; /* Sidebar height matches container height */
             flex-shrink: 0; /* Prevent sidebar from shrinking */
           }
 

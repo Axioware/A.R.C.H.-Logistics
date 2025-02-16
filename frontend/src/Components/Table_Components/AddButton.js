@@ -44,7 +44,6 @@ export default function AddButton({
             height: 8vh;
             margin: 0px;
             font-weight: bold;
-            padding: 10px 0px 10px 10px;
           }
 
           .add-button {
@@ -69,7 +68,7 @@ export default function AddButton({
 
           .add-button:hover {
             background-color: rgba(255, 255, 255, 0.8);
-            color: ${COLORS.PRIMARY_BLUE};
+            color: ${buttonColor};
             box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
           }
 
