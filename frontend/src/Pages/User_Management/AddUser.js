@@ -95,7 +95,7 @@ const AddUser = () => {
     const [warehouse, setWarehouse] = useState('');
 
     const handleSelectWarehouse = async (WarehouseName) => {
-      const token = localStorage.getItem("accessToken");  // Ensure token is defined
+      const token = localStorage.getItem("access_token");  // Ensure token is defined
         if (!token) {
       alert("You are not authorized. Please log in.");
         return;

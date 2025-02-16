@@ -31,7 +31,7 @@ const AddWarehouse = () => {
     e.preventDefault();
     console.log("Form Data:", warehouseData);
 
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("access_token");
     if (!token) {
       alert("You are not authorized. Please log in.");
       return;
