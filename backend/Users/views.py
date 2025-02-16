@@ -12,6 +12,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django_tenants.utils import schema_context
 from django.core.cache import cache
+
 import json
 
 # Create your views here.
@@ -95,7 +96,7 @@ def users(request):
 
                 if all_data:
                     response_data = {"results": result, "count": len(result)}
-                    cache.set(cache_key, response_data, timeout=60)  # Cache for 60 seconds
+                    cache.set(cache_key, response_data, timeout=120)  # Cache for 60 seconds
                     return Response(response_data, status=status.HTTP_200_OK)
 
                 # Apply Pagination
@@ -103,11 +104,11 @@ def users(request):
                 page = paginator.paginate_queryset(result, request)
                 if page is not None:
                     response_data = paginator.get_paginated_response(page).data
-                    cache.set(cache_key, response_data, timeout=60)  # Cache paginated data
+                    cache.set(cache_key, response_data, timeout=120)  # Cache paginated data
                     return Response(response_data, status=status.HTTP_200_OK)
 
                 response_data = {'user_data': result}
-                cache.set(cache_key, response_data, timeout=60)  # Cache response
+                cache.set(cache_key, response_data, timeout=120)  # Cache response
                 return Response(response_data, status=status.HTTP_200_OK)
 
             except OperationalError as e:

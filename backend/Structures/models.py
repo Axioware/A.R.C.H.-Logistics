@@ -4,6 +4,7 @@ from django.db import models
 class Services(models.Model):
     service_id = models.AutoField(primary_key=True)
     service_name = models.CharField(max_length=50, null=False)
+    service_category = models.CharField(max_length=50, null=False)
     service_charge = models.FloatField(default=0.0)
 
 # class InventoryChargeChoices(models.TextChoices):

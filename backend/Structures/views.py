@@ -8,6 +8,8 @@ from django.db import OperationalError, transaction
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from django.core.cache import cache
+from django.conf import settings
+
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
@@ -57,7 +59,7 @@ def locations(request):
 
                 if all_data:
                     response_data = {"results": result, "count": len(result)}
-                    cache.set(cache_key, response_data, timeout=60)
+                    cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_SHORT)
                     return Response(response_data, status=status.HTTP_200_OK)
 
                 # Apply Pagination
@@ -65,11 +67,11 @@ def locations(request):
                 page = paginator.paginate_queryset(result, request)
                 if page is not None:
                     response_data = paginator.get_paginated_response(page).data
-                    cache.set(cache_key, response_data, timeout=60)
+                    cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_SHORT)
                     return Response(response_data, status=status.HTTP_200_OK)
 
                 response_data = {'locations': result}
-                cache.set(cache_key, response_data, timeout=60)
+                cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_SHORT)
                 return Response(response_data, status=status.HTTP_200_OK)
 
             except Exception as e:
@@ -123,12 +125,8 @@ def single_location(request, location_id):
 
     try:
         with schema_context(tenant.schema_name):
-            cache_key = f"location_{location_id}"
-            cached_location = cache.get(cache_key)
 
             if request.method == 'GET':
-                if cached_location:
-                    return Response(cached_location, status=status.HTTP_200_OK)
 
                 # Fetch the Location by ID
                 location = Locations.objects.get(pk=location_id)
@@ -140,7 +138,6 @@ def single_location(request, location_id):
                     'warehouse_id': location.warehouse_id.id  # Foreign key serialization
                 }
 
-                cache.set(cache_key, location_data, timeout=300)  # Cache for 5 minutes
                 return Response(location_data, status=status.HTTP_200_OK)
 
             elif request.method == 'PUT':
@@ -168,7 +165,6 @@ def single_location(request, location_id):
                 location.save()
 
                 # Invalidate cache after update
-                cache.delete(cache_key)
 
                 return Response({'message': 'Location updated successfully'}, status=status.HTTP_200_OK)
 
@@ -183,9 +179,6 @@ def single_location(request, location_id):
 
                 # Delete the Location
                 location.delete()
-
-                # Invalidate cache after deletion
-                cache.delete(cache_key)
 
                 return Response({'message': 'Location deleted successfully'}, status=status.HTTP_200_OK)
 
@@ -206,21 +199,24 @@ def services(request):
         with schema_context(tenant.schema_name):
             if request.method == 'GET':
                 page = request.GET.get('page', 1)
-                page_size = request.GET.get('page_size', 50)
-                cache_key = f"services_page_{page}_size_{page_size}"
+                service_category = request.GET.get('service_category')  # Get category from request
+                cache_key = f"services_page_{page}_category_{service_category}"
                 cached_services = cache.get(cache_key)
 
                 if cached_services:
                     return Response(cached_services, status=status.HTTP_200_OK)
 
+                # Filtering by service_category if provided
                 services_list = Services.objects.values('service_id', 'service_name', 'service_charge')
+                if service_category:
+                    services_list = services_list.filter(service_category=service_category)
 
                 paginator = UserPagination()
                 result_page = paginator.paginate_queryset(services_list, request)
 
                 response_data = paginator.get_paginated_response(result_page).data
 
-                cache.set(cache_key, response_data, timeout=300)  # Cache for 5 minutes
+                cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_LONG)  # Cache for 5 minutes
                 return Response(response_data, status=status.HTTP_200_OK)
 
             elif request.method == 'POST':
@@ -230,11 +226,12 @@ def services(request):
                 data = request.data
                 service_name = data.get('service_name')
                 service_charge = data.get('service_charge', 0.0)
+                service_category = data.get('service_category', 'FBA')
 
                 if not service_name:
                     return Response({"error": "Service name is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-                new_service = Services.objects.create(service_name=service_name, service_charge=service_charge)
+                new_service = Services.objects.create(service_name=service_name, service_charge=service_charge, service_category=service_category)
 
                 # Invalidate all cached pages
                 for key in cache.keys("services_page_*"):
@@ -244,6 +241,69 @@ def services(request):
 
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def single_service(request, service_id):
+    """API for retrieving, updating, and deleting a single service"""
+    tenant = request.tenant
+
+    try:
+        with schema_context(tenant.schema_name):
+            # Check if service exists
+            try:
+                service = Services.objects.get(service_id=service_id)
+            except Services.DoesNotExist:
+                return Response({"error": "Service not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            if request.method == 'GET':
+
+                # Retrieve service details
+                service_data = {
+                    "service_id": service.service_id,
+                    "service_name": service.service_name,
+                    "service_charge": service.service_charge,
+                    "service_category": service.service_category,
+                }
+
+                return Response(service_data, status=status.HTTP_200_OK)
+
+            elif request.method == 'PUT':
+                # Ensure user has the required permissions
+                if authenticate_clearance_level(request.user, [1, 2]):
+                    return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+
+                data = request.data
+                service.service_name = data.get("service_name", service.service_name)
+                service.service_charge = data.get("service_charge", service.service_charge)
+                service.service_category = data.get("service_category", service.service_category)
+                service.save()
+
+                # Invalidate cached data
+                cache.delete(f"service_{service_id}")
+                for key in cache.keys("services_page_*"):
+                    cache.delete(key)
+
+                return Response({"message": "Service updated successfully"}, status=status.HTTP_200_OK)
+
+            elif request.method == 'DELETE':
+                # Ensure user has the required permissions
+                if authenticate_clearance_level(request.user, [1, 2]):
+                    return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+
+                service.delete()
+
+                # Invalidate cached data
+                cache.delete(f"service_{service_id}")
+                for key in cache.keys("services_page_*"):
+                    cache.delete(key)
+
+                return Response({"message": "Service deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
@@ -364,7 +424,7 @@ def warehouse_detail(request, id):
                         "phone": warehouse.phone,
                         "email": warehouse.email,
                     }
-                    cache.set(cache_key, warehouse_data, timeout=3600)  # Cache for 1 hour
+                    cache.set(cache_key, warehouse_data, timeout=settings.CACHE_TIMEOUT_LONG)  # Cache for 1 hour
                 except Warehouse.DoesNotExist:
                     return Response({"error": "Warehouse not found"}, status=status.HTTP_404_NOT_FOUND)
 

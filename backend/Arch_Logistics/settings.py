@@ -175,6 +175,10 @@ TENANT_DOMAIN_MODEL = "TenantsManagement.Domain"  # app.Model
 # SHOW_PUBLIC_IF_NO_TENANT_FOUND = True
 SITE_ID = 1
 
+CACHE_TIMEOUT_SHORT = 60
+CACHE_TIMEOUT_MID = 150
+CACHE_TIMEOUT_LONG = 300
+
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
 WSGI_APPLICATION = 'Arch_Logistics.wsgi.application'
