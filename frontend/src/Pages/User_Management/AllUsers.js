@@ -12,6 +12,7 @@ import PageHeading from "../../Components/Table_Components/PageHeading";
 import SearchBar from "../../Components/Table_Components/SearchBar";
 import FilterButton from "../../Components/Table_Components/FilterButton";
 import FilterOptionsUserManagement from "../../Components/Filter/FilterOptionUserManagement";
+import Pagination from '../../Components/Table_Components/Pagination';
 
 export default function All_Users() {
 
@@ -20,7 +21,7 @@ export default function All_Users() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
   const [errorCode, setErrorCode] = useState(null);
   const [clearance, setclearance] = useState(1);
   const [billingType, setBillingType] = useState('');
@@ -238,6 +239,19 @@ export default function All_Users() {
             currentPage={currentPage}
             totalPages={totalPages}
           />
+
+            <Pagination
+              current_page={currentPage || 0}
+              total_pages={totalPages || 0}
+              text_color={[0, 0, 0]}
+              button_text_color={[255, 255, 255]}
+              button_background_color={[23, 23, 23]}
+              width="95%"
+              height="50px"
+              success={true}
+              onNext={handleNext}
+              onPrev={handlePrev}
+            />
         </div>
       </div>
     </div>

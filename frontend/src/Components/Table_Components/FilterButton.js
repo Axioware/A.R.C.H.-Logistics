@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import COLORS from "../../Assets/JS/Color"
 
 // Function to convert RGB array to 'rgb(r, g, b)' string
 function rgbArrayToString(rgbArray) {
@@ -11,8 +12,8 @@ function rgbArrayToString(rgbArray) {
 
 export default function FilterButton({
   text,
-  text_color = [255, 255, 255],
-  background_color = [23, 23, 23],
+  text_color = COLORS.WHITE,
+  background_color = COLORS.PRIMARY_BLUE,
   function: handleClick,
   content,
   width = 'auto',

@@ -1,4 +1,5 @@
 import React from 'react';
+import COLORS from "../../Assets/JS/Color"
 
 // Utility function to convert RGB array to 'rgb(r, g, b)' string
 function rgbArrayToString(rgbArray) {
@@ -14,8 +15,8 @@ export default function Pagination({
   current_page,
   total_pages,
   text_color = [0, 0, 0],
-  button_text_color = [255, 255, 255],
-  button_background_color = [34, 53, 83], // Navy blue color for buttons
+  button_text_color = COLORS.WHITE,
+  button_background_color = COLORS.PRIMARY_BLUE, // Navy blue color for buttons
   width = '100%',
   height = '60px',
   onNext, // Function to handle 'Next' button click
@@ -31,6 +32,8 @@ export default function Pagination({
   }
 
   return (
+    
+    <div className="pagination-wrapper">
     <div className="Pagination-container">
       <button
         className="Pagination-button"
@@ -53,9 +56,16 @@ export default function Pagination({
       >
         Next <span className="Pagination-arrow Pagination-next-arrow">&rarr;</span>
       </button>
+    </div>
 
       <style>
         {`
+
+          .pagination-wrapper {
+            width: 100%;
+            margin-top: 20px;
+            text-align: center;
+          }
           .Pagination-container {
             width: ${width};
             height: ${height};

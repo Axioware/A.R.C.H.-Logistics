@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import COLORS from "../../Assets/JS/Color"
 
 // Function to convert RGB array or string to 'rgb(r, g, b)' string
 function rgbArrayToString(color) {
@@ -14,9 +15,9 @@ function rgbArrayToString(color) {
 
 export default function AddButton({
   text,
-  text_color = [255, 255, 255],
+  text_color = COLORS.WHITE,
   path,
-  background_color = [23, 23, 23],
+  background_color = COLORS.PRIMARY_BLUE,
   width = '135px',
   height = '45px',
 }) {
@@ -68,7 +69,7 @@ export default function AddButton({
 
           .add-button:hover {
             background-color: rgba(255, 255, 255, 0.8);
-            color: black;
+            color: ${COLORS.PRIMARY_BLUE};
             box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
           }
 

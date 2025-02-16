@@ -40,8 +40,6 @@ export default function TableTop({
       <div className="table-top-container">
         <PageHeading
           text={heading_text}
-          text_color={[0, 0, 0]} // Black text color
-          sidebar_color={[0, 0, 0]} // Black sidebar color
           width="auto" // Auto width to align properly
           height="auto" // Auto height
           sidebar_width="5px" // Increased sidebar width for visibility
@@ -49,19 +47,8 @@ export default function TableTop({
         />
 
         <div className="row-container1">
-          {/* <FilterButton
-            text="+ Filter By"
-            text_color={[255, 255, 255]} // White text color
-            background_color={[23, 23, 23]} // Dark background
-            function={filter_function} // Function to call on button click
-            // content={<Content />}
-            width="150px" // Set width explicitly
-            height="50px" // Set height explicitly
-          /> */}
-
           <SearchBar
             hint="Search..."
-            field_color={[255, 255, 255]} // White background
             function={search_function} // Function to call on search
             width="300px" // Set width explicitly
             height="50px" // Set height for input field

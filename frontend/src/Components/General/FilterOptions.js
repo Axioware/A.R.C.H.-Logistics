@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+import COLORS from "../../Assets/JS/Color";
 
 const FilterOptions = ({
   text,
-  text_color,
+  text_color = COLORS.WHITE,
   selected,
-  background_color,
-  hover_color,
-  selected_color,
-  selected_button_text_color,  // New parameter for the color of text on selected buttons
+  background_color = COLORS.PRIMARY_BLUE,
+  hover_color = COLORS.WHITE,
+  selected_color = COLORS.PRIMARY_BLUE,
+  selected_button_text_color = COLORS.WHITE,  // New parameter for the color of text on selected buttons
   func,
   radio,
   border_radius,

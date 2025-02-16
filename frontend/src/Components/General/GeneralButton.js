@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import COLORS from "../../Assets/JS/Color"; // Import the global color file
 
 const GeneralButton = ({
   text, 
-  text_color = [255, 255, 255],
-  button_color = [23, 23, 23],
+  text_color = COLORS.WHITE,
+  button_color = COLORS.PRIMARY_BLUE,
   name,
   id, 
   font_size,

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import COLORS from "../../Assets/JS/Color"
 
 // Function to convert RGB array or string to 'rgb(r, g, b)' string
 function rgbArrayToString(color) {
@@ -14,9 +15,9 @@ function rgbArrayToString(color) {
 
 export default function ModalOpener({
   text,
-  text_color,
+  text_color = COLORS.WHITE,
   func,
-  background_color,
+  background_color = COLORS.PRIMARY_BLUE,
   width = '135px',
   height = '45px',
 }) {

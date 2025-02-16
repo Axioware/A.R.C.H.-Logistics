@@ -32,8 +32,6 @@ export default function TableContent({
       <div className="table-wrapper">
         <Table
           headings={table_headings}
-          heading_background={[23, 23, 23]}
-          heading_color={[255, 255, 255]}
           sort_function={sorting_function}
           data={data}
           loading={loading}
@@ -42,21 +40,6 @@ export default function TableContent({
           table_function = {table_function}
           last_column={last_column}
           handleRefresh={handleRefresh}
-        />
-      </div>
-
-      {/* Pagination Component */}
-      <div className="pagination-wrapper">
-        <Pagination
-          current_page={currentPage || 0}
-          total_pages={totalPages || 0}
-          text_color={[0, 0, 0]}
-          button_text_color={[255, 255, 255]}
-          button_background_color={[23, 23, 23]}
-          width="95%"
-          height="50px"
-          onNext={next_button}
-          onPrev={prev_button}
         />
       </div>
       
@@ -75,11 +58,6 @@ export default function TableContent({
           .table-wrapper {
             margin-bottom: 20px;
             overflow-x: auto;
-          }
-
-          .pagination-wrapper {
-            margin-top: 20px;
-            text-align: center;
           }
             
         `}

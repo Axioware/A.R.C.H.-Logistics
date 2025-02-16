@@ -1,3 +1,5 @@
+import COLORS from "../../Assets/JS/Color"
+
 function rgbArrayToString(rgbArray) {
   if (Array.isArray(rgbArray) && rgbArray.length === 3) {
     const [r, g, b] = rgbArray;
@@ -8,17 +10,12 @@ function rgbArrayToString(rgbArray) {
 
 export default function Table({
   headings,
-  heading_background,
-  heading_color,
+  heading_background = COLORS.BLACK,
+  heading_color = COLORS.WHITE,
   sort_function,
-  data,
   loading,
-  success,
   table_function,
   last_column,
-  last_column_text,
-  last_column_icon,
-  last_column_function,
   handleRefresh,
   table_width_function,
 }) {
@@ -45,31 +42,6 @@ export default function Table({
             </tr>
           </thead>
           <tbody>
-            {/* {data.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {headings.map((heading, colIndex) => (
-                  <td key={colIndex}>{row[heading]}</td>
-                ))}
-                {last_column && (
-                  <td>
-                    <button
-                      onClick={() => last_column_function(row)}
-                      style={{ border: 'none', background: 'none', cursor: 'pointer' }}
-                    >
-                      {last_column_icon ? (
-                        <img
-                          src={last_column_icon}
-                          alt="Action Icon"
-                          style={{ width: '20px', height: '20px' }}
-                        />
-                      ) : (
-                        last_column_text
-                      )}
-                    </button>
-                  </td>
-                )}
-              </tr>
-            ))} */}
 
             {table_function()}
           </tbody>

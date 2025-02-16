@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Select from "react-select";
+import COLORS from "../../Assets/JS/Color";
 
 export default function DropDown({ label, data, width, height, onSelect, required=false, multi=false }) {
   const options = data.map((item) => ({ value: item, label: item }));

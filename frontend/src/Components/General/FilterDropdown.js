@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import COLORS from "../../Assets/JS/Color";
 
 const StyledDropdown = styled.div`
   position: relative;
@@ -67,9 +68,9 @@ const FilterDropdown = ({
   text,
   text_color,
   selected=[],
-  background_color,
-  hover_color,
-  selected_color,
+  background_color = COLORS.PRIMARY_BLUE,
+  hover_color = COLORS.WHITE,
+  selected_color = COLORS.PRIMARY_BLUE,
   func,
   radio,
   border_radius,
