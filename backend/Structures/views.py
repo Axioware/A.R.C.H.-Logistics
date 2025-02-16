@@ -59,7 +59,7 @@ def locations(request):
 
                 if all_data:
                     response_data = {"results": result, "count": len(result)}
-                    cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_SHORT)
+                    cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_MID)
                     return Response(response_data, status=status.HTTP_200_OK)
 
                 # Apply Pagination
@@ -198,25 +198,32 @@ def services(request):
     try:
         with schema_context(tenant.schema_name):
             if request.method == 'GET':
-                page = request.GET.get('page', 1)
                 service_category = request.GET.get('service_category')  # Get category from request
-                cache_key = f"services_page_{page}_category_{service_category}"
+                all_data = request.query_params.get('all', 'false').lower() == 'true'
+                cache_key = f"services_{request.query_params.urlencode()}"
                 cached_services = cache.get(cache_key)
 
                 if cached_services:
                     return Response(cached_services, status=status.HTTP_200_OK)
+                
+            
 
                 # Filtering by service_category if provided
                 services_list = Services.objects.values('service_id', 'service_name', 'service_charge')
                 if service_category:
                     services_list = services_list.filter(service_category=service_category)
 
+                if all_data:
+                    response_data = {"results": services_list, "count": len(services_list)}
+                    cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_LONG)
+                    return Response(response_data, status=status.HTTP_200_OK)
+
                 paginator = UserPagination()
                 result_page = paginator.paginate_queryset(services_list, request)
 
                 response_data = paginator.get_paginated_response(result_page).data
 
-                cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_LONG)  # Cache for 5 minutes
+                cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_SHORT)
                 return Response(response_data, status=status.HTTP_200_OK)
 
             elif request.method == 'POST':
@@ -234,7 +241,7 @@ def services(request):
                 new_service = Services.objects.create(service_name=service_name, service_charge=service_charge, service_category=service_category)
 
                 # Invalidate all cached pages
-                for key in cache.keys("services_page_*"):
+                for key in cache.keys("services_*"):
                     cache.delete(key)
 
                 return Response({"message": "Service created", "service_id": new_service.service_id}, status=status.HTTP_201_CREATED)
@@ -282,7 +289,7 @@ def single_service(request, service_id):
 
                 # Invalidate cached data
                 cache.delete(f"service_{service_id}")
-                for key in cache.keys("services_page_*"):
+                for key in cache.keys("services_*"):
                     cache.delete(key)
 
                 return Response({"message": "Service updated successfully"}, status=status.HTTP_200_OK)
@@ -296,7 +303,7 @@ def single_service(request, service_id):
 
                 # Invalidate cached data
                 cache.delete(f"service_{service_id}")
-                for key in cache.keys("services_page_*"):
+                for key in cache.keys("services_*"):
                     cache.delete(key)
 
                 return Response({"message": "Service deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
@@ -320,10 +327,9 @@ def warehouse(request):
         with schema_context(tenant.schema_name):
             if request.method == "GET":
                 search = request.query_params.get('search', None)
-                page = request.GET.get('page', 1)
-                page_size = request.GET.get('page_size', 50)
+                all_data = request.query_params.get('all', 'false').lower() == 'true'
 
-                cache_key = f"warehouses_page_{page}_size_{page_size}_search_{search or 'none'}"
+                cache_key = f"warehouses_{request.query_params.urlencode()}"
                 cached_data = cache.get(cache_key)
 
                 if cached_data:
@@ -336,6 +342,11 @@ def warehouse(request):
 
                 if not queryset.exists():
                     return Response({"error": "No warehouses found matching the criteria"}, status=status.HTTP_404_NOT_FOUND)
+                
+                if all_data:
+                    response_data = {"results": queryset, "count": len(queryset)}
+                    cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_MID)
+                    return Response(response_data, status=status.HTTP_200_OK)
 
                 paginator = UserPagination()
                 result_page = paginator.paginate_queryset(queryset, request)
@@ -355,7 +366,6 @@ def warehouse(request):
                     for warehouse in result_page
                 ]).data
 
-                cache.set(cache_key, response_data, timeout=300)  # Cache for 5 minutes
                 return Response(response_data, status=status.HTTP_200_OK)
 
             elif request.method == "POST":
@@ -384,7 +394,7 @@ def warehouse(request):
                 )
 
                 # Invalidate all cached pages when a new warehouse is added
-                for key in cache.keys("warehouses_page_*"):
+                for key in cache.keys("warehouses_*"):
                     cache.delete(key)
 
                 return Response({
@@ -407,8 +417,6 @@ def warehouse_detail(request, id):
 
     try:
         with schema_context(tenant.schema_name):
-            cache_key = f"warehouse_{tenant.schema_name}_{id}"
-            warehouse_data = cache.get(cache_key)
 
             if not warehouse_data:
                 try:
@@ -424,7 +432,6 @@ def warehouse_detail(request, id):
                         "phone": warehouse.phone,
                         "email": warehouse.email,
                     }
-                    cache.set(cache_key, warehouse_data, timeout=settings.CACHE_TIMEOUT_LONG)  # Cache for 1 hour
                 except Warehouse.DoesNotExist:
                     return Response({"error": "Warehouse not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -457,7 +464,6 @@ def warehouse_detail(request, id):
                     warehouse.save()
 
                 # Invalidate cache
-                cache.delete(cache_key)
 
                 return Response({"message": "Warehouse updated successfully"}, status=status.HTTP_200_OK)
 
@@ -471,7 +477,6 @@ def warehouse_detail(request, id):
                     warehouse.delete()
 
                 # Invalidate cache
-                cache.delete(cache_key)
 
                 return Response({"message": "Warehouse deleted successfully"}, status=status.HTTP_200_OK)
                     
