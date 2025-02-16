@@ -34,6 +34,10 @@ export default function AddInventory() {
   const [chargeBy, setChargeBy] = useState('');
   const [dateAdded, setDateAdded] = useState('');
   const [location, setLocation] = useState('');
+  const [length, setLength] = useState('');
+  const [width, setWidth] = useState('');
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
 
   const fetchClients = async () => {
     const url = `https://api.example.com/api/clients/`;
@@ -71,8 +75,6 @@ export default function AddInventory() {
     <>
       <style>
         {`
-          
-
           .table-top-container {
             display: flex;
             justify-content: space-between;
@@ -94,7 +96,7 @@ export default function AddInventory() {
           }
 
           .input-field, .select-field {
-            width: 100%;
+            width: 60%;
             padding: 8px;
             margin-top: 5px;
             border: 1px solid #ccc;
@@ -112,6 +114,20 @@ export default function AddInventory() {
             display: block;
             margin-bottom: 5px;
           }
+
+          .dimension-container {
+            display: flex;
+            gap: 10px;
+            width: 60%;
+            }
+
+            .dimension-input {
+            width: calc(33.33% - 7px) !important;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            }
         `}
       </style>
 
@@ -139,9 +155,11 @@ export default function AddInventory() {
                 sidebar_height="35px"
               />
             </div>
-            
 
             <form className="inventory-form">
+            <div className="form-grid">
+                <div>
+                    
               <label>Client Name:</label>
               <select 
                 value={clientName} 
@@ -155,6 +173,8 @@ export default function AddInventory() {
                   </option>
                 ))}
               </select>
+              </div>
+              </div>
 
               <div className="form-grid">
                 <div>
@@ -258,8 +278,57 @@ export default function AddInventory() {
                   />
                 </div>
               </div>
+
+              <div className="form-grid">
+                <div>
+                  <label>Dimension:</label>
+                  <div className="dimension-container">
+                    <input
+                      type="text"
+                      value={length}
+                      onChange={(e) => setLength(e.target.value)}
+                      className="input-field"
+                      placeholder="Length"
+                    />
+                    <input
+                      type="text"
+                      value={width}
+                      onChange={(e) => setWidth(e.target.value)}
+                      className="input-field"
+                      placeholder="Width"
+                    />
+                    <input
+                      type="text"
+                      value={height}
+                      onChange={(e) => setHeight(e.target.value)}
+                      className="input-field"
+                      placeholder="Height"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label>Weight (lbs):</label>
+                  <input
+                    type="number"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
+                    className="input-field"
+                    placeholder="Enter weight"
+                  />
+                </div>
+                <div>
+                  <label>Quantity:</label>
+                  <input
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    className="input-field"
+                    placeholder="Enter quantity"
+                  />
+                </div>
+              </div>
             </form>
-            </div>
+          </div>
         </div>
       </div>
     </>
