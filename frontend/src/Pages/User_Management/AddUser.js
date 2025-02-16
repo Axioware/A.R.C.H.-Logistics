@@ -7,7 +7,6 @@ import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
 import DropDown from "../../Components/General/DropDown";
 
-
 const AddUser = () => {
   const [UserData, setUserData] = useState({
     username: "",
@@ -16,7 +15,7 @@ const AddUser = () => {
     email: "",
     phone: "",
     password: "",
-    clearance_level:[],
+    clearance_level: [],
     llc_name: "",
     tax_id: "",
     email2: "",
@@ -37,33 +36,33 @@ const AddUser = () => {
     setUserData({ ...UserData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted',UserData); 
+    console.log('Form submitted', UserData);
 
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("access_token");
     if (!token) {
       alert("You are not authorized. Please log in.");
       return;
-    }  
+    }
 
-  try {
-    const response = await fetch(
-      `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/users/`,
-      {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(UserData),
-      }
-    );
+    try {
+      const response = await fetch(
+        `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/users/`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(UserData),
+        }
+      );
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      alert("User added successfully!");
+      if (response.ok) {
+        alert("User added successfully!");
         setUserData({
           username: "",
           first_name: "",
@@ -71,7 +70,7 @@ const AddUser = () => {
           email: "",
           phone: "",
           password: "",
-          clearance_level:[],
+          clearance_level: [],
           llc_name: "",
           tax_id: "",
           email2: "",
@@ -87,56 +86,60 @@ const AddUser = () => {
       }
     } catch (error) {
       alert("Failed to add User. Please try again.");
+      console.error("Error:", error);
     }
   };
 
-  const [clearance, setclearance] = useState('');
+  const [warehousesList, setWarehousesList] = useState([]);
+  const [selectedWarehouse, setSelectedWarehouse] = useState("");
 
-    const [warehouse, setWarehouse] = useState('');
-
-    const handleSelectWarehouse = async (WarehouseName) => {
-      const token = localStorage.getItem("access_token");  // Ensure token is defined
-        if (!token) {
-      alert("You are not authorized. Please log in.");
+  useEffect(() => {
+    const fetchWarehouses = async () => {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        alert("You are not authorized. Please log in.");
         return;
-        }
+      }
 
-        try {
-          const response = await fetch(
-            `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/warehouse/?name=${encodeURIComponent(WarehouseName)}`,  // Adjusted for GET request
-            {
-              method: "GET",
-              headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          if (response.ok) {
-            const data = await response.json();
-            console.log(data);  // or whatever you need to do with the data
-            setWarehouse(WarehouseName);
-          } else {
-            alert("Failed to fetch warehouse details. Please try again.");
+      try {
+        const response = await fetch(
+          `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/warehouse/`,
+          {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
           }
-        } catch (error) {
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setWarehousesList(data.results);
+        } else {
           alert("Failed to fetch warehouse details. Please try again.");
-          console.error("Error fetching warehouse:", error);
         }
-      };
+      } catch (error) {
+        alert("Failed to fetch warehouse details. Please try again.");
+        console.error("Error fetching warehouse:", error);
+      }
+    };
 
+    fetchWarehouses();
+  }, []);
 
- 
-  
+  const handleSelectWarehouse = (warehouseName) => {
+    const selected = warehousesList.find(w => w.name === warehouseName);
+    if (selected) {
+      setUserData({ ...UserData, warehouses: [selected.id] });
+      setSelectedWarehouse(warehouseName);
+    }
+  };
+
   return (
-      <div>
-      {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
-        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
-      ) : (
-        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
-      )}
-        
+    <div>
+      <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={styles.mainContent}>
           <NavPath
@@ -149,64 +152,50 @@ const AddUser = () => {
             height="50px"
           />
 
-          
-          {/* <div id="container" style={styles.container}> */}
           <div id="tableBackground" style={mainStyles.tableBackground}>
+            <div id="headingcontainer" style={styles.headingcontainer}>
+              <PageHeading text="Add User" />
+            </div>
 
+            <div id="RoleContainer" style={styles.RoleContainer}>
+              <label htmlFor="Dropdown" style={styles.label}>Role</label>
+              <select name="Dropdown" id="Dropdown" style={styles.select}>
+                <option value="Manager">Client</option>
+                <option value="VA">Prep-Team</option>
+                <option value="Prep-Team">VA's</option>
+                <option value="Client">Others</option>
+              </select>
+            </div>
 
-          <div id="headingcontainer" style={styles.headingcontainer}>
-            <PageHeading text="Add User" />
-          </div>
-        
-        <div id="RoleContainer" style={styles.RoleContainer}>
-
-        <label htmlFor="Dropdown" style={styles.label}>Role</label>
-
-        <select name="Dropdown" id="Dropdown" style={styles.select}>
-            <option value="Manager">Client</option>
-            <option value="VA">Prep-Team</option>
-            <option value="Prep-Team">VA's</option>
-            <option value="Client">Others</option>
-            </select>
-        </div>
-
-          <form id="form" style={styles.form} onSubmit={handleSubmit}>
-          <DropDown 
+            <form id="form" style={styles.form} onSubmit={handleSubmit}>
+              <DropDown 
                 label="Warehouse"
-                data={["Primary", "Secondary", "Others"]}
+                data={warehousesList.map(w => w.warehouse_name)}
                 onSelect={handleSelectWarehouse}
                 width="330px"
                 height="45px"
               />
-          <GeneralField label="LLC Name" field_type="text" hint="Enter Company name" required={true}/>
-          <GeneralField label="First Name" field_type="text" hint="First Name (e.g. , John)" />
-          <GeneralField label="Last Name" field_type="text" hint="Last Name (e.g. , Doe)" />
-          <GeneralField label="Phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" />
-          <GeneralField label="Address" field_type="text" hint="Full address" />
-          <GeneralField label="Country" field_type="text" hint="Country (e.g., USA)" />
-          <GeneralField label="State" field_type="text" hint="State (e.g., Texas)" />
-          <GeneralField label="City" field_type="text" hint="City (e.g., Stafford)" />
-          <GeneralField label="Zip Code" field_type="text" hint="Zip code" required={true}/>
-          <GeneralField label="Email" field_type="email" hint="Email address (e.g., example@mail.com)" />
-          <GeneralField label="Alternate Email" field_type="email" hint="Alternate Email address (e.g., example@mail.com)" />
-          <GeneralField label="Tax ID" field_type="Tax ID/EIN" hint="Tax ID/EIN (e.g., 123456)" required={true}/>
-          <GeneralField label="Password" field_type="text" hint="Enter Password" />
-          <GeneralField label="Retype Password" field_type="text" hint="Re-Type Password" />
-
-             
-          </form>
-            <div id="buttonContainer" style={styles.buttonContainer}>
-              <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]}  text_color={["0", "0", "0"]}   />
-              <GeneralButton text="Add" type="submit" width="100px" height="100%" />
-            </div>
+              <GeneralField label="LLC Name" field_type="text" hint="Enter Company name" required={true}/>
+              <GeneralField label="First Name" field_type="text" hint="First Name (e.g., John)" />
+              <GeneralField label="Last Name" field_type="text" hint="Last Name (e.g., Doe)" />
+              <GeneralField label="Phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" />
+              <GeneralField label="Address" field_type="text" hint="Full address" />
+              <GeneralField label="City" field_type="text" hint="City (e.g., Stafford)" />
+              <GeneralField label="State" field_type="text" hint="State (e.g., Texas)" />
+              <GeneralField label="Zip Code" field_type="text" hint="Zip code" required={true}/>
+              <GeneralField label="Email" field_type="email" hint="Email address" />
+              <div id="buttonContainer" style={styles.buttonContainer}>
+                <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
+                <GeneralButton text="Add" type="submit" width="100px" height="100%" />
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-
+// Styles Object
 const styles = {
   mainContent: {
     padding: "10px 0px 50px 0px",
@@ -236,8 +225,9 @@ buttonContainer: {
   flexDirection: 'row',
   width:'250px',
   gap: '20px',
-  marginTop: '20px',
+ 
   lineHeight:'40px',
+  marginTop:"100px",
 },
 
 headingcontainer:{
@@ -279,3 +269,4 @@ select: {
 };
 
 export default AddUser;
+

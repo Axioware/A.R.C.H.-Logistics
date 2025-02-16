@@ -141,7 +141,7 @@ const AddLocation = () => {
         set_sidebar_state={setIsSidebarClosed}
       />
       <div style={mainStyles.centerContent(isSidebarClosed)}>
-        <div style={{ padding: "10px 0px 50px 0px", backgroundColor: "#f7f6f6" }}>
+        <div style={{ padding: "10px 0px 50px 0px" }}>
           <NavPath
             text={["Home", "All Locations", "Add Location"]}
             paths={["/home", "/all-location", "/add-location"]}
