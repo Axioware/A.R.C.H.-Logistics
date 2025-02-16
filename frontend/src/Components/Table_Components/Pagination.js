@@ -63,8 +63,10 @@ export default function Pagination({
 
           .pagination-wrapper {
             width: 100%;
-            margin-top: 20px;
+            display: flex;
+            // margin-top: 20px;
             text-align: center;
+            justify-content: center;
           }
           .Pagination-container {
             width: ${width};
@@ -77,7 +79,7 @@ export default function Pagination({
             border-radius: 8px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             font-family: Arial, sans-serif;
-            margin: 20px 0px 0px 0px ;
+            // margin: 20px 0px 0px 0px ;
           }
 
           .Pagination-button {

@@ -72,7 +72,7 @@ export default function Table({
             max-width: 100%;
             text-align: center;
             // font-family: 'Arial', sans-serif;
-            margin: 10px 30px 0px 0px;
+            margin: 10px 0px 0px 0px;
             // fontFamily: "Playfair Display, serif"
 
           }

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import NavPath from '../../Components/General/NavPath';
 import TableContent from '../../Components/Table_Components/TableContent';
-import TableTop from '../../Components/Table_Components/TableTop';
 import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
-import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement";
 import EditIcon from "../../Components/Icons/EditIcon";
 import PageHeading from "../../Components/Table_Components/PageHeading";
 import SearchBar from "../../Components/Table_Components/SearchBar";
@@ -153,22 +151,22 @@ export default function All_Users() {
     <>
     <style>
         {`
-          .table-top-container {
-            display: flex;
-            justify-content: space-between; /* Space between heading and buttons */
-            align-items: center; /* Align items vertically */
-            width: 95%;
-            margin: 20px auto 20px 30px; /* Add margin to the right */
-            flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+          // .table-top-container {
+          //   display: flex;
+          //   justify-content: space-between; /* Space between heading and buttons */
+          //   align-items: center; /* Align items vertically */
+          //   width: 95%;
+          //   margin: 20px auto 20px 30px; /* Add margin to the right */
+          //   flex-wrap: wrap; /* Allow items to wrap on smaller screens */
             
-          }
+          // }
 
-          .row-container1 {
-            display: flex;
-            justify-content: flex-end; /* Align buttons to the right */
-            align-items: center;
-            gap: 20px; /* Add spacing between FilterButton and SearchBar */
-          }
+          // .row-container1 {
+          //   display: flex;
+          //   justify-content: flex-end; /* Align buttons to the right */
+          //   align-items: center;
+          //   gap: 20px; /* Add spacing between FilterButton and SearchBar */
+          // }
 
           .page-heading {
             flex-grow: 1; /* Allow the heading to take up space on the left */
@@ -198,7 +196,7 @@ export default function All_Users() {
 
         <div style={mainStyles.tableBackground}>
 
-          <div className="table-top-container">
+          {/* <div className="table-top-container"> */}
               <PageHeading
                 text={'All Users'}
                 width="auto" 
@@ -207,12 +205,10 @@ export default function All_Users() {
                 sidebar_height="35px"
               />
       
-              <div className="row-container1">
+              {/* <div className="row-container1"> */}
                 <FilterButton
                   text="+ Filter By"
-                  content={<FilterOptionsUserManagement setbill={setBillingType} setuser={setUserStatus} setware={setWarehouse} user={userStatus} billing={billingType} ware={warehouse}/>}
-                  width="150px"
-                  height="50px" 
+                  content={<FilterOptionsUserManagement setbill={setBillingType} setuser={setUserStatus} setware={setWarehouse} user={userStatus} billing={billingType} ware={warehouse}/>} 
                 />
       
                 <SearchBar
@@ -221,8 +217,8 @@ export default function All_Users() {
                   width="300px" 
                   height="50px"
                 />
-            </div>
-          </div>
+            {/* </div> */}
+          {/* </div> */}
 
 
           <TableContent
@@ -243,11 +239,6 @@ export default function All_Users() {
             <Pagination
               current_page={currentPage || 0}
               total_pages={totalPages || 0}
-              text_color={[0, 0, 0]}
-              button_text_color={[255, 255, 255]}
-              button_background_color={[23, 23, 23]}
-              width="95%"
-              height="50px"
               success={true}
               onNext={handleNext}
               onPrev={handlePrev}

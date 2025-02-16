@@ -16,8 +16,8 @@ export default function FilterButton({
   background_color = COLORS.PRIMARY_BLUE,
   function: handleClick,
   content,
-  width = 'auto',
-  height
+  width = '100px',
+  height = '36px'
 }) {
   // Convert colors to CSS string format
   const textColor = rgbArrayToString(text_color);
@@ -58,7 +58,7 @@ export default function FilterButton({
           .filter-button {
             color: ${textColor};
             background-color: ${buttonColor};
-            font-size: 1rem;
+            font-size: 0.75em;
             border: 2px solid ${textColor}; /* Border matching text color */
             transition: all 0.3s ease; /* Smooth transition for all styles */
             width: ${width};

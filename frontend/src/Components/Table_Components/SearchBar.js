@@ -71,7 +71,7 @@ export default function SearchBar({
 
           .Search-bar-input {
             width: 100%;
-            height: 100%;
+            height: 68%;
             padding: 10px 10px 10px 40px; /* Add extra left padding to create space between the icon and the text */
             border-radius: 5px;
             border: 1px solid #ccc;

@@ -16,7 +16,7 @@ export default function PageHeading({
   width = '100%', 
   height = 'auto', 
   sidebar_color,
-  font_size = '2rem',
+  font_size = '1.5rem',
   sidebar_width = '10px', 
   border_color = COLORS.BLACK, 
 }) {

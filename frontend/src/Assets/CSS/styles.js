@@ -18,7 +18,7 @@ const mainStyles = {
 
     tableBackground: {
         backgroundColor: '#f7f6f6',
-        padding: '20px 0px 40px 60px',
+        padding: '15px 15px 20px 15px',
         borderRadius: '8px',
         minHeight: '10vh',
         display: 'flex',
@@ -26,7 +26,7 @@ const mainStyles = {
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        margin: '20px 0px 0px 0px',
+        // margin: '0px 0px 0px 0px',
         boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
       },
       AddInputBackground: {

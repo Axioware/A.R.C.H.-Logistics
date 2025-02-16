@@ -18,10 +18,10 @@ export default function TableTop({
             display: flex;
             justify-content: space-between; /* Space between heading and buttons */
             align-items: center; /* Align items vertically */
-            width: 95%;
-            margin: 20px auto 20px 30px; /* Add margin to the right */
+            width: 100%;
+            margin: 0px 0px 0px 22px; /* Add margin to the right */
             flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-              
+            flex-direction: row;
           }
 
           .row-container1 {

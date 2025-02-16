@@ -18,8 +18,8 @@ export default function AddButton({
   text_color = COLORS.WHITE,
   path,
   background_color = COLORS.PRIMARY_BLUE,
-  width = '135px',
-  height = '45px',
+  width = '100px',
+  height = '36px',
 }) {
   const navigate = useNavigate();
 
@@ -56,7 +56,7 @@ export default function AddButton({
             border-radius: 5px;
             padding: 10px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.85rem;
             text-align: center;
             box-sizing: border-box;
             transition: all 0.3s ease;
