@@ -298,7 +298,9 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-
+PUBLIC_SCHEMA_URLS = [
+    r"^auth/api/tenant/$",  # Allow this API on the public schema
+]
 # AWS_ACCESS_KEY_ID = 'AKIA6GBMFAKPPYCLP5J2'
 # AWS_SECRET_ACCESS_KEY = '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'
 # AWS_STORAGE_BUCKET_NAME = 'djangotestArch_Logistics'

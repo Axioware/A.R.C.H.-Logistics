@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
@@ -8,9 +8,10 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model, logout as django_logout
 from rest_framework import status
 from rest_framework_simplejwt.exceptions import TokenError
-from django_tenants.utils import schema_context
+from django_tenants.utils import schema_context, get_tenant_model
 from django.core.cache import cache
 from .models import OTP
+
 
 # Generate cache keys
 OTP_CACHE_KEY = "otp_{email}"
@@ -115,3 +116,18 @@ def change_password(request):
         django_logout(request)
 
         return Response({"message": "Password updated successfully and user logged out"}, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+# @permission_classes([AllowAny])
+def tenants_info(request):
+    """
+    Returns a list of all tenants with their names and corresponding domain names.
+    """
+    TenantModel = get_tenant_model()
+
+    # Explicitly query the public schema
+    with schema_context("public"):
+        tenants = TenantModel.objects.all().values("name", "")
+
+    return Response({"tenants": list(tenants)}, status=200)
