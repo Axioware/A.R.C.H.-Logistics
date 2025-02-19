@@ -18,6 +18,25 @@ export default function InvoicesDetails() {
     }
   ]);
 
+
+    const [clientName, setClientName] = useState("");
+    const [clientOptions, setClientOptions] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(null);
+    const [errorCode, setErrorCode] = useState(null);
+    const [clearance, setclearance] = useState(1);
+    const [billingType, setBillingType] = useState('');
+    const [userStatus, setUserStatus] = useState('');
+    const [warehouse, setWarehouse] = useState('');
+    const [search, setSearch] = useState('');
+    const [endpoint, setEndpoint] = useState('api/users/');
+    const [bundledItem, setBundledItem] = useState("no"); // Added missing state
+    const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
+      const storedState = localStorage.getItem("sidebarclosed");
+      return storedState === null ? true : JSON.parse(storedState);
+    });
   const [boxQuantity, setBoxQuantity] = useState("");
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
@@ -71,7 +90,12 @@ export default function InvoicesDetails() {
 
   return (
     <div>
-      <SideBar sidebar_state={true} set_sidebar_state={() => {}} />
+    {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
+      <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+    ) : (
+      <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+    )}
+    <div style={mainStyles.centerContent(isSidebarClosed)}>
       <div style={mainStyles.centerContent(true)}>
         <NavPath
           text={["Home", "Order Details", "Add Box Dimensions"]}
@@ -256,6 +280,7 @@ export default function InvoicesDetails() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

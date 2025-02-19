@@ -56,6 +56,7 @@ import PendingOrder from './Pages/Order/PendingOrder';
 import OrderHistory from './Pages/Order/OrderHistory';
 import OrderDetails from './Pages/Order/OrderDetails';
 import AddDimension from './Pages/Order/AddDimension';
+import AddOrder from './Pages/Order/AddOrder';
 
 //Settings
 
@@ -185,6 +186,7 @@ function App() {
         <Route path="/completed-orders" element={<OrderHistory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/order-details" element={<OrderDetails />} />
         <Route path="/add-dimension" element={<AddDimension />} />
+        <Route path="/add-order" element={<AddOrder />} />
         {/* <Route path="/boxes-to-be-shipped" element={<BoxesToBeShipped />} />      */}
         {/* <Route path="/view-tracking" element={<ViewTracking menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
