@@ -11,6 +11,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from django_tenants.utils import schema_context, get_tenant_model
 from django.core.cache import cache
 from .models import OTP
+from TenantsManagement.models import Domain
 
 
 # Generate cache keys
@@ -119,15 +120,23 @@ def change_password(request):
 
 
 @api_view(["GET"])
-# @permission_classes([AllowAny])
-def tenants_info(request):
-    """
-    Returns a list of all tenants with their names and corresponding domain names.
-    """
+def get_tenant_domain(request):
+
+    tenant_name = request.GET.get("tenant_name")
+
+    if not tenant_name:
+        return Response({"error": "Missing tenant_name parameter"}, status=400)
+
     TenantModel = get_tenant_model()
 
-    # Explicitly query the public schema
     with schema_context("public"):
-        tenants = TenantModel.objects.all().values("schema_name")
+        tenant = TenantModel.objects.filter(name=tenant_name).first()
+        
+        if not tenant:
+            return Response({"error": "Tenant not found"}, status=404)
+        
+        domain = Domain.objects.filter(tenant=tenant, is_primary=True).first()
+        if not domain:
+            return Response({"error": "No domain found for this tenant"}, status=404)
 
-    return Response({"tenants": list(tenants)}, status=200)
+        return Response({"tenant_name": tenant_name, "domain": domain.domain}, status=200)
