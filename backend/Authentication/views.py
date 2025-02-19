@@ -128,6 +128,6 @@ def tenants_info(request):
 
     # Explicitly query the public schema
     with schema_context("public"):
-        tenants = TenantModel.objects.all().values("name", "")
+        tenants = TenantModel.objects.all().values("schema_name")
 
     return Response({"tenants": list(tenants)}, status=200)
