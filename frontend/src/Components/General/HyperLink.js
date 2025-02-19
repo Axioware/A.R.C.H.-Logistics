@@ -39,34 +39,17 @@ export default function HyperLink({
       className="hyperlink"
       onClick={handleClick}
     >
-      <span
-        style={{
-          color: color, // Dynamically set text color using the converted RGB value
-        }}
-      >
-        {text} 
-        
-        {arrow && <span style={{ marginLeft: '32px'}}>&gt;</span>}
-
-      </span>
-
       <style>
         {`
           .hyperlink {
             border-radius: 5px;
             padding: 10px;
             text-decoration: none;
+            color: white;
             cursor: pointer;
             text-align: center;
             width: ${width || 'auto'};
             height: ${height || 'auto'};
-            margin: -22px 0px 0px -45px;
-          }
-
-          .hyperlink span {
-            font-size: 16px;
-            font-weight: bold;
-            position: relative;
           }
         `}
       </style>

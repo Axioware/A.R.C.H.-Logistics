@@ -96,7 +96,6 @@ export default function InvoicesDetails() {
       <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
     )}
     <div style={mainStyles.centerContent(isSidebarClosed)}>
-      <div style={mainStyles.centerContent(true)}>
         <NavPath
           text={["Home", "Order Details", "Add Box Dimensions"]}
           paths={["/home", "/order-details", "/add-dimension"]}
@@ -107,7 +106,9 @@ export default function InvoicesDetails() {
         />
 
         <div style={mainStyles.tableBackground}>
-          <PageHeading text='Add Box Dimensions' text_color={[0, 0, 0]} width='100%' height='auto' />
+          
+          <div style={mainStyles.tableTopContainer}>
+          <PageHeading text='Add Box Dimensions' text_color={[0, 0, 0]}  />
 
           <div style={styles.headerContainer}>
             <div style={styles.invoiceDetails}>
@@ -323,7 +324,7 @@ const styles = {
     marginRight: '30px',
   },
   table: {
-    width: "98%",
+    width: "100%",
     borderCollapse: "collapse",
     marginBottom: "20px",
     textAlign: "left",

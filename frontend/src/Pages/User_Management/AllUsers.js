@@ -11,6 +11,7 @@ import SearchBar from "../../Components/Table_Components/SearchBar";
 import FilterButton from "../../Components/Table_Components/FilterButton";
 import FilterOptionsUserManagement from "../../Components/Filter/FilterOptionUserManagement";
 import Pagination from '../../Components/Table_Components/Pagination';
+import NavPath2 from "../../Components/General/NavPath2";
 
 export default function All_Users() {
 
@@ -185,9 +186,12 @@ export default function All_Users() {
         <NavPath
           text={["Home", "User Management"]}
           paths={["/home", "/users"]}
-          width="100%"
-          height="50px"
         />
+
+          {/* <NavPath2 
+          text1={'fjdslifjsdlifjsdlifjs'}
+          text2={'text2'}
+          /> */}
 
         <AddButton
           text="Add User"
@@ -200,8 +204,6 @@ export default function All_Users() {
               <PageHeading
                 text={'All Users'}
                 width="auto" 
-                sidebar_width="5px"
-                sidebar_height="35px"
               />
       
               <div style={mainStyles.rowContainer}>

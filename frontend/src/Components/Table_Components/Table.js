@@ -32,7 +32,7 @@ export default function Table({
         <table className="table">
           {table_width_function()}
           <thead>
-            <tr style={{ backgroundColor: headingBackgroundColor, color: headingTextColor }}>
+            <tr style={{ backgroundColor: headingBackgroundColor, color: headingTextColor, height: "10px" }}>
               {headings.map((heading, index) => (
                 <th key={index} onClick={() => sort_function(heading)}>
                   {heading}
@@ -87,13 +87,15 @@ export default function Table({
             
           }
 
-          .table th,
+
           .table td {
             padding: 15px;
-            // text-align: left;
-            border: none;
-            // fontFamily: "Montserrat, sans-serif"
-           
+            border: none;           
+          }
+
+          .table th {
+            padding: 12px;
+            border: none;           
           }
 
           .table th {
@@ -101,11 +103,9 @@ export default function Table({
             color: ${headingTextColor};
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            // font-family: "Montserrat, sans-serif"
-            
+            transition: background-color 0.3s ease, color 0.3s ease;            
           }
 
           .table tr:nth-child(even) {

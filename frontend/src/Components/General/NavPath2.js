@@ -1,6 +1,5 @@
 import React from 'react';
-import HyperLink from './HyperLink';
-import { useNavigate } from 'react-router-dom';  // Assuming HyperLink component is available
+import HyperLink from './HyperLink';  // Assuming HyperLink component is available
 
 // Function to convert RGB array to 'rgb(r, g, b)' string
 function rgbArrayToString(rgbArray) {
@@ -13,46 +12,50 @@ function rgbArrayToString(rgbArray) {
 }
 
 export default function NavPath({
-  text,
-  paths,
+  text1,
+  text2,
+  path1,
+  path2,
   text_color = [255, 255, 255],  // Array of RGB values for text color
   background_color = [23, 23, 23],  // Array of RGB values for background color
-  width = "100%",
-  height = "45px"
+  width = '100%',
+  height = '50px'
 }) {
   // Convert background color to rgb string
   const bgColor = rgbArrayToString(background_color);
   const tcolor = rgbArrayToString(text_color);
-  const navigate = useNavigate();
-
-  const handleClick = (path) => {
-    navigate(path)
-  };
-
 
   return (
     <div className="navpath-container">
       {/* Loop through the text and paths arrays */}
       {/* <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p> */}
-      {text.map((linkText, index) => {
-        // Get the corresponding path, text color, and size for each hyperlink
-        const path = paths[index];
-        var arr = index !== text.length - 1;
+        
+            {/* <HyperLink
+              key={1}
+              text={text1}
+              path={path1}
+              text_color={text_color}  // Pass the text color to the HyperLink component
+              width={'50px'}  // Set the width from hyperlink_size
+              // height={'20px'}
+              // arrow={arr}  // Set the height from hyperlink_size
+            />  */}
+            
 
-        return (
-          <>
-            <div className='navpath-text' onClick={() => handleClick(path)}
-            >
-                <h3>{linkText}</h3>
-            </div>
+<div style={{ color: 'white', fontWeight: "bold", display: "flex", alignItems: "center", marginRight: "15px" }}>
+    <h3>{text1}</h3>
+</div>
 
-            { arr && <div style={{ color: 'white', fontWeight: "bold", display: "flex", alignItems: "center", marginRight: "15px", cursor: "default"}}>
-                <h3>&gt;</h3>
-            </div>
-            }
-          </>
-        );
-      })}
+
+
+<div style={{ color: 'white', fontWeight: "bold", display: "flex", alignItems: "center", marginRight: "15px" }}>
+    <h3>&gt;</h3>
+</div>
+
+
+<div style={{ color: 'white', fontWeight: "bold", display: "flex", alignItems: "center", marginRight: "15px" }}>
+    <h3>{text2}</h3>
+</div>
+
 
       {/* Internal CSS Styling */}
       <style>
@@ -61,22 +64,13 @@ export default function NavPath({
             display: flex;
             flex-direction: row;
             align-items: center;
-            padding: 5px 5px 5px 50px;
+            padding: 5px;
+            padding-left: 50px;
             border-radius: 5px;
             width: ${width || 'auto'};
             height: ${height || 'auto'};
             background-color: ${bgColor || 'transparent'};
-            margin: 25px 0px 0px 0px;
-          }
-
-          .navpath-text {
-            color: white;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            margin-right: 15px;
-            font-size: 13px;
-            cursor: pointer;
+            gap: 20px;
           }
 
           /* Responsive styles */

@@ -18,7 +18,7 @@ export default function Pagination({
   button_text_color = COLORS.WHITE,
   button_background_color = COLORS.PRIMARY_BLUE, // Navy blue color for buttons
   width = '100%',
-  height = '60px',
+  height = '40px',
   onNext, // Function to handle 'Next' button click
   onPrev, // Function to handle 'Previous' button click
 }) {
@@ -39,7 +39,7 @@ export default function Pagination({
         className="Pagination-button"
         onClick={onPrev}
         disabled={current_page <= 1}
-        style={{ width: '120px' }} // Consistent width
+        style={{ width: '100px' }} // Consistent width
       >
         <span className="Pagination-arrow Pagination-prev-arrow">&larr;</span> Previous
       </button>
@@ -52,7 +52,7 @@ export default function Pagination({
         className="Pagination-button"
         onClick={onNext}
         disabled={current_page >= total_pages}
-        style={{ width: '120px' }} // Consistent width
+        style={{ width: '100px' }} // Consistent width
       >
         Next <span className="Pagination-arrow Pagination-next-arrow">&rarr;</span>
       </button>
@@ -75,7 +75,7 @@ export default function Pagination({
             justify-content: space-between;
             align-items: center;
             background-color: white;
-            padding: 30px 30px;
+            padding: 23px 26px;
             border-radius: 8px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             font-family: Arial, sans-serif;
@@ -87,13 +87,13 @@ export default function Pagination({
             justify-content: center;
             align-items: center;
             gap: 8px;
-            padding: 10px 20px; /* Adjusted padding for better spacing */
+            padding: 4px 0px; /* Adjusted padding for better spacing */
             background-color: ${buttonBgColor};
             color: ${buttonTextColor};
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             text-align: center; /* Center-align text */
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
@@ -126,14 +126,17 @@ export default function Pagination({
           }
 
           .Pagination-page-display {
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 350;
             color: ${textColor};
             text-align: center; /* Center-align the text in the page display */
           }
 
           .Pagination-arrow {
-            font-size: 13px;
+            font-size: 12px;
+            display: flex;
+            margin-bottom: 3px;
+            align-items: center;
             transition: transform 0.2s ease; /* Add transition for smooth animation */
           }
 
