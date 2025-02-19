@@ -5,29 +5,13 @@ import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
 import PageHeading from "../../Components/Table_Components/PageHeading";
 import { FaTrash } from "react-icons/fa";
+import DropDown from "../../Components/General/DropDown";
 
-export default function Orderdetails() {
+export default function AddOrder() {
   const [Label, setLabel] = useState([
-    { ProductName: "Xyz", Service: "Prep", BundleQuantity: "145", Quantity: "78", PackingInstruction: "Handle Carefully" }
+    { ProductName: "Xyz", Services: [ { service_name: "Prep", service_id: 1}, { service_name: "Bundling", service_id: 2}], BundleQuantity: 145, UnitQuantity: [{ Quantity: "78"},  {Quantity: "78"}], PackingInstruction: "Handle Carefully" }
   ]);
 
-  const [Services, setServices] = useState([
-    { ProductName: [{pname:"Apple", sname: [{name: 'prep'}, {name: 'label'}]}, {pname:'orange', sname: [{name: 'bundling'}]}], BundleQuantity: "4", Quantity: "70", PackingInstruction: "Handle Carefully Fargile", StartDate: "12/12/2012", EndDate: "12/12/2012", Status: "Cancelled"},
-    { ProductName: [{pname:"Apple", sname: [{name: 'prep'}, {name: 'label'}]}, {pname:'orange', sname: [{name: 'bundling'}]}], BundleQuantity: "4", Quantity: "70", PackingInstruction: "Handle Carefully Fargile", StartDate: "12/12/2012", EndDate: "12/12/2012", Status: "Completed"},
-    { ProductName: [{pname:"Apple", sname: [{name: 'prep'}, {name: 'label'}]}, {pname:'orange', sname: [{name: 'bundling'}]}], BundleQuantity: "4", Quantity: "70", PackingInstruction: "Handle Carefully Fargile", StartDate: "12/12/2012", EndDate: "12/12/2012", Status: "In Progress"}
-  ]);
-
-  const [Boxes, setBoxes] = useState([
-    { ProductName: [{pname:"Apple", sname: [{name: 'prep'}, {name: 'label'}]}, {pname:'orange', sname: [{name: 'bundling'}]}], BundleQuantity: "4", Quantity: "70", PackingInstruction: "Handle Carefully Fargile", StartDate: "12/12/2012", EndDate: "12/12/2012", Status: "Completed"}
-  ]);
-
-  const [Charges, setCharges] = useState([
-    { ProductName: [{pname:"Apple", sname: [{name: 'prep'}, {name: 'label'}]}, {pname:'orange', sname: [{name: 'bundling'}]}], BundleQuantity: "4", Quantity: "70", PackingInstruction: "Handle Carefully Fargile", StartDate: "12/12/2012", EndDate: "12/12/2012", Status: "Completed"}
-  ]);
-
-  const [data, setData] = useState([
-    { product: "Apple", service: "Prep", date: "12/12/2012", amount: "$987", notes: "" }
-  ]);
 
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -57,11 +41,13 @@ export default function Orderdetails() {
 
   // Define categories and handleCategorySelect
   const categories = ["Select", "Category 1", "Category 2", "Category 3"];
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
   };
+
+
 
   // Define products state and related functions
   const [products, setProducts] = useState([{ product: "", quantity: "" }]);
@@ -146,7 +132,9 @@ export default function Orderdetails() {
   
   useEffect(() => {
     // Fetch data logic here if needed
-  }, [currentPage]);
+
+    console.log(selectedCategory)
+  }, [selectedCategory]);
 
   const handleDelete = (index) => {
     setLabel(Label.filter((_, i) => i !== index));
@@ -158,12 +146,11 @@ export default function Orderdetails() {
     setShowLabelModal(false);
   };
 
+  
+
   const chargeOptions = ["Service Fee", "Extra Services", "Late Fee", "Custom Charge"];
   
-  const handleAddCharge = () => {
-    setData([...data, { product: "New Item", service: chargeType, date: new Date().toLocaleDateString(), amount: `$${amount}`, notes }]);
-    resetModal();
-  };
+
   
   const resetModal = () => {
     setChargeType("Service Fee");
@@ -175,15 +162,16 @@ export default function Orderdetails() {
   useEffect(() => {
     // Fetch data logic here if needed
   }, [currentPage]);
+
+
   
-  const handleDeletes = (index) => {
-    setData(data.filter((_, i) => i !== index));
-  };
+  
 
   return (
     <div>
       <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
       <div style={mainStyles.centerContent(isSidebarClosed)}>
+        <div style={{ marginBottom: '60px' }}>
         <NavPath
           text={["Home", "Add Order"]}
           paths={["/home", "/add-order"]}
@@ -192,140 +180,211 @@ export default function Orderdetails() {
           width="100%"
           height="50px"
         />
+        </div>
 
-        <div style={mainStyles.tableBackground}>
-          <PageHeading text='Add Order' text_color={[0, 0, 0]} width='100%' height='auto' />
+<div style={mainStyles.AddInputBackground}>
+  {/* PageHeading with margin-bottom */}
+  <div style={{ marginBottom: '20px' }}> {/* Add margin-bottom here */}
+    <PageHeading text='Add Order' text_color={[0, 0, 0]} width='100%' height='auto' />
+  </div>
+          
+          
+          <DropDown
+            label="Category"
+            data={["FBA", "FBM", "Storage", "Other"]} // Example data, replace with actual data
+            width="250px"
+            height="40px"
+            onSelect={setSelectedCategory} // Update selectedCategory
+            required={true}
+            multi={false} 
+          />
 
-          <div style={styles.headerContainer}>
-            <div style={styles.invoiceDetails}>
-              {/* <span><strong>LLC Name:</strong> {LLCName}</span> */}
-              {/* <span><strong>Order ID:</strong> {OrderID}</span> */}
+{selectedCategory && ["FBA", "FBM", "Storage", "Other"].includes(selectedCategory.value) && (
+  <>
+    <div style={styles.buttonWrapper}>
+      <ModalOpener 
+        text="Add Service" 
+        text_color={[255, 255, 255]} 
+        func={AddLabel} 
+        style={styles.modalOpener}
+      />
+    </div>
+
+    <table style={styles.table}>
+      <colgroup>
+        <col style={{ width: "18%" }} />
+        <col style={{ width: "18%" }} />
+        <col style={{ width: "18%" }} />
+        <col style={{ width: "18%" }} />
+        <col style={{ width: "18%" }} />
+        <col style={{ width: "10%" }} />
+      </colgroup>
+      <thead>
+        <tr>
+          <th style={styles.th}>Product Name</th>
+          <th style={styles.th}>Service</th>
+          <th style={styles.th}>Bundle Quantity</th>
+          <th style={styles.th}>Quantity</th>
+          <th style={styles.th}>Packing Instruction</th>
+          <th style={styles.th}></th>
+        </tr>
+      </thead>
+      <tbody>
+        {/* {Label.map((row, index) => (
+          <tr key={index}>
+            <td style={styles.td}>{row.ProductName}</td>
+            <td style={styles.td}>{row.Service}</td>
+            <td style={styles.td}>{row.BundleQuantity}</td>
+            <td style={styles.td}>{row.Quantity}</td>
+            <td style={styles.td}>{row.PackingInstruction}</td>
+            <td style={{ ...styles.td, display: "flex" }}>
+              <FaTrash style={{ ...styles.deleteIcon }} onClick={() => handleDelete(index)} />
+            </td>
+          </tr>
+        ))} */}
+      </tbody>
+    </table>  
+  </>
+)}
+
+{showLabelModal && 
+  <div style={styles.modalOverlay}>
+    <div style={styles.modal}>
+      <h2 style={styles.modalTitle}>Add Service</h2>
+      
+      {serviceList.map((service, index) => (
+        <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+          <div style={{ flex: 2 }}>
+            <label style={styles.label}>Service</label>
+            <select 
+              style={styles.input} 
+              value={service.service} 
+              onChange={(e) => handleServiceChange(index, e.target.value)}
+            >
+              <option value="option1">Select</option>
+              <option value="option1">Prep</option>
+              <option value="option2">Bundling</option>
+            </select>
+          </div>
+        </div>
+      ))}
+
+      <div style={{ textAlign: 'left' }}>
+        <button style={styles.addAnotherButton} onClick={handleAddAnotherService}>
+          + Add Another Service
+        </button>
+      </div>
+
+      {/* If "Prep" is selected, show these fields once */}
+      {serviceList.some(service => service.service === "option1") && (
+        <>
+          <div style={styles.rowContainer}>
+            <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
+              <label style={styles.label}>Product</label>
+              <select
+                style={styles.dropdown}
+                value={products[0]?.product || ""}
+                onChange={(e) => handleProductChange(0, "product", e.target.value)}
+              >
+                <option value="">Select Product</option>
+                <option value="Xyz1">Xyz1</option>
+                <option value="Xyz2">Xyz2</option>
+              </select>
             </div>
-            <div style={styles.buttonWrapper}>
-              <ModalOpener 
-                text="Add Service" 
-                text_color={[255, 255, 255]} 
-                func={AddLabel} 
-                style={styles.modalOpener}
+            <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
+              <label style={styles.label}>Unit Quantity</label>
+              <input
+                type="number"
+                style={styles.input}
+                value={products[0]?.quantity || ""}
+                onChange={(e) => handleProductChange(0, "quantity", e.target.value)}
+                placeholder="Enter quantity"
               />
             </div>
           </div>
 
-          <table style={styles.table}>
-            <colgroup>
-              <col style={{ width: "18%" }} />
-              <col style={{ width: "18%" }} />
-              <col style={{ width: "18%" }} />
-              <col style={{ width: "18%" }} />
-              <col style={{ width: "18%" }} />
-              <col style={{ width: "10%" }} />
-            </colgroup>
-            <thead>
-              <tr>
-                <th style={styles.th}>Product Name</th>
-                <th style={styles.th}>Service</th>
-                <th style={styles.th}>Bundle Quantity</th>
-                <th style={styles.th}>Quantity</th>
-                <th style={styles.th}>Packing Instruction</th>
-                <th style={styles.th}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {Label.map((row, index) => (
-                <tr key={index}>
-                  <td style={styles.td}>{row.ProductName}</td>
-                  <td style={styles.td}>{row.Service}</td>
-                  <td style={styles.td}>{row.BundleQuantity}</td>
-                  <td style={styles.td}>{row.Quantity}</td>
-                  <td style={styles.td}>{row.PackingInstruction}</td>
-                  <td style={{ ...styles.td, display: "flex" }}>
-                    <FaTrash style={{ ...styles.deleteIcon }} onClick={() => handleDelete(index)} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>  
+          {/* Packing Instruction Field */}
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Packing Instruction</label>
+            <input
+              type="text"
+              style={styles.input}
+              value={custom}
+              onChange={(e) => setCustom(e.target.value)}
+              placeholder="Enter packing instructions"
+            />
+          </div>
+        </>
+      )}
 
-          {showLabelModal && 
-            <div style={styles.modalOverlay}>
-              <div style={styles.modal}>
-                <h2 style={styles.modalTitle}>Add Service</h2>
-                {serviceList.map((service, index) => (
-                  <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
-                    <div style={{ flex: 2 }}>
-                      <label style={styles.label}>Service</label>
-                      <select 
-                        style={styles.input} 
-                        value={service.service} 
-                        onChange={(e) => handleServiceChange(index, e.target.value)}
-                      >
-                        <option value="option1">Prep</option>
-                        <option value="option2">Bundling</option>
-                      </select>
-                    </div>
-                  </div>
-                ))}
-                <div style={{ textAlign: 'left' }}>
-                  <button style={styles.addAnotherButton} onClick={handleAddAnotherService}>
-                    + Add Another Service
-                  </button>
-                </div>
-
-                {/* Conditionally render Product, Unit Quantity, and Packing Instruction */}
-                {serviceList.some(service => service.service === "option2") && (
-                  <>
-                    {products.map((item, index) => (
-                      <div key={index} style={styles.rowContainer}>
-                        <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
-                          <label style={styles.label}>Product</label>
-                          <select
-                            style={styles.dropdown}
-                            value={item.product}
-                            onChange={(e) => handleProductChange(index, "product", e.target.value)}
-                          >
-                            <option value="">Select Product</option>
-                            <option value="Xyz1">Xyz1</option>
-                            <option value="Xyz2">Xyz2</option>
-                          </select>
-                        </div>
-                        <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
-                          <label style={styles.label}>Unit Quantity</label>
-                          <input
-                            type="number"
-                            style={styles.input}
-                            value={item.quantity}
-                            onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
-                            placeholder="25"
-                          />
-                        </div>
-                      </div>
-                    ))}
-
-                    <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
-                      + Add Another Product
-                    </p>
-
-                    {/* Packing Instruction Field */}
-                    <div style={styles.inputGroup}>
-                      <label style={styles.label}>Packing Instruction</label>
-                      <input
-                        type="text"
-                        style={styles.input}
-                        value={custom} // Assuming custom is used for packing instructions
-                        onChange={(e) => setCustom(e.target.value)}
-                        placeholder="Enter packing instructions"
-                      />
-                    </div>
-                  </>
-                )}
-
-                <div style={styles.buttonContainer}>
-                  <button style={styles.cancelButton} onClick={handleCancel}>Cancel</button>
-                  <button style={styles.confirmButton} onClick={handleAddLabel}>Add Service</button>
-                </div>
+      {/* If "Bundling" is selected, show multiple products and extra fields */}
+      {serviceList.some(service => service.service === "option2") && (
+        <>
+          {products.map((item, index) => (
+            <div key={index} style={styles.rowContainer}>
+              <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
+                <label style={styles.label}>Product</label>
+                <select
+                  style={styles.dropdown}
+                  value={item.product}
+                  onChange={(e) => handleProductChange(index, "product", e.target.value)}
+                >
+                  <option value="">Select Product</option>
+                  <option value="Xyz1">Xyz1</option>
+                  <option value="Xyz2">Xyz2</option>
+                </select>
+              </div>
+              <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
+                <label style={styles.label}>Unit Quantity</label>
+                <input
+                  type="number"
+                  style={styles.input}
+                  value={item.quantity}
+                  onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
+                  placeholder="Enter quantity"
+                />
               </div>
             </div>
-          }
+          ))}
+
+          <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
+            + Add Another Product
+          </p>
+
+          {/* Bundle Quantity Field */}
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Bundle Quantity</label>
+            <input
+              type="text"
+              style={styles.input}
+              value={custom}
+              onChange={(e) => setCustom(e.target.value)}
+              placeholder="Enter Bundle Quantity"
+            />
+          </div>
+
+          {/* Packing Instruction Field */}
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Packing Instruction</label>
+            <input
+              type="text"
+              style={styles.input}
+              value={custom}
+              onChange={(e) => setCustom(e.target.value)}
+              placeholder="Enter packing instructions"
+            />
+          </div>
+        </>
+      )}
+
+      <div style={styles.buttonContainer}>
+        <button style={styles.cancelButton} onClick={handleCancel}>Cancel</button>
+        <button style={styles.confirmButton} onClick={handleAddLabel}>Add Service</button>
+      </div>
+    </div>
+  </div>
+}
+
         </div>
       </div>
     </div>
