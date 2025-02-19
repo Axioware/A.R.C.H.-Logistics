@@ -1,31 +1,70 @@
-import React from 'react';
-import { View, Image, StyleSheet,Dimensions, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, StyleSheet, Dimensions, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Card from '../components/Card';
 import Footer from '../components/Footer';
 import LoginButton from '../components/LoginButton';
 import { OtpInput } from 'react-native-otp-entry';
 
 export default function OtpVerification() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  
+  // ✅ Safely retrieve email from params
+  const email = (route.params as any)?.email || '';  
+
+  const [otp, setOtp] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const handleOtpChange = (text: string) => {
-    console.log(text);
+    setOtp(text);
   };
 
   const handleOtpFilled = (text: string) => {
-    console.log(`OTP is ${text}`);
+    setOtp(text);
   };
 
-  const handleSubmit = () => {
-    console.log('Submit button pressed');
+  const handleSubmit = async () => {
+    if (otp.length !== 5) {
+      Alert.alert('Error', 'Please enter a valid 5-digit OTP.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('https://your-api.com/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        Alert.alert('Success', 'OTP verified successfully!');
+        
+        // ✅ Navigate to Reset Password Page, passing the email
+        // navigation.navigate('ResetPassword', { email });
+      } else {
+        Alert.alert('Error', data.message || 'Invalid OTP. Please try again.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Get screen height for dynamic logo sizing
-    const screenHeight = Dimensions.get("window").height;
-    const logoHeight = screenHeight * 0.07;
+  const screenHeight = Dimensions.get("window").height;
+  const logoHeight = screenHeight * 0.07;
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
-        {/* Logo */}
         {/* Logo */}
         <Image
           source={require('../assets/logo.png')}
@@ -58,9 +97,8 @@ export default function OtpVerification() {
 
           {/* Submit Button */}
           <LoginButton
-            title="Submit OTP"
+            title={loading ? <ActivityIndicator color="#fff" /> : "Submit OTP"}
             onPress={handleSubmit}
-          //   style={styles.loginButton}
           />
         </Card>
 
@@ -78,15 +116,14 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'flex-start', // Ensure content starts from the top
-    alignItems: 'center', // Center everything horizontally
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 0, // Adjust top padding if needed
   },
   logo: {
-    width: '60%', // Adjust the width of the logo
-    alignSelf: 'center', // Center the logo horizontally
-    marginBottom: 20, // Space between logo and content
+    width: '60%',
+    alignSelf: 'center',
+    marginBottom: 20,
   },
   otpContainer: {
     width: '100%',
@@ -125,10 +162,4 @@ const styles = StyleSheet.create({
   activePinCodeContainer: {
     borderColor: 'black',
   },
-//   loginButton: {
-//     width: '90%', // Match the width of the OTP container
-//     height: 60, // Increase the height
-//     alignSelf: 'center', // Center the button horizontally
-//     marginTop: 20, // Add spacing above the button
-//   },
 });
