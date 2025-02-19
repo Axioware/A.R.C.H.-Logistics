@@ -250,11 +250,12 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           color: #fff;
           font-weight: 600;
           transition: 0.3s ease;
-          transition-delay: 0.1s;
+          transition-delay: 0.4s;
         }
 
         .sidebar.close .logo-details .logo_name {
           transition-delay: 0s;
+          transition: 0.1s ease;
           opacity: 0;
           pointer-events: none;
         }
@@ -426,10 +427,15 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           // background: #1d1b31;
           padding: 12px 0;
           transition: all 0.5s ease;
+          // transition: 0.3s ease;
+          transition-delay: 0.4s;
         }
 
         .sidebar.close .profile-details {
           background: none;
+          display: none;
+          transition: all 0.3s ease;
+          transition-delay: 0.4s;
         }
 
         .sidebar.close .profile-details {
@@ -437,12 +443,16 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
         }
 
         .sidebar .profile-details .profile-content {
+        transition: 0.3s ease;
+          transition-delay: 0.4s;
           display: flex;
           align-items: center;
           justify-content: center;
         }
 
         .sidebar .profile-details img {
+        transition: 0.3s ease;
+          transition-delay: 0.4s;
           height: 52px;
           width: 52px;
           object-fit: cover;
