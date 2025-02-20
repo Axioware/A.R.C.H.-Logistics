@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
-import stat from "../../Assets/Images/icons8-edit-30.png";
-import dyn from "../../Assets/Images/icons8-edit-unscreen.gif";
+import stat from "../../Assets/Images/dollar-static-black-1.png";
+import dyn from "../../Assets/Images/dollar-animated-1.gif";
 
-const EditIcon = ({ path, tooltipText = "Edit" }) => {
-  const [hovered, setHovered] = useState(false);
+const DollarIcon = ({ path, tooltipText = "Custom Rates" }) => {
   const [tool, setTool] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const [first, setFirst] = useState(false);
   const navigate = useNavigate(); // React Router hook for navigation
 
@@ -39,17 +39,14 @@ const EditIcon = ({ path, tooltipText = "Edit" }) => {
       {/* Icon */}
       <img
         src={hovered ? dyn : stat} // Toggle image on hover
-        alt="Edit Icon"
-        className="edit-icon"
+        alt="Dollar Icon"
+        className="dollar-icon"
         onMouseEnter={() => {
-          setTool(true);
-          if (!first) {
-            setHovered(true); // Trigger hover effect only if not animated yet
-            
-          }
+            setTool(true)
+          if (!first) setHovered(true); // Trigger hover effect only if not animated yet
         }}
         onMouseLeave={() => {
-          setTool(false);
+            setTool(false)
           if (!first) {
             setHovered(false);
             setFirst(true); // Prevent hover animation from repeating
@@ -68,4 +65,4 @@ const EditIcon = ({ path, tooltipText = "Edit" }) => {
   );
 };
 
-export default EditIcon;
+export default DollarIcon;

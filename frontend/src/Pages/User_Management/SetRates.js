@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
-import FilterDropdown from '../../Components/General/FilterDropdown';
+import DropDown from '../../Components/General/DropDown';
 import NavPath from '../../Components/General/NavPath';
 import PageHeading from '../../Components/Table_Components/PageHeading';
 import mainStyles from "../../Assets/CSS/styles";
@@ -105,13 +105,8 @@ const SetRates = () => {
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={styles.mainContent}>
           <NavPath
-            text={['Home', 'Settings', 'Set Rates']}
-            paths={['/home', '/settings', '/set-rates']}
-            text_color={[255, 255, 255]}
-            background_color={[23, 23, 23]}
-            hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
-            width="100%"
-            height="50px"
+            text={['Home', 'Users', 'Set Rates']}
+            paths={['/home', '/users', '/set-rates']}
           />
           
            <div id="tableBackground" style={mainStyles.tableBackground}> 
@@ -124,20 +119,7 @@ const SetRates = () => {
            
            <div id="label container" style={styles.labelcontainer}>
             <label htmlFor="Dropdown" style={styles.label}>Service</label>
-            <FilterDropdown
-              text={["FBA", "FBM", "Storage", "Others"]}
-              text_color={[0, 0, 0]}
-              selected={["FBA"]}  // Default selected option
-              background_color={[255, 255, 255]}
-              hover_color={[200, 200, 200]}
-              selected_color={[150, 150, 150]}
-              func={(option) => console.log("Selected:", option)}
-              radio={true} // Only one option can be selected
-              border_radius="10px"
-              width={["260px"]}
-              height="45px"
-
-            />
+            <DropDown data={['fd', 'ds']}/>
             </div>
            
             <GeneralField label="Custom Charge" field_type="text" hint="Enter the Charge for Service" required={true} />             
@@ -150,7 +132,7 @@ const SetRates = () => {
           </div>
         </div>
       </div>
-    // </div>
+    </div>
   );
 };
 
