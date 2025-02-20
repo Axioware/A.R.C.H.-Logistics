@@ -11,7 +11,7 @@ import SearchBar from "../../Components/Table_Components/SearchBar";
 import FilterButton from "../../Components/Table_Components/FilterButton";
 import FilterOptionsUserManagement from "../../Components/Filter/FilterOptionUserManagement";
 import Pagination from '../../Components/Table_Components/Pagination';
-import NavPath2 from "../../Components/General/NavPath2";
+import Dollar from "../../Components/Icons/DollarIcon"
 
 export default function All_Users() {
 
@@ -43,11 +43,9 @@ export default function All_Users() {
     // Set the updated endpoint
     setEndpoint(`api/users/${params.toString() ? '?' + params.toString() : ''}`);
     console.log('hello' + endpoint);
+    getData();
   }, [billingType, userStatus, warehouse, search, currentPage]); // Dependencies to trigger the effect
   
-
-  // const filteredUsers = filterOptionUser(billing={billingType}, user={userStatus}, ware={warehouse}, setbill={setBillingType}, setuser={setUserStatus}, setware={setWarehouse});
-
   const table_function = () => {
     return data.map((row, index) => (
       <tr key={index}>
@@ -55,10 +53,14 @@ export default function All_Users() {
         <td>{row.name}</td>
         <td>{row.email}</td>
         <td>{row.role}</td>
-        <td style={{ display: "flex", padding: '15px 15px 15px 0px', marginRight:"15px", justifyContent: "right"}}>
-      <EditIcon path={`edit-user/?id=${row.id}`}/>
-    </td>
-
+        <div style={{display: "flex", flexDirection: "row"}}>
+          <td style={{ display: "flex", padding: '15px 15px 15px 0px', marginLeft: "40px", justifyContent: "right"}}>
+            <Dollar path={`set-rates/?id=${row.id}`}/>
+          </td>
+          <td style={{ display: "flex", padding: '15px 15px 15px 0px', justifyContent: "right"}}>
+            <EditIcon path={`edit-user/?id=${row.id}`}/>
+          </td>
+        </div>
       </tr>
     ));
   };
@@ -141,39 +143,8 @@ export default function All_Users() {
     }
   };
 
-  // Handle Reset and Apply for filters
-  const handleReset = () => {
-    setBillingType('All');
-    setUserStatus('All');
-  };
-
-
   return (
     <>
-    <style>
-        {`
-          // .table-top-container {
-          //   display: flex;
-          //   justify-content: space-between; /* Space between heading and buttons */
-          //   align-items: center; /* Align items vertically */
-          //   width: 95%;
-          //   margin: 20px auto 20px 30px; /* Add margin to the right */
-          //   flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-            
-          // }
-
-          // .row-container1 {
-          //   display: flex;
-          //   justify-content: flex-end; /* Align buttons to the right */
-          //   align-items: center;
-          //   gap: 20px; /* Add spacing between FilterButton and SearchBar */
-          // }
-
-          // .page-heading {
-          //   flex-grow: 1; /* Allow the heading to take up space on the left */
-          // }
-        `}
-      </style>
 
     <div>
       {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
@@ -188,10 +159,6 @@ export default function All_Users() {
           paths={["/home", "/users"]}
         />
 
-          {/* <NavPath2 
-          text1={'fjdslifjsdlifjsdlifjs'}
-          text2={'text2'}
-          /> */}
 
         <AddButton
           text="Add User"
@@ -216,7 +183,7 @@ export default function All_Users() {
                   hint="Search..."
                   setSearch={setSearch}
                   width="300px" 
-                  height="50px"
+                  height="53px"
                 />
             </div>
           </div>

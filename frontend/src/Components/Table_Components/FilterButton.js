@@ -58,7 +58,7 @@ export default function FilterButton({
           .filter-button {
             color: ${textColor};
             background-color: ${buttonColor};
-            font-size: 0.75em;
+            font-size: 0.85em;
             border: 2px solid ${textColor}; /* Border matching text color */
             transition: all 0.3s ease; /* Smooth transition for all styles */
             width: ${width};

@@ -13,7 +13,7 @@ import SearchBar from "../../Components/Table_Components/SearchBar";
 import FilterButton from "../../Components/Table_Components/FilterButton";
 import FilterOptionsUserManagement from "../../Components/Filter/FilterOptionUserManagement";
 
-export default function All_Users() {
+export default function Printers() {
 
   const [data, setData] = useState([{id: '1', name:'abc', email:'abc@gmail.com', role: 'client'},
     {id: '1', name:'abc', email:'abc@gmail.com', role: 'client'}]);
@@ -23,9 +23,6 @@ export default function All_Users() {
   const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
   const [clearance, setclearance] = useState(1);
-  const [billingType, setBillingType] = useState('');
-  const [userStatus, setUserStatus] = useState('');
-  const [warehouse, setWarehouse] = useState('');
   const [search, setSearch] = useState('');
   const [endpoint, setEndpoint] = useState('api/users/');
   const table_function = () => {
@@ -109,12 +106,6 @@ export default function All_Users() {
     }
   };
 
-  // Handle Reset and Apply for filters
-  const handleReset = () => {
-    setBillingType('All');
-    setUserStatus('All');
-  };
-
 
   return (
     <>
@@ -152,15 +143,10 @@ export default function All_Users() {
       <div style={mainStyles.centerContent(isSidebarClosed)}>
 
         <NavPath
-          text={["Home", "Setting", "Printers"]}
-          paths={["/home", "/setting", "/printers"]}
+          text={["Home", "Printers"]}
+          paths={["/home", "/printers"]}
           width="100%"
           height="50px"
-        />
-
-        <AddButton
-          text="Add User"
-          path='/add-user'
         />
 
         <div style={mainStyles.tableBackground}>

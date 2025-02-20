@@ -66,7 +66,7 @@ import AddService from './Pages/Services/AddService';
 import Printers from './Pages/Setting/Printers';
 import LabelFormat from './Pages/Setting/LabelFormat';
 
-import SetRates from "./Pages/Setting/SetRates";
+import SetRates from "./Pages/User_Management/SetRates";
 import test from './Assets/Images/SearchIcon.png'
 import test2 from './Assets/Images/user-solid.svg'
 
@@ -167,7 +167,7 @@ function App() {
         <Route path="/printers" element={<Printers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/label-format" element={<LabelFormat menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
-        {/* <Route path="/set-rates" element={<SetRates menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+        <Route path="/set-rates" element={<SetRates menuItems={menuItems} toggleExpand={toggleExpand}/>} />
 
         {/* Modals */}
         <Route path="/test" element={<Forbidden />} />
