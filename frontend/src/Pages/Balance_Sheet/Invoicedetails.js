@@ -30,6 +30,7 @@ export default function InvoicesDetails() {
   const [notes, setNotes] = useState("");
   const [editingIndex, setEditingIndex] = useState(null); // Track which row is being edited
   const [editingNotes, setEditingNotes] = useState(""); // Track the current value of the notes being edited
+  const [isHovered, setIsHovered] = useState(false); // Hover state for confirmButton
 
   const chargeOptions = ["Service Fee", "Extra Services", "Late Fee", "Custom Charge"];
 
@@ -57,6 +58,20 @@ export default function InvoicesDetails() {
     setData(data.filter((_, i) => i !== index));
   };
 
+  // Dynamic style for confirmButton
+  const confirmButtonStyle = {
+    backgroundColor: isHovered ? "#fff" : "#4682B4",
+    color: isHovered ? "rgb(70,130,180)" : "#fff",
+    border: "none",
+    padding: "5px 15px",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "500",
+    transition: "background 0.3s ease, color 0.3s ease",
+    height: "35px",
+  };
+
   return (
     <div>
       <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
@@ -67,8 +82,6 @@ export default function InvoicesDetails() {
           paths={["/home", "/invoices", "/invoices-details"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
-          width="100%"
-          height="50px"
         />
 
         <div style={mainStyles.tablesBackground}>
@@ -174,7 +187,12 @@ export default function InvoicesDetails() {
                   <button style={styles.cancelButton} onClick={resetModal}>
                     Cancel
                   </button>
-                  <button style={styles.confirmButton} onClick={handleAddCharge}>
+                  <button
+                    style={confirmButtonStyle}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    onClick={handleAddCharge}
+                  >
                     Add Charge
                   </button>
                 </div>
@@ -248,6 +266,7 @@ const styles = {
     marginBottom: "20px",
     textAlign: "left",
     marginRight: '30px',
+    fontSize: '12px',
   },
   th: {
     background: "#000",
@@ -255,17 +274,15 @@ const styles = {
     fontWeight: "bold",
     padding: "12px",
     borderBottom: "2px solid #ddd",
-    textAlign: "center", // Center align text
-    width: "auto", // Respect colgroup width
+    textAlign: "center",
+    width: "auto",
     fontFamily: "Montserrat, sans-serif"
   },
   td: {
     padding: "12px",
     borderBottom: "1px solid #ddd",
-    textAlign: "center", // Center align text
-    width: "auto", // Respect colgroup width
-    // fontFamily: "Nunito, sans-serif"
-
+    textAlign: "center",
+    width: "auto",
   },
   deleteIcon: {
     cursor: "pointer",
@@ -294,16 +311,16 @@ const styles = {
   },
   modal: {
     background: "#fff",
-    padding: "25px",
+    padding: "15px",
     borderRadius: "12px",
-    width: "450px",
+    width: "400px",
     boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
     textAlign: "center",
     position: "relative",
   },
   modalTitle: {
     marginBottom: "20px",
-    fontSize: "26px",
+    fontSize: "22px",
     fontWeight: "bolder",
     color: "#333",
   },
@@ -311,13 +328,13 @@ const styles = {
     display: "block",
     textAlign: "left",
     marginBottom: "8px",
-    fontSize: "22px",
+    fontSize: "16px",
     fontWeight: "500",
     color: "#555",
   },
   input: {
     width: "100%",
-    padding: "12px",
+    padding: "6px",
     marginBottom: "18px",
     border: "1px solid #ccc",
     borderRadius: "6px",
@@ -335,22 +352,12 @@ const styles = {
     backgroundColor: "#ccc",
     color: "#333",
     border: "none",
-    padding: "12px 18px",
+    padding: "5px 15px",
     borderRadius: "6px",
     cursor: "pointer",
-    fontSize: "16px",
+    fontSize: "14px",
     fontWeight: "500",
     transition: "background 0.3s ease",
-  },
-  confirmButton: {
-    backgroundColor: "#4682B4",
-    color: "#fff",
-    border: "none",
-    padding: "12px 18px",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "500",
-    transition: "background 0.3s ease",
+    height: '35px'
   },
 };

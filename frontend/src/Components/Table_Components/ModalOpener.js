@@ -72,7 +72,7 @@ export default function ModalOpener({
 
           .add-button:hover {
             background-color: rgba(255, 255, 255, 0.8);
-            color: black;
+            color: rgb(70,130,180);
             box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
           }
 
