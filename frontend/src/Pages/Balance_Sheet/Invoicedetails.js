@@ -71,7 +71,7 @@ export default function InvoicesDetails() {
           height="50px"
         />
 
-        <div style={mainStyles.tableBackground}>
+        <div style={mainStyles.tablesBackground}>
           <PageHeading text='Invoices Details' text_color={[0, 0, 0]} width='100%' height='auto' />
 
           <div style={styles.headerContainer}>
@@ -187,8 +187,8 @@ export default function InvoicesDetails() {
               <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span>
             </div>
             <div style={styles.buttonWrapper}>
-              <GeneralButton text="Cancel" width="145px" height="42px" button_color={["230", "230", "230"]} text_color={["0", "0", 0]} />
-              <GeneralButton text="Mark As Paid" type="submit" width="145px" height="42px" />
+              <GeneralButton text="Cancel" width="110px" height="32px" font_size="12px" button_color={["230", "230", "230"]} text_color={["0", "0", 0]} />
+              <GeneralButton text="Mark As Paid" type="submit" width="110px" height="32px" font_size="12px"/>
             </div>
           </div>
         </div>
@@ -233,6 +233,7 @@ const styles = {
     gap: '10px',
     justifyContent: 'flex-end',
     marginRight: '30px',
+    fontWeight: "bold",
   },
   table: {
     width: "98%",
@@ -335,7 +336,7 @@ const styles = {
     transition: "background 0.3s ease",
   },
   confirmButton: {
-    backgroundColor: "#000",
+    backgroundColor: "#4682B4",
     color: "#fff",
     border: "none",
     padding: "12px 18px",

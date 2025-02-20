@@ -40,67 +40,66 @@ const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, se
     setbill(billingType);
     setuser(userStatus);
     setware(warehouse);
-  }
+  };
 
   return (
     <div style={{ zIndex: '60' }}>
       <div className="filter-container">
-        <div className="filters-row">
-          <div className="mb-4">
-            <label className="block mb-2 font-medium text-gray-700">Billing Type</label>
-            <Select
-              options={billingOptions}
-              value={billingOptions.find(option => option.value === billingType)}
-              onChange={(selectedOption) => handleChange('Billing Type', selectedOption)}
-              styles={{
-                control: (provided) => ({
-                  ...provided,
-                  width: '100%',
-                  minWidth: '120px',
-                  maxWidth: '120px',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  marginBottom: '12px',
-                  borderColor: '#e2e8f0', // Same border as in the <select> element
-                  boxShadow: 'none', // To match no shadow effect
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected || state.isFocused ? 'black' : 'white',
-                  color: state.isSelected || state.isFocused ? 'white' : 'black',
-                  cursor: 'pointer',
-                })
-              }}
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block mb-2 font-medium text-gray-700">User Status</label>
-            <Select
-              options={userStatusOptions}
-              value={userStatusOptions.find(option => option.value === userStatus)}
-              onChange={(selectedOption) => handleChange('User Status', selectedOption)}
-              styles={{
-                control: (provided) => ({
-                  ...provided,
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '6px',
-                  marginBottom: '12px',
-                  borderColor: '#e2e8f0',
-                  boxShadow: 'none',
-                }),
-                option: (provided, state) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected || state.isFocused ? 'black' : 'white',
-                  color: state.isSelected || state.isFocused ? 'white' : 'black',
-                  cursor: 'pointer',
-                })
-              }}
-            />
-          </div>
+        {/* Billing Type */}
+        <div className="mb-4">
+          <label className="block mb-2 font-medium text-gray-700">Billing Type</label>
+          <Select
+            options={billingOptions}
+            value={billingOptions.find(option => option.value === billingType)}
+            onChange={(selectedOption) => handleChange('Billing Type', selectedOption)}
+            styles={{
+              control: (provided) => ({
+                ...provided,
+                width: '100%',
+                padding: '0px',
+                borderRadius: '3px',
+                marginBottom: '12px',
+                borderColor: '#e2e8f0',
+                boxShadow: 'none',
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                backgroundColor: state.isSelected || state.isFocused ? 'rgb(70, 130, 180)' : 'white',
+                color: state.isSelected || state.isFocused ? 'white' : 'black',
+                cursor: 'pointer',
+              }),
+            }}
+          />
         </div>
 
+        {/* User Status */}
+        <div className="mb-4">
+          <label className="block mb-2 font-medium text-gray-700">User Status</label>
+          <Select
+            options={userStatusOptions}
+            value={userStatusOptions.find(option => option.value === userStatus)}
+            onChange={(selectedOption) => handleChange('User Status', selectedOption)}
+            styles={{
+              control: (provided) => ({
+                ...provided,
+                width: '100%',
+                padding: '0px',
+                borderRadius: '3px',
+                marginBottom: '12px',
+                borderColor: '#e2e8f0',
+                boxShadow: 'none',
+              }),
+              option: (provided, state) => ({
+                ...provided,
+                backgroundColor: state.isSelected || state.isFocused ? 'rgb(70, 130, 180)' : 'white',
+                color: state.isSelected || state.isFocused ? 'white' : 'black',
+                cursor: 'pointer',
+              }),
+            }}
+          />
+        </div>
+
+        {/* Warehouses */}
         <div className="mb-4">
           <label className="block mb-2 font-medium text-gray-700">Warehouses</label>
           <Select
@@ -111,25 +110,26 @@ const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, se
               control: (provided) => ({
                 ...provided,
                 width: '100%',
-                padding: '8px',
-                borderRadius: '6px',
+                padding: '0px',
+                borderRadius: '3px',
                 marginBottom: '12px',
                 borderColor: '#e2e8f0',
                 boxShadow: 'none',
               }),
               option: (provided, state) => ({
                 ...provided,
-                backgroundColor: state.isSelected || state.isFocused ? 'black' : 'white',
+                backgroundColor: state.isSelected || state.isFocused ? 'rgb(70, 130, 180)' : 'white',
                 color: state.isSelected || state.isFocused ? 'white' : 'black',
                 cursor: 'pointer',
-              })
+              }),
             }}
           />
         </div>
 
+        {/* Buttons */}
         <div className="button-container">
           <button
-            className="reset-btn bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+            className="reset-btn bg-gray-500 text-white  py-1 px-3 rounded-lg transition duration-200"
             onClick={() => {
               setBillingType("All");
               setUserStatus("All");
@@ -142,7 +142,7 @@ const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, se
             Reset
           </button>
           <button
-            className="apply-btn bg-black hover:bg-white hover:text-black text-white font-semibold py-2 px-4 rounded-lg transition duration-200"
+            className="apply-btn bg-[rgb(70,130,180)] hover:bg-white hover:text-black text-white  py-1 px-3 rounded-lg transition duration-200"
             onClick={() => apply_function()}
           >
             Apply
@@ -154,17 +154,11 @@ const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, se
         .filter-container {
           padding: 20px;
           border: 1px solid #e2e8f0;
-          border-radius: 12px;
+          // border-radius: 12px;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          max-width: 400px;
-          margin: auto;
+          max-width: 300px;
+          margin: 0px 0px 0px 0px;
           background-color: white;
-        }
-
-        .filters-row {
-          display: flex;
-          justify-content: space-between;
-          gap: 8px;
         }
 
         .button-container {
@@ -174,7 +168,7 @@ const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, se
         }
 
         label {
-          font-weight: bold;
+          // font-weight: bold;
           margin-bottom: 8px;
           display: block;
           color: #4a5568;

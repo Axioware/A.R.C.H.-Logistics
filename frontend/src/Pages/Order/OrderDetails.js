@@ -1,18 +1,16 @@
-// import React, { useState, useEffect } from "react";
 import React, { useState, useEffect, useRef } from "react";
-import NavPath from '../../Components/General/NavPath';
-// import TableContent from '../../Components/Table_Components/TableContent';
-// import fetchData from '../../utils/fetch_data';
-// import AddButton from '../../Components/Table_Components/AddButton';
-import ModalOpener from "../../Components/Table_Components/ModalOpener";
-import SideBar from '../../Components/General/Sidebar';
-import mainStyles from "../../Assets/CSS/styles";
-import PageHeading from "../../Components/Table_Components/PageHeading";
-import GeneralButton from '../../Components/General/GeneralButton';
 import { FaTrash } from "react-icons/fa";
+import mainStyles from "../../Assets/CSS/styles";
+import NavPath from '../../Components/General/NavPath';
+import SideBar from '../../Components/General/Sidebar';
+import GeneralButton from '../../Components/General/GeneralButton';
+import ModalOpener from "../../Components/Table_Components/ModalOpener";
+import PageHeading from "../../Components/Table_Components/PageHeading";
 import FilterButton from '../../Components/Table_Components/FilterButton';
-import FilterOptionsDownload from "../../Components/Filter/FilterOptionsDownload"
-import FilterOptionsPrint from "../../Components/Filter/FilterOptionsPrint"
+import FilterOptionsPrint1 from "../../Components/Filter/FilterOptionsPrint1";
+import FilterOptionsDownload1 from "../../Components/Filter/FilterOptionsDownload1";
+
+
 
 export default function Orderdetails() {
 
@@ -57,6 +55,12 @@ export default function Orderdetails() {
   const [notes, setNotes] = useState("");
   const [editingIndex, setEditingIndex] = useState(null); // Track which row is being edited
 const [editingNotes, setEditingNotes] = useState(""); // Track the current value of the notes being edited
+
+
+const [billingType, setBillingType] = useState("");
+const [userStatus, setUserStatus] = useState("");
+const [warehouse, setWarehouse] = useState("");
+
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -184,6 +188,10 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
       setData(data.filter((_, i) => i !== index));
     };
 
+    
+  const [showPrintModal, setShowPrintModal] = useState(false);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
+
   
   return (
     <div>
@@ -200,8 +208,8 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
         />
 
 
-<div style={mainStyles.tableBackground}>
-          <PageHeading text='Labels' text_color={[0, 0, 0]} width='100%' height='auto' />
+<div style={mainStyles.tablesBackground}>
+          <PageHeading text='Labels'width="auto" />
 
           <div style={styles.headerContainer}>
             <div style={styles.invoiceDetails}>
@@ -209,7 +217,36 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
               {/* <span><strong>Order ID:</strong> {OrderID}</span> */}
             </div>
             <div style={styles.buttonWrapper}>
-            <FilterButton
+            {/* <FilterButton
+                text="Print"
+                text_color={[255, 255, 255]}
+                background_color={[23, 23, 23]}
+                onClick={() => setShowPrintModal(true)}
+                content={FilterOptionsPrint}
+                width="150px"
+                height="50px"
+                style={styles.filterButton}
+              />
+              <FilterButton
+                text="Download"
+                text_color={[255, 255, 255]}
+                background_color={[23, 23, 23]}
+                onClick={() => setShowDownloadModal(true)}
+                content={FilterOptionsDownload}
+                width="150px"
+                height="50px"
+                style={styles.filterButton}
+              /> */}
+              <FilterButton
+                  text="Print"
+                  content={<FilterOptionsPrint1/>} 
+                />
+
+              <FilterButton
+                  text="Download"
+                  content={<FilterOptionsDownload1/>} 
+                />
+            {/* <FilterButton
               text="Print"
               text_color={[255, 255, 255]} // White text color
               background_color={[23, 23, 23]} // Dark background
@@ -228,7 +265,7 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
               width="150px" // Set width explicitly
               height="50px" // Set height explicitly
               style={styles.filterButton} // Add this to enforce consistent styling
-            />
+            /> */}
             <ModalOpener 
               text="Add Label" 
               text_color={[255, 255, 255]} 
@@ -282,6 +319,9 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
               ))}
             </tbody>
           </table>  
+
+
+          
        {showLabelModal && 
   <div style={styles.modalOverlay}>
     <div style={styles.modal}>
@@ -357,7 +397,7 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
 
 </div>
 
-        <div style={mainStyles.tableBackground}>
+        <div style={mainStyles.tablesBackground}>
           <PageHeading text='Services' text_color={[0, 0, 0]} width='100%' height='auto' />
 
           <div style={styles.headerContainer}>
@@ -415,7 +455,7 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
         </div>
 
 
-        <div style={mainStyles.tableBackground}>
+        <div style={mainStyles.tablesBackground}>
           <PageHeading text='Boxes' text_color={[0, 0, 0]} width='100%' height='auto' />
 
           <div style={styles.headerContainer}>
@@ -466,7 +506,7 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
           </table>        
         </div>
 
-        <div style={mainStyles.tableBackground}>
+        <div style={mainStyles.tablesBackground}>
           <PageHeading text='Invoices Details' text_color={[0, 0, 0]} width='100%' height='auto' />
 
           <div style={styles.headerContainer}>
@@ -575,8 +615,8 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
               {/* <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span> */}
             </div>
             <div style={styles.buttonWrapper}>
-              <GeneralButton text="Cancel" width="145px" height="42px" button_color={["230", "230", "230"]} text_color={["0", "0", 0]} />
-              <GeneralButton text="Mark As Paid" type="submit" width="145px" height="42px" />
+              <GeneralButton text="Cancel" width="110px" height="32px" font_size="12px" button_color={["230", "230", "230"]} text_color={["0", "0", 0]} />
+              <GeneralButton text="Mark As Paid" type="submit" width="110px" height="32px" font_size="12px" />
             </div>
           </div>
         </div>
@@ -616,12 +656,7 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
       display: 'flex',
       gap: '20px',
     },
-    buttonWrapper: {
-      display: 'flex',
-      gap: '10px',
-      justifyContent: 'flex-end',
-      marginRight: '30px',
-    },
+   
     table: {
       width: "98%",
       borderCollapse: "collapse",
@@ -650,14 +685,7 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
       color: "red",
       fontSize: "18px",
     },
-    notesInput: {
-      width: "60%",
-      padding: "5px",
-      border: "1px solid #ccc",
-      borderRadius: "4px",
-      background: "#fff",
-      fontSize: "1rem",
-    },
+
     modalOverlay: {
       position: "fixed",
       top: 0,
@@ -670,67 +698,14 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
       alignItems: "center",
       zIndex: 1000,
     },
-    modal: {
-      background: "#fff",
-      padding: "25px",
-      borderRadius: "12px",
-      width: "450px",
-      boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
-      textAlign: "center",
-      position: "relative",
-    },
-    modalTitle: {
-      marginBottom: "20px",
-      fontSize: "26px",
-      fontWeight: "bolder",
-      color: "#333",
-    },
-    label: {
-      display: "block",
-      textAlign: "left",
-      marginBottom: "8px",
-      fontSize: "22px",
-      fontWeight: "500",
-      color: "#555",
-    },
-    input: {
-      width: "100%",
-      padding: "12px",
-      marginBottom: "18px",
-      border: "1px solid #ccc",
-      borderRadius: "6px",
-      fontSize: "16px",
-      outline: "none",
-      transition: "border 0.3s ease",
-    },
+ 
     buttonContainer: {
       display: "flex",
       justifyContent: "flex-end",
       gap: "12px",
       marginTop: "15px",
     },
-    cancelButton: {
-      backgroundColor: "#ccc",
-      color: "#333",
-      border: "none",
-      padding: "12px 18px",
-      borderRadius: "6px",
-      cursor: "pointer",
-      fontSize: "16px",
-      fontWeight: "500",
-      transition: "background 0.3s ease",
-    },
-    confirmButton: {
-      backgroundColor: "#000",
-      color: "#fff",
-      border: "none",
-      padding: "12px 18px",
-      borderRadius: "6px",
-      cursor: "pointer",
-      fontSize: "16px",
-      fontWeight: "500",
-      transition: "background 0.3s ease",
-    },
+
     buttonWrapper: {
       display: 'flex',
       flexDirection: 'row', // Ensure buttons are in the same row
@@ -738,6 +713,7 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
       gap: '10px', // Add some space between buttons
       justifyContent: 'flex-end', // Align buttons to the right
       marginRight: '30px',
+      fontWeight: "bold",
     },
     filterButton: {
       height: '50px', // Ensure consistent height
@@ -797,7 +773,7 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
       transition: "border 0.3s ease",
     },
     uploadButton: {
-      backgroundColor: "black",
+      backgroundColor: "#4682B4",
       color: "white",
       border: "none",
       padding: "12px 18px",
@@ -810,18 +786,13 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
       width: "100%",
     },
     
-    
-    // uploadButton:hover {
-    //   background-color: "white",
-    //   color: "black",
-    // },
-
     buttonContainer: {
       display: "flex",
       justifyContent: "flex-end",
       gap: "12px",
       marginTop: "15px",
     },
+
     cancelButton: {
       backgroundColor: "#ccc",
       color: "#333",
@@ -834,7 +805,7 @@ const [editingNotes, setEditingNotes] = useState(""); // Track the current value
       transition: "background 0.3s ease",
     },
     confirmButton: {
-      backgroundColor: "#000",
+      backgroundColor: "#4682B4",
       color: "#fff",
       border: "none",
       padding: "12px 18px",

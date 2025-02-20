@@ -18,8 +18,10 @@ export default function ModalOpener({
   text_color = COLORS.WHITE,
   func,
   background_color = COLORS.PRIMARY_BLUE,
-  width = '135px',
-  height = '45px',
+  width = '100px',
+  height = '33px'
+  
+  
 }) {
 
   const buttonColor = rgbArrayToString(background_color);
@@ -44,6 +46,7 @@ export default function ModalOpener({
             margin: 0px;
             font-weight: bold;
             padding: 10px 0px 10px 10px;
+            
           }
 
           .add-button {
@@ -53,9 +56,9 @@ export default function ModalOpener({
             height: ${height};
             border: none;
             border-radius: 5px;
-            padding: 10px;
+            padding: 10px 10px 10px 10px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 12px;
             text-align: center;
             box-sizing: border-box;
             transition: all 0.3s ease;
@@ -64,6 +67,7 @@ export default function ModalOpener({
             align-items: center; /* Centers text vertically */
             justify-content: center; /* Centers text horizontally */
             white-space: nowrap;
+            margin: 10px 10px 10px -8px;
           }
 
           .add-button:hover {
