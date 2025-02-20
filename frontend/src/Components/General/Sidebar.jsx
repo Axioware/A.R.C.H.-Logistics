@@ -199,19 +199,7 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
           margin: 0;
           padding: 0;
           box-sizing: border-box;
-        //  font-family: "DM Sans", serif;
-          // font-family: "PT Sans", serif;
-          // font-family: "Be Vietnam Pro";
         }
-
-        //@font-face {
-        //     font-family: 'abc';
-        //     src: url('../../Assets/fonts/Be_Vietnam_Pro/BeVietnamPro-BoldItalic.ttf') format('woff2'),
-        //      //  url('/fonts/MyFont.woff') format('woff'),
-        //      //  url('/fonts/MyFont.ttf') format('truetype');
-        //     font-weight: normal;
-        //     font-style: normal;
-        // }
 
         .sidebar {
           position: fixed;
@@ -511,6 +499,7 @@ const Sidebar = ({sidebar_state, set_sidebar_state}) => {
         }
 
         .home-section .home-content {
+          background-color: white;
           height: 60px;
           display: flex;
           align-items: center;

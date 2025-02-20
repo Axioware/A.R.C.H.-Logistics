@@ -142,7 +142,7 @@ const FilterOptionsUserManagement = ({ billing, user, ware, setbill, setuser, se
             Reset
           </button>
           <button
-            className="apply-btn bg-[rgb(70,130,180)] hover:bg-white hover:text-black text-white  py-1 px-3 rounded-lg transition duration-200"
+            className="apply-btn bg-[rgb(70,130,180)] hover:bg-white hover:text-[rgb(70,130,180)] text-white  py-1 px-3 rounded-lg transition duration-200"
             onClick={() => apply_function()}
           >
             Apply

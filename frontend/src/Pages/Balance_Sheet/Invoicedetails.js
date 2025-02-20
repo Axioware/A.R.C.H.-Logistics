@@ -186,7 +186,7 @@ export default function InvoicesDetails() {
             <div style={styles.totalCharge}>
               <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span>
             </div>
-            <div style={styles.buttonWrapper}>
+            <div style={styles.buttonWrapper2}>
               <GeneralButton text="Cancel" width="110px" height="32px" font_size="12px" button_color={["230", "230", "230"]} text_color={["0", "0", 0]} />
               <GeneralButton text="Mark As Paid" type="submit" width="110px" height="32px" font_size="12px"/>
             </div>
@@ -231,6 +231,13 @@ const styles = {
   buttonWrapper: {
     display: 'flex',
     gap: '10px',
+    justifyContent: 'flex-end',
+    marginRight: '30px',
+    fontWeight: "bold",
+  },
+  buttonWrapper2: {
+    display: 'flex',
+    gap: '21px',
     justifyContent: 'flex-end',
     marginRight: '30px',
     fontWeight: "bold",

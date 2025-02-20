@@ -203,8 +203,7 @@ const [warehouse, setWarehouse] = useState("");
           paths={["/home", "/invoices", "/invoices-details"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
-          width="100%"
-          height="50px"
+
         />
 
 
@@ -663,6 +662,7 @@ const [warehouse, setWarehouse] = useState("");
       marginBottom: "20px",
       textAlign: "left",
       marginRight: '30px',
+      fontSize: "12px"
     },
     th: {
       background: "#000",
