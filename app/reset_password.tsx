@@ -1,23 +1,58 @@
-import React from 'react';
-import { View, Image, StyleSheet, Dimensions, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, StyleSheet, Dimensions, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Card from '../components/Card';
 import ChildCard from '../components/ChildCard';
 import Footer from '../components/Footer';
-import { useNavigation } from '@react-navigation/native';
 
 export default function ResetPassword() {
-  const navigation = useNavigation(); // Using React Navigation's hook for navigation
+  const navigation = useNavigation();
+  const route = useRoute();
 
-  const handleResetPassword = () => {
-    // Handle reset passowrd logic here
-    console.log('Reset Password Pressed');
+  // ✅ Safely retrieve email from params
+  const email = (route.params as any)?.email || '';  
+
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleResetPassword = async () => {
+    if (!newPassword || !confirmPassword) {
+      Alert.alert('Error', 'Both fields are required.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('https://your-api.com/reset-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, newPassword }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        Alert.alert('Success', 'Password updated successfully!');
+        // navigation.navigate('LoginScreen'); // ✅ Redirect to Login page
+      } else {
+        Alert.alert('Error', data.message || 'Failed to reset password.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleForgotPassword = () => {
-    // Navigate to the Forgot Password screen
-  };
-
-  // Get screen height for dynamic logo sizing
   const screenHeight = Dimensions.get("window").height;
   const logoHeight = screenHeight * 0.07;
 
@@ -25,11 +60,11 @@ export default function ResetPassword() {
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
         {/* Logo */}
-          <Image
-            source={require('../assets/logo.png')}
-            style={[styles.logo, { height: logoHeight }]}
-            resizeMode="contain"
-          />
+        <Image
+          source={require('../assets/logo.png')}
+          style={[styles.logo, { height: logoHeight }]}
+          resizeMode="contain"
+        />
 
         {/* Parent Card */}
         <Card imageSource={require('../assets/login_screen_image.jpg')}>
@@ -37,14 +72,22 @@ export default function ResetPassword() {
           <ChildCard
             title="Please enter new password"
             inputFields={[
-              { placeholder: 'New Password', secureTextEntry: true},
-              { placeholder: 'Confirm Password', secureTextEntry: true },
+              {
+                placeholder: 'New Password',
+                secureTextEntry: true,
+                value: newPassword,
+                onChangeText: setNewPassword,
+              },
+              {
+                placeholder: 'Confirm Password',
+                secureTextEntry: true,
+                value: confirmPassword,
+                onChangeText: setConfirmPassword,
+              },
             ]}
             onLoginPress={handleResetPassword}
-            buttonText="Reset Password"
+            buttonText={loading ? <ActivityIndicator color="#fff" /> : "Reset Password"}
             showForgotPassword={false}
-            forgotPasswordText="Forgot Password?"
-            onForgotPasswordPress={handleForgotPassword} // Passing the function here
           />
         </Card>
 
@@ -62,14 +105,13 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'flex-start', // Ensure content starts from the top
-    alignItems: 'center', // Center everything horizontally
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 0, // Adjust top padding if needed
   },
   logo: {
-    width: '60%', // Adjust the width of the logo
-    alignSelf: 'center', // Center the logo horizontally
-    marginBottom: 20, // Space between logo and content
+    width: '60%',
+    alignSelf: 'center',
+    marginBottom: 20,
   },
 });

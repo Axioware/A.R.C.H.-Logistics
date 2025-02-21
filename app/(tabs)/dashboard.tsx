@@ -1,17 +1,31 @@
-import React from "react";
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native";
+import React, { useState, useEffect } from "react";
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, ActivityIndicator } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
 // Get screen dimensions for responsiveness
 const { width } = Dimensions.get("window");
 
 export default function Dashboard() {
+  // State variables with default values set to 0
+  const [orders, setOrders] = useState(0);
+  const [items, setItems] = useState(0);
+  const [dueToday, setDueToday] = useState(0);
+  const [shippedToday, setShippedToday] = useState(0);
+  const [loading, setLoading] = useState(false); // No API fetch for now
+
+  // export default function Dashboard() {
+  //   // State variables to store fetched data
+  //   const [orders, setOrders] = useState<number | null>(null);
+  //   const [items, setItems] = useState<number | null>(null);
+  //   const [dueToday, setDueToday] = useState<number | null>(null);
+  //   const [shippedToday, setShippedToday] = useState<number | null>(null);
+  //   const [loading, setLoading] = useState(true);
+
   // Load Custom Fonts
   const [fontsLoaded] = useFonts({
-    tahoma: require("../../assets/fonts/tahoma.ttf"), // Adjust path to your font folder
+    tahoma: require("../../assets/fonts/tahoma.ttf"),
   });
 
   // Keep the splash screen visible while fonts are loading
@@ -26,13 +40,36 @@ export default function Dashboard() {
     prepare();
   }, [fontsLoaded]);
 
+
+    // // Fetch data from API
+    // useEffect(() => {
+    //   const fetchData = async () => {
+    //     try {
+    //       const response = await fetch("https://your-api.com/dashboard-data");
+    //       const data = await response.json();
+  
+    //       // ✅ Store API data into state
+    //       setOrders(data.orders || 0);
+    //       setItems(data.items || 0);
+    //       setDueToday(data.dueToday || 0);
+    //       setShippedToday(data.shippedToday || 0);
+    //     } catch (error) {
+    //       console.error("Error fetching data:", error);
+    //     } finally {
+    //       setLoading(false);
+    //     }
+    //   };
+  
+    //   fetchData();
+    // }, []);
+
   if (!fontsLoaded) {
     return null;
   }
 
   // Get screen height for dynamic logo sizing
   const screenHeight = Dimensions.get("window").height;
-  const logoHeight = screenHeight * 0.07; // 7% of screen height, adjust as needed
+  const logoHeight = screenHeight * 0.07;
   const profileHeight = screenHeight * 0.07;
 
   return (
@@ -40,14 +77,14 @@ export default function Dashboard() {
       {/* Top Section */}
       <View style={styles.topSection}>
         <Image source={require("../../assets/logo.png")} 
-        style={[styles.logo, { height: logoHeight}]}
+        style={[styles.logo, { height: logoHeight }]}
         resizeMode="contain" />
 
         {/* Profile Button */}
         <TouchableOpacity style={styles.profileButton}>
           <Image
-            source={{ uri: "https://via.placeholder.com/50x50.png?text= " }} // Grey placeholder
-            style={[styles.profileImage, { height: profileHeight}]}
+            source={{ uri: "https://via.placeholder.com/50x50.png?text= " }} 
+            style={[styles.profileImage, { height: profileHeight }]}
           />
         </TouchableOpacity>
       </View>
@@ -55,66 +92,70 @@ export default function Dashboard() {
       {/* Overview Section */}
       <View style={styles.overviewContainer}>
         <Text style={styles.overviewTitle}>Overview</Text>
-        <View style={styles.overviewBox}>
-          {/* Left Section */}
-          <View style={styles.leftSection}>
-            <Text style={styles.bigText}>21</Text>
-            <Text style={styles.smallText}>ORDERS</Text>
-            <View style={styles.greenTextContainer}>
-              <Text style={styles.greenText}>ready to ship</Text>
+
+        {loading ? (
+          <ActivityIndicator size="large" color="#000" />
+        ) : (
+          <View style={styles.overviewBox}>
+            {/* Left Section */}
+            <View style={styles.leftSection}>
+              <Text style={styles.bigText}>{orders}</Text>
+              <Text style={styles.smallText}>ORDERS</Text>
+              <View style={styles.greenTextContainer}>
+                <Text style={styles.greenText}>ready to ship</Text>
+              </View>
+
+              <View style={styles.footerRow}>
+                <Text style={styles.footerText}>
+                  <Text style={styles.boldText}>{dueToday}</Text> DUE TODAY
+                </Text>
+                <Text style={styles.footerText}>
+                  <Text style={styles.boldText}>{shippedToday}</Text> SHIPPED TODAY
+                </Text>
+              </View>
             </View>
 
-            <View style={styles.footerRow}>
-              <Text style={styles.footerText}>
-                <Text style={styles.boldText}>9</Text> DUE TODAY
-              </Text>
-              <Text style={styles.footerText}>
-                <Text style={styles.boldText}>0</Text> SHIPPED TODAY
-              </Text>
+            {/* Right Section - White Card */}
+            <View style={styles.rightCard}>
+              <Text style={styles.bigText}>{items}</Text>
+              <Text style={styles.smallText}>ITEMS</Text>
+              <View style={styles.greenTextContainer}>
+                <Text style={styles.greenTextCard}>ready to pick</Text>
+              </View>
             </View>
           </View>
-
-          {/* Right Section - White Card */}
-          <View style={styles.rightCard}>
-            <Text style={styles.bigText}>31</Text>
-            <Text style={styles.smallText}>ITEMS</Text>
-            <View style={styles.greenTextContainer}>
-              <Text style={styles.greenTextCard}>ready to pick</Text>
-            </View>
-          </View>
-        </View>
+        )}
       </View>
 
-      {/* New Card Section */}
-      <View style={styles.newCard}>
-        <Text style={styles.cardTitle}>How would you like to proceed?</Text>
-
-        {/* Multi Item Orders Button */}
-        <TouchableOpacity style={[styles.buttonContainer, { borderTopWidth: 0 }]}>
-          <View style={styles.buttonContent}>
-            <FontAwesome name="cubes" size={20} color="#00000" />
-            <View style={styles.buttonTextContainer}>
-              <Text style={styles.buttonTitle}>Multi Item Orders</Text>
-              <Text style={styles.buttonFooter}>
-                Pick multi SKU orders into individual totes
-              </Text>
-            </View>
-            <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
+    <View style={styles.newCard}>
+            <Text style={styles.cardTitle}>How would you like to proceed?</Text>
+    
+            {/* Multi Item Orders Button */}
+            <TouchableOpacity style={[styles.buttonContainer, { borderTopWidth: 0 }]}>
+              <View style={styles.buttonContent}>
+                <FontAwesome name="cubes" size={20} color="#00000" />
+                <View style={styles.buttonTextContainer}>
+                  <Text style={styles.buttonTitle}>Multi Item Orders</Text>
+                  <Text style={styles.buttonFooter}>
+                    Pick multi SKU orders into individual totes
+                  </Text>
+                </View>
+                <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
+              </View>
+            </TouchableOpacity>
+    
+            {/* Single Order Button */}
+            <TouchableOpacity style={[styles.buttonContainer, { borderTopWidth: 1, borderTopColor: "#ddd" }]}>
+              <View style={styles.buttonContent}>
+                <FontAwesome name="shopping-bag" size={20} color="#00000" />
+                <View style={styles.buttonTextContainer}>
+                  <Text style={styles.buttonTitle}>Single Order</Text>
+                  <Text style={styles.buttonFooter}>Pick a specific order</Text>
+                </View>
+                <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
+              </View>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
-
-        {/* Single Order Button */}
-        <TouchableOpacity style={[styles.buttonContainer, { borderTopWidth: 1, borderTopColor: "#ddd" }]}>
-          <View style={styles.buttonContent}>
-            <FontAwesome name="shopping-bag" size={20} color="#00000" />
-            <View style={styles.buttonTextContainer}>
-              <Text style={styles.buttonTitle}>Single Order</Text>
-              <Text style={styles.buttonFooter}>Pick a specific order</Text>
-            </View>
-            <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
-          </View>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 }
