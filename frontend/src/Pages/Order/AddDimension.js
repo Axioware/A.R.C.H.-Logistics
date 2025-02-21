@@ -18,25 +18,24 @@ export default function InvoicesDetails() {
     }
   ]);
 
-
-    const [clientName, setClientName] = useState("");
-    const [clientOptions, setClientOptions] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(null);
-    const [errorCode, setErrorCode] = useState(null);
-    const [clearance, setclearance] = useState(1);
-    const [billingType, setBillingType] = useState('');
-    const [userStatus, setUserStatus] = useState('');
-    const [warehouse, setWarehouse] = useState('');
-    const [search, setSearch] = useState('');
-    const [endpoint, setEndpoint] = useState('api/users/');
-    const [bundledItem, setBundledItem] = useState("no"); // Added missing state
-    const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
-      const storedState = localStorage.getItem("sidebarclosed");
-      return storedState === null ? true : JSON.parse(storedState);
-    });
+  const [clientName, setClientName] = useState("");
+  const [clientOptions, setClientOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
+  const [errorCode, setErrorCode] = useState(null);
+  const [clearance, setclearance] = useState(1);
+  const [billingType, setBillingType] = useState('');
+  const [userStatus, setUserStatus] = useState('');
+  const [warehouse, setWarehouse] = useState('');
+  const [search, setSearch] = useState('');
+  const [endpoint, setEndpoint] = useState('api/users/');
+  const [bundledItem, setBundledItem] = useState("no"); // Added missing state
+  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
+    const storedState = localStorage.getItem("sidebarclosed");
+    return storedState === null ? true : JSON.parse(storedState);
+  });
   const [boxQuantity, setBoxQuantity] = useState("");
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
@@ -44,6 +43,7 @@ export default function InvoicesDetails() {
   const [weight, setWeight] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [products, setProducts] = useState([{ product: "", quantity: "" }]);
+  const [isHovered, setIsHovered] = useState(false); // State for hover effect
 
   const handleAddBox = () => {
     const newBox = {
@@ -88,200 +88,216 @@ export default function InvoicesDetails() {
     setData(data.filter((_, i) => i !== index));
   };
 
+  // Dynamic style for confirmButton
+  const confirmButtonStyle = {
+    backgroundColor: isHovered ? "#fff" : "#4682B4",
+    color: isHovered ? "rgb(70,130,180)" : "#fff",
+    border: "none",
+    padding: "5px 15px",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "500",
+    transition: "background 0.3s ease, color 0.3s ease",
+    height: "35px",
+  };
+
   return (
     <div>
-    {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
-      <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
-    ) : (
-      <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
-    )}
-    <div style={mainStyles.centerContent(isSidebarClosed)}>
+      {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      ) : (
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+      )}
+      <div style={mainStyles.centerContent(isSidebarClosed)}>
         <NavPath
           text={["Home", "Order Details", "Add Box Dimensions"]}
           paths={["/home", "/order-details", "/add-dimension"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
-          width="100%"
-          height="50px"
         />
 
         <div style={mainStyles.tablesBackground}>
-          
           <div style={mainStyles.tableTopContainer}>
-          <PageHeading text='Add Box Dimensions' text_color={[0, 0, 0]}  />
+            <PageHeading text='Add Box Dimensions' text_color={[0, 0, 0]} />
 
-          <div style={styles.headerContainer}>
-            <div style={styles.invoiceDetails}>
-              <span><strong>LLC Name:</strong> Prep Prime</span>
-              <span><strong>Order ID:</strong> XCV82SL7</span>
+            <div style={styles.headerContainer}>
+              <div style={styles.invoiceDetails}>
+                <span><strong>LLC Name:</strong> Prep Prime</span>
+                <span><strong>Order ID:</strong> XCV82SL7</span>
+              </div>
+              <div style={styles.buttonWrapper}>
+                <ModalOpener text="Add Box" text_color={[255, 255, 255]} func={() => setShowModal(true)} />
+              </div>
             </div>
-            <div style={styles.buttonWrapper}>
-              <ModalOpener text="Add Box" text_color={[255, 255, 255]} func={() => setShowModal(true)} />
-            </div>
-          </div>
 
-          {/* Updated Table */}
-          <table style={styles.table}>
-            <colgroup>
-              <col style={{ width: "10%" }} />
-              <col style={{ width: "15%" }} />
-              <col style={{ width: "15%" }} />
-              <col style={{ width: "15%" }} />
-              <col style={{ width: "20%" }} />
-              <col style={{ width: "10%" }} />
-              <col style={{ width: "15%" }} />
-            </colgroup>
-            <thead>
-              <tr>
-                <th style={styles.th}>Box No</th>
-                <th style={styles.th}>Box Quantity</th>
-                <th style={styles.th}>Products</th>
-                <th style={styles.th}>Quantity</th>
-                <th style={styles.th}>Dimensions ( L x H x W )</th>
-                <th style={styles.th}>Weight</th>
-                <th style={styles.th}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((row, index) => (
-                <tr key={index}>
-                  <td style={styles.td}>{row.BoxNo}</td>
-                  <td style={styles.td}>{row.BoxQuantity}</td>
-                  <td style={styles.td}>
-                    {row.Products.map((product, i) => (
-                      <div key={i} style={{ textAlign: "center" }}>{product.ProductName}</div>
-                    ))}
-                  </td>
-                  <td style={styles.td}>
-                    {row.Products.map((product, i) => (
-                      <div key={i} style={{ textAlign: "center" }}>{product.Quantity}</div>
-                    ))}
-                  </td>
-                  <td style={styles.td}>{row.Dimensions.replace(/x/g, " x ")}</td>
-                  <td style={styles.td}>{row.Weight}</td>
-                  <td style={styles.td}>
-                    <FaTrash style={{ ...styles.deleteIcon, margin: "0 auto" }} onClick={() => handleDelete(index)} />
-                  </td>
+            {/* Updated Table */}
+            <table style={styles.table}>
+              <colgroup>
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "15%" }} />
+                <col style={{ width: "20%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "15%" }} />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th style={styles.th}>Box No</th>
+                  <th style={styles.th}>Box Quantity</th>
+                  <th style={styles.th}>Products</th>
+                  <th style={styles.th}>Quantity</th>
+                  <th style={styles.th}>Dimensions ( L x H x W )</th>
+                  <th style={styles.th}>Weight</th>
+                  <th style={styles.th}></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {data.map((row, index) => (
+                  <tr key={index}>
+                    <td style={styles.td}>{row.BoxNo}</td>
+                    <td style={styles.td}>{row.BoxQuantity}</td>
+                    <td style={styles.td}>
+                      {row.Products.map((product, i) => (
+                        <div key={i} style={{ textAlign: "center" }}>{product.ProductName}</div>
+                      ))}
+                    </td>
+                    <td style={styles.td}>
+                      {row.Products.map((product, i) => (
+                        <div key={i} style={{ textAlign: "center" }}>{product.Quantity}</div>
+                      ))}
+                    </td>
+                    <td style={styles.td}>{row.Dimensions.replace(/x/g, " x ")}</td>
+                    <td style={styles.td}>{row.Weight}</td>
+                    <td style={styles.td}>
+                      <FaTrash style={{ ...styles.deleteIcon, margin: "0 auto" }} onClick={() => handleDelete(index)} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-          {showModal && (
-            <div style={styles.modalOverlay}>
-              <div style={styles.modal}>
-                <h2 style={styles.modalTitle}>Add Box</h2>
+            {showModal && (
+              <div style={styles.modalOverlay}>
+                <div style={styles.modal}>
+                  <h2 style={styles.modalTitle}>Add Box</h2>
 
-                {/* Box Quantity, Length, Width, Height, Weight in the same row */}
-                <div style={styles.rowContainer}>
-                  <div style={styles.inputGroup}>
-                    <label style={styles.label}>Box Quantity <span style={{ color: 'red' }}>*</span></label>
-                    <input
-                      type="number"
-                      style={styles.input}
-                      value={boxQuantity}
-                      onChange={(e) => setBoxQuantity(e.target.value)}
-                      placeholder="65"
-                    />
-                  </div>
-                  <div style={styles.inputGroup}>
-                    <label style={styles.label}>Length</label>
-                    <input
-                      type="number"
-                      style={styles.input}
-                      value={length}
-                      onChange={(e) => setLength(e.target.value)}
-                      placeholder="12"
-                    />
-                  </div>
-                  <div style={styles.inputGroup}>
-                    <label style={styles.label}>Width</label>
-                    <input
-                      type="number"
-                      style={styles.input}
-                      value={width}
-                      onChange={(e) => setWidth(e.target.value)}
-                      placeholder="25"
-                    />
-                  </div>
-                  <div style={styles.inputGroup}>
-                    <label style={styles.label}>Height</label>
-                    <input
-                      type="number"
-                      style={styles.input}
-                      value={height}
-                      onChange={(e) => setHeight(e.target.value)}
-                      placeholder="45"
-                    />
-                  </div>
-                  <div style={styles.inputGroup}>
-                    <label style={styles.label}>Weight</label>
-                    <input
-                      type="number"
-                      style={styles.input}
-                      value={weight}
-                      onChange={(e) => setWeight(e.target.value)}
-                      placeholder="88"
-                    />
-                  </div>
-                </div>
-
-                {products.map((item, index) => (
-                  <div key={index} style={styles.rowContainer}>
-                    <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
-                      <label style={styles.label}>Product (Service)</label>
-                      <select
-                        style={styles.dropdown}
-                        value={item.product}
-                        onChange={(e) => handleProductChange(index, "product", e.target.value)}
-                      >
-                        <option value="">Select Product</option> {/* Default placeholder */}
-                        <option value="Xyz1">Xyz1</option>
-                        <option value="Xyz2">Xyz2</option>
-                      </select>
-                    </div>
-                    <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
-                      <label style={styles.label}>Unit Quantity</label>
+                  {/* Box Quantity, Length, Width, Height, Weight in the same row */}
+                  <div style={styles.rowContainer}>
+                    <div style={styles.inputGroup}>
+                      <label style={styles.label}>Box Quantity <span style={{ color: 'red' }}>*</span></label>
                       <input
                         type="number"
                         style={styles.input}
-                        value={item.quantity}
-                        onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
+                        value={boxQuantity}
+                        onChange={(e) => setBoxQuantity(e.target.value)}
+                        placeholder="65"
+                      />
+                    </div>
+                    <div style={styles.inputGroup}>
+                      <label style={styles.label}>Length</label>
+                      <input
+                        type="number"
+                        style={styles.input}
+                        value={length}
+                        onChange={(e) => setLength(e.target.value)}
+                        placeholder="12"
+                      />
+                    </div>
+                    <div style={styles.inputGroup}>
+                      <label style={styles.label}>Width</label>
+                      <input
+                        type="number"
+                        style={styles.input}
+                        value={width}
+                        onChange={(e) => setWidth(e.target.value)}
                         placeholder="25"
                       />
                     </div>
+                    <div style={styles.inputGroup}>
+                      <label style={styles.label}>Height</label>
+                      <input
+                        type="number"
+                        style={styles.input}
+                        value={height}
+                        onChange={(e) => setHeight(e.target.value)}
+                        placeholder="45"
+                      />
+                    </div>
+                    <div style={styles.inputGroup}>
+                      <label style={styles.label}>Weight</label>
+                      <input
+                        type="number"
+                        style={styles.input}
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        placeholder="88"
+                      />
+                    </div>
                   </div>
-                ))}
 
-                <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
-                  + Add Another Product
-                </p>
+                  {products.map((item, index) => (
+                    <div key={index} style={styles.rowContainer}>
+                      <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
+                        <label style={styles.label}>Product (Service)</label>
+                        <select
+                          style={styles.dropdown}
+                          value={item.product}
+                          onChange={(e) => handleProductChange(index, "product", e.target.value)}
+                        >
+                          <option value="">Select Product</option> {/* Default placeholder */}
+                          <option value="Xyz1">Xyz1</option>
+                          <option value="Xyz2">Xyz2</option>
+                        </select>
+                      </div>
+                      <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
+                        <label style={styles.label}>Unit Quantity</label>
+                        <input
+                          type="number"
+                          style={styles.input}
+                          value={item.quantity}
+                          onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
+                          placeholder="25"
+                        />
+                      </div>
+                    </div>
+                  ))}
 
-                {/* Cancel and Add Box Buttons */}
-                <div style={styles.buttonContainer}>
-                  <button style={styles.cancelButton} onClick={resetModal}>
-                    Cancel
-                  </button>
-                  <button style={styles.confirmButton} onClick={handleAddBox}>
-                    Add Box
-                  </button>
+                  <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
+                    + Add Another Product
+                  </p>
+
+                  {/* Cancel and Add Box Buttons */}
+                  <div style={styles.buttonContainer}>
+                    <button style={styles.cancelButton} onClick={resetModal}>
+                      Cancel
+                    </button>
+                    <button
+                      style={confirmButtonStyle}
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}
+                      onClick={handleAddBox}
+                    >
+                      Add Box
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <div style={styles.totalContainer}>
-            <div style={styles.totalCharge}>
-              {/* <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span> */}
-            </div>
-            <div style={styles.buttonWrapper}>
-              <GeneralButton text="Cancel" width="110px" height="32px" font_size="12px" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-              <GeneralButton text="Add Dimension" type="submit" width="110px" height="32px" font_size="12px" />
+            <div style={styles.totalContainer}>
+              <div style={styles.totalCharge}>
+                {/* <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span> */}
+              </div>
+              <div style={styles.buttonWrapper2}>
+                <GeneralButton text="Cancel" width="110px" height="32px" font_size="12px" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
+                <GeneralButton text="Add Dimension" type="submit" width="110px" height="32px" font_size="12px" />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }
@@ -324,12 +340,20 @@ const styles = {
     marginRight: '30px',
     fontWeight: "bold",
   },
+  buttonWrapper2: {
+    display: 'flex',
+    gap: '21px',
+    justifyContent: 'flex-end',
+    marginRight: '30px',
+    fontWeight: "bold",
+  },
   table: {
     width: "100%",
     borderCollapse: "collapse",
     marginBottom: "20px",
     textAlign: "left",
     marginRight: '30px',
+    fontSize: '12px',
   },
   th: {
     background: "#000",
@@ -337,18 +361,16 @@ const styles = {
     fontWeight: "bold",
     padding: "12px",
     borderBottom: "2px solid #ddd",
-    textAlign: "center", // Center align text
-    width: "auto", // Respect colgroup width
+    textAlign: "center",
+    width: "auto",
     fontFamily: "Montserrat, sans-serif"
-
   },
   td: {
     padding: "12px",
     borderBottom: "1px solid #ddd",
-    textAlign: "center", // Center align text
-    width: "auto", // Respect colgroup width
+    textAlign: "center",
+    width: "auto",
     fontFamily: "Nunito, sans-serif"
-
   },
   deleteIcon: {
     cursor: "pointer",
@@ -373,7 +395,11 @@ const styles = {
     width: '35%',
   },
   modalTitle: {
-    marginBottom: '20px',
+    marginBottom: "20px",
+    fontSize: "22px",
+    fontWeight: "bolder",
+    color: "#333",
+    textAlign: 'center'
   },
   label: {
     display: 'block',
@@ -420,20 +446,16 @@ const styles = {
     marginTop: '20px',
   },
   cancelButton: {
-    backgroundColor: '#ccc',
-    color: '#000',
-    border: 'none',
-    padding: '10px 15px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    marginRight: '10px',
-  },
-  confirmButton: {
-    backgroundColor: '#4682B4',
-    color: 'white',
-    padding: '10px 15px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    transition: '0.3s',
+    backgroundColor: "#ccc",
+    color: "#333",
+    border: "none",
+    padding: "5px 15px",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "500",
+    transition: "background 0.3s ease",
+    height: '35px',
+    marginRight: '12px'
   },
 };

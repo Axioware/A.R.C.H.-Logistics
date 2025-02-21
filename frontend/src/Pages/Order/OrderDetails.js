@@ -613,7 +613,7 @@ const [warehouse, setWarehouse] = useState("");
             <div style={styles.totalCharge}>
               {/* <span><strong>Total Charge:</strong> &nbsp;&nbsp; ${TotalCharge}</span> */}
             </div>
-            <div style={styles.buttonWrapper}>
+            <div style={styles.buttonWrapper2}>
               <GeneralButton text="Cancel" width="110px" height="32px" font_size="12px" button_color={["230", "230", "230"]} text_color={["0", "0", 0]} />
               <GeneralButton text="Mark As Paid" type="submit" width="110px" height="32px" font_size="12px" />
             </div>
@@ -715,6 +715,16 @@ const [warehouse, setWarehouse] = useState("");
       marginRight: '30px',
       fontWeight: "bold",
     },
+
+    buttonWrapper2: {
+      display: 'flex',
+      flexDirection: 'row', // Ensure buttons are in the same row
+      alignItems: 'center', // Align buttons vertically in the center
+      gap: '21px', // Add some space between buttons
+      justifyContent: 'flex-end', // Align buttons to the right
+      marginRight: '30px',
+      fontWeight: "bold",
+    },
     filterButton: {
       height: '50px', // Ensure consistent height
       display: 'flex',
@@ -743,28 +753,29 @@ const [warehouse, setWarehouse] = useState("");
       background: "#fff",
       padding: "25px",
       borderRadius: "12px",
-      width: "450px",
+      width: "400px",
       boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
       textAlign: "center",
       position: "relative",
     },
     modalTitle: {
       marginBottom: "20px",
-      fontSize: "26px",
+      fontSize: "22px",
       fontWeight: "bolder",
       color: "#333",
+      textAlign: 'center'
     },
     label: {
       display: "block",
       textAlign: "left",
       marginBottom: "8px",
-      fontSize: "22px",
+      fontSize: "16px",
       fontWeight: "500",
       color: "#555",
     },
     input: {
       width: "100%",
-      padding: "12px",
+      padding: "6px",
       marginBottom: "18px",
       border: "1px solid #ccc",
       borderRadius: "6px",
@@ -776,7 +787,7 @@ const [warehouse, setWarehouse] = useState("");
       backgroundColor: "#4682B4",
       color: "white",
       border: "none",
-      padding: "12px 18px",
+      padding: "5px 15px 5px 15px",
       borderRadius: "6px",
       cursor: "pointer",
       fontSize: "16px",
@@ -784,6 +795,7 @@ const [warehouse, setWarehouse] = useState("");
       transition: "background 0.3s ease",
       marginTop: "10px",
       width: "100%",
+      height: '35px'
     },
     
     buttonContainer: {
@@ -797,23 +809,25 @@ const [warehouse, setWarehouse] = useState("");
       backgroundColor: "#ccc",
       color: "#333",
       border: "none",
-      padding: "12px 18px",
+      padding: "5px 15px 5px 15px",
       borderRadius: "6px",
       cursor: "pointer",
-      fontSize: "16px",
+      fontSize: "14px",
       fontWeight: "500",
       transition: "background 0.3s ease",
+      height: '35px'
     },
     confirmButton: {
       backgroundColor: "#4682B4",
       color: "#fff",
       border: "none",
-      padding: "12px 18px",
+      padding: "5px 15px 5px 15px",
       borderRadius: "6px",
       cursor: "pointer",
-      fontSize: "16px",
+      fontSize: "14px",
       fontWeight: "500",
       transition: "background 0.3s ease",
+      height: '35px',
 
       notesInput: {
         width: "100%",
@@ -824,6 +838,7 @@ const [warehouse, setWarehouse] = useState("");
         fontSize: "1rem",
         outline: "none",
       },
+      
       
       
       
