@@ -33,7 +33,7 @@ export default function ChildCard({
 
       {/* Render Input Fields dynamically */}
       {inputFields.map((field, index) => (
-        <TextInputField key={index} placeholder={field.placeholder} secureTextEntry={field.secureTextEntry} />
+        <TextInputField key={index} placeholder={field.placeholder} secureTextEntry={field.secureTextEntry} value={field.value ?? ''} onChangeText={(text) => field.onChangeText?.(text)} />
       ))}
 
       {/* Login Button */}

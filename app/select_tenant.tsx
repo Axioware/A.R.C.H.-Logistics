@@ -4,7 +4,7 @@ import Card from '../components/Card';
 import ChildCard from '../components/ChildCard';
 import Footer from '../components/Footer';
 import { useNavigation } from '@react-navigation/native';
-import LoginScreen from './login';
+import {Link} from "expo-router"
 
 export default function SelectTenant() {
   const navigation = useNavigation();
@@ -12,6 +12,7 @@ export default function SelectTenant() {
   const [loading, setLoading] = useState(false);
 
   const handleSelectTenant = async () => {
+    console.log(tenantName)
     if (!tenantName.trim()) {
       Alert.alert('Error', 'Please enter a tenant name.');
       return;
@@ -20,16 +21,14 @@ export default function SelectTenant() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://your-api.com/check-tenant', {
-        method: 'POST',
+      const response = await fetch(`http://localhost:8000/auth/api/tenant/?tenant_name=${encodeURIComponent(tenantName)}`, {
+        method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tenant: tenantName }),
       });
-
       const data = await response.json();
-
+      console.log(data)
       if (response.status === 200) {
-        // navigation.navigate(LoginScreen); // Navigate to login screen
+        <Link href="/login"></Link>
       } else if (response.status === 400) {
         Alert.alert('Invalid Tenant', 'Entered name does not exist.');
       } else {
