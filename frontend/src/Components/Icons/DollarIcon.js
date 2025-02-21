@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate for naviga
 import stat from "../../Assets/Images/dollar-static-black-1.png";
 import dyn from "../../Assets/Images/dollar-animated-1.gif";
 
-const DollarIcon = ({ path, tooltipText = "Custom Rates" }) => {
+const DollarIcon = ({ path, tooltipText = "Custom Rates", width = "30px", height= "30px" }) => {
   const [tool, setTool] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [first, setFirst] = useState(false);
@@ -56,8 +56,8 @@ const DollarIcon = ({ path, tooltipText = "Custom Rates" }) => {
         style={{
           alignSelf: "right",
           alignItems: "right",
-          width: "30px",
-          height: "30px",
+          width: {width},
+          height: {height},
           cursor: "pointer",
         }}
       />

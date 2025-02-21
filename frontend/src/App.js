@@ -8,6 +8,8 @@ import Asad from './Pages/Asad';
 import Rauf from './Pages/Rauf';
 import Ahsan from './Pages/Ahsan';
 
+import Dashboard from './Pages/Dashboard';
+
 //User Authentication
 import Login from './Pages/Authentication/Login';
 import ForgotPassword from './Pages/Authentication/ForgotPassword';
@@ -129,6 +131,8 @@ function App() {
         <Route path="/omer" element={<Omer />} />
         <Route path="/rauf" element={<Rauf />} /> 
         <Route path="/ahsan" element={<Ahsan menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
+        <Route path="/home" element={<Dashboard />} /> 
 
         {/* User Authentication */}
         <Route path="/login" element={<Login />} />

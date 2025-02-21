@@ -7,6 +7,7 @@ import React from "react";
 // import PageHeading from '../Components/Table_Components/PageHeading';
 // import TableTop from '../Components/Table_Components/TableTop';
 import SessionExpired  from "../Components/Modals/SessionExpired";
+import Dash from "../Components/General/Dash";
 
 function App() {
   return (
@@ -51,18 +52,20 @@ function App() {
   //           // height="100px" // Adjust height as needed
   //         />
 
-  <SessionExpired
-  heading_text="Session Expired"
-  body_text="Your session has expired. Please log in again."
-  button_text="Login"
-  button_function={() => console.log("Logging in...")}
-  // heading_background={[220, 53, 69]}  // Red for header
-  // background_color={[255, 255, 255]}  // White for body
-  // button_color={[0, 123, 255]}  // Blue button
-  // button_hover_color={[0, 86, 179]}  // Darker blue hover
-  // width="500px"
-  // height="350px"
-/>
+//   <SessionExpired
+//   heading_text="Session Expired"
+//   body_text="Your session has expired. Please log in again."
+//   button_text="Login"
+//   button_function={() => console.log("Logging in...")}
+//   // heading_background={[220, 53, 69]}  // Red for header
+//   // background_color={[255, 255, 255]}  // White for body
+//   // button_color={[0, 123, 255]}  // Blue button
+//   // button_hover_color={[0, 86, 179]}  // Darker blue hover
+//   // width="500px"
+//   // height="350px"
+// />
+<Dash />
+
   );
 
 }
