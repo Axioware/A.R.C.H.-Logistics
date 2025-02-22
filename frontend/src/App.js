@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 //Dummy Pages
 import Omer from './Pages/Omer';
@@ -124,7 +124,7 @@ function App() {
     {/* <GlobalStyles /> */}
     <Router>  
       <Routes>
-
+        <Route path="/" element={<Navigate to="/login" replace />} />
         {/* Dummy Pages */}
         <Route path="/moiz" element={<Moiz />} />
         <Route path="/asad" element={<Asad />} />

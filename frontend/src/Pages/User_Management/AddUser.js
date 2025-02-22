@@ -31,30 +31,46 @@ const AddUser = () => {
     warehouse: []
   });
 
+  const [errors, setErrors] = useState({});
+  const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
+
+  const validateFields = () => {
+    let newErrors = {};
+    if (!UserData.username) newErrors.username = "Username is required.";
+    if (!UserData.password) newErrors.password = "Password is required.";
+    if (!UserData.first_name) newErrors.first_name = "First name is required.";
+    if (!UserData.clearance_level) newErrors.clearance_level = "Clearance level is required.";
+    if (UserData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(UserData.email)) {
+      newErrors.email = "Invalid email format.";
+    }
+    return newErrors;
+  };
+
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
     return storedState === null ? true : JSON.parse(storedState);
   });
 
-  const [modalState, setModalState] = useState({
-    isOpen: false,
-    title: "",
-    content: "",
-  });
-
   const handleChange = (e) => {
+    setErrors({ ...errors, [e.target.name]: "" });
     setUserData({ ...UserData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationErrors = validateFields();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
 
     const token = localStorage.getItem("access_token");
     if (!token) {
       navigate("/login");
       return;
     }
-    console.log(UserData);
+
     try {
       const response = await fetch(
         `http://${process.env.REACT_APP_TENANT_NAME}/users/api/users/`,
@@ -71,7 +87,7 @@ const AddUser = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setModalState({
+        setModalData({
           isOpen: true,
           title: "Success",
           content: "User added successfully!",
@@ -93,17 +109,17 @@ const AddUser = () => {
           city: "",
           state: "",
           zip: "",
-          warehouse: null
+          warehouse: []
         });
       } else {
-        setModalState({
+        setModalData({
           isOpen: true,
           title: "Error",
           content: data.message || "Failed to add user.",
         });
       }
     } catch (error) {
-      setModalState({
+      setModalData({
         isOpen: true,
         title: "Error",
         content: "Failed to add user. Please try again.",
@@ -244,8 +260,8 @@ const AddUser = () => {
               <GeneralField label="Last Name" name="last_name" field_type="text" hint="Last Name (e.g., Doe)" value={UserData.last_name} func={handleChange}/>
               <GeneralField label="Password" name="password" field_type="password" hint="********" value={UserData.password} func={handleChange} required={true}/>
               <GeneralField label="Phone" name="phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" value={UserData.phone} func={handleChange}/>
-              <GeneralField label="Primary Email" name="email" field_type="email" hint="Email address" value={UserData.primary_email} func={handleChange} />
-              <GeneralField label="Secondary Email" name="email2" field_type="email" hint="Email address" value={UserData.email} func={handleChange} />
+              <GeneralField label="Primary Email" name="email" field_type="email" hint="Email address" value={UserData.email} func={handleChange} />
+              <GeneralField label="Secondary Email" name="email2" field_type="email" hint="Email address" value={UserData.email2} func={handleChange} />
               <GeneralField label="Address" name="address" field_type="text" hint="Full address" value={UserData.address} func={handleChange}/>
               <GeneralField label="City" name="city" field_type="text" hint="City (e.g., Stafford)" value={UserData.city} func={handleChange}/>
               <GeneralField label="State" name="state" field_type="text" hint="State (e.g., Texas)" value={UserData.state} func={handleChange}/>
@@ -261,6 +277,13 @@ const AddUser = () => {
           </div>
         </div>
       </div>
+      {modalData.isOpen && (
+        <LargeModal
+          title={modalData.title}
+          content={modalData.content}
+          onClose={() => setModalData({ isOpen: false, title: "", content: "" })}
+        />
+      )}
     </div>
   );
 };
@@ -279,12 +302,6 @@ form: {
     marginTop:'35px',
     marginRight:'100px',
     alignSelf:'flex-start',
-},
-
-select: {
-
-  marginLeft:"40px",
-  marginTop:"10px",
 },
 
 buttonContainer: {
