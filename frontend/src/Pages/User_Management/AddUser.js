@@ -6,30 +6,40 @@ import PageHeading from '../../Components/Table_Components/PageHeading';
 import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
 import DropDown from "../../Components/General/DropDown";
+import LargeModal from "../../Components/Modals/SuccessModal";
+import { useNavigate } from "react-router-dom";
 
 const AddUser = () => {
+  const navigate = useNavigate();
+
   const [UserData, setUserData] = useState({
     username: "",
     first_name: "",
     last_name: "",
-    email: "",
     phone: "",
     password: "",
-    clearance_level: [],
+    clearance_level: null,
     llc_name: "",
     tax_id: "",
+    email: "",
     email2: "",
     address: "",
     billing_type: "",
     city: "",
     state: "",
     zip: "",
-    warehouses: []
+    warehouse: []
   });
 
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
     return storedState === null ? true : JSON.parse(storedState);
+  });
+
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    title: "",
+    content: "",
   });
 
   const handleChange = (e) => {
@@ -38,17 +48,16 @@ const AddUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted', UserData);
 
     const token = localStorage.getItem("access_token");
     if (!token) {
-      alert("You are not authorized. Please log in.");
+      navigate("/login");
       return;
     }
-
+    console.log(UserData);
     try {
       const response = await fetch(
-        `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/users/`,
+        `http://${process.env.REACT_APP_TENANT_NAME}/users/api/users/`,
         {
           method: "POST",
           headers: {
@@ -62,7 +71,12 @@ const AddUser = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert("User added successfully!");
+        setModalState({
+          isOpen: true,
+          title: "Success",
+          content: "User added successfully!",
+        });
+
         setUserData({
           username: "",
           first_name: "",
@@ -70,7 +84,7 @@ const AddUser = () => {
           email: "",
           phone: "",
           password: "",
-          clearance_level: [],
+          clearance_level: null,
           llc_name: "",
           tax_id: "",
           email2: "",
@@ -79,19 +93,26 @@ const AddUser = () => {
           city: "",
           state: "",
           zip: "",
-          warehouses: []
+          warehouse: null
         });
       } else {
-        alert(`Error: ${data.message || "Failed to add User."}`);
+        setModalState({
+          isOpen: true,
+          title: "Error",
+          content: data.message || "Failed to add user.",
+        });
       }
     } catch (error) {
-      alert("Failed to add User. Please try again.");
+      setModalState({
+        isOpen: true,
+        title: "Error",
+        content: "Failed to add user. Please try again.",
+      });
       console.error("Error:", error);
     }
   };
 
   const [warehousesList, setWarehousesList] = useState([]);
-  const [selectedWarehouse, setSelectedWarehouse] = useState("");
 
   useEffect(() => {
     const fetchWarehouses = async () => {
@@ -128,12 +149,49 @@ const AddUser = () => {
     fetchWarehouses();
   }, []);
 
-  const handleSelectWarehouse = (warehouseName) => {
-    const selected = warehousesList.find(w => w.name === warehouseName);
-    if (selected) {
-      setUserData({ ...UserData, warehouses: [selected.id] });
-      setSelectedWarehouse(warehouseName);
+  const handleSelectWarehouse = (selectedOptions) => {
+    if (!selectedOptions || selectedOptions.length === 0) {
+      console.error("No warehouse selected");
+      return;
     }
+  
+    // Extract warehouse IDs from the selected options
+    const selectedWarehouses = selectedOptions.map(option => {
+      const warehouse = warehousesList.find(w => w.warehouse_name === option);
+      return warehouse ? warehouse.warehouse_id : null;
+    }).filter(id => id !== null); // Remove any null values
+  
+    setUserData(prev => ({ ...prev, warehouse: selectedWarehouses }));
+  };
+
+  const handleSelectBillingType = (billingType) => {
+    if (!billingType || !billingType.value) {
+      console.error("Invalid billing type selected");
+      return;
+    }
+  
+    setUserData(prev => ({ ...prev, billing_type: billingType.value }));
+  };
+
+  const handleSelectClearanceLevel = (selectedOption) => {
+    if (!selectedOption || !selectedOption.value) {
+      console.error("Invalid role selection");
+      return;
+    }
+  
+    const roleClearanceMap = {
+      "Manager": "1",
+      "VA": "2",
+      "Prep-Team": "3",
+      "Client": "4"
+    };
+  
+    const clearanceLevel = roleClearanceMap[selectedOption.value] || ""; 
+    
+    setUserData(prev => ({ 
+      ...prev, 
+      clearance_level: clearanceLevel 
+    }));
   };
 
   return (
@@ -157,33 +215,44 @@ const AddUser = () => {
               <PageHeading text="Add User" />
             </div>
 
-            <div id="RoleContainer" style={styles.RoleContainer}>
-              <label htmlFor="Dropdown" style={styles.label}>Role</label>
-              <select name="Dropdown" id="Dropdown" style={styles.select}>
-                <option value="Manager">Client</option>
-                <option value="VA">Prep-Team</option>
-                <option value="Prep-Team">VA's</option>
-                <option value="Client">Others</option>
-              </select>
-            </div>
-
             <form id="form" style={styles.form} onSubmit={handleSubmit}>
+              <DropDown
+                label="Clearance Level"
+                data = {["Manager", "VA", "Prep-Team", "Client"]}
+                onSelect={handleSelectClearanceLevel}
+                width="230px"
+                height="45px"
+                required={true}
+              />
               <DropDown 
                 label="Warehouse"
                 data={warehousesList.map(w => w.warehouse_name)}
                 onSelect={handleSelectWarehouse}
-                width="330px"
+                width="230px"
+                height="45px"
+                multi={true}
+              />
+              <DropDown 
+                label="Billing Type"
+                data={["Daily", "Monthly", "Bi-Monthly"]}
+                onSelect={handleSelectBillingType}
+                width="230px"
                 height="45px"
               />
-              <GeneralField label="LLC Name" field_type="text" hint="Enter Company name" required={true}/>
-              <GeneralField label="First Name" field_type="text" hint="First Name (e.g., John)" />
-              <GeneralField label="Last Name" field_type="text" hint="Last Name (e.g., Doe)" />
-              <GeneralField label="Phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" />
-              <GeneralField label="Address" field_type="text" hint="Full address" />
-              <GeneralField label="City" field_type="text" hint="City (e.g., Stafford)" />
-              <GeneralField label="State" field_type="text" hint="State (e.g., Texas)" />
-              <GeneralField label="Zip Code" field_type="text" hint="Zip code" required={true}/>
-              <GeneralField label="Email" field_type="email" hint="Email address" />
+              <GeneralField label="Username" name="username" field_type="text" hint="Enter Username" value={UserData.username} required={true} func={handleChange}/>
+              <GeneralField label="First Name" name="first_name" field_type="text" hint="First Name (e.g., John)" value={UserData.first_name} func={handleChange} required={true}/>
+              <GeneralField label="Last Name" name="last_name" field_type="text" hint="Last Name (e.g., Doe)" value={UserData.last_name} func={handleChange}/>
+              <GeneralField label="Password" name="password" field_type="password" hint="********" value={UserData.password} func={handleChange} required={true}/>
+              <GeneralField label="Phone" name="phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" value={UserData.phone} func={handleChange}/>
+              <GeneralField label="Primary Email" name="email" field_type="email" hint="Email address" value={UserData.primary_email} func={handleChange} />
+              <GeneralField label="Secondary Email" name="email2" field_type="email" hint="Email address" value={UserData.email} func={handleChange} />
+              <GeneralField label="Address" name="address" field_type="text" hint="Full address" value={UserData.address} func={handleChange}/>
+              <GeneralField label="City" name="city" field_type="text" hint="City (e.g., Stafford)" value={UserData.city} func={handleChange}/>
+              <GeneralField label="State" name="state" field_type="text" hint="State (e.g., Texas)" value={UserData.state} func={handleChange}/>
+              <GeneralField label="Zip Code" name="zip" field_type="text" hint="Zip code" required={true} value={UserData.zip} func={handleChange}/>
+              <GeneralField label="LLC Name" name="llc_name" field_type="text" hint="Enter Company name" required={true} value={UserData.llc_name} func={handleChange}/>
+              <GeneralField label="Tax ID" name="tax_id" field_type="text" hint="Tax ID" required={true} value={UserData.tax_id} func={handleChange}/>
+
               <div id="buttonContainer" style={styles.buttonContainer}>
                 <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
                 <GeneralButton text="Add" type="submit" width="100px" height="100%" />
@@ -240,12 +309,6 @@ headingcontainer:{
 PageHeading:{
   marginLeft:'10px',
   marginTop:'20px',  
-},
-
-RoleContainer: {
-  alignSelf: 'flex-start',
-  marginTop:'10px',  
-  marginLeft:"10px",
 },
 
 label: {

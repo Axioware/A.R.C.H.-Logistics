@@ -48,7 +48,7 @@ const LoginForm = () => {
         localStorage.setItem('access_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
         console.log(localStorage.getItem('access_token'));
-        navigate('/dashboard');
+        navigate('/home');
       }
     } catch (error) {
       setErrorMessage("Failed to connect to the server. Please try again.");
