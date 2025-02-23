@@ -129,9 +129,6 @@ def users(request):
             errors = {}
             warehouses = data.get('warehouses', [])
 
-            if authenticate_clearance_level(user, [4]) and not warehouses:
-                errors['warehouses'] = "Warehouses are required for clients."
-
             username = data.get('username', '')
             first_name = data.get('first_name', '')
             last_name = data.get('last_name', '')
@@ -164,6 +161,7 @@ def users(request):
                     errors['email'] = "Invalid email format."
 
             if errors:
+                print(errors)
                 return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
 
             try:

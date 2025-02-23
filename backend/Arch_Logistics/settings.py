@@ -234,7 +234,9 @@ CORS_ALLOW_ALL_ORIGINS = True #ONLY DEVELOPMENT
 CORS_ALLOW_CREDENTIALS = True
 import os
 
-
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+]
 
 SIMPLE_JWT = {
     # Custom expiration for access token (e.g., 5 minutes)

@@ -47,6 +47,7 @@ def locations(request):
                 if not queryset.exists():
                     return Response({"error": "No locations found matching the criteria"}, status=status.HTTP_404_NOT_FOUND)
 
+                # Map queryset into a list of dictionaries
                 result = [
                     {
                         'location_id': loc.location_id,
@@ -70,6 +71,7 @@ def locations(request):
                     cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_SHORT)
                     return Response(response_data, status=status.HTTP_200_OK)
 
+                # Fallback response if pagination doesn't return data
                 response_data = {'locations': result}
                 cache.set(cache_key, response_data, timeout=settings.CACHE_TIMEOUT_SHORT)
                 return Response(response_data, status=status.HTTP_200_OK)
@@ -106,14 +108,16 @@ def locations(request):
             )
             new_location.save()
 
-            # Clear cache after inserting new location
-            cache.delete_pattern("locations_*")
+            # Invalidate all cached pages when a new location is added
+            for key in cache.keys("locations_*"):
+                cache.delete(key)
 
             return Response(
                 {'message': 'Location created successfully', 'location_id': new_location.location_id},
                 status=status.HTTP_201_CREATED
             )
 
+@csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def single_location(request, location_id):
@@ -188,7 +192,7 @@ def single_location(request, location_id):
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-    
+@csrf_exempt
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def services(request):
@@ -267,6 +271,7 @@ def services(request):
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def single_service(request, service_id):
@@ -351,14 +356,11 @@ def warehouse(request):
 
                 if cached_data:
                     return Response(cached_data, status=status.HTTP_200_OK)
-
                 queryset = Warehouse.objects.all()
 
                 if search:
                     queryset = queryset.filter(Q(warehouse_name__icontains=search))
 
-                if not queryset.exists():
-                    return Response({"error": "No warehouses found matching the criteria"}, status=status.HTTP_404_NOT_FOUND)
                 
                 if all_data:
                     response_data = {"results": queryset, "count": len(queryset)}
@@ -382,7 +384,7 @@ def warehouse(request):
                     }
                     for warehouse in result_page
                 ]).data
-
+                
                 return Response(response_data, status=status.HTTP_200_OK)
 
             elif request.method == "POST":
@@ -424,7 +426,9 @@ def warehouse(request):
     except Exception as e:
         return Response({"error": "An unexpected error occurred", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-
+@csrf_exempt
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def warehouse_detail(request, id):
     user = request.user
     tenant = request.tenant
