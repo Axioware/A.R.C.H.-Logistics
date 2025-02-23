@@ -64,7 +64,6 @@ const AddUser = () => {
       return;
     }
 
-
     const token = localStorage.getItem("access_token");
     if (!token) {
       navigate("/login");
@@ -279,9 +278,11 @@ const AddUser = () => {
       </div>
       {modalData.isOpen && (
         <LargeModal
+          isOpen={modalData.isOpen}
           title={modalData.title}
           content={modalData.content}
           onClose={() => setModalData({ isOpen: false, title: "", content: "" })}
+          onSave={() => setModalData({ isOpen: false, title: "", content: "" })} // Ensure this is added or updated
         />
       )}
     </div>

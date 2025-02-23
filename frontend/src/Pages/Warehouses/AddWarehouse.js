@@ -5,8 +5,12 @@ import NavPath from '../../Components/General/NavPath';
 import PageHeading from '../../Components/Table_Components/PageHeading';
 import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
+import LargeModal from "../../Components/Modals/SuccessModal";
+import { useNavigate } from "react-router-dom";
 
 const AddWarehouse = () => {
+  const navigate = useNavigate();
+
   const [warehouseData, setWarehouseData] = useState({
     warehouse_name: "",
     email: "",
@@ -17,6 +21,9 @@ const AddWarehouse = () => {
     state: "",
     zip_code: ""
   });
+
+  const [errors, setErrors] = useState({});
+  const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
 
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
@@ -29,11 +36,10 @@ const AddWarehouse = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data:", warehouseData);
 
     const token = localStorage.getItem("access_token");
     if (!token) {
-      alert("You are not authorized. Please log in.");
+      navigate("/login");
       return;
     }
 
@@ -53,7 +59,11 @@ const AddWarehouse = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert("Warehouse added successfully!");
+        setModalData({
+          isOpen: true,
+          title: "Success",
+          content: "Warehouse added successfully!",
+        });
         setWarehouseData({
           warehouse_name: "",
           email: "",
@@ -65,10 +75,19 @@ const AddWarehouse = () => {
           zip_code: ""
         });
       } else {
-        alert(`Error: ${data.message || "Failed to add warehouse."}`);
+        setModalData({
+          isOpen: true,
+          title: "Error",
+          content: data.message || "Failed to add warehouse.",
+        });
       }
     } catch (error) {
-      alert("Failed to add warehouse. Please try again.");
+      setModalData({
+        isOpen: true,
+        title: "Error",
+        content: "Failed to add warehouse. Please try again.",
+      });
+      console.error("Error:", error);
     }
   };
 
@@ -111,6 +130,15 @@ const AddWarehouse = () => {
           </div>
         </div>
       </div>
+      {modalData.isOpen && (
+        <LargeModal
+          isOpen={modalData.isOpen}
+          title={modalData.title}
+          content={modalData.content}
+          onClose={() => setModalData({ isOpen: false, title: "", content: "" })}
+          onSave={() => setModalData({ isOpen: false, title: "", content: "" })} // Ensure this is added or updated
+        />
+      )}
     </div>
   );
 };
