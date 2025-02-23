@@ -6,6 +6,7 @@ import PageHeading from "../../Components/Table_Components/PageHeading";
 import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
 import DropDown from "../../Components/General/DropDown";
+import LargeModal from "../../Components/Modals/SuccessModal";
 
 const AddLocation = () => {
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
@@ -18,19 +19,20 @@ const AddLocation = () => {
   const [selectedWarehouseName, setSelectedWarehouseName] = useState(null);
   const [locationName, setLocationName] = useState("");
   const [locationType, setLocationType] = useState("");
+  const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
 
   useEffect(() => {
-    console.log(warehouses);
-    console.log(selectedWarehouseName)
-    const selectedWarehouse = warehouses.find((w) => w.warehouse_name === selectedWarehouseName.value);
-    if (selectedWarehouse) {
-      setSelectedWarehouseId(selectedWarehouse.warehouse_id);
-      console.log("Selected Warehouse ID:", selectedWarehouse.warehouse_id);
-    } else {
-      setSelectedWarehouseId(null);
-      console.log("No warehouse selected");
+    if (selectedWarehouseName) {
+      const selectedWarehouse = warehouses.find(
+        (w) => w.warehouse_name === selectedWarehouseName.value
+      );
+      if (selectedWarehouse) {
+        setSelectedWarehouseId(selectedWarehouse.warehouse_id);
+      } else {
+        setSelectedWarehouseId(null);
+      }
     }
-  }, [selectedWarehouseName])
+  }, [selectedWarehouseName, warehouses]);
 
   const token = localStorage.getItem("access_token");
 
@@ -48,12 +50,9 @@ const AddLocation = () => {
             },
           }
         );
-
         if (!response.ok) throw new Error("Failed to fetch warehouses");
-
         const data = await response.json();
         setWarehouses(data.results || []);
-        console.log("Fetched Warehouses:", data.results);
       } catch (error) {
         console.error("Error fetching warehouses:", error);
       }
@@ -62,43 +61,16 @@ const AddLocation = () => {
     fetchWarehouses();
   }, [token]);
 
-  // Fetch locations
-  useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const response = await fetch(
-          `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/locations/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!response.ok) throw new Error("Failed to fetch locations");
-
-        const data = await response.json();
-        console.log("Fetched Locations:", data);
-      } catch (error) {
-        console.error("Error fetching locations:", error);
-      }
-    };
-
-    fetchLocations();
-  }, [token]);
-
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Location Name:", locationName);
-    console.log("Location Type:", locationType);
-    console.log("Selected Warehouse ID:", selectedWarehouseId);
-
     if (!locationName.trim() || !locationType.trim() || !selectedWarehouseId) {
-      alert("All fields are required!");
+      setModalData({
+        isOpen: true,
+        title: "Error",
+        content: "All fields are required!",
+      });
       return;
     }
 
@@ -122,15 +94,28 @@ const AddLocation = () => {
       );
 
       if (response.ok) {
-        alert("Location added successfully!");
+        setModalData({
+          isOpen: true,
+          title: "Success",
+          content: "Location added successfully!",
+        });
         setLocationName("");
         setLocationType("");
         setSelectedWarehouseId(null);
       } else {
-        alert("Failed to add location!");
+        setModalData({
+          isOpen: true,
+          title: "Error",
+          content: "Failed to add location!",
+        });
       }
     } catch (error) {
       console.error("Error adding location:", error);
+      setModalData({
+        isOpen: true,
+        title: "Error",
+        content: "Error adding location. Please try again.",
+      });
     }
   };
 
@@ -218,6 +203,15 @@ const AddLocation = () => {
           </div>
         </div>
       </div>
+      {modalData.isOpen && (
+        <LargeModal
+          isOpen={modalData.isOpen}
+          title={modalData.title}
+          content={modalData.content}
+          onClose={() => setModalData({ isOpen: false, title: "", content: "" })}
+          onSave={() => setModalData({ isOpen: false, title: "", content: "" })}
+        />
+      )}
     </div>
   );
 };

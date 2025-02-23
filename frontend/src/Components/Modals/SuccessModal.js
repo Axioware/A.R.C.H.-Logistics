@@ -86,7 +86,7 @@ const LargeModal = ({
         </div>
         <div style={styles.footer}>
           <div id="buttonContainer" style={styles.buttonContainer}>
-            <GeneralButton text="Okay" width="80px" height="30px" onClick={onSave} />
+            <GeneralButton text="Okay" width="80px" height="30px" func={onSave} />
           </div>
         </div>
       </div>
