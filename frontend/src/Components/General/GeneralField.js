@@ -6,6 +6,7 @@ const GeneralField = ({
   hint,
   field_type = 'text', // Default to 'text' if no type is passed
   name,
+  value,
   width,
   height,
   func = () => {}, // Default function: no-op
@@ -78,6 +79,7 @@ const GeneralField = ({
         type={field_type}
         name={name}
         id={id}
+        value={value} 
         placeholder={hint}
         className={`field-input`} // Apply modified class name for input
         onChange={(e) => func(e)} // Ensure func is always a function
