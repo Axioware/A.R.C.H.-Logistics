@@ -119,7 +119,145 @@ const AddLocation = () => {
     }
   };
 
+  const [quantity, setQuantity] = useState("");
+  const [category, setCategory] = useState("");
+  const [chargeBy, setChargeBy] = useState("");
+
+
   return (
+    <>
+    <style>
+        {`
+          .table-top-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 95%;
+            margin: 30px auto 20px 50px;
+            flex-wrap: wrap;
+          }
+
+          .row-container1 {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
+          }
+
+          .page-heading {
+            flex-grow: 1;
+          }
+
+          .input-field, .select-field {
+            width: 70%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          }
+
+          .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            position: relative;
+            margin: 20px 0px 0px 50px;
+          }
+
+          .form-grid label {
+            display: block;
+            margin-bottom: 5px;
+          }
+
+          .dimension-container {
+            display: flex;
+            gap: 10px;
+            width: 70%;
+          }
+
+          .dimension-input {
+            width: calc(33.33% - 7px) !important;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          }
+
+          .add-another-button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            color: grey;
+            border: none;
+            cursor: pointer;
+            background: none;
+            margin: 10px 0px 0px 50px;
+          }
+
+          .add-another-buttons {
+            margin-top: 10px;
+            padding: 0px 16px;
+            color: grey;
+            border: none;
+            cursor: pointer;
+            background: none;
+          }
+
+          .remove-dimension-button {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+          }
+
+          .remove-dimension-button:hover {
+            background-color: #ff3d3d;
+          }
+
+          .radio-container {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+          }
+
+          .radio-label {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+          }
+
+          .radio-input {
+            margin-right: 5px;
+          }
+
+          .bundle-product-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+          }
+
+          .bundle-product-container .input-field {
+            width: 100%;
+          }
+
+          .bundle-product-container .add-another-button {
+            margin: 0;
+            align-self: flex-end;
+          }
+        `}
+      </style>
     <div>
       <SideBar
         sidebar_state={isSidebarClosed}
@@ -127,7 +265,7 @@ const AddLocation = () => {
       />
       <div style={mainStyles.centerContent(isSidebarClosed)}>
 
-      <div style={{ marginBottom: '50px' }}>
+      <div style={{ marginBottom: '60px' }}>
           <NavPath
             text={["Home", "All Locations", "Add Location"]}
             paths={["/home", "/all-location", "/add-location"]}
@@ -142,12 +280,60 @@ const AddLocation = () => {
             height="50px"
           />
 
-          <div id="tableBackground" style={mainStyles.tablesBackground}>
-            <div id="headingcontainer" style={{ }}>
-              <PageHeading text="Add Location" />
+        <div style={mainStyles.AddInputBackground}>
+            <div className="table-top-container">
+              <PageHeading
+                text={'Add Location'}
+                width="auto" 
+                height="auto"
+                sidebar_width="5px"
+                sidebar_height="35px"
+              />
             </div>
 
-            <form
+          <form className="inventory-form">
+          <div className="form-grid">
+                <div>
+                  <label>Name</label>
+                  <input
+                    type="text"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    className="input-field"
+                    placeholder="Enter Name"
+                  />
+                </div>
+                <div>
+                  <label>Type</label>
+                  <input
+                    type="text"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    className="input-field"
+                    placeholder="Enter quantity"
+                  />
+                </div>
+                <div>
+                  <label>Warehouse</label>
+                  <select 
+                    value={chargeBy} 
+                    onChange={(e) => setChargeBy(e.target.value)}
+                    className="select-field"
+                  >
+                    <option value="">Select </option>
+                    <option value="weight">Option 1</option>
+                    <option value="unit">Option 2</option>
+                  </select>
+                </div>
+              </div>
+
+          </form>
+          <div id="buttonContainer" style={styles.buttonContainer}>
+                <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
+                <GeneralButton text="Add" type="submit" width="100px" height="100%" />
+              </div>
+
+            {/* <form
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr 1fr 1fr",
@@ -200,7 +386,7 @@ const AddLocation = () => {
                 />
                 <GeneralButton text="Add" type="submit" width="100px" height="100%" />
               </div>
-            </form>
+            </form> */}
           </div>
         </div>
       </div>
@@ -214,7 +400,25 @@ const AddLocation = () => {
         />
       )}
     </div>
+    </>
   );
+};
+
+
+const styles = {
+  buttonContainer: {
+    alignSelf: 'flex-end',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '100%',
+    maxWidth: '250px',
+    textAlign: 'right', // Ensure text & inline elements align
+    gap: '20px',
+    lineHeight: '40px',
+    marginTop: "50px",
+    marginRight: "100px",
+  },
 };
 
 export default AddLocation;
