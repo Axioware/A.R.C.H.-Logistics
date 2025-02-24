@@ -120,100 +120,128 @@ const AddLocation = () => {
   };
 
   return (
-    <div>
-      <SideBar
-        sidebar_state={isSidebarClosed}
-        set_sidebar_state={setIsSidebarClosed}
-      />
-      <div style={mainStyles.centerContent(isSidebarClosed)}>
+    <>
+      <style>
+        {`
+          .table-top-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 95%;
+            margin: 30px auto 20px 50px;
+            flex-wrap: wrap;
+          }
 
-      <div style={{ marginBottom: '50px' }}>
-          <NavPath
-            text={["Home", "All Locations", "Add Location"]}
-            paths={["/home", "/all-location", "/add-location"]}
-            text_color={[255, 255, 255]}
-            background_color={[23, 23, 23]}
-            hyperlink_size={[
-              ["10%", "55%"],
-              ["40%", "50%"],
-              ["4%", "4%"],
-            ]}
-            width="100%"
-            height="50px"
-          />
+          /* Increase the width of input fields */
+          input {
+            width: 80%; /* Make input fields take full width of their container */
+          }
+        `}
+      </style>
+      <div>
+        <SideBar
+          sidebar_state={isSidebarClosed}
+          set_sidebar_state={setIsSidebarClosed}
+        />
+        <div style={mainStyles.centerContent(isSidebarClosed)}>
+          <div style={{ marginBottom: '50px' }}>
+            <NavPath
+              text={["Home", "All Locations", "Add Location"]}
+              paths={["/home", "/all-location", "/add-location"]}
+              text_color={[255, 255, 255]}
+              background_color={[23, 23, 23]}
+              hyperlink_size={[
+                ["10%", "55%"],
+                ["40%", "50%"],
+                ["4%", "4%"],
+              ]}
+              width="100%"
+              height="50px"
+            />
 
-          <div id="tableBackground" style={mainStyles.tablesBackground}>
-            <div id="headingcontainer" style={{ }}>
-              <PageHeading text="Add Location" />
-            </div>
-
-            <form
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr 1fr",
-                gap: "20px",
-                marginLeft: "20px",
-                marginRight: "30px",
-                marginTop: "35px",
-              }}
-              onSubmit={handleSubmit}
-            >
-              <GeneralField
-                label="Name"
-                field_type="text"
-                hint="Enter location name"
-                required={true}
-                func={(e) => setLocationName(e.target.value)}
-              />
-              <GeneralField
-                label="Type"
-                field_type="text"
-                hint="Select the type of location"
-                required={true}
-                func={(e) => setLocationType(e.target.value)}
-              />
-              <DropDown
-                data={warehouses.map((w) => w.warehouse_name)}
-                multi={false}
-                label="Warehouse"
-                required={true}
-                width="230px"
-                onSelect={setSelectedWarehouseName}
-              />
-              <div
-                style={{
-                  alignSelf: "flex-end",
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "250px",
-                  gap: "20px",
-                  marginTop: "100px",
-                  lineHeight: "40px",
-                }}
-              >
-                <GeneralButton
-                  text="Cancel"
-                  width="100px"
-                  height="100%"
-                  button_color={["230", "230", "230"]}
-                  text_color={["0", "0", "0"]}
+            <div style={mainStyles.AddInputBackground}>
+              <div className="table-top-container">
+                <PageHeading
+                  text={'Add Location'}
+                  width="auto" 
+                  height="auto"
+                  sidebar_width="5px"
+                  sidebar_height="35px"
                 />
-                <GeneralButton text="Add" type="submit" width="100px" height="100%" />
               </div>
-            </form>
+
+              <form
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                  gap: "10px",
+                  marginLeft: "50px",
+                  marginRight: "30px",
+                  marginTop: "35px",
+                }}
+                onSubmit={handleSubmit}
+              >
+                <GeneralField
+                  label="Name"
+                  field_type="text"
+                  hint="Enter location name"
+                  required={true}
+                  func={(e) => setLocationName(e.target.value)}
+                />
+                <GeneralField
+                  label="Type"
+                  field_type="text"
+                  hint="Select the type of location"
+                  required={true}
+                  func={(e) => setLocationType(e.target.value)}
+                />
+                <DropDown
+                  data={warehouses.map((w) => w.warehouse_name)}
+                  multi={false}
+                  label="Warehouse"
+                  required={true}
+                  width="90%"
+                  onSelect={setSelectedWarehouseName}
+                />
+                <div
+                  style={{
+                    alignSelf: "flex-end",
+                    display: "flex",
+                    flexDirection: "row",
+                    width: "70%",
+                    gap: "10px",
+                    marginTop: "100px",
+                    lineHeight: "40px",
+                    '@media (max-width: 768px)': {
+                      flexDirection: 'column',
+                      gap: '10px',
+                    },
+                  }}
+                >
+                  <GeneralButton
+                    text="Cancel"
+                    width="50%"
+                    height="40px"
+                    button_color={["230", "230", "230"]}
+                    text_color={["0", "0", "0"]}
+                  />
+                  <GeneralButton text="Add" type="submit" width="50%" height="40px" />
+                </div>
+              </form>
+            </div>
           </div>
         </div>
+        {modalData.isOpen && (
+          <LargeModal
+            isOpen={modalData.isOpen}
+            title={modalData.title}
+            content={modalData.content}
+            onClose={() => setModalData({ isOpen: false, title: "", content: "" })}
+            onSave={() => setModalData({ isOpen: false, title: "", content: "" })}
+          />
+        )}
       </div>
-      {modalData.isOpen && (
-        <LargeModal
-          isOpen={modalData.isOpen}
-          title={modalData.title}
-          content={modalData.content}
-          onClose={() => setModalData({ isOpen: false, title: "", content: "" })}
-          onSave={() => setModalData({ isOpen: false, title: "", content: "" })}
-        />
-      )}
-    </div>
+    </>
   );
 };
 

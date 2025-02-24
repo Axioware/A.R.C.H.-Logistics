@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import COLORS from "../../Assets/JS/Color"; // Import the global color file
 
 const GeneralButton = ({
@@ -36,6 +36,31 @@ const GeneralButton = ({
     fontSize: font_size || '16px',
     transition: 'all 0.3s ease' // Smooth transition for hover effect
   };
+
+  // Add media queries dynamically
+  useEffect(() => {
+    const styleTag = document.createElement('style');
+    styleTag.innerHTML = `
+      @media (max-width: 768px) {
+        #${id} {
+          font-size: 14px;
+          padding: 8px 16px;
+        }
+      }
+      @media (max-width: 480px) {
+        #${id} {
+          font-size: 12px;
+          padding: 6px 12px;
+        }
+      }
+    `;
+    document.head.appendChild(styleTag);
+
+    // Cleanup the style tag when the component unmounts
+    return () => {
+      document.head.removeChild(styleTag);
+    };
+  }, [id]); // Re-run effect if `id` changes
 
   return (
     <button
