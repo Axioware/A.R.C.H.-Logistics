@@ -12,6 +12,8 @@ import FilterButton from "../../Components/Table_Components/FilterButton";
 import FilterOptionsUserManagement from "../../Components/Filter/FilterOptionUserManagement";
 import Pagination from '../../Components/Table_Components/Pagination';
 import Dollar from "../../Components/Icons/DollarIcon"
+import { FaTrash } from "react-icons/fa";
+// import mainStyles from "../../Assets/CSS/styles";
 
 export default function All_Users() {
 
@@ -60,9 +62,16 @@ export default function All_Users() {
           <td style={{ display: "flex", padding: '15px 15px 15px 0px', justifyContent: "right"}}>
             <EditIcon path={`edit-user/?id=${row.id}`}/>
           </td>
+          <td  style={{ display: "flex", padding: '20px 15px 15px 0px', justifyContent: "right"}}>
+            <FaTrash style={{ ...styles.deleteIcon, margin: "0 auto" }} onClick={() => handleDelete(index)} />
+           </td>
         </div>
       </tr>
     ));
+  };
+
+  const handleDelete = (index) => {
+    setData(data.filter((_, i) => i !== index));
   };
 
   const table_width_function = () => {
@@ -71,8 +80,8 @@ export default function All_Users() {
         <col style={{ width: "10%" }} />
         <col style={{ width: "20%" }} />
         <col style={{ width: "30%" }} />
-        <col style={{ width: "30%" }} />
-        <col style={{ width: "10%" }} />  
+        <col style={{ width: "28%" }} />
+        <col style={{ width: "12%" }} />  
       </colgroup>
     );
   };
@@ -217,3 +226,16 @@ export default function All_Users() {
     </>
   );
 }  
+
+
+const styles = {
+  td: {
+    // padding: '20px',
+    // textAlign: 'center'
+  },
+  deleteIcon: {
+    color: 'red',
+    cursor: 'pointer'
+  }
+};
+
