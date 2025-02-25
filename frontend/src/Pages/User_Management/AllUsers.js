@@ -11,9 +11,8 @@ import SearchBar from '../../Components/Table_Components/SearchBar';
 import FilterButton from '../../Components/Table_Components/FilterButton';
 import FilterOptionsUserManagement from '../../Components/Filter/FilterOptionUserManagement';
 import Pagination from '../../Components/Table_Components/Pagination';
-import Dollar from "../../Components/Icons/DollarIcon"
+import Dollar from "../../Components/Icons/DollarIcon";
 import { FaTrash } from "react-icons/fa";
-// import mainStyles from "../../Assets/CSS/styles";
 
 export default function All_Users() {
   const [data, setData] = useState([]);
@@ -31,7 +30,16 @@ export default function All_Users() {
   const [endpoint, setEndpoint] = useState(BASE_URL);
   const location = useLocation();
 
-  // Build the endpoint: Always include page, filters only on Users page.
+  // Inline truncation style with padding.
+  const tdStyle = {
+    maxWidth: "150px",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    padding: "15px"
+  };
+
+  // Consolidated useEffect: build endpoint and call getData once.
   useEffect(() => {
     const params = new URLSearchParams();
     if (currentPage) params.append('page', currentPage);
@@ -48,53 +56,57 @@ export default function All_Users() {
     getData(newEndpoint);
   }, [location.pathname, billingType, warehouses, search, currentPage, clearanceLevel]);
 
-  // Map all fields except is_active
+  // Table row mapping with inline truncation style.
   const table_function = () => {
     return data.map((row, index) => (
       <tr key={index}>
-        <td>{row.id}</td>
-        <td>{row.username}</td>
-        <td>{row.first_name}</td>
-        <td>{row.last_name}</td>
-        <td>{row.email}</td>
-        <td>{row.tax_id}</td>
-        <td>{row.phone}</td>
-        <td>{row.state}</td>
-        <td>{row.city}</td>
-        <td>{row.zip}</td>
-        <td>{row.clearance_level}</td>
-        <td>{row.last_logout}</td>
-        <td>{row.date_created}</td>
-        <td>{row.email2}</td>
-        <td>{row.address}</td>
-        <td>{row.llc_name}</td>
-        <td>{row.billing_type}</td>
-        <td>{Array.isArray(row.warehouses) ? row.warehouses.join(", ") : row.warehouses}</td>
-        <td style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+        <td style={tdStyle} title={row.id}>{row.id}</td>
+        <td style={tdStyle} title={row.username}>{row.username}</td>
+        <td style={tdStyle} title={row.first_name}>{row.first_name}</td>
+        <td style={tdStyle} title={row.last_name}>{row.last_name}</td>
+        <td style={tdStyle} title={row.email}>{row.email}</td>
+        <td style={tdStyle} title={row.phone}>{row.phone}</td>
+        <td style={tdStyle} title={row.state}>{row.state}</td>
+        <td style={tdStyle} title={row.city}>{row.city}</td>
+        <td style={tdStyle} title={row.zip}>{row.zip}</td>
+        <td style={tdStyle} title={row.address}>{row.address}</td>
+        <td style={tdStyle} title={row.llc_name}>{row.llc_name}</td>
+        <td style={tdStyle} title={row.billing_type}>{row.billing_type}</td>
+        <td style={tdStyle} title={row.role}>{row.role}</td>
+        <td style={{ display: "flex", justifyContent: "flex-end", gap: "10px", padding: "15px" }}>
           <Dollar path={`set-rates/?id=${row.id}`} />
           <EditIcon path={`edit-user/?id=${row.id}`} />
+          <FaTrash
+            style={{ color: "red", cursor: "pointer" }}
+            onClick={() => handleDelete(row.id, index)}
+          />
         </td>
-        <td>{row.role}</td>
-        <div style={{display: "flex", flexDirection: "row"}}>
-          <td style={{ display: "flex", padding: '15px 15px 15px 0px', marginLeft: "40px", justifyContent: "right"}}>
-            <Dollar path={`set-rates/?id=${row.id}`}/>
-          </td>
-          <td style={{ display: "flex", padding: '15px 15px 15px 0px', justifyContent: "right"}}>
-            <EditIcon path={`edit-user/?id=${row.id}`}/>
-          </td>
-          <td  style={{ display: "flex", padding: '20px 15px 15px 0px', justifyContent: "right"}}>
-            <FaTrash style={{ ...styles.deleteIcon, margin: "0 auto" }} onClick={() => handleDelete(index)} />
-           </td>
-        </div>
       </tr>
     ));
   };
 
-  const handleDelete = (index) => {
-    setData(data.filter((_, i) => i !== index));
+  // DELETE handler.
+  const handleDelete = async (userId, index) => {
+    const token = localStorage.getItem("access_token");
+    try {
+      const res = await fetch(`${BASE_URL}${userId}/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      if (res.ok) {
+        setData(prevData => prevData.filter((_, i) => i !== index));
+      } else {
+        console.error("Error deleting user:", res.status);
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
   };
 
-  // Adjust colgroup to match the new columns (19 columns: 18 data columns + 1 for actions)
+  // Adjust colgroup to match the columns.
   const table_width_function = () => {
     return (
       <colgroup>
@@ -103,25 +115,15 @@ export default function All_Users() {
         <col style={{ width: "7%" }} />   {/* First Name */}
         <col style={{ width: "7%" }} />   {/* Last Name */}
         <col style={{ width: "10%" }} />  {/* Email */}
-        <col style={{ width: "5%" }} />   {/* Tax ID */}
         <col style={{ width: "7%" }} />   {/* Phone */}
         <col style={{ width: "7%" }} />   {/* State */}
         <col style={{ width: "7%" }} />   {/* City */}
         <col style={{ width: "5%" }} />   {/* ZIP */}
-        <col style={{ width: "5%" }} />   {/* Clearance */}
-        <col style={{ width: "7%" }} />   {/* Last Logout */}
-        <col style={{ width: "7%" }} />   {/* Date Created */}
-        <col style={{ width: "7%" }} />   {/* Email2 */}
         <col style={{ width: "7%" }} />   {/* Address */}
         <col style={{ width: "7%" }} />   {/* LLC Name */}
         <col style={{ width: "7%" }} />   {/* Billing Type */}
-        <col style={{ width: "7%" }} />   {/* Warehouses */}
-        <col style={{ width: "5%" }} />   {/* Actions */}
-        <col style={{ width: "10%" }} />
-        <col style={{ width: "20%" }} />
-        <col style={{ width: "30%" }} />
-        <col style={{ width: "28%" }} />
-        <col style={{ width: "12%" }} />  
+        <col style={{ width: "7%" }} />   {/* Role */}
+        <col style={{ width: "7%" }} />   {/* Actions */}
       </colgroup>
     );
   };
@@ -132,7 +134,7 @@ export default function All_Users() {
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Fetch data from the API and update totalPages.
+  // Fetch data function.
   const getData = async (url) => {
     setLoading(true);
     const token = localStorage.getItem("access_token");
@@ -170,10 +172,6 @@ export default function All_Users() {
     }
   };
 
-  useEffect(() => {
-    getData(endpoint);
-  }, [currentPage, endpoint]);
-
   const handleNext = () => {
     if (currentPage < totalPages) {
       setCurrentPage(prev => prev + 1);
@@ -189,11 +187,7 @@ export default function All_Users() {
   return (
     <>
       <div>
-        {clearanceLevel && ([1, 2, 3].includes(Number(clearanceLevel))) ? (
-          <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
-        ) : (
-          <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
-        )}
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
         <div style={mainStyles.centerContent(isSidebarClosed)}>
           <NavPath text={["Home", "User Management"]} paths={["/home", "/users"]} />
           <AddButton text="Add User" path='/add-user' />
@@ -216,26 +210,25 @@ export default function All_Users() {
               </div>
             </div>
             <div style={{ overflowX: "auto", width: "100%" }}>
-            <div style={{ minWidth: "1500px" }}>
-            <TableContent
-              table_headings={[
-                'ID', 'Username', 'First Name', 'Last Name', 'Email', 'Tax ID', 
-                'Phone', 'State', 'City', 'ZIP', 'Clearance', 'Last Logout', 
-                'Date Created', 'Email2', 'Address', 'LLC Name', 'Billing Type', 'Warehouses', 'Actions'
-              ]}
-              last_column={true}
-              loading={loading}
-              success={success}
-              prev_button={handlePrev}
-              next_button={handleNext}
-              fetchData={getData}
-              data={data}
-              table_width_function={table_width_function}
-              table_function={table_function}
-              currentPage={currentPage}
-              totalPages={totalPages}
-            />
-            </div>
+              <div style={{ minWidth: "1500px" }}>
+                <TableContent
+                  table_headings={[
+                    'ID', 'Username', 'First Name', 'Last Name', 'Email',
+                    'Phone', 'State', 'City', 'ZIP', 'Address', 'LLC Name', 'Billing Type', 'Role', 'Actions'
+                  ]}
+                  last_column={true}
+                  loading={loading}
+                  success={success}
+                  prev_button={handlePrev}
+                  next_button={handleNext}
+                  fetchData={getData}
+                  data={data}
+                  table_width_function={table_width_function}
+                  table_function={table_function}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                />
+              </div>
             </div>
             <Pagination
               current_page={currentPage || 0}
@@ -249,17 +242,4 @@ export default function All_Users() {
       </div>
     </>
   );
-}  
-
-
-const styles = {
-  td: {
-    // padding: '20px',
-    // textAlign: 'center'
-  },
-  deleteIcon: {
-    color: 'red',
-    cursor: 'pointer'
-  }
-};
-
+}
