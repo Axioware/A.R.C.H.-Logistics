@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import Select from 'react-select'; // Add this import
 import NavPath from '../../Components/General/NavPath';
 import ModalOpener from "../../Components/Table_Components/ModalOpener";
 import SideBar from '../../Components/General/Sidebar';
@@ -11,7 +12,6 @@ export default function AddOrder() {
   const [Label, setLabel] = useState([
     { ProductName: "Xyz", Services: [ { service_name: "Prep", service_id: 1}, { service_name: "Bundling", service_id: 2}], BundleQuantity: 145, UnitQuantity: [{ Quantity: "78"},  {Quantity: "78"}], PackingInstruction: "Handle Carefully" }
   ]);
-
 
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -38,6 +38,7 @@ export default function AddOrder() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
+  const [Packing, setPacking] = useState("");
 
   // Define categories and handleCategorySelect
   const categories = ["Select", "Category 1", "Category 2", "Category 3"];
@@ -47,7 +48,17 @@ export default function AddOrder() {
     setSelectedCategory(category);
   };
 
+  const resetModalValues = () => {
+    setCustom(""); 
+    setWidth(""); 
+    setHeight(""); 
+    setTextOnLabel(""); 
+    setSelectedFile(null);
+  };
+  
 
+  
+  
 
   // Define products state and related functions
   const [products, setProducts] = useState([{ product: "", quantity: "" }]);
@@ -92,31 +103,45 @@ export default function AddOrder() {
     );
   };
 
-  const resetModalValues = () => {
-    setCustom(""); 
-    setWidth(""); 
-    setHeight(""); 
-    setTextOnLabel(""); 
-    setSelectedFile(null);
-  };
+  // const resetModalValues = () => {
+  //   setCustom(""); 
+  //   setWidth(""); 
+  //   setHeight(""); 
+  //   setTextOnLabel(""); 
+  //   setSelectedFile(null);
+  // };
 
   const AddLabel = () => {
     setShowLabelModal(true);
   };
 
   const handleAddLabel = () => {
-    if (!custom) {
-      alert("Please select a service before adding.");
+    if (!serviceList.length || !serviceList[0].service) {
+      alert("Please select at least one service before adding.");
       return;
     }
-
-    // Add the new service to the Label state
-    setLabel([...Label, { ProductName: "New Product", Service: custom, BundleQuantity: "0", Quantity: "0", PackingInstruction: "Handle Carefully" }]);
-
-    // Reset modal values and close the modal
+  
+    const updatedLabel = [...Label];
+  
+    // Assuming all services are applied to the same product for now
+    const newProduct = {
+      ProductName: "New Product",
+      Services: serviceList.map(s => ({ service_name: s.service, service_id: Math.random() })), // Assign unique IDs
+      BundleQuantity: custom || 0,
+      UnitQuantity: products.map(p => ({ Quantity: p.quantity })),
+      PackingInstruction: Packing || "Handle Carefully",
+    };
+  
+    updatedLabel.push(newProduct);
+    setLabel(updatedLabel);
+  
+    // Reset the modal values
     resetModalValues();
+    setServiceList([{ service: "" }]);
+    setProducts([{ product: "", quantity: "" }]);
     setShowLabelModal(false);
   };
+  
 
   const [serviceList, setServiceList] = useState([{ service: "" }]);
 
@@ -124,16 +149,23 @@ export default function AddOrder() {
     setServiceList([...serviceList, { service: "" }]);
   };
 
-  const handleServiceChange = (index, value) => {
+    const handleServiceChange = (index, value) => {
     const newServiceList = [...serviceList];
     newServiceList[index].service = value;
     setServiceList(newServiceList);
+
+    // If "Bundling" is selected, initialize products with two sets of fields
+    if (value === "Bundling") {
+      setProducts([{ product: "", quantity: "" }, { product: "", quantity: "" }]);
+    } else {
+      // Reset to one set of fields for other services
+      setProducts([{ product: "", quantity: "" }]);
+    }
   };
   
   useEffect(() => {
     // Fetch data logic here if needed
-
-    console.log(selectedCategory)
+    console.log(selectedCategory);
   }, [selectedCategory]);
 
   const handleDelete = (index) => {
@@ -141,16 +173,14 @@ export default function AddOrder() {
   };
 
   const handleCancel = () => {
-    resetModalValues();
-    setSelectedFile(null);
-    setShowLabelModal(false);
+    resetModalValues(); // Reset fields
+    setServiceList([{ service: "" }]); // Reset service list to default state
+    setProducts([{ product: "", quantity: "" }]); // Reset products
+    setShowLabelModal(false); // Close modal
   };
-
   
 
   const chargeOptions = ["Service Fee", "Extra Services", "Late Fee", "Custom Charge"];
-  
-
   
   const resetModal = () => {
     setChargeType("Service Fee");
@@ -163,91 +193,141 @@ export default function AddOrder() {
     // Fetch data logic here if needed
   }, [currentPage]);
 
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [selectedWarehouse, setSelectedWarehouse] = useState(null);
 
-  
-  
+  const clientOptions = [
+    { value: "client1", label: "Client 1" },
+    { value: "client2", label: "Client 2" },
+    { value: "client3", label: "Client 3" },
+  ];
+
+
 
   return (
     <div>
       <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={{ marginBottom: '60px' }}>
-        <NavPath
-          text={["Home", "Add Order"]}
-          paths={["/home", "/add-order"]}
-          text_color={[255, 255, 255]}
-          background_color={[23, 23, 23]}
-          width="100%"
-          height="50px"
-        />
+          <NavPath
+            text={["Home", "Add Order"]}
+            paths={["/home", "/add-order"]}
+            text_color={[255, 255, 255]}
+            background_color={[23, 23, 23]}
+            width="100%"
+            height="50px"
+          />
         </div>
 
-<div style={mainStyles.AddInputBackground}>
-  {/* PageHeading with margin-bottom */}
-  <div style={{ marginBottom: '20px' }}> {/* Add margin-bottom here */}
-    <PageHeading text='Add Order' text_color={[0, 0, 0]} width='100%' height='auto' />
-  </div>
-          
-          
+        <div style={mainStyles.AddInputBackground}>
+          <div style={{ marginBottom: '20px' }}>
+            <PageHeading text='Add Order' text_color={[0, 0, 0]} width='100%' height='auto' />
+          </div>
+
+          <div style={{ display: "flex", gap: "100px", alignItems: "center" }}>
+ 
+          {/* Client Name Dropdown */}
+          <div style={{ marginBottom: '15px' }}>
+            <label style={styles.label}>Client Name</label>
+            <Select
+              options={clientOptions}
+              onChange={(selectedOption) => setSelectedClient(selectedOption)}
+              placeholder="Select Client"
+              isSearchable={true}
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  width: "250px",
+                  height: "40px",
+                }),
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+          {/* Category Dropdown */}
           <DropDown
             label="Category"
-            data={["FBA", "FBM", "Storage", "Other"]} // Example data, replace with actual data
+            data={["FBA", "FBM", "Storage", "Other"]}
             width="250px"
             height="40px"
-            onSelect={setSelectedCategory} // Update selectedCategory
+            onSelect={setSelectedCategory}
             required={true}
-            multi={false} 
+            multi={false}
           />
+</div>
 
-{selectedCategory && ["FBA", "FBM", "Storage", "Other"].includes(selectedCategory.value) && (
+<div style={{ marginBottom: '20px' }}>
+          {/* Warehouse Dropdown */}
+          <DropDown
+            label="Warehouse"
+            data={["Warehouse 1", "Warehouse 2", "Warehouse 3"]}
+            width="250px"
+            height="40px"
+            onSelect={setSelectedWarehouse}
+            required={true}
+            multi={false}
+          />
+          </div>
+          </div>
+
+          {selectedClient && selectedCategory && selectedWarehouse && (
   <>
-    <div style={styles.buttonWrapper}>
-      <ModalOpener 
-        text="Add Service" 
-        text_color={[255, 255, 255]} 
-        func={AddLabel} 
-        style={styles.modalOpener}
-      />
-    </div>
+              <div style={styles.buttonWrapper}>
+                <ModalOpener 
+                  text="Add Service" 
+                  text_color={[255, 255, 255]} 
+                  func={AddLabel} 
+                  style={styles.modalOpener}
+                />
+              </div>
 
-    <table style={styles.table}>
-      <colgroup>
-        <col style={{ width: "18%" }} />
-        <col style={{ width: "18%" }} />
-        <col style={{ width: "18%" }} />
-        <col style={{ width: "18%" }} />
-        <col style={{ width: "18%" }} />
-        <col style={{ width: "10%" }} />
-      </colgroup>
-      <thead>
-        <tr>
-          <th style={styles.th}>Product Name</th>
-          <th style={styles.th}>Service</th>
-          <th style={styles.th}>Bundle Quantity</th>
-          <th style={styles.th}>Quantity</th>
-          <th style={styles.th}>Packing Instruction</th>
-          <th style={styles.th}></th>
-        </tr>
-      </thead>
-      <tbody>
-        {/* {Label.map((row, index) => (
-          <tr key={index}>
-            <td style={styles.td}>{row.ProductName}</td>
-            <td style={styles.td}>{row.Service}</td>
-            <td style={styles.td}>{row.BundleQuantity}</td>
-            <td style={styles.td}>{row.Quantity}</td>
-            <td style={styles.td}>{row.PackingInstruction}</td>
-            <td style={{ ...styles.td, display: "flex" }}>
-              <FaTrash style={{ ...styles.deleteIcon }} onClick={() => handleDelete(index)} />
-            </td>
-          </tr>
-        ))} */}
-      </tbody>
-    </table>  
-  </>
-)}
+              <table style={styles.table}>
+                <colgroup>
+                  <col style={{ width: "18%" }} />
+                  <col style={{ width: "18%" }} />
+                  <col style={{ width: "18%" }} />
+                  <col style={{ width: "18%" }} />
+                  <col style={{ width: "18%" }} />
+                  <col style={{ width: "10%" }} />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Product Name</th>
+                    <th style={styles.th}>Service</th>
+                    <th style={styles.th}>Bundle Quantity</th>
+                    <th style={styles.th}>Quantity</th>
+                    <th style={styles.th}>Packing Instruction</th>
+                    <th style={styles.th}></th>
+                  </tr>
+                </thead>
+                <tbody>
+  {Label.map((row, index) => (
+    <tr key={index}>
+      <td style={styles.td}>{row.ProductName}</td>
+      <td style={styles.td}>
+        {row.Services.map((s, i) => (
+          <span key={i}>{s.service_name}{i < row.Services.length - 1 ? ", " : ""}</span>
+        ))}
+      </td>
+      <td style={styles.td}>{row.BundleQuantity}</td>
+      <td style={styles.td}>
+        {row.UnitQuantity.map((q, i) => (
+          <span key={i}>{q.Quantity}{i < row.UnitQuantity.length - 1 ? ", " : ""}</span>
+        ))}
+      </td>
+      <td style={styles.td}>{row.PackingInstruction}</td>
+      <td style={{ ...styles.td, display: "flex" }}>
+        <FaTrash style={styles.deleteIcon} onClick={() => handleDelete(index)} />
+      </td>
+    </tr>
+  ))}
+</tbody>
+              </table>  
+            </>
+        )}
 
-{showLabelModal && 
+          {showLabelModal && 
   <div style={styles.modalOverlay}>
     <div style={styles.modal}>
       <h2 style={styles.modalTitle}>Add Service</h2>
@@ -261,9 +341,9 @@ export default function AddOrder() {
               value={service.service} 
               onChange={(e) => handleServiceChange(index, e.target.value)}
             >
-              <option value="option1">Select</option>
-              <option value="option1">Prep</option>
-              <option value="option2">Bundling</option>
+              <option value="">Select</option>
+              <option value="Prep">Prep</option>
+              <option value="Bundling">Bundling</option>
             </select>
           </div>
         </div>
@@ -276,7 +356,7 @@ export default function AddOrder() {
       </div>
 
       {/* If "Prep" is selected, show these fields once */}
-      {serviceList.some(service => service.service === "option1") && (
+      {serviceList.some(service => service.service === "Prep") && (
         <>
           <div style={styles.rowContainer}>
             <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
@@ -302,23 +382,11 @@ export default function AddOrder() {
               />
             </div>
           </div>
-
-          {/* Packing Instruction Field */}
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Packing Instruction</label>
-            <input
-              type="text"
-              style={styles.input}
-              value={custom}
-              onChange={(e) => setCustom(e.target.value)}
-              placeholder="Enter packing instructions"
-            />
-          </div>
         </>
       )}
 
       {/* If "Bundling" is selected, show multiple products and extra fields */}
-      {serviceList.some(service => service.service === "option2") && (
+      {serviceList.some(service => service.service === "Bundling") && (
         <>
           {products.map((item, index) => (
             <div key={index} style={styles.rowContainer}>
@@ -362,19 +430,21 @@ export default function AddOrder() {
               placeholder="Enter Bundle Quantity"
             />
           </div>
-
-          {/* Packing Instruction Field */}
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Packing Instruction</label>
-            <input
-              type="text"
-              style={styles.input}
-              value={custom}
-              onChange={(e) => setCustom(e.target.value)}
-              placeholder="Enter packing instructions"
-            />
-          </div>
         </>
+      )}
+
+      {/* Render Packing Instruction only once if any service is selected */}
+      {serviceList.some(service => service.service !== "") && (
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>Packing Instruction</label>
+          <input
+            type="text"
+            style={styles.input}
+            value={Packing}
+            onChange={(e) => setPacking(e.target.value)}
+            placeholder="Enter packing instructions"
+          />
+        </div>
       )}
 
       <div style={styles.buttonContainer}>
@@ -384,7 +454,6 @@ export default function AddOrder() {
     </div>
   </div>
 }
-
         </div>
       </div>
     </div>
@@ -392,183 +461,6 @@ export default function AddOrder() {
 }
 
 const styles = {
-  headerContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: '15px',
-    padding: '10px 0',
-  },
-  table: {
-    width: "98%",
-    borderCollapse: "collapse",
-    marginBottom: "20px",
-    textAlign: "left",
-    marginRight: '30px',
-  },
-  th: {
-    background: "#000",
-    color: "#fff",
-    fontWeight: "bold",
-    padding: "12px",
-    borderBottom: "2px solid #ddd",
-    textAlign: "center",
-    width: "auto",
-    fontFamily: "Montserrat, sans-serif"
-  },
-  td: {
-    padding: "12px",
-    borderBottom: "1px solid #ddd",
-    textAlign: "center",
-    width: "auto",
-  },
-  deleteIcon: {
-    cursor: "pointer",
-    color: "red",
-    fontSize: "18px",
-  },
-  buttonWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: '10px',
-    justifyContent: 'flex-end',
-    marginRight: '30px',
-  },
-  modalOpener: {
-    height: '50px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modalOverlay: { 
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1000,
-  },
-  modal: {
-    background: "#fff",
-    padding: "25px",
-    borderRadius: "12px",
-    width: "450px",
-    boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
-    textAlign: "center",
-    position: "relative",
-  },
-  modalTitle: {
-    marginBottom: "20px",
-    fontSize: "26px",
-    fontWeight: "bolder",
-    color: "#333",
-  },
-  label: {
-    display: "block",
-    textAlign: "left",
-    marginBottom: "8px",
-    fontSize: "22px",
-    fontWeight: "500",
-    color: "#555",
-  },
-  input: {
-    width: "100%",
-    padding: "12px",
-    marginBottom: "18px",
-    border: "1px solid #ccc",
-    borderRadius: "6px",
-    fontSize: "16px",
-    outline: "none",
-    transition: "border 0.3s ease",
-  },
-  buttonContainer: {
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "12px",
-    marginTop: "15px",
-  },
-  cancelButton: {
-    backgroundColor: "#ccc",
-    color: "#333",
-    border: "none",
-    padding: "12px 18px",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "500",
-    transition: "background 0.3s ease",
-  },
-  confirmButton: {
-    backgroundColor: "#000",
-    color: "#fff",
-    border: "none",
-    padding: "12px 18px",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "500",
-    transition: "background 0.3s ease",
-  },
-  dropdownContainer: {
-    marginBottom: '20px',
-    display: 'flex',
-    justifyContent: 'flex-start',
-  },
-  dropdown: {
-    position: 'relative',
-    display: 'inline-block',
-    width: '200px',
-  },
-  dropdownButton: {
-    backgroundColor: '#fff',
-    color: '#000',
-    padding: '12px 16px',
-    fontSize: '16px',
-    border: '1px solid #ccc',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    width: '100%',
-    textAlign: 'left',
-  },
-  dropdownList: {
-    position: 'absolute',
-    top: '100%',
-    left: '0',
-    backgroundColor: '#fff',
-    border: '1px solid #ccc',
-    borderRadius: '6px',
-    listStyle: 'none',
-    padding: '0',
-    margin: '0',
-    zIndex: '1000',
-    width: '100%',
-  },
-  dropdownItem: {
-    padding: '12px 16px',
-    cursor: 'pointer',
-    textAlign: 'left',
-  },
-  arrow: {
-    marginLeft: '10px',
-  },
-  addAnotherButton: {
-    color: "grey",
-    fontSize: "16px",
-    fontWeight: "300",
-    marginTop: "2px", // Decreased top margin
-    alignSelf: "flex-start", // Align to the left
-    backgroundColor: "transparent", // Optional: Remove background color
-    border: "none", // Optional: Remove border
-    cursor: "pointer", // Optional: Add pointer cursor
-    padding: "0", // Optional: Remove padding
-    marginBottom:"14px",
-  },
   headerContainer: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -611,6 +503,7 @@ const styles = {
     marginBottom: "20px",
     textAlign: "left",
     marginRight: '30px',
+    fontSize: "12px",
   },
   th: {
     background: "#000",
@@ -621,7 +514,6 @@ const styles = {
     textAlign: "center", // Center align text
     width: "auto", // Respect colgroup width
     fontFamily: "Montserrat, sans-serif"
-
   },
   td: {
     padding: "12px",
@@ -629,7 +521,6 @@ const styles = {
     textAlign: "center", // Center align text
     width: "auto", // Respect colgroup width
     fontFamily: "Nunito, sans-serif"
-
   },
   deleteIcon: {
     cursor: "pointer",
@@ -654,7 +545,11 @@ const styles = {
     width: '35%',
   },
   modalTitle: {
-    marginBottom: '20px',
+    marginBottom: "20px",
+    fontSize: "22px",
+    fontWeight: "bolder",
+    color: "#333",
+    textAlign: 'center'
   },
   label: {
     display: 'block',

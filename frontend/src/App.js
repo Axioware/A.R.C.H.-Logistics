@@ -28,6 +28,7 @@ import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 
 //Location Management
 import AddLocation from './Pages/Locations/AddLocation';
+import AddLocation2 from './Pages/Locations/AddLocation2';
 import EditLocation from './Pages/Locations/EditLocation';
 import AllLocation from './Pages/Locations/AllLocation';
 
@@ -147,6 +148,7 @@ function App() {
 
         {/* Location Management */}
         <Route path="/add-location" element={<AddLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
+        <Route path="/add-location2" element={<AddLocation2 menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
         <Route path="/edit-location" element={<EditLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} /> 
         <Route path="/locations" element={<AllLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />     
         

@@ -11,7 +11,9 @@ import SearchBar from '../../Components/Table_Components/SearchBar';
 import FilterButton from '../../Components/Table_Components/FilterButton';
 import FilterOptionsUserManagement from '../../Components/Filter/FilterOptionUserManagement';
 import Pagination from '../../Components/Table_Components/Pagination';
-import Dollar from '../../Components/Icons/DollarIcon';
+import Dollar from "../../Components/Icons/DollarIcon"
+import { FaTrash } from "react-icons/fa";
+// import mainStyles from "../../Assets/CSS/styles";
 
 export default function All_Users() {
   const [data, setData] = useState([]);
@@ -72,8 +74,24 @@ export default function All_Users() {
           <Dollar path={`set-rates/?id=${row.id}`} />
           <EditIcon path={`edit-user/?id=${row.id}`} />
         </td>
+        <td>{row.role}</td>
+        <div style={{display: "flex", flexDirection: "row"}}>
+          <td style={{ display: "flex", padding: '15px 15px 15px 0px', marginLeft: "40px", justifyContent: "right"}}>
+            <Dollar path={`set-rates/?id=${row.id}`}/>
+          </td>
+          <td style={{ display: "flex", padding: '15px 15px 15px 0px', justifyContent: "right"}}>
+            <EditIcon path={`edit-user/?id=${row.id}`}/>
+          </td>
+          <td  style={{ display: "flex", padding: '20px 15px 15px 0px', justifyContent: "right"}}>
+            <FaTrash style={{ ...styles.deleteIcon, margin: "0 auto" }} onClick={() => handleDelete(index)} />
+           </td>
+        </div>
       </tr>
     ));
+  };
+
+  const handleDelete = (index) => {
+    setData(data.filter((_, i) => i !== index));
   };
 
   // Adjust colgroup to match the new columns (19 columns: 18 data columns + 1 for actions)
@@ -99,6 +117,11 @@ export default function All_Users() {
         <col style={{ width: "7%" }} />   {/* Billing Type */}
         <col style={{ width: "7%" }} />   {/* Warehouses */}
         <col style={{ width: "5%" }} />   {/* Actions */}
+        <col style={{ width: "10%" }} />
+        <col style={{ width: "20%" }} />
+        <col style={{ width: "30%" }} />
+        <col style={{ width: "28%" }} />
+        <col style={{ width: "12%" }} />  
       </colgroup>
     );
   };
@@ -226,4 +249,17 @@ export default function All_Users() {
       </div>
     </>
   );
-}
+}  
+
+
+const styles = {
+  td: {
+    // padding: '20px',
+    // textAlign: 'center'
+  },
+  deleteIcon: {
+    color: 'red',
+    cursor: 'pointer'
+  }
+};
+
