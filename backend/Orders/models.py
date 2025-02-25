@@ -10,20 +10,21 @@ class Orders(models.Model):
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING)
     
     ORDERS_CATEGORY_CHOICES = [
-        ('FBA', 'FBA'),
-        ('FBM', 'FBM'),
-        ('Storage', 'Storage'),
-        ('Other', 'Other'),
+        ('fba', 'FBA'),
+        ('fbm', 'FBM'),
+        ('storage', 'Storage'),
+        ('other', 'Other'),
     ]
+
 
     category = models.CharField(
         max_length=10, 
         choices=ORDERS_CATEGORY_CHOICES, 
     )
 
-    order_name = models.CharField(max_length=50, null=True)
     order_charge = models.DecimalField(max_digits=10, decimal_places=4, default=0)
     completed = models.BooleanField(default=False)
+    create_date = models.DateTimeField(default=timezone.now)
     start_date = models.DateTimeField(default=None, null=True, blank=True)
     completed_date = models.DateTimeField(default=None, null=True, blank=True)
 
@@ -43,15 +44,13 @@ class SubOrders(models.Model):
         ('cancelled', 'Cancelled'),
     ]
     
-    sub_order_id = models.CharField(max_length=100, primary_key=True)
-    sub_order_type = models.ForeignKey(Services, on_delete=models.DO_NOTHING, related_name="sub_order_type_sub_order")
-    item_id = models.ForeignKey(Item, on_delete=models.DO_NOTHING, related_name="item_id_sub_order")
+    sub_order_id = models.AutoField(primary_key=True)
+    sub_order_type = models.ManyToManyField(Services, related_name="sub_order_type_sub_order")
     order_id = models.ForeignKey(Orders, on_delete=models.CASCADE, related_name="order_id_sub_order")
     warehouse = models.ForeignKey(Warehouse, on_delete=models.DO_NOTHING, related_name="warehouse_sub_order")
     no_bundles = models.IntegerField(default=None, null=True, blank=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     active = models.BooleanField(default=False, null=True, blank=True)
-    # order_placed_date = models.DateTimeField(default=timezone.now, blank=True, null=True)
     order_start_date = models.DateTimeField(blank=True, null=True)
     # state = models.CharField(max_length=50, null=True, blank=True)
     phase = models.CharField(max_length=15, choices=PHASE_CHOICES, null=True)

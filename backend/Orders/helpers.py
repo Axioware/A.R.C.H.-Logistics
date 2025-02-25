@@ -25,7 +25,16 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib import colors
-import io
+import string
+
+def generate_order_id():
+    """Generate a unique 8-character alphanumeric order ID."""
+    MAX_TRIES = 3
+    for _ in range(MAX_TRIES):
+        order_id = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+        if not Orders.objects.filter(order_id=order_id).exists():
+            return order_id
+    return None
 
 def fba_title_label(date, llc_name, boxes, order_id):
     packet = io.BytesIO()

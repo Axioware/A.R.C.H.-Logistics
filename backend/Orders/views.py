@@ -16,12 +16,9 @@ from django.db.models import Q, Sum, F
 from django.db import transaction
 from Arch_Logistics.helpers import *
 from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_datetime
 import random
-import pytz
-import ast
-from rest_framework.parsers import JSONParser
+import string
 from .helpers import *
 import json
 from itertools import groupby
@@ -108,156 +105,51 @@ def orders(request):
 
     if request.method == 'POST':
         try:
-            errors = {}
-            data = request.data
-            # print(body_data)
-            if authenticate_prep(user):
-                return Response({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
-            if not authenticate_client(user):
-                client_id = data.get('client_id')
-                client = User.objects.get(id=client_id)
-                if not client_id:
-                    return Response({'error': 'client id is required'}, status=status.HTTP_400_BAD_REQUEST)
-                print('ASSDHFJHGHGJHGJHGJHGH')
-            else:
-                client = user
-            fnsku_files = request.FILES.getlist('fnsku_files[]')
-            box_label_files = request.FILES.getlist('box_label_files[]')
-            trackings = data.get('trackings')
-            # trackings = ast.literal_eval(trackings)
-            print(trackings)
-            service_id = generate_service_id(client)
-            body_data = data.get('body_data')
-            body_data = json.loads(body_data)
-            # print(service_id)
-            for index, service_details in enumerate(body_data):
-                
-                # Extract fields from request data
-                item_ids = service_details.get('item_id')
-                service_code = service_details.get('service_code')
-                category_id = service_details.get('category_id')
-    
-                additional_service = service_details.get('additional_service', '')
-                additional_format = service_details.get('additional_format', '')
-                additional_format_text = service_details.get('additional_format_text', '')
-                additional_format_file = service_details.get('additional_format_file', None)
-                quantities = service_details.get('quantity', [])
-                fnsku = fnsku_files[index] if index < len(fnsku_files) else None
-                box_label = box_label_files[index] if index < len(box_label_files) else None
-                placed_date = timezone.now()
-                packing_instructions = service_details.get('packing_instructions', '')
-                pallet = service_details.get('pallet', False)
-                bundle_quantity = service_details.get('bundle_quantity', [])        
-                no_bundles = service_details.get('no_bundles')    
-    
-    
-                #-----------------------------------------------------------------------------------------------------------------------
-                if not (len(item_ids) == len(quantities)):
-                    return Response({'error': 'items and quantities do not match'}, status=status.HTTP_400_BAD_REQUEST)
-                if len(bundle_quantity) > 0:
-                    if not (len(bundle_quantity) == len(item_ids)):
-                            return Response({'error': 'items and bundle quantities do not match'}, status=status.HTTP_400_BAD_REQUEST)
-    
-                if not service_code:
-                    errors['service_code'] = 'service id is required'
-                if not category_id:
-                    errors['category_id'] = 'category id is required'
-                if not fnsku:
-                    errors['fnsku'] = 'fnsku is required'
-                if not len(item_ids) > 0:
-                    errors['item_id'] = 'atleast one item id is required'
+            data = request.json()
+            if 'user_id' not in data or 'category' not in data or 'subOrders' not in data or 'warehouse' not in data:
+                return JsonResponse({'error': 'Missing required fields'}, status=400)
 
-                if errors:
-                    return Response({'error': errors}, status=status.HTTP_400_BAD_REQUEST)
-                
-                for number in range(len(item_ids)):
-                    item_id = item_ids[number]
-                    item = Item.objects.get(item_id=item_id) if item_id else None
-                    service_category = ServiceCategory.objects.get(service_code=service_code) if service_code else None
-                    category = OrderCategory.objects.get(category_id=category_id) if category_id else None
-                    quantity = quantities[number]
-                    
-                    if item is None:
-                        errors['item'] = 'Item does not exist'
-                    if service_category is None:
-                        errors['service_id'] = 'service id does not exist'
-                    if category is None:
-                        errors['category'] = 'category does not exist'
-                    if len(quantity) != 3:
-                        errors['quantity'] = 'source quantity in wrong format'    
-                    
-                    if errors:
-                        return Response({'error': errors}, status=status.HTTP_400_BAD_REQUEST)
-                    b_quantity = None
-                    if bundle_quantity:
-                        if len(bundle_quantity) > 0:
-                            b_quantity = bundle_quantity[number]
-                    with transaction.atomic():
-                        if number == 0:
-                            service_detail = ServiceDetail.objects.create(
-                                service_id=service_id,
-                                item_id=item,
-                                service_code=service_category,
-                                category_id=category,
-                                client_id=client,
-                                no_bundles=no_bundles,
-                                bundle_quantity=b_quantity if b_quantity else None,
-                                additional_service=additional_service,
-                                additional_format=additional_format,
-                                additional_format_text=additional_format_text,
-                                additional_format_file=additional_format_file,
-                                quantity_from_inventory=quantity[0],
-                                quantity_from_recent_received=quantity[1],
-                                quantity_from_new_shipment=quantity[2],
-                                fnsku=fnsku,
-                                box_label=box_label,
-                                placed_date=placed_date,
-                                packing_instructions=packing_instructions,
-                                pallet=pallet
-                            )
-                        else:
-                            bundle_order = BundleOrder.objects.create(
-                                service_id=service_id,
-                                item_id=service_detail.item_id,
-                                service_code=service_code,
-                                category_id=category_id,
-                                other_item=item,
-                                quantity_from_inventory=quantity[0],
-                                quantity_from_recent_received=quantity[1],
-                                quantity_from_new_shipment=quantity[2],
-                            )
+            order_id = generate_order_id()
+            if order_id is None:
+                return JsonResponse({'error': 'Failed to generate a unique order ID'}, status=500)
+
             with transaction.atomic():
-                for track in trackings:
-                    print(track)
-                    received_item = Received.objects.create(
-                                tracking_id=track,
-                                client_id=client,
-                                tracking_type='Box',
-                                date_received=None,
-                                completed=False,
-                                assigned=True
-                            )
-                    assigned = Received_Service.objects.create(
-                        tracking_id=received_item,
-                        service_id=service_id
-                    )
-            # Return successful response
-            return Response({"message": "Order created successfully!", "service_id": service_detail.service_id}, status=status.HTTP_201_CREATED)
-        
-        except Item.DoesNotExist:
-            return Response({"error": "Item not found."}, status=status.HTTP_400_BAD_REQUEST)
-        except ServiceCategory.DoesNotExist:
-            return Response({"error": "Service category not found."}, status=status.HTTP_400_BAD_REQUEST)
-        except OrderCategory.DoesNotExist:
-            return Response({"error": "Order category not found."}, status=status.HTTP_400_BAD_REQUEST)
-        except Bin.DoesNotExist:
-            return Response({"error": "Bin not found."}, status=status.HTTP_400_BAD_REQUEST)
-        except User.DoesNotExist:
-            return Response({"error": "Client not found."}, status=status.HTTP_400_BAD_REQUEST)
-        # except Exception as e:
-            # return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                order = Orders.objects.create(
+                    order_id=order_id,
+                    user_id=data['user_id'],
+                    category=data['category']
+                )
 
-    return Response({"error": "Invalid HTTP method"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+                for sub_order_data in data['subOrders']:
+                    if 'services' not in sub_order_data or 'products' not in sub_order_data:
+                        return JsonResponse({'error': 'Missing services or products in suborder'}, status=400)
+
+                    service_ids = [service['id'] for service in sub_order_data['services']]
+                    services = Services.objects.filter(service_id__in=service_ids)
+                    if services.count() != len(service_ids):
+                        return JsonResponse({'error': 'One or more services not found'}, status=404)
+
+                    sub_order = SubOrders.objects.create(
+                        order_id=order,
+                        bundle_quantity=sub_order_data['bundle_quantity'],
+                        packing_instructions=sub_order_data['packing_instruction']
+                    )
+                    sub_order.sub_order_type.add(*services)  # Link services to the suborder
+
+                    for product in sub_order_data['products']:
+                        try:
+                            item = Item.objects.get(item_id=product['id'])
+                            SubOrderItem.objects.create(
+                                sub_order_id=sub_order,
+                                item_id=item,
+                                quantity=product['quantity']
+                            )
+                        except Item.DoesNotExist:
+                            return JsonResponse({'error': f"Item with ID {product['id']} not found"}, status=404)
+
+                return JsonResponse({'message': 'Order created successfully'}, status=201)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 
 
