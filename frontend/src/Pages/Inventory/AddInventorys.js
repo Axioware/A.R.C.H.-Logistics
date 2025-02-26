@@ -44,7 +44,6 @@ export default function AddInventory() {
 
   const [clientOptions, setClientOptions] = useState([
     { name: "Abdul Moiz" },
-    { name: "Noman" },
     { name: "John" },
     { name: "Smith" }
   ]);
@@ -216,7 +215,7 @@ export default function AddInventory() {
           {errors.id && <span style={styles.error}>{errors.id}</span>}
           <label style={styles.label}>Name</label>
           <input
-            type="text"
+            type="text" 
             name="name"
             value={newProduct.name}
             onChange={handleInputChange}
@@ -238,6 +237,7 @@ export default function AddInventory() {
               Cancel
             </button>
             <button
+              type="button" // Ensure this is not type="submit"
               style={styles.confirmButton}
               onClick={handleAddProduct}
             >
@@ -249,7 +249,6 @@ export default function AddInventory() {
     );
   };
 
-  
   return (
     <>
       <style>
@@ -331,8 +330,8 @@ export default function AddInventory() {
 
           .remove-dimension-button {
             position: absolute;
-            right: 30px;
-            top: 50%;
+            right: 110px;
+            top: 75%;
             transform: translateY(-50%);
             background-color: #ff6b6b;
             color: white;
