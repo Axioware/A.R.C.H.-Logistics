@@ -116,7 +116,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 8,
   },
-  title: { fontSize: 18, fontWeight: "bold" },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    borderLeftWidth: 3, // Adds a left border
+    borderLeftColor: "black", // Sets the border color to black
+    paddingLeft: 8,
+  },
   productCount: { fontSize: 16, color: "gray" },
   searchBar: {
     flexDirection: "row",

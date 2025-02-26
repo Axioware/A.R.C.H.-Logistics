@@ -222,7 +222,9 @@ const styles = StyleSheet.create({
   },
   backButton: { flexDirection: "row", alignItems: "center" },
   backText: { fontSize: 16, fontWeight: "bold" },
-  title: { fontSize: 22, fontWeight: "bold", textAlign: "center", flex: 1 },
+  title: {
+     fontSize: 22,
+     fontWeight: "bold", textAlign: "center", flex: 1 },
   card: {
     backgroundColor: "white",
     borderRadius: 10,
@@ -274,7 +276,6 @@ const styles = StyleSheet.create({
 });
 
 export default AccountInfoPage;
-
 
 // import React, { useState, useEffect } from "react";
 // import {

@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     marginBottom: 8,
+    marginTop: 10,
   },
   sideContainer: { width: 40, alignItems: "center" },
   backButton: { padding: 8 },
