@@ -1,10 +1,41 @@
 import React, { useState, useEffect } from "react";
+import Select from 'react-select';
 import SideBar from '../../Components/General/Sidebar';
 import NavPath from '../../Components/General/NavPath';
 import PageHeading from "../../Components/Table_Components/PageHeading";
 import mainStyles from "../../Assets/CSS/styles";
 import fetchData from '../../utils/fetch_data';
 import GeneralButton from '../../Components/General/GeneralButton';
+
+// Custom styles for react-select dropdown
+const customStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    boxShadow: state.isFocused ? `0 0 0 1px rgb(14, 116, 144)` : 'none',
+    '&:hover': {
+      borderColor: 'rgb(14, 116, 144)',
+    },
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected ? 'rgb(14, 116, 144)' : 'white',
+    color: 'black', // Always black text
+    '&:hover': {
+      backgroundColor: 'rgba(14, 116, 144, 0.8)',
+      color: 'black', // Always black text on hover
+    },
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: 'black', // Always black text for selected value
+  }),
+  menu: (provided) => ({
+    ...provided,
+    border: '1px solid rgb(14, 116, 144)',
+  }),
+};
 
 export default function AddInventory() {
   const [data, setData] = useState([]);
@@ -43,18 +74,29 @@ export default function AddInventory() {
   const [bundleProducts, setBundleProducts] = useState([{ product: '', quantity: '' }]);
 
   const [clientOptions, setClientOptions] = useState([
-    { name: "Abdul Moiz" },
-    { name: "John" },
-    { name: "Smith" }
+    { value: "Abdul Moiz", label: "Abdul Moiz" },
+    { value: "John", label: "John" },
+    { value: "Smith", label: "Smith" }
   ]);
 
   const [warehouseOptions, setWarehouseOptions] = useState([
-    { name: "Warehouse 1" },
-    { name: "Warehouse 2" }
+    { value: "Warehouse 1", label: "Warehouse 1" },
+    { value: "Warehouse 2", label: "Warehouse 2" }
   ]);
 
   const [productOptions, setProductOptions] = useState([
-    { name: "Add New Product" },
+    { value: "Add New Product", label: "Add New Product" },
+  ]);
+
+  const [categoryOptions, setCategoryOptions] = useState([
+    { value: "Electronics", label: "Electronics" },
+    { value: "Furniture", label: "Furniture" },
+    { value: "Clothing", label: "Clothing" },
+  ]);
+
+  const [chargeByOptions, setChargeByOptions] = useState([
+    { value: "weight", label: "Weight" },
+    { value: "unit", label: "Unit" },
   ]);
 
   const [showModal, setShowModal] = useState(false);
@@ -66,7 +108,7 @@ export default function AddInventory() {
     if (response && response.error) {
       setErrorCode(response.error);
     } else if (response) {
-      setClientOptions([...response, { name: "Abdul Moiz" }, { name: "Noman" }, { name: "John" }, { name: "Smith" }]);
+      setClientOptions([...response, { value: "Abdul Moiz", label: "Abdul Moiz" }, { value: "Noman", label: "Noman" }, { value: "John", label: "John" }, { value: "Smith", label: "Smith" }]);
     }
   };
 
@@ -77,7 +119,7 @@ export default function AddInventory() {
     if (response && response.error) {
       setErrorCode(response.error);
     } else if (response) {
-      setWarehouseOptions([...response, { name: "Warehouse 1" }, { name: "Warehouse 2" }]);
+      setWarehouseOptions([...response, { value: "Warehouse 1", label: "Warehouse 1" }, { value: "Warehouse 2", label: "Warehouse 2" }]);
     }
   };
 
@@ -88,7 +130,7 @@ export default function AddInventory() {
     if (response && response.error) {
       setErrorCode(response.error);
     } else if (response) {
-      setProductOptions([...response, { name: "Product 1" }, { name: "Product 2" }]);
+      setProductOptions([...response, { value: "Product 1", label: "Product 1" }, { value: "Product 2", label: "Product 2" }]);
     }
   };
 
@@ -111,20 +153,31 @@ export default function AddInventory() {
     }
   };
 
-  const handleClientChange = (event) => {
-    setClientName(event.target.value);
+  const handleClientChange = (selectedOption) => {
+    setClientName(selectedOption.value);
   };
 
-  const handleProductChange = (e) => {
-    const selectedValue = e.target.value;
-    setProduct(selectedValue);
-    if (selectedValue === "Add New Product") {
+  const handleProductChange = (selectedOption) => {
+    setProduct(selectedOption.value);
+    if (selectedOption.value === "Add New Product") {
       setShowModal(true);
     }
   };
 
+  const handleWarehouseChange = (selectedOption) => {
+    setWarehouse(selectedOption.value);
+  };
+
+  const handleCategoryChange = (selectedOption) => {
+    setCategory(selectedOption.value);
+  };
+
+  const handleChargeByChange = (selectedOption) => {
+    setChargeBy(selectedOption.value);
+  };
+
   const handleAddNewProduct = (newProduct) => {
-    setProductOptions([...productOptions, newProduct]);
+    setProductOptions([...productOptions, { value: newProduct.name, label: newProduct.name }]);
     setProduct(newProduct.name);
     setShowModal(false);
   };
@@ -203,7 +256,7 @@ export default function AddInventory() {
       <div style={styles.modalOverlay}>
         <div style={styles.modal}>
           <h2 style={styles.modalTitle}>Add New Product</h2>
-          <label style={styles.label}>Product ID</label>
+          <label style={styles.label}>SKU </label>
           <input
             type="text"
             name="id"
@@ -273,7 +326,15 @@ export default function AddInventory() {
             flex-grow: 1;
           }
 
-          .input-field, .select-field {
+          .input-field, .select-fields {
+            width: 70%;
+            padding: px;
+            margin-top: 5px;
+            border: 0px solid #ccc;
+            border-radius: 4px;
+          }
+
+           .input-field, .select-field {
             width: 70%;
             padding: 8px;
             margin-top: 5px;
@@ -413,18 +474,14 @@ export default function AddInventory() {
               <div className="form-grid">
                 <div>
                   <label>Client Name:</label>
-                  <select 
-                    value={clientName} 
-                    onChange={handleClientChange} 
-                    className="select-field"
-                  >
-                    <option value="">Select a client</option>
-                    {clientOptions.map((client, index) => (
-                      <option key={index} value={client.name}>
-                        {client.name}
-                      </option>
-                    ))}
-                  </select>
+                  <Select
+                    value={clientOptions.find(option => option.value === clientName)}
+                    onChange={handleClientChange}
+                    options={clientOptions}
+                    className="select-fields"
+                    placeholder="Select a client"
+                    styles={customStyles} // Apply custom styles
+                  />
                 </div>
               </div>
 
@@ -433,18 +490,14 @@ export default function AddInventory() {
                   <div className="form-grid">
                     <div>
                       <label>Product:</label>
-                      <select 
-                        value={product} 
+                      <Select
+                        value={productOptions.find(option => option.value === product)}
                         onChange={handleProductChange}
-                        className="select-field"
-                      >
-                        <option value="">Select a product</option>
-                        {productOptions.map((product, index) => (
-                          <option key={index} value={product.name}>
-                            {product.name}
-                          </option>
-                        ))}
-                      </select>
+                        options={productOptions}
+                        className="select-fields"
+                        placeholder="Select a product"
+                        styles={customStyles} // Apply custom styles
+                      />
                       {showModal && (
                         <Modal 
                           onClose={() => setShowModal(false)} 
@@ -487,26 +540,25 @@ export default function AddInventory() {
                     </div>
                     <div>
                       <label>Category:</label>
-                      <select 
-                        value={category} 
-                        onChange={(e) => setCategory(e.target.value)}
-                        className="select-field"
-                      >
-                        <option value="">Select a category</option>
-                        {/* Populate options dynamically if needed */}
-                      </select>
+                      <Select
+                        value={categoryOptions.find(option => option.value === category)}
+                        onChange={handleCategoryChange}
+                        options={categoryOptions}
+                        className="select-fields"
+                        placeholder="Select a category"
+                        styles={customStyles} // Apply custom styles
+                      />
                     </div>
                     <div>
                       <label>Charge By:</label>
-                      <select 
-                        value={chargeBy} 
-                        onChange={(e) => setChargeBy(e.target.value)}
-                        className="select-field"
-                      >
-                        <option value="">Select charge by</option>
-                        <option value="weight">Weight</option>
-                        <option value="unit">Unit</option>
-                      </select>
+                      <Select
+                        value={chargeByOptions.find(option => option.value === chargeBy)}
+                        onChange={handleChargeByChange}
+                        options={chargeByOptions}
+                        className="select-fields"
+                        placeholder="Select charge by"
+                        styles={customStyles} // Apply custom styles
+                      />
                     </div>
                   </div>
 
@@ -522,18 +574,14 @@ export default function AddInventory() {
                     </div>
                     <div>
                       <label>Warehouse:</label>
-                      <select 
-                        value={warehouse} 
-                        onChange={(e) => setWarehouse(e.target.value)}
-                        className="select-field"
-                      >
-                        <option value="">Select a warehouse</option>
-                        {warehouseOptions.map((wh, index) => (
-                          <option key={index} value={wh.name}>
-                            {wh.name}
-                          </option>
-                        ))}
-                      </select>
+                      <Select
+                        value={warehouseOptions.find(option => option.value === warehouse)}
+                        onChange={handleWarehouseChange}
+                        options={warehouseOptions}
+                        className="select-fields"
+                        placeholder="Select a warehouse"
+                        styles={customStyles} // Apply custom styles
+                      />
                     </div>
                     <div>
                       <label>Location:</label>
@@ -706,7 +754,6 @@ export default function AddInventory() {
         </div>
       </div>
     </>
-    
   );
 }
 
@@ -724,71 +771,71 @@ const styles = {
     marginTop: "20px",
     marginRight: "100px",
   },
-    modalOverlay: {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      background: "rgba(0, 0, 0, 0.5)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 1000,
-    },
-    modal: {
-      backgroundColor: '#fff',
-      padding: '20px',
-      borderRadius: '8px',
-      width: '35%',
-    },
-    modalTitle: {
-      marginBottom: "20px",
-      fontSize: "22px",
-      fontWeight: "bolder",
-      color: "#333",
-      textAlign: 'center'
-    },
-    label: {
-      display: 'block',
-      marginBottom: '5px',
-    },
-    input: {
-      width: '100%',
-      padding: '8px',
-      marginBottom: '10px',
-      borderRadius: '4px',
-      border: '1px solid #ccc',
-    },
-    buttonContainers: {
-      display: "flex",
-      justifyContent: "flex-end",
-      gap: "10px",
-    },
-    cancelButton: {
-      backgroundColor: '#ccc',
-      color: '#000',
-      border: 'none',
-      padding: '8px 10px ',
-      borderRadius: '5px',
-      cursor: 'pointer',
-      marginRight: '10px',
-      marginTop: "14px",
-    },
-    confirmButton: {
-      backgroundColor: 'black',
-      color: 'white',
-      border: '1px solid black',
-      padding: '8px 10px',
-      borderRadius: '5px',
-      cursor: 'pointer',
-      transition: '0.3s',
-      marginTop: "14px",
-    },
-    error: {
-      color: 'red',
-      fontSize: '12px',
-      marginBottom: '10px',
-      display: 'block',
-    },
-  };
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0, 0, 0, 0.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+  },
+  modal: {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '8px',
+    width: '35%',
+  },
+  modalTitle: {
+    marginBottom: "20px",
+    fontSize: "22px",
+    fontWeight: "bolder",
+    color: "#333",
+    textAlign: 'center'
+  },
+  label: {
+    display: 'block',
+    marginBottom: '5px',
+  },
+  input: {
+    width: '100%',
+    padding: '8px',
+    marginBottom: '10px',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+  },
+  buttonContainers: {
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "10px",
+  },
+  cancelButton: {
+    backgroundColor: '#ccc',
+    color: '#000',
+    border: 'none',
+    padding: '8px 10px ',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginRight: '10px',
+    marginTop: "14px",
+  },
+  confirmButton: {
+    backgroundColor: 'black',
+    color: 'white',
+    border: '1px solid black',
+    padding: '8px 10px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    transition: '0.3s',
+    marginTop: "14px",
+  },
+  error: {
+    color: 'red',
+    fontSize: '12px',
+    marginBottom: '10px',
+    display: 'block',
+  },
+};

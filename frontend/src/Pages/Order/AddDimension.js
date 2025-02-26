@@ -311,16 +311,17 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginBottom: '15px',
-    padding: '10px 0',
+    marginBottom: '10px',
+    padding: '25px 0',
   },
   invoiceDetails: {
     display: 'flex',
     flexDirection: 'column',
     gap: '5px',
     alignItems: 'flex-start',
-    fontSize: '0.9rem',
+    fontSize: '1.0rem',
     fontFamily: "'abc'",
+    // marginRight: "100px",
   },
   totalContainer: {
     display: 'flex',
@@ -330,12 +331,7 @@ const styles = {
     marginBottom: '20px',
     padding: '10px 0',
   },
-  totalCharge: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    display: 'flex',
-    gap: '20px',
-  },
+ 
   buttonWrapper: {
     display: 'flex',
     gap: '10px',
