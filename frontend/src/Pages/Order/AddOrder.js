@@ -145,22 +145,30 @@ export default function AddOrder() {
 
   const [serviceList, setServiceList] = useState([{ service: "" }]);
 
-  const handleAddAnotherService = () => {
-    setServiceList([...serviceList, { service: "" }]);
-  };
-
-    const handleServiceChange = (index, value) => {
+  const handleServiceChange = (index, value) => {
     const newServiceList = [...serviceList];
     newServiceList[index].service = value;
     setServiceList(newServiceList);
-
-    // If "Bundling" is selected, initialize products with two sets of fields
-    if (value === "Bundling") {
-      setProducts([{ product: "", quantity: "" }, { product: "", quantity: "" }]);
+  
+    // Check if "Bundling" is selected in any of the services
+    const hasBundling = newServiceList.some(service => service.service === "Bundling");
+  
+    // If "Bundling" is selected, ensure there are exactly two product fields
+    if (hasBundling) {
+      if (products.length < 2) {
+        // Add only one more set of fields if "Bundling" is selected
+        setProducts([...products, { product: "", quantity: "" }]);
+      }
     } else {
-      // Reset to one set of fields for other services
-      setProducts([{ product: "", quantity: "" }]);
+      // If no "Bundling" is selected, ensure there is only one product field
+      if (products.length > 1) {
+        setProducts([{ product: "", quantity: "" }]);
+      }
     }
+  };
+  
+  const handleAddAnotherService = () => {
+    setServiceList([...serviceList, { service: "" }]);
   };
   
   useEffect(() => {
@@ -284,12 +292,12 @@ export default function AddOrder() {
 
               <table style={styles.table}>
                 <colgroup>
-                  <col style={{ width: "18%" }} />
-                  <col style={{ width: "18%" }} />
-                  <col style={{ width: "18%" }} />
-                  <col style={{ width: "18%" }} />
-                  <col style={{ width: "18%" }} />
-                  <col style={{ width: "10%" }} />
+                  <col style={{ width: "19%" }} />
+                  <col style={{ width: "19%" }} />
+                  <col style={{ width: "19%" }} />
+                  <col style={{ width: "19%" }} />
+                  <col style={{ width: "19%" }} />
+                  <col style={{ width: "5%" }} />
                 </colgroup>
                 <thead>
                   <tr>
@@ -327,18 +335,19 @@ export default function AddOrder() {
             </>
         )}
 
-          {showLabelModal && 
+{showLabelModal && (
   <div style={styles.modalOverlay}>
     <div style={styles.modal}>
       <h2 style={styles.modalTitle}>Add Service</h2>
-      
+
+      {/* Render Services */}
       {serviceList.map((service, index) => (
         <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
           <div style={{ flex: 2 }}>
             <label style={styles.label}>Service</label>
-            <select 
-              style={styles.input} 
-              value={service.service} 
+            <select
+              style={styles.input}
+              value={service.service}
               onChange={(e) => handleServiceChange(index, e.target.value)}
             >
               <option value="">Select</option>
@@ -349,91 +358,61 @@ export default function AddOrder() {
         </div>
       ))}
 
+      {/* Add Another Service Button */}
       <div style={{ textAlign: 'left' }}>
         <button style={styles.addAnotherButton} onClick={handleAddAnotherService}>
           + Add Another Service
         </button>
       </div>
 
-      {/* If "Prep" is selected, show these fields once */}
-      {serviceList.some(service => service.service === "Prep") && (
-        <>
-          <div style={styles.rowContainer}>
-            <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
-              <label style={styles.label}>Product</label>
-              <select
-                style={styles.dropdown}
-                value={products[0]?.product || ""}
-                onChange={(e) => handleProductChange(0, "product", e.target.value)}
-              >
-                <option value="">Select Product</option>
-                <option value="Xyz1">Xyz1</option>
-                <option value="Xyz2">Xyz2</option>
-              </select>
-            </div>
-            <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
-              <label style={styles.label}>Unit Quantity</label>
-              <input
-                type="number"
-                style={styles.input}
-                value={products[0]?.quantity || ""}
-                onChange={(e) => handleProductChange(0, "quantity", e.target.value)}
-                placeholder="Enter quantity"
-              />
-            </div>
+      {/* Render Product and Unit Quantity Fields */}
+      {products.map((item, index) => (
+        <div key={index} style={styles.rowContainer}>
+          <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
+            <label style={styles.label}>Product</label>
+            <select
+              style={styles.dropdown}
+              value={item.product}
+              onChange={(e) => handleProductChange(index, "product", e.target.value)}
+            >
+              <option value="">Select Product</option>
+              <option value="Xyz1">Xyz1</option>
+              <option value="Xyz2">Xyz2</option>
+            </select>
           </div>
-        </>
-      )}
-
-      {/* If "Bundling" is selected, show multiple products and extra fields */}
-      {serviceList.some(service => service.service === "Bundling") && (
-        <>
-          {products.map((item, index) => (
-            <div key={index} style={styles.rowContainer}>
-              <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
-                <label style={styles.label}>Product</label>
-                <select
-                  style={styles.dropdown}
-                  value={item.product}
-                  onChange={(e) => handleProductChange(index, "product", e.target.value)}
-                >
-                  <option value="">Select Product</option>
-                  <option value="Xyz1">Xyz1</option>
-                  <option value="Xyz2">Xyz2</option>
-                </select>
-              </div>
-              <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
-                <label style={styles.label}>Unit Quantity</label>
-                <input
-                  type="number"
-                  style={styles.input}
-                  value={item.quantity}
-                  onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
-                  placeholder="Enter quantity"
-                />
-              </div>
-            </div>
-          ))}
-
-          <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
-            + Add Another Product
-          </p>
-
-          {/* Bundle Quantity Field */}
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Bundle Quantity</label>
+          <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
+            <label style={styles.label}>Unit Quantity</label>
             <input
-              type="text"
+              type="number"
               style={styles.input}
-              value={custom}
-              onChange={(e) => setCustom(e.target.value)}
-              placeholder="Enter Bundle Quantity"
+              value={item.quantity}
+              onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
+              placeholder="Enter quantity"
             />
           </div>
-        </>
+        </div>
+      ))}
+
+      {/* Add Another Product Button */}
+      <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
+        + Add Another Product
+      </p>
+
+      {/* Bundle Quantity Field */}
+      {serviceList.some(service => service.service === "Bundling") && (
+        <div style={styles.inputGroup}>
+          <label style={styles.label}>Bundle Quantity</label>
+          <input
+            type="text"
+            style={styles.input}
+            value={custom}
+            onChange={(e) => setCustom(e.target.value)}
+            placeholder="Enter Bundle Quantity"
+          />
+        </div>
       )}
 
-      {/* Render Packing Instruction only once if any service is selected */}
+      {/* Packing Instruction Field */}
       {serviceList.some(service => service.service !== "") && (
         <div style={styles.inputGroup}>
           <label style={styles.label}>Packing Instruction</label>
@@ -447,13 +426,14 @@ export default function AddOrder() {
         </div>
       )}
 
+      {/* Modal Buttons */}
       <div style={styles.buttonContainer}>
         <button style={styles.cancelButton} onClick={handleCancel}>Cancel</button>
         <button style={styles.confirmButton} onClick={handleAddLabel}>Add Service</button>
       </div>
     </div>
   </div>
-}
+)}
         </div>
       </div>
     </div>
