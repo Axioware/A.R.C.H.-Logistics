@@ -75,17 +75,18 @@ const AddService = () => {
 
   const styles = {
     mainContent: {
-      padding: "10px 0px 50px 0px",
+      padding: "20px 0px 50px 0px",
     },
     form: {
       position: "relative",
       alignSelf: "flex-start",
       display: "grid",
       gridTemplateColumns: "1fr 1fr 1fr", // Two columns
-      gap: "50px",
-      marginLeft: "20px",
+      gap: "20px",
+      marginLeft: "60px",
       marginRight: "30px",
       marginTop: "35px",
+      width: "60%"
     },
     buttonContainer: {
       alignSelf: "flex-end",
@@ -95,12 +96,14 @@ const AddService = () => {
       gap: "20px",
       marginTop: "20px",
       lineHeight: "40px",
+      // width: "100px"
     },
     headingContainer: {
       alignSelf: "flex-start",
-      marginLeft: "20px",
+      marginLeft: "60px",
       marginTop: "15px",
     },
+    
   };
 
   return (
@@ -111,6 +114,7 @@ const AddService = () => {
       />
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={styles.mainContent}>
+        <div style={{ marginBottom: '50px' }}>
           <NavPath
             text={["Home", "Service", "Add Services"]}
             paths={["/home", "/service", "/add-service"]}
@@ -124,6 +128,7 @@ const AddService = () => {
             width="100%"
             height="50px"
           />
+            </div>
 
           <div id="tableBackground" style={mainStyles.tableBackground}>
             <div id="headingContainer" style={styles.headingContainer}>

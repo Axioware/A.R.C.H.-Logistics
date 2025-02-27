@@ -100,13 +100,7 @@ export default function AddOrder() {
     );
   };
 
-  // const resetModalValues = () => {
-  //   setCustom(""); 
-  //   setWidth(""); 
-  //   setHeight(""); 
-  //   setTextOnLabel(""); 
-  //   setSelectedFile(null);
-  // };
+
 
   const AddLabel = () => {
     setShowLabelModal(true);
