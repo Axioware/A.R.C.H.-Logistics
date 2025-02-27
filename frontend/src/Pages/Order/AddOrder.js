@@ -19,10 +19,6 @@ export default function AddOrder() {
   const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
   const [clearance, setClearance] = useState(1);
-  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
-    const storedState = localStorage.getItem("sidebarclosed");
-    return storedState === null ? true : JSON.parse(storedState);
-  });
   const [showModal, setShowModal] = useState(false);
   const [showLabelModal, setShowLabelModal] = useState(false);
   const [chargeType, setChargeType] = useState("Service Fee");
@@ -30,7 +26,6 @@ export default function AddOrder() {
   const [notes, setNotes] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [editingNotes, setEditingNotes] = useState("");
-
   const [custom, setCustom] = useState("");
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
@@ -39,8 +34,10 @@ export default function AddOrder() {
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
   const [Packing, setPacking] = useState("");
-
-  // Define categories and handleCategorySelect
+  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
+    const storedState = localStorage.getItem("sidebarclosed");
+    return storedState === null ? true : JSON.parse(storedState);
+  });
   const categories = ["Select", "Category 1", "Category 2", "Category 3"];
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -179,12 +176,13 @@ export default function AddOrder() {
   const handleDelete = (index) => {
     setLabel(Label.filter((_, i) => i !== index));
   };
-
   const handleCancel = () => {
-    resetModalValues(); // Reset fields
+    // Reset all modal-related states
+    resetModalValues(); // Reset custom, width, height, textOnLabel, and selectedFile
     setServiceList([{ service: "" }]); // Reset service list to default state
-    setProducts([{ product: "", quantity: "" }]); // Reset products
-    setShowLabelModal(false); // Close modal
+    setProducts([{ product: "", quantity: "" }]); // Reset products to default state
+    setPacking(""); // Reset packing instruction
+    setShowLabelModal(false); // Close the modal
   };
   
 
@@ -365,65 +363,67 @@ export default function AddOrder() {
         </button>
       </div>
 
-      {/* Render Product and Unit Quantity Fields */}
-      {products.map((item, index) => (
-        <div key={index} style={styles.rowContainer}>
-          <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
-            <label style={styles.label}>Product</label>
-            <select
-              style={styles.dropdown}
-              value={item.product}
-              onChange={(e) => handleProductChange(index, "product", e.target.value)}
-            >
-              <option value="">Select Product</option>
-              <option value="Xyz1">Xyz1</option>
-              <option value="Xyz2">Xyz2</option>
-            </select>
-          </div>
-          <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
-            <label style={styles.label}>Unit Quantity</label>
+      {/* Render Product and Unit Quantity Fields only if a service is selected */}
+      {serviceList.some(service => service.service !== "") && (
+        <>
+          {products.map((item, index) => (
+            <div key={index} style={styles.rowContainer}>
+              <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
+                <label style={styles.label}>Product</label>
+                <select
+                  style={styles.dropdown}
+                  value={item.product}
+                  onChange={(e) => handleProductChange(index, "product", e.target.value)}
+                >
+                  <option value="">Select Product</option>
+                  <option value="Xyz1">Xyz1</option>
+                  <option value="Xyz2">Xyz2</option>
+                </select>
+              </div>
+              <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
+                <label style={styles.label}>Unit Quantity</label>
+                <input
+                  type="number"
+                  style={styles.input}
+                  value={item.quantity}
+                  onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
+                  placeholder="Enter quantity"
+                />
+              </div>
+            </div>
+          ))}
+
+          {/* Add Another Product Button */}
+          <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
+            + Add Another Product
+          </p>
+
+          {/* Bundle Quantity Field (only for "Bundling" service) */}
+          {serviceList.some(service => service.service === "Bundling") && (
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Bundle Quantity</label>
+              <input
+                type="text"
+                style={styles.input}
+                value={custom}
+                onChange={(e) => setCustom(e.target.value)}
+                placeholder="Enter Bundle Quantity"
+              />
+            </div>
+          )}
+
+          {/* Packing Instruction Field */}
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Packing Instruction</label>
             <input
-              type="number"
+              type="text"
               style={styles.input}
-              value={item.quantity}
-              onChange={(e) => handleProductChange(index, "quantity", e.target.value)}
-              placeholder="Enter quantity"
+              value={Packing}
+              onChange={(e) => setPacking(e.target.value)}
+              placeholder="Enter packing instructions"
             />
           </div>
-        </div>
-      ))}
-
-      {/* Add Another Product Button */}
-      <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
-        + Add Another Product
-      </p>
-
-      {/* Bundle Quantity Field */}
-      {serviceList.some(service => service.service === "Bundling") && (
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Bundle Quantity</label>
-          <input
-            type="text"
-            style={styles.input}
-            value={custom}
-            onChange={(e) => setCustom(e.target.value)}
-            placeholder="Enter Bundle Quantity"
-          />
-        </div>
-      )}
-
-      {/* Packing Instruction Field */}
-      {serviceList.some(service => service.service !== "") && (
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Packing Instruction</label>
-          <input
-            type="text"
-            style={styles.input}
-            value={Packing}
-            onChange={(e) => setPacking(e.target.value)}
-            placeholder="Enter packing instructions"
-          />
-        </div>
+        </>
       )}
 
       {/* Modal Buttons */}
