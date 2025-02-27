@@ -163,6 +163,8 @@ export default function AddOrder() {
       }
     }
   };
+
+  
   
   const handleAddAnotherService = () => {
     setServiceList([...serviceList, { service: "" }]);
@@ -333,6 +335,7 @@ export default function AddOrder() {
             </>
         )}
 
+
 {showLabelModal && (
   <div style={styles.modalOverlay}>
     <div style={styles.modal}>
@@ -393,10 +396,12 @@ export default function AddOrder() {
             </div>
           ))}
 
-          {/* Add Another Product Button */}
-          <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
-            + Add Another Product
-          </p>
+          {/* Render "Add Another Product" button only if "Bundling" is selected or multiple services are selected */}
+          {serviceList.some(service => service.service === "Bundling") && (
+            <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
+              + Add Another Product
+            </p>
+          )}
 
           {/* Bundle Quantity Field (only for "Bundling" service) */}
           {serviceList.some(service => service.service === "Bundling") && (
@@ -579,18 +584,20 @@ const styles = {
     backgroundColor: '#ccc',
     color: '#000',
     border: 'none',
-    padding: '10px 15px',
+    padding: '8px 10px ',
     borderRadius: '5px',
     cursor: 'pointer',
     marginRight: '10px',
+    marginTop: "14px",
   },
   confirmButton: {
-    backgroundColor: 'black',
+    backgroundColor: 'rgb(14, 116, 144)',  // Updated color
     color: 'white',
-    border: '1px solid black',
-    padding: '10px 15px',
+    border: '1px solid rgb(14, 116, 144)', // Updated border color
+    padding: '8px 10px',
     borderRadius: '5px',
     cursor: 'pointer',
     transition: '0.3s',
+    marginTop: "14px",
   },
 };

@@ -199,15 +199,24 @@ const [warehouse, setWarehouse] = useState("");
       <div style={mainStyles.centerContent(isSidebarClosed)}>
 
         <NavPath
-          text={["Home", "Invoices", "Invoices Details"]}
-          paths={["/home", "/invoices", "/invoices-details"]}
+          text={["Home", "Order", "Order Details"]}
+          paths={["/home", "/order", "/order-details"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
 
         />
 
-
+            <div style={styles.invoiceDetail}>
+              <span><strong>LLC Name:</strong> {LLCName}</span>
+              <span><strong>Order ID:</strong> {OrderID}</span>
+            </div>
 <div style={mainStyles.tablesBackground}>
+  
+
+<div style={styles.headerContainer}>
+           
+           
+          </div>
           <PageHeading text='Labels'width="auto" />
 
           <div style={styles.headerContainer}>
@@ -245,26 +254,7 @@ const [warehouse, setWarehouse] = useState("");
                   text="Download"
                   content={<FilterOptionsDownload1/>} 
                 />
-            {/* <FilterButton
-              text="Print"
-              text_color={[255, 255, 255]} // White text color
-              background_color={[23, 23, 23]} // Dark background
-              filter_function={() => {}}   
-              content={FilterOptionsPrint}
-              width="150px" // Set width explicitly
-              height="50px" // Set height explicitly
-              style={styles.filterButton} // Add this to enforce consistent styling
-            />
-            <FilterButton
-              text="Download"
-              text_color={[255, 255, 255]} // White text color
-              background_color={[23, 23, 23]} // Dark background
-              filter_function={() => {}}   
-              content={FilterOptionsDownload}
-              width="150px" // Set width explicitly
-              height="50px" // Set height explicitly
-              style={styles.filterButton} // Add this to enforce consistent styling
-            /> */}
+       
             <ModalOpener 
               text="Add Label" 
               text_color={[255, 255, 255]} 
@@ -506,7 +496,7 @@ const [warehouse, setWarehouse] = useState("");
         </div>
 
         <div style={mainStyles.tablesBackground}>
-          <PageHeading text='Invoices Details' text_color={[0, 0, 0]} width='100%' height='auto' />
+          <PageHeading text='Charges' text_color={[0, 0, 0]} width='100%' height='auto' />
 
           <div style={styles.headerContainer}>
             <div style={styles.invoiceDetails}>
@@ -632,6 +622,16 @@ const [warehouse, setWarehouse] = useState("");
       width: '100%',
       marginBottom: '15px',
       padding: '10px 0',
+    },
+    invoiceDetail: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '5px',
+      alignItems: 'flex-start',
+      fontSize: '1.2rem',
+      fontFamily: "'abc'",
+      marginTop: '35px',
+      marginLeft: '20px',
     },
     invoiceDetails: {
       display: 'flex',

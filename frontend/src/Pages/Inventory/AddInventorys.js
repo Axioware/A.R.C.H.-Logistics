@@ -65,7 +65,7 @@ export default function AddInventory() {
   const [category, setCategory] = useState('');
   const [chargeBy, setChargeBy] = useState('');
   const [dateAdded, setDateAdded] = useState('');
-  const [location, setLocation] = useState('');
+  // const [location, setLocation] = useState('');
   const [weight, setWeight] = useState('');
   const [dimensionFields, setDimensionFields] = useState([
     { length: '', width: '', height: '', weight: '', quantity: '' }
@@ -98,6 +98,83 @@ export default function AddInventory() {
     { value: "weight", label: "Weight" },
     { value: "unit", label: "Unit" },
   ]);
+
+  const handleWarehouseChange = (selectedOption) => {
+    setWarehouse(selectedOption ? selectedOption.value : ''); // Ensure warehouse is updated
+    setLocation([]); // Clear location selection when warehouse changes
+    console.log("Warehouse selected:", selectedOption ? selectedOption.value : 'None'); // Debugging
+  };
+
+  console.log("Current warehouse:", warehouse); // Debugging
+  // const handleWarehouseChange = (selectedOption) => {
+  //   setWarehouse(selectedOption.value);
+  //   setLocation([]); // Clear location selection when warehouse changes
+  // };
+  const [location, setLocation] = useState([]); // Store multiple locations
+  const handleLocationChange = (selectedOptions) => {
+    setLocation(selectedOptions); // selectedOptions is an array of selected values
+  };
+  const [locationOptions, setLocationOptions] = useState([
+    { value: "Location 1", label: "Location 1" },
+    { value: "Location 2", label: "Location 2" },
+    { value: "Location 3", label: "Location 3" },
+  ]);
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      border: '1px solid #ccc',
+      borderRadius: '4px',
+      // boxShadow: state.isFocused ? `0 0 0 1px rgb(14, 116, 144)` : 'none',
+      '&:hover': {
+        borderColor: 'rgb(14, 116, 144)',
+      },
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? 'rgb(14, 116, 144)' : 'white',
+      color: 'black', // Always black text
+      '&:hover': {
+        backgroundColor: 'rgba(14, 116, 144, 0.8)',
+        color: 'white', // Always black text on hover
+      },
+    }),
+    // multiValue: (provided) => ({
+    //   ...provided,
+    //   backgroundColor: 'rgb(14, 116, 144)',
+    //   color: 'white',
+    // }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      color: 'black',
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: 'white',
+      ':hover': {
+        backgroundColor: 'rgba(14, 116, 144, 0.8)',
+        color: 'white',
+      },
+    }),
+  };
+
+
+//   const [locationOptions, setLocationOptions] = useState([
+//     { value: "Location 1", label: "Location 1" },
+//     { value: "Location 2", label: "Location 2" }
+// ]);
+
+  
+//   const fetchLocations = async () => {
+//     const url = "https://api.example.com/api/locations/"; // Replace with the correct API URL
+//     const response = await fetchData(setLoading, setSuccess, url);
+  
+//     if (response && response.error) {
+//       setErrorCode(response.error);
+//     } else if (response) {
+//       setLocationOptions([...response, { name: "Location 1" }, { name: "Location 2" }]);
+//     }
+//   };
+  
 
   const [showModal, setShowModal] = useState(false);
 
@@ -164,9 +241,9 @@ export default function AddInventory() {
     }
   };
 
-  const handleWarehouseChange = (selectedOption) => {
-    setWarehouse(selectedOption.value);
-  };
+  // const handleWarehouseChange = (selectedOption) => {
+  //   setWarehouse(selectedOption.value);
+  // };
 
   const handleCategoryChange = (selectedOption) => {
     setCategory(selectedOption.value);
@@ -572,6 +649,7 @@ export default function AddInventory() {
                         className="input-field"
                       />
                     </div>
+
                     <div>
                       <label>Warehouse:</label>
                       <Select
@@ -583,17 +661,22 @@ export default function AddInventory() {
                         styles={customStyles} // Apply custom styles
                       />
                     </div>
+
                     <div>
                       <label>Location:</label>
-                      <input
-                        type="text"
+                      <Select
+                        isMulti
                         value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        className="input-field"
-                        placeholder="Enter location"
-                        disabled={!warehouse}
+                        onChange={handleLocationChange}
+                        options={locationOptions}
+                        className="select-fields"
+                        placeholder="Select location(s)"
+                        styles={customStyles}
+                        isDisabled={!warehouse} // Disable if no warehouse is selected
                       />
                     </div>
+
+   
                   </div>
 
                   {dimensionFields.map((field, index) => (
@@ -823,9 +906,9 @@ const styles = {
     marginTop: "14px",
   },
   confirmButton: {
-    backgroundColor: 'black',
+    backgroundColor: 'rgb(14, 116, 144)',  // Updated color
     color: 'white',
-    border: '1px solid black',
+    border: '1px solid rgb(14, 116, 144)', // Updated border color
     padding: '8px 10px',
     borderRadius: '5px',
     cursor: 'pointer',
