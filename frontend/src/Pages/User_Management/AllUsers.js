@@ -13,6 +13,15 @@ import FilterOptionsUserManagement from '../../Components/Filter/FilterOptionUse
 import Pagination from '../../Components/Table_Components/Pagination';
 import Dollar from "../../Components/Icons/DollarIcon";
 import { FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+const roleClearanceMap = {
+  1: "Manager",
+  2: "VA",
+  3: "Prep-Team",
+  4: "Client"
+};
+
 
 export default function All_Users() {
   const [data, setData] = useState([]);
@@ -25,6 +34,8 @@ export default function All_Users() {
   const [billingType, setBillingType] = useState('');
   const [warehouses, setWarehouses] = useState('');
   const [search, setSearch] = useState('');
+
+  const navigate = useNavigate();
 
   const BASE_URL = `http://${process.env.REACT_APP_TENANT_NAME}/users/api/users/`;
   const [endpoint, setEndpoint] = useState(BASE_URL);
@@ -52,7 +63,7 @@ export default function All_Users() {
     const queryString = params.toString() ? `?${params.toString()}` : "";
     const newEndpoint = `${BASE_URL}${queryString}`;
     setEndpoint(newEndpoint);
-    console.log('Updated endpoint:', newEndpoint);
+    // console.log('Updated endpoint:', newEndpoint);
     getData(newEndpoint);
   }, [location.pathname, billingType, warehouses, search, currentPage, clearanceLevel]);
 
@@ -75,7 +86,7 @@ export default function All_Users() {
         <td style={tdStyle} title={row.role}>{row.role}</td>
         <td style={{ display: "flex", justifyContent: "flex-end", gap: "10px", padding: "15px" }}>
           <Dollar path={`set-rates/?id=${row.id}`} />
-          <EditIcon path={`edit-user/?id=${row.id}`} />
+          <EditIcon path={`add-user/${row.id}`} />
           <FaTrash
             style={{ color: "red", cursor: "pointer" }}
             onClick={() => handleDelete(row.id, index)}
@@ -132,7 +143,7 @@ export default function All_Users() {
     const storedState = localStorage.getItem("sidebarclosed");
     return storedState === null ? true : JSON.parse(storedState);
   });
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Fetch data function.
   const getData = async (url) => {
@@ -146,23 +157,17 @@ export default function All_Users() {
         }
       });
       const response = await res.json();
-      if (!res.ok) {
-        switch (res.status) {
-          case 400: setErrorCode(400); break;
-          case 401: setErrorCode(401); break;
-          case 403: setErrorCode(403); break;
-          case 500: setErrorCode(500); break;
-          default: setErrorCode(res.status); break;
-        }
-      } else if (response) {
-        if (response.results) {
-          setData(response.results);
-          const pageSize = 10;
-          setTotalPages(Math.ceil(response.count / pageSize));
-        } else {
-          setData(response);
-        }
-        setErrorCode(null);
+      
+      if (res.ok && response.results) {
+        const formattedData = response.results.map(user => ({
+          ...user,
+          role: roleClearanceMap[user.clearance_level] || "", 
+        }));
+
+        setData(formattedData);
+        setTotalPages(Math.ceil(response.count / 10));
+      } else {
+        setErrorCode(res.status);
       }
     } catch (error) {
       console.error("Error fetching data:", error);

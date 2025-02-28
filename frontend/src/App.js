@@ -154,8 +154,8 @@ function App() {
         
         {/* User_Management */}
         <Route path="/users" element={<AllUsers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/add-user" element={<AddUser menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/edit-user" element={<EditUser menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/add-user/:userId?" element={<AddUser menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
 
         {/* Components */}
         <Route path="/spinner" element={<Spinner />} />

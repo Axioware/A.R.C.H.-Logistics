@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
 import NavPath from '../../Components/General/NavPath';
@@ -7,18 +8,33 @@ import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
 import DropDown from "../../Components/General/DropDown";
 import LargeModal from "../../Components/Modals/SuccessModal";
-import { useNavigate } from "react-router-dom";
+
+const roleClearanceMap = {
+  1: "Manager",
+  2: "VA",
+  3: "Prep-Team",
+  4: "Client"
+};
+
+const reverseRoleClearanceMap = {
+  "Manager": 1,
+  "VA": 2,
+  "Prep-Team": 3,
+  "Client": 4
+};
 
 const AddUser = () => {
   const navigate = useNavigate();
+  const { userId } = useParams(); // If present, we're editing
 
+  // Set initial form state
   const [UserData, setUserData] = useState({
     username: "",
     first_name: "",
     last_name: "",
     phone: "",
     password: "",
-    clearance_level: null,
+    role: "",
     llc_name: "",
     tax_id: "",
     email: "",
@@ -31,15 +47,16 @@ const AddUser = () => {
     warehouse: []
   });
 
+  const [warehousesList, setWarehousesList] = useState([]);
   const [errors, setErrors] = useState({});
   const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
 
   const validateFields = () => {
     let newErrors = {};
     if (!UserData.username) newErrors.username = "Username is required.";
-    if (!UserData.password) newErrors.password = "Password is required.";
+    if (!UserData.password && !userId) newErrors.password = "Password is required."; // For editing, you might not require re-entering password.
     if (!UserData.first_name) newErrors.first_name = "First name is required.";
-    if (!UserData.clearance_level) newErrors.clearance_level = "Clearance level is required.";
+    if (!UserData.role) newErrors.role = "Role is required.";
     if (UserData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(UserData.email)) {
       newErrors.email = "Invalid email format.";
     }
@@ -56,6 +73,60 @@ const AddUser = () => {
     setUserData({ ...UserData, [e.target.name]: e.target.value });
   };
 
+  // Fetch existing user data if in edit mode
+  useEffect(() => {
+    if (userId) {
+      const fetchUserData = async () => {
+        const token = localStorage.getItem("access_token");
+        try {
+          const response = await fetch(
+            `http://${process.env.REACT_APP_TENANT_NAME}/users/api/users/${userId}/`,
+            {
+              method: "GET",
+              headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          
+          if (response.ok) {
+            const data = await response.json();
+            console.log(data.user_data);
+
+            setUserData(prev => ({
+              ...prev,
+              username: data.user_data.username || "",
+              first_name: data.user_data.first_name || "",
+              last_name: data.user_data.last_name || "",
+              phone: data.user_data.phone || "",
+              password: "",
+              role: roleClearanceMap[data.user_data.clearance_level] || "",  
+              llc_name: data.user_data.llc_name || "",
+              tax_id: data.user_data.tax_id || "",
+              email: data.user_data.email || "",
+              email2: data.user_data.email2 || "",
+              address: data.user_data.address || "",
+              billing_type: data.user_data.billing_type || "",
+              city: data.user_data.city || "",
+              state: data.user_data.state || "",
+              zip: data.user_data.zip || "",
+              warehouse: data.user_data.warehouses.map(id => {
+                const warehouseObj = warehousesList.find(w => w.warehouse_id === id);
+                return warehouseObj ? warehouseObj.warehouse_name : null;
+              }).filter(name => name !== null)
+            }));
+          } else {
+            console.error("Failed to fetch user data.");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+      fetchUserData();
+    }
+  }, [userId, warehousesList]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateFields();
@@ -70,18 +141,27 @@ const AddUser = () => {
       return;
     }
 
+    // Convert role name to clearance level ID before sending to the API
+    const formData = {
+      ...UserData,
+      clearance_level: reverseRoleClearanceMap[UserData.role] || "",  // ✅ Convert role to clearance level ID
+    };
+
+    // Determine URL and HTTP method based on mode (add or edit)
+    const url = userId
+      ? `http://${process.env.REACT_APP_TENANT_NAME}/users/api/users/${userId}/`
+      : `http://${process.env.REACT_APP_TENANT_NAME}/users/api/users/`;
+    const method = userId ? "PUT" : "POST";
+    
     try {
-      const response = await fetch(
-        `http://${process.env.REACT_APP_TENANT_NAME}/users/api/users/`,
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(UserData),
-        }
-      );
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData), // ✅ Send converted data
+      });
 
       const data = await response.json();
 
@@ -89,45 +169,25 @@ const AddUser = () => {
         setModalData({
           isOpen: true,
           title: "Success",
-          content: "User added successfully!",
-        });
-
-        setUserData({
-          username: "",
-          first_name: "",
-          last_name: "",
-          email: "",
-          phone: "",
-          password: "",
-          clearance_level: null,
-          llc_name: "",
-          tax_id: "",
-          email2: "",
-          address: "",
-          billing_type: "",
-          city: "",
-          state: "",
-          zip: "",
-          warehouse: []
+          content: userId ? "User updated successfully!" : "User added successfully!",
         });
       } else {
         setModalData({
           isOpen: true,
           title: "Error",
-          content: data.message || "Failed to add user.",
+          content: data.message || (userId ? "Failed to update user." : "Failed to add user."),
         });
       }
     } catch (error) {
       setModalData({
         isOpen: true,
         title: "Error",
-        content: "Failed to add user. Please try again.",
+        content: userId ? "Failed to update user. Please try again." : "Failed to add user. Please try again.",
       });
       console.error("Error:", error);
     }
   };
 
-  const [warehousesList, setWarehousesList] = useState([]);
 
   useEffect(() => {
     const fetchWarehouses = async () => {
@@ -165,48 +225,20 @@ const AddUser = () => {
   }, []);
 
   const handleSelectWarehouse = (selectedOptions) => {
-    if (!selectedOptions || selectedOptions.length === 0) {
-      console.error("No warehouse selected");
-      return;
-    }
-  
-    // Extract warehouse IDs from the selected options
     const selectedWarehouses = selectedOptions.map(option => {
       const warehouse = warehousesList.find(w => w.warehouse_name === option);
       return warehouse ? warehouse.warehouse_id : null;
-    }).filter(id => id !== null); // Remove any null values
-  
+    }).filter(id => id !== null);
+
     setUserData(prev => ({ ...prev, warehouse: selectedWarehouses }));
   };
 
   const handleSelectBillingType = (billingType) => {
-    if (!billingType || !billingType.value) {
-      console.error("Invalid billing type selected");
-      return;
-    }
-  
-    setUserData(prev => ({ ...prev, billing_type: billingType.value }));
+    setUserData(prev => ({ ...prev, billing_type: billingType || "" }));
   };
 
   const handleSelectClearanceLevel = (selectedOption) => {
-    if (!selectedOption || !selectedOption.value) {
-      console.error("Invalid role selection");
-      return;
-    }
-  
-    const roleClearanceMap = {
-      "Manager": "1",
-      "VA": "2",
-      "Prep-Team": "3",
-      "Client": "4"
-    };
-  
-    const clearanceLevel = roleClearanceMap[selectedOption.value] || ""; 
-    
-    setUserData(prev => ({ 
-      ...prev, 
-      clearance_level: clearanceLevel 
-    }));
+    setUserData(prev => ({ ...prev, clearance_level: roleClearanceMap[selectedOption] || "" }));
   };
 
   return (
@@ -216,7 +248,7 @@ const AddUser = () => {
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={styles.mainContent}>
           <NavPath
-            text={['Home', 'All User', 'Add User']}
+            text={userId ? ['Home', 'All Users', 'Edit User'] : ['Home', 'All Users', 'Add User']}
             paths={['/home', '/users', '/add-user']}
             text_color={[255, 255, 255]}
             background_color={[23, 23, 23]}
@@ -227,17 +259,18 @@ const AddUser = () => {
 
           <div id="tableBackground" style={mainStyles.tableBackground}>
             <div id="headingcontainer" style={styles.headingcontainer}>
-              <PageHeading text="Add User" />
+              <PageHeading text={userId ? "Edit User" : "Add User"} />
             </div>
 
             <form id="form" style={styles.form} onSubmit={handleSubmit}>
               <DropDown
-                label="Clearance Level"
-                data = {["Manager", "VA", "Prep-Team", "Client"]}
+                label="Role"
+                data={["Manager", "VA", "Prep-Team", "Client"]}
                 onSelect={handleSelectClearanceLevel}
                 width="230px"
                 height="45px"
                 required={true}
+                value={UserData.role}
               />
               <DropDown 
                 label="Warehouse"
@@ -246,6 +279,7 @@ const AddUser = () => {
                 width="230px"
                 height="45px"
                 multi={true}
+                value={UserData.warehouse}
               />
               <DropDown 
                 label="Billing Type"
@@ -253,11 +287,12 @@ const AddUser = () => {
                 onSelect={handleSelectBillingType}
                 width="230px"
                 height="45px"
+                value={UserData.billing_type}
               />
               <GeneralField label="Username" name="username" field_type="text" hint="Enter Username" value={UserData.username} required={true} func={handleChange}/>
               <GeneralField label="First Name" name="first_name" field_type="text" hint="First Name (e.g., John)" value={UserData.first_name} func={handleChange} required={true}/>
               <GeneralField label="Last Name" name="last_name" field_type="text" hint="Last Name (e.g., Doe)" value={UserData.last_name} func={handleChange}/>
-              <GeneralField label="Password" name="password" field_type="password" hint="********" value={UserData.password} func={handleChange} required={true}/>
+              <GeneralField label="Password" name="password" field_type="password" hint="********" value={UserData.password} func={handleChange} required={!userId}/>
               <GeneralField label="Phone" name="phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" value={UserData.phone} func={handleChange}/>
               <GeneralField label="Primary Email" name="email" field_type="email" hint="Email address" value={UserData.email} func={handleChange} />
               <GeneralField label="Secondary Email" name="email2" field_type="email" hint="Email address" value={UserData.email2} func={handleChange} />
@@ -270,7 +305,7 @@ const AddUser = () => {
 
               <div id="buttonContainer" style={styles.buttonContainer}>
                 <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-                <GeneralButton text="Add" type="submit" width="100px" height="100%" />
+                <GeneralButton text={userId ? "Update" : "Add"} type="submit" width="100px" height="100%" />
               </div>
             </form>
           </div>
@@ -282,72 +317,60 @@ const AddUser = () => {
           title={modalData.title}
           content={modalData.content}
           onClose={() => setModalData({ isOpen: false, title: "", content: "" })}
-          onSave={() => setModalData({ isOpen: false, title: "", content: "" })} // Ensure this is added or updated
+          onSave={() => setModalData({ isOpen: false, title: "", content: "" })}
         />
       )}
     </div>
   );
 };
-// Styles Object
+
 const styles = {
   mainContent: {
     padding: "10px 0px 50px 0px",
-},
-
-form: {
+  },
+  form: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr 1fr', // Two columns
-    gap: '20px', // Space between fields
-    // border: '2px solid white',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr',
+    gap: '20px',
     marginLeft:'20px',
     marginTop:'35px',
     marginRight:'100px',
     alignSelf:'flex-start',
-},
-
-buttonContainer: {
-  // border: '2px solid white',
-  alignSelf:'flex-end',
-  display: 'flex',
-  flexDirection: 'row',
-  width:'250px',
-  gap: '20px',
- 
-  lineHeight:'40px',
-  marginTop:"100px",
-},
-
-headingcontainer:{
-  alignSelf: 'flex-start',
-  // border: '2px solid purple',
-  marginLeft:'20px',
-  marginTop:'15px',
-},
-
-PageHeading:{
-  marginLeft:'10px',
-  marginTop:'20px',  
-},
-
-label: {
-
-  marginTop:'10px',  
-  marginLeft:"20px",
-  display:'block',
-  fontWeight:'700px',
-},
-
-select: {
-  marginTop:'15px',  
-  marginLeft:"10px",
-  display:'block',
-  width:'260px',
-  height:'45px',
-  borderRadius:'10px',
-  border: '1px solid lightgrey',
-  boxShadow: '1px 1px 1px 1px lightgrey',
-},
+  },
+  buttonContainer: {
+    alignSelf:'flex-end',
+    display: 'flex',
+    flexDirection: 'row',
+    width:'250px',
+    gap: '20px',
+    lineHeight:'40px',
+    marginTop:"100px",
+  },
+  headingcontainer:{
+    alignSelf: 'flex-start',
+    marginLeft:'20px',
+    marginTop:'15px',
+  },
+  PageHeading:{
+    marginLeft:'10px',
+    marginTop:'20px',  
+  },
+  label: {
+    marginTop:'10px',  
+    marginLeft:"20px",
+    display:'block',
+    fontWeight:'700px',
+  },
+  select: {
+    marginTop:'15px',  
+    marginLeft:"10px",
+    display:'block',
+    width:'260px',
+    height:'45px',
+    borderRadius:'10px',
+    border: '1px solid lightgrey',
+    boxShadow: '1px 1px 1px 1px lightgrey',
+  },
 };
 
 export default AddUser;
-
