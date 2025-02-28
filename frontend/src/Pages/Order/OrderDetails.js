@@ -9,6 +9,7 @@ import PageHeading from "../../Components/Table_Components/PageHeading";
 import FilterButton from '../../Components/Table_Components/FilterButton';
 import FilterOptionsPrint1 from "../../Components/Filter/FilterOptionsPrint1";
 import FilterOptionsDownload1 from "../../Components/Filter/FilterOptionsDownload1";
+import DropDown from "../../Components/General/DropDown";
 
 
 
@@ -192,6 +193,43 @@ const [warehouse, setWarehouse] = useState("");
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [showDownloadModal, setShowDownloadModal] = useState(false);
 
+  const Dropdown = ({ options, onSelect }) => {
+      const [isOpen, setIsOpen] = useState(false);
+      const [selectedOption, setSelectedOption] = useState(options[0]);
+  
+      const toggleDropdown = () => setIsOpen(!isOpen);
+  
+      const handleSelect = (option) => {
+        setSelectedOption(option);
+        onSelect(option);
+        setIsOpen(false);
+      };
+  
+      return (
+        <div style={styles.dropdown}>
+          <button onClick={toggleDropdown} style={styles.dropdownButton}>
+            {selectedOption} <span style={styles.arrow}>{isOpen ? '▲' : '▼'}</span>
+          </button>
+          {isOpen && (
+            <ul style={styles.dropdownList}>
+              {options.map((option, index) => (
+                <li key={index} onClick={() => handleSelect(option)} style={styles.dropdownItem}>
+                  {option}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      );
+    };
+
+    const categories = ["Select", "Category 1", "Category 2", "Category 3"];
+      const [selectedCategory, setSelectedCategory] = useState(null);
+    
+      const handleCategorySelect = (category) => {
+        setSelectedCategory(category);
+      };
+
   
   return (
     <div>
@@ -199,15 +237,36 @@ const [warehouse, setWarehouse] = useState("");
       <div style={mainStyles.centerContent(isSidebarClosed)}>
 
         <NavPath
-          text={["Home", "Invoices", "Invoices Details"]}
-          paths={["/home", "/invoices", "/invoices-details"]}
+          text={["Home", "Order", "Order Details"]}
+          paths={["/home", "/order", "/order-details"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
 
         />
-
-
+<div style={mainStyles.AddInputBackground}>
+            <div style={styles.invoiceDetail}>
+              <span><strong>LLC Name:</strong> {LLCName}</span>
+              <span><strong>Order ID:</strong> {OrderID}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px', marginRight: '50px', marginTop: '-70px' }}>
+            <DropDown
+              label="Order Supervisor"
+              data={["Abdul Moiz", "John", "Smith"]}
+              width="250px"
+              height="40px"
+              onSelect={setSelectedCategory}
+              required={true}
+              multi={false}
+            />
+          </div>
+          </div>
 <div style={mainStyles.tablesBackground}>
+  
+
+<div style={styles.headerContainer}>
+           
+           
+          </div>
           <PageHeading text='Labels'width="auto" />
 
           <div style={styles.headerContainer}>
@@ -216,26 +275,7 @@ const [warehouse, setWarehouse] = useState("");
               {/* <span><strong>Order ID:</strong> {OrderID}</span> */}
             </div>
             <div style={styles.buttonWrapper}>
-            {/* <FilterButton
-                text="Print"
-                text_color={[255, 255, 255]}
-                background_color={[23, 23, 23]}
-                onClick={() => setShowPrintModal(true)}
-                content={FilterOptionsPrint}
-                width="150px"
-                height="50px"
-                style={styles.filterButton}
-              />
-              <FilterButton
-                text="Download"
-                text_color={[255, 255, 255]}
-                background_color={[23, 23, 23]}
-                onClick={() => setShowDownloadModal(true)}
-                content={FilterOptionsDownload}
-                width="150px"
-                height="50px"
-                style={styles.filterButton}
-              /> */}
+          
               <FilterButton
                   text="Print"
                   content={<FilterOptionsPrint1/>} 
@@ -245,26 +285,7 @@ const [warehouse, setWarehouse] = useState("");
                   text="Download"
                   content={<FilterOptionsDownload1/>} 
                 />
-            {/* <FilterButton
-              text="Print"
-              text_color={[255, 255, 255]} // White text color
-              background_color={[23, 23, 23]} // Dark background
-              filter_function={() => {}}   
-              content={FilterOptionsPrint}
-              width="150px" // Set width explicitly
-              height="50px" // Set height explicitly
-              style={styles.filterButton} // Add this to enforce consistent styling
-            />
-            <FilterButton
-              text="Download"
-              text_color={[255, 255, 255]} // White text color
-              background_color={[23, 23, 23]} // Dark background
-              filter_function={() => {}}   
-              content={FilterOptionsDownload}
-              width="150px" // Set width explicitly
-              height="50px" // Set height explicitly
-              style={styles.filterButton} // Add this to enforce consistent styling
-            /> */}
+       
             <ModalOpener 
               text="Add Label" 
               text_color={[255, 255, 255]} 
@@ -506,7 +527,7 @@ const [warehouse, setWarehouse] = useState("");
         </div>
 
         <div style={mainStyles.tablesBackground}>
-          <PageHeading text='Invoices Details' text_color={[0, 0, 0]} width='100%' height='auto' />
+          <PageHeading text='Charges' text_color={[0, 0, 0]} width='100%' height='auto' />
 
           <div style={styles.headerContainer}>
             <div style={styles.invoiceDetails}>
@@ -632,6 +653,16 @@ const [warehouse, setWarehouse] = useState("");
       width: '100%',
       marginBottom: '15px',
       padding: '10px 0',
+    },
+    invoiceDetail: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '5px',
+      alignItems: 'flex-start',
+      fontSize: '1.2rem',
+      fontFamily: "'abc'",
+      marginTop: '25px',
+      marginLeft: '0px',
     },
     invoiceDetails: {
       display: 'flex',

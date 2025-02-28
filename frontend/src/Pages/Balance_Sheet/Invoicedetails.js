@@ -229,7 +229,7 @@ const styles = {
     flexDirection: 'column',
     gap: '5px',
     alignItems: 'flex-start',
-    fontSize: '1.2rem',
+    fontSize: '1.0rem',
     fontFamily: "'abc'",
   },
   totalContainer: {
@@ -241,8 +241,8 @@ const styles = {
     padding: '10px 0',
   },
   totalCharge: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
+    fontSize: '1.4  rem',
+    fontWeight: '500',
     display: 'flex',
     gap: '20px',
   },

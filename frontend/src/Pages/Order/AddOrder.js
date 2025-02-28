@@ -19,10 +19,6 @@ export default function AddOrder() {
   const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
   const [clearance, setClearance] = useState(1);
-  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
-    const storedState = localStorage.getItem("sidebarclosed");
-    return storedState === null ? true : JSON.parse(storedState);
-  });
   const [showModal, setShowModal] = useState(false);
   const [showLabelModal, setShowLabelModal] = useState(false);
   const [chargeType, setChargeType] = useState("Service Fee");
@@ -30,7 +26,6 @@ export default function AddOrder() {
   const [notes, setNotes] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [editingNotes, setEditingNotes] = useState("");
-
   const [custom, setCustom] = useState("");
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
@@ -39,8 +34,10 @@ export default function AddOrder() {
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
   const [Packing, setPacking] = useState("");
-
-  // Define categories and handleCategorySelect
+  const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
+    const storedState = localStorage.getItem("sidebarclosed");
+    return storedState === null ? true : JSON.parse(storedState);
+  });
   const categories = ["Select", "Category 1", "Category 2", "Category 3"];
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -103,13 +100,7 @@ export default function AddOrder() {
     );
   };
 
-  // const resetModalValues = () => {
-  //   setCustom(""); 
-  //   setWidth(""); 
-  //   setHeight(""); 
-  //   setTextOnLabel(""); 
-  //   setSelectedFile(null);
-  // };
+
 
   const AddLabel = () => {
     setShowLabelModal(true);
@@ -145,22 +136,32 @@ export default function AddOrder() {
 
   const [serviceList, setServiceList] = useState([{ service: "" }]);
 
-  const handleAddAnotherService = () => {
-    setServiceList([...serviceList, { service: "" }]);
-  };
-
-    const handleServiceChange = (index, value) => {
+  const handleServiceChange = (index, value) => {
     const newServiceList = [...serviceList];
     newServiceList[index].service = value;
     setServiceList(newServiceList);
-
-    // If "Bundling" is selected, initialize products with two sets of fields
-    if (value === "Bundling") {
-      setProducts([{ product: "", quantity: "" }, { product: "", quantity: "" }]);
+  
+    // Check if "Bundling" is selected in any of the services
+    const hasBundling = newServiceList.some(service => service.service === "Bundling");
+  
+    // If "Bundling" is selected, ensure there are exactly two product fields
+    if (hasBundling) {
+      if (products.length < 2) {
+        // Add only one more set of fields if "Bundling" is selected
+        setProducts([...products, { product: "", quantity: "" }]);
+      }
     } else {
-      // Reset to one set of fields for other services
-      setProducts([{ product: "", quantity: "" }]);
+      // If no "Bundling" is selected, ensure there is only one product field
+      if (products.length > 1) {
+        setProducts([{ product: "", quantity: "" }]);
+      }
     }
+  };
+
+  
+  
+  const handleAddAnotherService = () => {
+    setServiceList([...serviceList, { service: "" }]);
   };
   
   useEffect(() => {
@@ -171,12 +172,13 @@ export default function AddOrder() {
   const handleDelete = (index) => {
     setLabel(Label.filter((_, i) => i !== index));
   };
-
   const handleCancel = () => {
-    resetModalValues(); // Reset fields
+    // Reset all modal-related states
+    resetModalValues(); // Reset custom, width, height, textOnLabel, and selectedFile
     setServiceList([{ service: "" }]); // Reset service list to default state
-    setProducts([{ product: "", quantity: "" }]); // Reset products
-    setShowLabelModal(false); // Close modal
+    setProducts([{ product: "", quantity: "" }]); // Reset products to default state
+    setPacking(""); // Reset packing instruction
+    setShowLabelModal(false); // Close the modal
   };
   
 
@@ -284,12 +286,12 @@ export default function AddOrder() {
 
               <table style={styles.table}>
                 <colgroup>
-                  <col style={{ width: "18%" }} />
-                  <col style={{ width: "18%" }} />
-                  <col style={{ width: "18%" }} />
-                  <col style={{ width: "18%" }} />
-                  <col style={{ width: "18%" }} />
-                  <col style={{ width: "10%" }} />
+                  <col style={{ width: "19%" }} />
+                  <col style={{ width: "19%" }} />
+                  <col style={{ width: "19%" }} />
+                  <col style={{ width: "19%" }} />
+                  <col style={{ width: "19%" }} />
+                  <col style={{ width: "5%" }} />
                 </colgroup>
                 <thead>
                   <tr>
@@ -327,18 +329,20 @@ export default function AddOrder() {
             </>
         )}
 
-          {showLabelModal && 
+
+{showLabelModal && (
   <div style={styles.modalOverlay}>
     <div style={styles.modal}>
       <h2 style={styles.modalTitle}>Add Service</h2>
-      
+
+      {/* Render Services */}
       {serviceList.map((service, index) => (
         <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
           <div style={{ flex: 2 }}>
             <label style={styles.label}>Service</label>
-            <select 
-              style={styles.input} 
-              value={service.service} 
+            <select
+              style={styles.input}
+              value={service.service}
               onChange={(e) => handleServiceChange(index, e.target.value)}
             >
               <option value="">Select</option>
@@ -349,44 +353,15 @@ export default function AddOrder() {
         </div>
       ))}
 
+      {/* Add Another Service Button */}
       <div style={{ textAlign: 'left' }}>
         <button style={styles.addAnotherButton} onClick={handleAddAnotherService}>
           + Add Another Service
         </button>
       </div>
 
-      {/* If "Prep" is selected, show these fields once */}
-      {serviceList.some(service => service.service === "Prep") && (
-        <>
-          <div style={styles.rowContainer}>
-            <div style={{ ...styles.inputGroup, ...styles.productServiceGroup }}>
-              <label style={styles.label}>Product</label>
-              <select
-                style={styles.dropdown}
-                value={products[0]?.product || ""}
-                onChange={(e) => handleProductChange(0, "product", e.target.value)}
-              >
-                <option value="">Select Product</option>
-                <option value="Xyz1">Xyz1</option>
-                <option value="Xyz2">Xyz2</option>
-              </select>
-            </div>
-            <div style={{ ...styles.inputGroup, ...styles.unitQuantityGroup }}>
-              <label style={styles.label}>Unit Quantity</label>
-              <input
-                type="number"
-                style={styles.input}
-                value={products[0]?.quantity || ""}
-                onChange={(e) => handleProductChange(0, "quantity", e.target.value)}
-                placeholder="Enter quantity"
-              />
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* If "Bundling" is selected, show multiple products and extra fields */}
-      {serviceList.some(service => service.service === "Bundling") && (
+      {/* Render Product and Unit Quantity Fields only if a service is selected */}
+      {serviceList.some(service => service.service !== "") && (
         <>
           {products.map((item, index) => (
             <div key={index} style={styles.rowContainer}>
@@ -415,45 +390,49 @@ export default function AddOrder() {
             </div>
           ))}
 
-          <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
-            + Add Another Product
-          </p>
+          {/* Render "Add Another Product" button only if "Bundling" is selected or multiple services are selected */}
+          {serviceList.some(service => service.service === "Bundling") && (
+            <p style={{ ...styles.addProduct, color: 'grey' }} onClick={handleAddProductField}>
+              + Add Another Product
+            </p>
+          )}
 
-          {/* Bundle Quantity Field */}
+          {/* Bundle Quantity Field (only for "Bundling" service) */}
+          {serviceList.some(service => service.service === "Bundling") && (
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Bundle Quantity</label>
+              <input
+                type="text"
+                style={styles.input}
+                value={custom}
+                onChange={(e) => setCustom(e.target.value)}
+                placeholder="Enter Bundle Quantity"
+              />
+            </div>
+          )}
+
+          {/* Packing Instruction Field */}
           <div style={styles.inputGroup}>
-            <label style={styles.label}>Bundle Quantity</label>
+            <label style={styles.label}>Packing Instruction</label>
             <input
               type="text"
               style={styles.input}
-              value={custom}
-              onChange={(e) => setCustom(e.target.value)}
-              placeholder="Enter Bundle Quantity"
+              value={Packing}
+              onChange={(e) => setPacking(e.target.value)}
+              placeholder="Enter packing instructions"
             />
           </div>
         </>
       )}
 
-      {/* Render Packing Instruction only once if any service is selected */}
-      {serviceList.some(service => service.service !== "") && (
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Packing Instruction</label>
-          <input
-            type="text"
-            style={styles.input}
-            value={Packing}
-            onChange={(e) => setPacking(e.target.value)}
-            placeholder="Enter packing instructions"
-          />
-        </div>
-      )}
-
+      {/* Modal Buttons */}
       <div style={styles.buttonContainer}>
         <button style={styles.cancelButton} onClick={handleCancel}>Cancel</button>
         <button style={styles.confirmButton} onClick={handleAddLabel}>Add Service</button>
       </div>
     </div>
   </div>
-}
+)}
         </div>
       </div>
     </div>
@@ -599,18 +578,20 @@ const styles = {
     backgroundColor: '#ccc',
     color: '#000',
     border: 'none',
-    padding: '10px 15px',
+    padding: '8px 10px ',
     borderRadius: '5px',
     cursor: 'pointer',
     marginRight: '10px',
+    marginTop: "14px",
   },
   confirmButton: {
-    backgroundColor: 'black',
+    backgroundColor: 'rgb(14, 116, 144)',  // Updated color
     color: 'white',
-    border: '1px solid black',
-    padding: '10px 15px',
+    border: '1px solid rgb(14, 116, 144)', // Updated border color
+    padding: '8px 10px',
     borderRadius: '5px',
     cursor: 'pointer',
     transition: '0.3s',
+    marginTop: "14px",
   },
 };

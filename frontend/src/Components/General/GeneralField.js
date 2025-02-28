@@ -15,6 +15,7 @@ const GeneralField = ({
   label_text,
   maxLength, // New prop for max length
   required = false,
+  
 }) => {
   const styles = `
   .field-input:hint{

@@ -47,6 +47,7 @@ export default function LabelFormat() {
     <div>
       <SideBar sidebar_state={true} set_sidebar_state={() => {}} />
       <div style={mainStyles.centerContent(true)}>
+      <div style={{ marginBottom: '50px' }}>
         <NavPath
           text={["Home", "Setting", "Label Format"]}
           paths={["/home", "/setting", "/label-format"]}
@@ -55,16 +56,13 @@ export default function LabelFormat() {
           width="100%"
           height="50px"
         />
+        </div>
 
         <div style={mainStyles.tableBackground}>
         <div style={styles.headerContainer}>
-            <PageHeading
-                text="Label Format"
-                width="auto"
-                height="auto"
-                sidebar_width="5px"
-                sidebar_height="35px"
-            />
+            <div style={{ marginBottom: '20px' }}>
+                       <PageHeading text='Label Format' text_color={[0, 0, 0]} width='100%' height='auto' />
+                     </div>
                         
             <SearchBar
                 hint="Search..."
@@ -223,6 +221,7 @@ export default function LabelFormat() {
       marginBottom: "20px",
       textAlign: "left",
       marginRight: '30px',
+      fontSize:"12px",
     },
     th: {
       background: "#000",
