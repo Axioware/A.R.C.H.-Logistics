@@ -12,6 +12,7 @@ import FilterButton from '../../Components/Table_Components/FilterButton';
 import FilterOptionsUserManagement from '../../Components/Filter/FilterOptionUserManagement';
 import Pagination from '../../Components/Table_Components/Pagination';
 import Dollar from "../../Components/Icons/DollarIcon";
+import LargeModal from "../../Components/Modals/SuccessModal";
 import { FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -34,6 +35,7 @@ export default function All_Users() {
   const [billingType, setBillingType] = useState('');
   const [warehouses, setWarehouses] = useState('');
   const [search, setSearch] = useState('');
+  const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
 
   const navigate = useNavigate();
 
@@ -63,7 +65,6 @@ export default function All_Users() {
     const queryString = params.toString() ? `?${params.toString()}` : "";
     const newEndpoint = `${BASE_URL}${queryString}`;
     setEndpoint(newEndpoint);
-    // console.log('Updated endpoint:', newEndpoint);
     getData(newEndpoint);
   }, [location.pathname, billingType, warehouses, search, currentPage, clearanceLevel]);
 
@@ -109,11 +110,24 @@ export default function All_Users() {
       });
       if (res.ok) {
         setData(prevData => prevData.filter((_, i) => i !== index));
+        setModalData({
+          isOpen: true,
+          title: "Success",
+          content: userId ? "User Deleted Successfully! :)" : "User Deleted successfully! :)",
+        });
       } else {
-        console.error("Error deleting user:", res.status);
+        setModalData({
+          isOpen: true,
+          title: "Failed",
+          content: userId ? "Error deleting user" : "Error deleting user",
+        });
       }
     } catch (error) {
-      console.error("Error deleting user:", error);
+      setModalData({
+        isOpen: true,
+        title: "Failed",
+        content: userId ? "Error deleting user" : "Error deleting user",
+      });
     }
   };
 
@@ -157,7 +171,7 @@ export default function All_Users() {
         }
       });
       const response = await res.json();
-      
+
       if (res.ok && response.results) {
         const formattedData = response.results.map(user => ({
           ...user,
@@ -244,6 +258,15 @@ export default function All_Users() {
             />
           </div>
         </div>
+        {modalData.isOpen && (
+        <LargeModal
+          isOpen={modalData.isOpen}
+          title={modalData.title}
+          content={modalData.content}
+          onClose={() => setModalData({ isOpen: false, title: "", content: "" })}
+          onSave={() => setModalData({ isOpen: false, title: "", content: "" })}
+        />
+      )}
       </div>
     </>
   );
