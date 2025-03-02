@@ -49,6 +49,7 @@ import Forbidden from './Components/Error_Components/Forbidden';
 import AllInventory from './Pages/Inventory/AllInventory';
 import AddInventory from "./Pages/Inventory/AddInventory";
 import AddInventorys from "./Pages/Inventory/AddInventorys";
+import Shopify from "./Pages/Inventory/Shopify";
 import ByDateInventory from './Pages/Inventory/ByDateInventory';
 import CombineInventory from './Pages/Inventory/CombineInventory';
 
@@ -182,6 +183,7 @@ function App() {
         <Route path="/all-inventory" element={<AllInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-inventory" element={<AddInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-inventorys" element={<AddInventorys menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/Shopify" element={<Shopify menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/by-date-inventory" element={<ByDateInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
         {/* <Route path="/inventory-overview" element={<CombineInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
