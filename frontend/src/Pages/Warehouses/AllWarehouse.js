@@ -6,8 +6,11 @@ import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
-// import mainFunctions from "../../Assets/JS/script";
+import { useLocation } from 'react-router-dom';
 import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement"
+import LargeModal from "../../Components/Modals/SuccessModal";
+import { FaTrash } from "react-icons/fa";
+import EditIcon from '../../Components/Icons/EditIcon';
 
 export default function AllWarehouse() {
 
@@ -17,59 +20,148 @@ export default function AllWarehouse() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
-  const [clearance, setclearance] = useState(1);
+  const [search, setSearch] = useState('');
+  const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
 
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
     return storedState === null ? true : JSON.parse(storedState);
   });
-
-  // State for filters
-  // const [billingType, setBillingType] = useState('All');
-  // const [userStatus, setUserStatus] = useState('All');
   
-  // State to toggle the dropdown visibility
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const BASE_URL = `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/warehouse/`;
+  const [endpoint, setEndpoint] = useState(BASE_URL);
+  const location = useLocation();
 
-  const getData = async () => {
-    const url = `https://api.example.com/users?page=${currentPage}`;
-    const response = await fetchData(setLoading, setSuccess, url);
-
-    if (response && response.error) {
-      switch (response.error) {
-        case 400:
-          setErrorCode(401);
-          break;
-        case 401:
-          setErrorCode(401);
-          break;
-        case 403:
-          setErrorCode(403);
-          break;
-        case 500:
-          setErrorCode(500);
-          break;
-        default:
-          setErrorCode(response.error);
-          break;
+  useEffect(() => {
+    const fetchData = async () => {
+      const params = new URLSearchParams();
+      if (currentPage) params.append('page', currentPage);
+      if (location.pathname === "/warehouse" && search) {
+        params.append('search', search);
       }
-    } else if (response) {
-      setData(response);
-      setErrorCode(null);
+      const queryString = params.toString() ? `?${params.toString()}` : "";
+      const newEndpoint = `${BASE_URL}${queryString}`;
+      setEndpoint(newEndpoint);
+      await getData(newEndpoint); // Safe async call
+    };
+  
+    fetchData();
+  }, [location.pathname, search, currentPage]);
+
+    const table_function = () => {
+      return data.map((row, index) => (
+        <tr key={index}>
+          <td style={tdStyle} title={row.warehouse_id}>{row.warehouse_id}</td>
+          <td style={tdStyle} title={row.warehouse_name}>{row.warehouse_name}</td>
+          <td style={tdStyle} title={row.address}>{row.address}</td>
+          <td style={tdStyle} title={row.city}>{row.city}</td>
+          <td style={tdStyle} title={row.state}>{row.state}</td>
+          <td style={tdStyle} title={row.country}>{row.country}</td>
+          <td style={tdStyle} title={row.zip_code}>{row.zip_code}</td>
+          <td style={tdStyle} title={row.phone}>{row.phone}</td>
+          <td style={tdStyle} title={row.email}>{row.email}</td>
+          <td style={{ display: "flex", justifyContent: "flex-end", gap: "10px", padding: "15px" }}>
+            <EditIcon path={`add-warehouses/${row.warehouse_id}`} />
+            <FaTrash
+              style={{ color: "red", cursor: "pointer" }}
+              onClick={() => handleDelete(row.warehouse_id, index)}
+            />
+          </td>
+        </tr>
+      ));
+    };
+
+  // DELETE handler.
+  const handleDelete = async (warehouseId, index) => {
+    const token = localStorage.getItem("access_token");
+    try {
+      const res = await fetch(`${BASE_URL}${warehouseId}/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      if (res.ok) {
+        setData(prevData => prevData.filter((_, i) => i !== index));
+        setModalData({
+          isOpen: true,
+          title: "Success",
+          content: warehouseId ? "Warehouse Deleted Successfully! :)" : "Warehouse Deleted successfully! :)",
+        });
+      } else {
+        setModalData({
+          isOpen: true,
+          title: "Failed",
+          content: warehouseId ? "Error deleting Warehouse" : "Error deleting Warehouse",
+        });
+      }
+    } catch (error) {
+      setModalData({
+        isOpen: true,
+        title: "Failed",
+        content: warehouseId ? "Error deleting Warehouse" : "Error deleting Warehouse",
+      });
     }
   };
 
-  useEffect(() => {
-    // if (!mainFunctions.generalValidate()) {
-      
-    // } 
-    // if (!mainFunctions.employeeValidate()) {
+  // Adjust colgroup to match the columns.
+  const table_width_function = () => {
+    return (
+      <colgroup>
+        <col style={{ width: "3%" }} />   
+        <col style={{ width: "10%" }} />   
+        <col style={{ width: "13%" }} />  
+        <col style={{ width: "6%" }} />   
+        <col style={{ width: "9%" }} />  
+        <col style={{ width: "6%" }} />   
+        <col style={{ width: "7%" }} />   
+        <col style={{ width: "9%" }} />  
+        <col style={{ width: "11%" }} /> 
+        <col style={{ width: "7%" }} />   
+      </colgroup>
+    );
+  };
 
-    // }
-    // var data = mainFunctions.getUserData();
-    // setclearance(data.clearance);
-    getData();
-  }, [currentPage]);
+  const getData = async (url) => {
+    setLoading(true);
+    const token = localStorage.getItem("access_token");
+    try {
+      const res = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (res.status === 403) {
+        setModalData({
+          isOpen: true,
+          title: "Access Denied",
+          content: "You do not have permission to access this resource.",
+        });
+        setErrorCode(403);
+        return;
+      }
+      const response = await res.json();
+
+      if (res.ok && response.results) {
+        setData(response.results);
+        setTotalPages(Math.ceil(response.count / 10));
+      } else {
+        setErrorCode(res.status);
+      }
+    } catch (error) {
+      setModalData({
+        isOpen: true,
+        title: "Failed",
+        content:  "Error Fetching Data",
+      });
+      setErrorCode(500);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleNext = () => {
     if (currentPage < totalPages) {
@@ -83,30 +175,18 @@ export default function AllWarehouse() {
     }
   };
 
-  // Handle Reset and Apply for filters
-  // const handleReset = () => {
-  //   setBillingType('All');
-  //   setUserStatus('All');
-  // };
-
-  // const handleApply = () => {
-  //   console.log("Filters applied:", { billingType, userStatus });
-  // };
-
-  // Toggle dropdown visibility on filter button click
-  // const toggleDropdown = () => {
-  //   console.log("Dropdown toggled");
-  //   setIsDropdownOpen(!isDropdownOpen);
-  // };
+  const tdStyle = {
+    maxWidth: "150px",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    padding: "15px"
+  };
 
   return (
     <div>
-      {clearance && (clearance === "1" || clearance === "2" || clearance === "3") ? (
-        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
-      ) : (
-        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
-      )}
-      <div style={mainStyles.centerContent(isSidebarClosed)}>
+      <SideBar isSidebarClosed={isSidebarClosed} setIsSidebarClosed={setIsSidebarClosed} />
+    <div style={mainStyles.centerContent(isSidebarClosed)}>
 
         <NavPath
           text={["Home", "All Warehouses"]}
@@ -127,13 +207,13 @@ export default function AllWarehouse() {
         <div style={mainStyles.tableBackground}>
           <TableTop
             heading_text={'All Warehouse'}
-            search_function={getData}
+            search_function={(query) => setSearch(query)}
             // filter_function={() => {}}   
             content={filterOptionUser}
           />
 
           <TableContent
-            table_headings={['ID', 'Name', 'Country', 'State', 'City', 'Email', 'Phone']}
+            table_headings={['ID', 'Name', 'Address', 'City', 'State', 'Country', 'Zip Code', 'Phone', 'Email']}
             last_column={true}
             loading={loading}
             success={success}
@@ -141,11 +221,22 @@ export default function AllWarehouse() {
             next_button={handleNext}
             fetchData={getData}
             data={data}
+            table_width_function={table_width_function}
+            table_function={table_function}
             currentPage={currentPage}
             totalPages={totalPages}
           />
         </div>
       </div>
+      {modalData.isOpen && (
+        <LargeModal
+          isOpen={modalData.isOpen}
+          title={modalData.title}
+          content={modalData.content}
+          onClose={() => setModalData({ isOpen: false, title: "", content: "" })}
+          onSave={() => setModalData({ isOpen: false, title: "", content: "" })}
+        />
+      )}
     </div>
   );
 }  

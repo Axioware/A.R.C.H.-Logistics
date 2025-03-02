@@ -12,8 +12,8 @@ import FilterButton from '../../Components/Table_Components/FilterButton';
 import FilterOptionsUserManagement from '../../Components/Filter/FilterOptionUserManagement';
 import Pagination from '../../Components/Table_Components/Pagination';
 import Dollar from "../../Components/Icons/DollarIcon";
+import LargeModal from "../../Components/Modals/SuccessModal";
 import { FaTrash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
 const roleClearanceMap = {
   1: "Manager",
@@ -34,21 +34,11 @@ export default function All_Users() {
   const [billingType, setBillingType] = useState('');
   const [warehouses, setWarehouses] = useState('');
   const [search, setSearch] = useState('');
-
-  const navigate = useNavigate();
+  const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
 
   const BASE_URL = `http://${process.env.REACT_APP_TENANT_NAME}/users/api/users/`;
   const [endpoint, setEndpoint] = useState(BASE_URL);
   const location = useLocation();
-
-  // Inline truncation style with padding.
-  const tdStyle = {
-    maxWidth: "150px",
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    padding: "15px"
-  };
 
   // Consolidated useEffect: build endpoint and call getData once.
   useEffect(() => {
@@ -63,7 +53,6 @@ export default function All_Users() {
     const queryString = params.toString() ? `?${params.toString()}` : "";
     const newEndpoint = `${BASE_URL}${queryString}`;
     setEndpoint(newEndpoint);
-    // console.log('Updated endpoint:', newEndpoint);
     getData(newEndpoint);
   }, [location.pathname, billingType, warehouses, search, currentPage, clearanceLevel]);
 
@@ -109,11 +98,24 @@ export default function All_Users() {
       });
       if (res.ok) {
         setData(prevData => prevData.filter((_, i) => i !== index));
+        setModalData({
+          isOpen: true,
+          title: "Success",
+          content: userId ? "User Deleted Successfully! :)" : "User Deleted successfully! :)",
+        });
       } else {
-        console.error("Error deleting user:", res.status);
+        setModalData({
+          isOpen: true,
+          title: "Failed",
+          content: userId ? "Error deleting user" : "Error deleting user",
+        });
       }
     } catch (error) {
-      console.error("Error deleting user:", error);
+      setModalData({
+        isOpen: true,
+        title: "Failed",
+        content: userId ? "Error deleting user" : "Error deleting user",
+      });
     }
   };
 
@@ -156,8 +158,19 @@ export default function All_Users() {
           "Authorization": `Bearer ${token}`
         }
       });
+
+      if (res.status === 403) {
+        setModalData({
+          isOpen: true,
+          title: "Access Denied",
+          content: "You do not have permission to access this resource.",
+        });
+        setErrorCode(403);
+        return;
+      }
+
       const response = await res.json();
-      
+
       if (res.ok && response.results) {
         const formattedData = response.results.map(user => ({
           ...user,
@@ -170,7 +183,11 @@ export default function All_Users() {
         setErrorCode(res.status);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      setModalData({
+        isOpen: true,
+        title: "Failed",
+        content:  "Error Fetching Data",
+      });
       setErrorCode(500);
     } finally {
       setLoading(false);
@@ -187,6 +204,15 @@ export default function All_Users() {
     if (currentPage > 1) {
       setCurrentPage(prev => prev - 1);
     }
+  };
+
+  // Inline truncation style with padding.
+  const tdStyle = {
+    maxWidth: "150px",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    padding: "15px"
   };
 
   return (
@@ -244,6 +270,15 @@ export default function All_Users() {
             />
           </div>
         </div>
+        {modalData.isOpen && (
+        <LargeModal
+          isOpen={modalData.isOpen}
+          title={modalData.title}
+          content={modalData.content}
+          onClose={() => setModalData({ isOpen: false, title: "", content: "" })}
+          onSave={() => setModalData({ isOpen: false, title: "", content: "" })}
+        />
+      )}
       </div>
     </>
   );
