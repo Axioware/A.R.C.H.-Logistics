@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
 import NavPath from '../../Components/General/NavPath';
@@ -6,20 +6,21 @@ import PageHeading from '../../Components/Table_Components/PageHeading';
 import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
 import LargeModal from "../../Components/Modals/SuccessModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AddWarehouse = () => {
   const navigate = useNavigate();
+  const { warehouseId } = useParams(); // If present, we're editing
 
   const [warehouseData, setWarehouseData] = useState({
     warehouse_name: "",
-    email: "",
-    phone: "",
     address: "",
-    country: "",
     city: "",
     state: "",
-    zip_code: ""
+    country: "",
+    zip_code: "",
+    phone: "",
+    email: ""
   });
 
   const [errors, setErrors] = useState({});
@@ -30,12 +31,61 @@ const AddWarehouse = () => {
     return storedState === null ? true : JSON.parse(storedState);
   });
 
+  const validateFields = () => {
+    let newErrors = {};
+    return newErrors;
+  };
+
   const handleChange = (e) => {
+    setErrors({ ...errors, [e.target.name]: "" });
     setWarehouseData({ ...warehouseData, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+      if (warehouseId) {
+        const fetchWarehouseData = async () => {
+          const token = localStorage.getItem("access_token");
+          try {
+            const response = await fetch(
+              `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/warehouse/${warehouseId}/`,
+              {
+                method: "GET",
+                headers: {
+                  "Authorization": `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+  
+            if (response.status === 403) {
+              setModalData({
+                isOpen: true,
+                title: "Access Denied",
+                content: "You do not have permission to access this resource.",
+              });
+            }
+            
+            if (response.ok) {
+              const data = await response.json();
+              setWarehouseData(data);
+            } else {
+              console.error("Failed to fetch user data.");
+            }
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        };
+        fetchWarehouseData();
+      }
+    }, [warehouseId]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationErrors = validateFields();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
     const token = localStorage.getItem("access_token");
     if (!token) {
@@ -43,18 +93,20 @@ const AddWarehouse = () => {
       return;
     }
 
+    const url = warehouseId
+      ? `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/warehouse/${warehouseId}/`
+      : `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/warehouse/`;
+    const method = warehouseId ? "PUT" : "POST";
+
     try {
-      const response = await fetch(
-        `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/warehouse/`,
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(warehouseData),
-        }
-      );
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(warehouseData), 
+      });
 
       const data = await response.json();
 
@@ -97,7 +149,7 @@ const AddWarehouse = () => {
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={{ padding: "10px 0px 50px 0px", backgroundColor: "f7f6f6" }}>
           <NavPath
-            text={["Home", "Warehouses", "Add Warehouse"]}
+            text={warehouseId ? ["Home", "Warehouses", "Edit Warehouse"] : ["Home", "Warehouses", "Add Warehouse"]}
             paths={["/home", "/warehouses", "/add-warehouses"]}
             text_color={[255, 255, 255]}
             background_color={[23, 23, 23]}
@@ -108,7 +160,7 @@ const AddWarehouse = () => {
 
           <div id="tableBackground" style={mainStyles.tableBackground}>
             <div style={{ alignSelf: "flex-start", marginLeft: "20px", marginTop: "15px" }}>
-              <PageHeading text="Add Warehouse" />
+              <PageHeading text={warehouseId ? "Edit Warehouse" : "Add Warehouse"} />
             </div>
 
             <form style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "20px", marginLeft: "20px", marginRight: "30px", marginTop: "35px" }} onSubmit={handleSubmit}>
@@ -123,7 +175,7 @@ const AddWarehouse = () => {
 
               <div style={{ alignSelf: "flex-end", display: "flex", flexDirection: "row", width: "250px", gap: "20px", marginTop: "20px", lineHeight: "40px" }}>
                 <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-                <GeneralButton text="Add" type="submit" width="100px" height="100%" />
+                <GeneralButton text={warehouseId ? "Update" : "Add"} type="submit" width="100px" height="100%" />
               </div>
             </form>
 
@@ -154,9 +206,8 @@ form: {
     position:'relative',
     alignSelf:'flex-start',
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr 1fr', // Two columns
-    gap: '20px', // Space between fields
-    // border: '2px solid red',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr',
+    gap: '20px', 
     marginLeft:'20px',
     marginRight:'30px',
     gap:'20px',

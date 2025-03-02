@@ -89,10 +89,17 @@ const AddUser = () => {
               },
             }
           );
+
+          if (response.status === 403) {
+            setModalData({
+              isOpen: true,
+              title: "Access Denied",
+              content: "You do not have permission to access this resource.",
+            });
+          }
           
           if (response.ok) {
             const data = await response.json();
-            console.log(data.user_data);
 
             setUserData(prev => ({
               ...prev,
@@ -163,6 +170,14 @@ const AddUser = () => {
         body: JSON.stringify(formData), // ✅ Send converted data
       });
 
+      if (response.status === 403) {
+        setModalData({
+          isOpen: true,
+          title: "Access Denied",
+          content: "You do not have permission to access this resource.",
+        });
+      }
+
       const data = await response.json();
 
       if (response.ok) {
@@ -209,15 +224,30 @@ const AddUser = () => {
           }
         );
 
+        if (response.status === 403) {
+          setModalData({
+            isOpen: true,
+            title: "Access Denied",
+            content: "You do not have permission to access this resource.",
+          });
+        }
+
         if (response.ok) {
           const data = await response.json();
           setWarehousesList(data.results);
         } else {
-          alert("Failed to fetch warehouse details. Please try again.");
+          setModalData({
+            isOpen: true,
+            title: "error",
+            content: "Failed to fetch warehouse details. Please try again.",
+          });
         }
       } catch (error) {
-        alert("Failed to fetch warehouse details. Please try again.");
-        console.error("Error fetching warehouse:", error);
+        setModalData({
+          isOpen: true,
+          title: "error",
+          content: "Failed to fetch warehouse details. Please try again.",
+        });
       }
     };
 

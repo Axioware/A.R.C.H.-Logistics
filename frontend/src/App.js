@@ -19,7 +19,6 @@ import Otp from './Pages/Authentication/Otp';
 //User Management
 import AllUsers from './Pages/User_Management/AllUsers';
 import AddUser from './Pages/User_Management/AddUser';
-import EditUser from './Pages/User_Management/EditUser';
 
 //Warehouse Management
 import AllWarehouse from './Pages/Warehouses/AllWarehouse';
@@ -143,8 +142,7 @@ function App() {
 
         {/* Warehouse Management */}
         <Route path="/warehouses" element={<AllWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/edit-warehouses" element={<EditWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/add-warehouses" element={<AddWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/add-warehouses/:warehouseId?" element={<AddWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
 
         {/* Location Management */}
         <Route path="/add-location" element={<AddLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  

@@ -14,7 +14,6 @@ import Pagination from '../../Components/Table_Components/Pagination';
 import Dollar from "../../Components/Icons/DollarIcon";
 import LargeModal from "../../Components/Modals/SuccessModal";
 import { FaTrash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
 const roleClearanceMap = {
   1: "Manager",
@@ -37,20 +36,9 @@ export default function All_Users() {
   const [search, setSearch] = useState('');
   const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
 
-  const navigate = useNavigate();
-
   const BASE_URL = `http://${process.env.REACT_APP_TENANT_NAME}/users/api/users/`;
   const [endpoint, setEndpoint] = useState(BASE_URL);
   const location = useLocation();
-
-  // Inline truncation style with padding.
-  const tdStyle = {
-    maxWidth: "150px",
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    padding: "15px"
-  };
 
   // Consolidated useEffect: build endpoint and call getData once.
   useEffect(() => {
@@ -170,6 +158,17 @@ export default function All_Users() {
           "Authorization": `Bearer ${token}`
         }
       });
+
+      if (res.status === 403) {
+        setModalData({
+          isOpen: true,
+          title: "Access Denied",
+          content: "You do not have permission to access this resource.",
+        });
+        setErrorCode(403);
+        return;
+      }
+
       const response = await res.json();
 
       if (res.ok && response.results) {
@@ -184,7 +183,11 @@ export default function All_Users() {
         setErrorCode(res.status);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      setModalData({
+        isOpen: true,
+        title: "Failed",
+        content:  "Error Fetching Data",
+      });
       setErrorCode(500);
     } finally {
       setLoading(false);
@@ -201,6 +204,15 @@ export default function All_Users() {
     if (currentPage > 1) {
       setCurrentPage(prev => prev - 1);
     }
+  };
+
+  // Inline truncation style with padding.
+  const tdStyle = {
+    maxWidth: "150px",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    padding: "15px"
   };
 
   return (
