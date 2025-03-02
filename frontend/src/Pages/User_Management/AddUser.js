@@ -188,7 +188,6 @@ const AddUser = () => {
     }
   };
 
-
   useEffect(() => {
     const fetchWarehouses = async () => {
       const token = localStorage.getItem("access_token");
@@ -247,19 +246,23 @@ const AddUser = () => {
 
       <div style={mainStyles.centerContent(isSidebarClosed)}>
         <div style={styles.mainContent}>
-          <NavPath
-            text={userId ? ['Home', 'All Users', 'Edit User'] : ['Home', 'All Users', 'Add User']}
-            paths={['/home', '/users', '/add-user']}
-            text_color={[255, 255, 255]}
-            background_color={[23, 23, 23]}
-            hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
-            width="100%"
-            height="50px"
-          />
+          <div style={{ marginBottom: '60px' }}>
+            <NavPath
+              text={userId ? ['Home', 'All Users', 'Edit User'] : ['Home', 'All Users', 'Add User']}
+              paths={['/home', '/users', '/add-user']}
+              text_color={[255, 255, 255]}
+              background_color={[23, 23, 23]}
+              hyperlink_size={[['10%', '55%'], ['40%', '50%'], ['4%', '4%']]}
+              width="100%"
+              height="50px"
+            />
+          </div>
 
           <div id="tableBackground" style={mainStyles.tableBackground}>
             <div id="headingcontainer" style={styles.headingcontainer}>
-              <PageHeading text={userId ? "Edit User" : "Add User"} />
+              <div className="table-top-container">
+                <PageHeading text={userId ? "Edit User" : "Add User"} />
+              </div>
             </div>
 
             <form id="form" style={styles.form} onSubmit={handleSubmit}>
@@ -267,8 +270,8 @@ const AddUser = () => {
                 label="Role"
                 data={["Manager", "VA", "Prep-Team", "Client"]}
                 onSelect={handleSelectClearanceLevel}
-                width="230px"
-                height="45px"
+                width="300px"
+                height="50px"
                 required={true}
                 value={UserData.role}
               />
@@ -276,8 +279,8 @@ const AddUser = () => {
                 label="Warehouse"
                 data={warehousesList.map(w => w.warehouse_name)}
                 onSelect={handleSelectWarehouse}
-                width="230px"
-                height="45px"
+                width="300px"
+                height="50px"
                 multi={true}
                 value={UserData.warehouse}
               />
@@ -285,23 +288,23 @@ const AddUser = () => {
                 label="Billing Type"
                 data={["Daily", "Monthly", "Bi-Monthly"]}
                 onSelect={handleSelectBillingType}
-                width="230px"
-                height="45px"
+                width="300px"
+                height="50px"
                 value={UserData.billing_type}
               />
-              <GeneralField label="Username" name="username" field_type="text" hint="Enter Username" value={UserData.username} required={true} func={handleChange}/>
-              <GeneralField label="First Name" name="first_name" field_type="text" hint="First Name (e.g., John)" value={UserData.first_name} func={handleChange} required={true}/>
-              <GeneralField label="Last Name" name="last_name" field_type="text" hint="Last Name (e.g., Doe)" value={UserData.last_name} func={handleChange}/>
-              <GeneralField label="Password" name="password" field_type="password" hint="********" value={UserData.password} func={handleChange} required={!userId}/>
-              <GeneralField label="Phone" name="phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" value={UserData.phone} func={handleChange}/>
-              <GeneralField label="Primary Email" name="email" field_type="email" hint="Email address" value={UserData.email} func={handleChange} />
-              <GeneralField label="Secondary Email" name="email2" field_type="email" hint="Email address" value={UserData.email2} func={handleChange} />
-              <GeneralField label="Address" name="address" field_type="text" hint="Full address" value={UserData.address} func={handleChange}/>
-              <GeneralField label="City" name="city" field_type="text" hint="City (e.g., Stafford)" value={UserData.city} func={handleChange}/>
-              <GeneralField label="State" name="state" field_type="text" hint="State (e.g., Texas)" value={UserData.state} func={handleChange}/>
-              <GeneralField label="Zip Code" name="zip" field_type="text" hint="Zip code" required={true} value={UserData.zip} func={handleChange}/>
-              <GeneralField label="LLC Name" name="llc_name" field_type="text" hint="Enter Company name" required={true} value={UserData.llc_name} func={handleChange}/>
-              <GeneralField label="Tax ID" name="tax_id" field_type="text" hint="Tax ID" required={true} value={UserData.tax_id} func={handleChange}/>
+              <GeneralField label="Username" name="username" field_type="text" hint="Enter Username" value={UserData.username} required={true} func={handleChange} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="First Name" name="first_name" field_type="text" hint="First Name (e.g., John)" value={UserData.first_name} func={handleChange} required={true} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="Last Name" name="last_name" field_type="text" hint="Last Name (e.g., Doe)" value={UserData.last_name} func={handleChange} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="Password" name="password" field_type="password" hint="********" value={UserData.password} func={handleChange} required={!userId} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="Phone" name="phone" field_type="tel" hint="Phone number (e.g., +1 (275) 432-345)" value={UserData.phone} func={handleChange} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="Primary Email" name="email" field_type="email" hint="Email address" value={UserData.email} func={handleChange} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="Secondary Email" name="email2" field_type="email" hint="Email address" value={UserData.email2} func={handleChange} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="Address" name="address" field_type="text" hint="Full address" value={UserData.address} func={handleChange} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="City" name="city" field_type="text" hint="City (e.g., Stafford)" value={UserData.city} func={handleChange} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="State" name="state" field_type="text" hint="State (e.g., Texas)" value={UserData.state} func={handleChange} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="Zip Code" name="zip" field_type="text" hint="Zip code" required={true} value={UserData.zip} func={handleChange} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="LLC Name" name="llc_name" field_type="text" hint="Enter Company name" required={true} value={UserData.llc_name} func={handleChange} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="Tax ID" name="tax_id" field_type="text" hint="Tax ID" required={true} value={UserData.tax_id} func={handleChange} style={{ width: '300px', height: '50px' }}/>
 
               <div id="buttonContainer" style={styles.buttonContainer}>
                 <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
@@ -330,44 +333,44 @@ const styles = {
   },
   form: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr 1fr',
-    gap: '20px',
-    marginLeft:'20px',
-    marginTop:'35px',
-    marginRight:'100px',
-    alignSelf:'flex-start',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr', // 4 columns
+    gap: '20px 70px',
+    marginLeft: '100px',
+    marginTop: '35px',
+    marginRight: '100px',
+    alignSelf: 'flex-start',
   },
   buttonContainer: {
-    alignSelf:'flex-end',
+    alignSelf: 'flex-end',
     display: 'flex',
     flexDirection: 'row',
-    width:'250px',
+    width: '250px',
     gap: '20px',
-    lineHeight:'40px',
-    marginTop:"100px",
+    lineHeight: '40px',
+    marginTop: "10px",
   },
-  headingcontainer:{
+  headingcontainer: {
     alignSelf: 'flex-start',
-    marginLeft:'20px',
-    marginTop:'15px',
+    marginLeft: '20px',
+    marginTop: '15px',
   },
-  PageHeading:{
-    marginLeft:'10px',
-    marginTop:'20px',  
+  PageHeading: {
+    marginLeft: '10px',
+    marginTop: '20px',  
   },
   label: {
-    marginTop:'10px',  
-    marginLeft:"20px",
-    display:'block',
-    fontWeight:'700px',
+    marginTop: '10px',  
+    marginLeft: "20px",
+    display: 'block',
+    fontWeight: '700px',
   },
   select: {
-    marginTop:'15px',  
-    marginLeft:"10px",
-    display:'block',
-    width:'260px',
-    height:'45px',
-    borderRadius:'10px',
+    marginTop: '15px',  
+    marginLeft: "10px",
+    display: 'block',
+    width: '300px',
+    height: '50px',
+    borderRadius: '10px',
     border: '1px solid lightgrey',
     boxShadow: '1px 1px 1px 1px lightgrey',
   },

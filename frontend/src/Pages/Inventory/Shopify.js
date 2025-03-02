@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import SideBar from '../../Components/General/Sidebar';
 import NavPath from '../../Components/General/NavPath';
 import PageHeading from "../../Components/Table_Components/PageHeading";
-import mainStyles from "../../Assets/CSS/styles";
+import mainStyles from "../../Assets/CSS/styles"; // Importing mainStyles from an external file
 import fetchData from '../../utils/fetch_data';
 import GeneralButton from '../../Components/General/GeneralButton';
 
@@ -61,14 +61,6 @@ export default function Shopify() {
 
           .input-field, .select-fields {
             width: 70%;
-            padding: px;
-            margin-top: 5px;
-            border: 0px solid #ccc;
-            border-radius: 4px;
-          }
-
-           .input-field, .select-field {
-            width: 70%;
             padding: 8px;
             margin-top: 5px;
             border: 1px solid #ccc;
@@ -88,6 +80,81 @@ export default function Shopify() {
             display: block;
             margin-bottom: 5px;
           }
+
+          #buttonContainer {
+            align-self: flex-end;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            width: 100%;
+            max-width: 250px;
+            text-align: right;
+            gap: 20px;
+            line-height: 40px;
+            margin-top: 20px;
+            margin-right: 100px;
+          }
+
+          /* Responsive Styles */
+          @media (max-width: 768px) {
+            .table-top-container {
+              margin: 20px auto 10px 20px;
+            }
+
+            .form-grid {
+              grid-template-columns: repeat(2, 1fr);
+              margin: 20px 0px 0px 20px;
+            }
+
+            .input-field, .select-fields {
+              width: 90%;
+            }
+
+            #buttonContainer {
+              max-width: 100%;
+              margin-right: 20px;
+              justify-content: center;
+            }
+
+            .nav-path {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 10px;
+              padding: 10px;
+            }
+
+            .nav-path a {
+              font-size: 14px;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .form-grid {
+              grid-template-columns: 1fr;
+              margin: 20px 0px 0px 10px;
+            }
+
+            .input-field, .select-fields {
+              width: 100%;
+            }
+
+            #buttonContainer {
+              flex-direction: column;
+              align-items: center;
+              gap: 10px;
+            }
+
+            .nav-path {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 5px;
+              padding: 5px;
+            }
+
+            .nav-path a {
+              font-size: 12px;
+            }
+          }
         `}
       </style>
       <div>
@@ -102,6 +169,7 @@ export default function Shopify() {
             paths={["/home", "/inventory", "/add-inventorys"]}
             width="100%"
             height="50px"
+            className="nav-path"
           />
 
           <div style={mainStyles.AddInputBackground}>
@@ -140,7 +208,7 @@ export default function Shopify() {
               </div>
             </form>
 
-            <div id="buttonContainer" style={styles.buttonContainer}>
+            <div id="buttonContainer">
               <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
               <GeneralButton text="Save" type="submit" width="100px" height="100%" />
             </div>
@@ -150,6 +218,7 @@ export default function Shopify() {
     </>
   );
 }
+
 
 const styles = {
   buttonContainer: {

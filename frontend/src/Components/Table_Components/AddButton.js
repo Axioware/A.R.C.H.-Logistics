@@ -39,10 +39,10 @@ export default function AddButton({
         {`
           .add-button-container {
             display: flex;
-            justify-content: flex-end;
+            justify-content: flex-end; /* Keep right-aligned */
             align-items: center;
             height: 8vh;
-            margin: 0px;
+            margin: 0px; 
             font-weight: bold;
           }
 
@@ -61,8 +61,8 @@ export default function AddButton({
             transition: all 0.3s ease;
             box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
             display: flex;
-            align-items: center; /* Centers text vertically */
-            justify-content: center; /* Centers text horizontally */
+            align-items: center;
+            justify-content: center;
             white-space: nowrap;
           }
 
@@ -72,10 +72,24 @@ export default function AddButton({
             box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
           }
 
+           @media (max-width: 992px) {
+            .add-button-container {
+              justify-content: flex-end; /* Keep right-aligned */
+              // margin-left: 10px;
+            }
+
+            .add-button {
+              width: 120px;
+              height: 40px;
+              font-size: 0.9rem;
+              
+            }
+          }
+
           /* Responsive styles */
           @media (max-width: 768px) {
             .add-button-container {
-              justify-content: center;
+              justify-content: flex-end; /* Keep right-aligned */
             }
 
             .add-button {
@@ -86,6 +100,10 @@ export default function AddButton({
           }
 
           @media (max-width: 480px) {
+            .add-button-container {
+              justify-content: flex-end; /* Still right-aligned */
+            }
+
             .add-button {
               width: 100px;
               height: 35px;

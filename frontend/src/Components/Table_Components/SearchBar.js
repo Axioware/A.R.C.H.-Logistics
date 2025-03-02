@@ -36,10 +36,7 @@ export default function SearchBar({
   };
 
   return (
-    <div
-      className={`Search-bar-container ${class_name}`}
-      style={{ width, height }}  
-    >
+    <div className={`Search-bar-container ${class_name}`}>
       <div className="Search-icon-container">
         {icon ? <FaSearch className="Search-icon" /> : <img src={SearchIcon} alt="Search Icon" className="Search-icon" />}
       </div>
@@ -56,48 +53,90 @@ export default function SearchBar({
         {`
           .Search-bar-container {
             position: relative;
-            width: ${width}; /* Apply width */
-            height: ${height}; /* Apply height */
+            width: ${width};
+            height: ${height};
             display: flex;
             align-items: center;
             margin: 0px 40px 0px 0px;
+            transition: all 0.3s ease-in-out;
           }
 
           .Search-icon-container {
             position: absolute;
-            left: 10px; /* Position the icon inside the input field */
-            z-index: 1; /* Make sure the icon appears above the input */
+            left: 10px;
+            z-index: 1;
           }
 
           .Search-bar-input {
             width: 100%;
             height: 68%;
-            padding: 10px 10px 10px 40px; /* Add extra left padding to create space between the icon and the text */
+            padding: 10px 10px 10px 40px;
             border-radius: 5px;
             border: 1px solid #ccc;
             font-size: 1rem;
             outline: none;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
           }
 
           .Search-bar-input:focus {
-            border-color: #007bff; /* Focused input border color */
+            border-color: #007bff;
           }
 
           .Search-icon {
             width: 20px;
             height: 20px;
-            color: #aaa; /* Dim the color of the search icon */
+            color: #aaa;
           }
 
           .Search-bar-input::placeholder {
-            color: #aaa; /* Set the placeholder color to match the icon */
+            color: #aaa;
+          }
+
+          /* Responsive Styles */
+          @media (max-width: 1024px) {
+            .Search-bar-container {
+              width: 80%;
+              margin-right: 20px;
+            }
+          }
+
+          @media (max-width: 768px) {
+            .Search-bar-container {
+              width: 60%; /* Decrease width */
+              margin-right: 10px;
+            }
+
+            .Search-bar-input {
+              font-size: 0.9rem;
+              height: 50%; /* Decrease height */
+              padding: 8px 8px 8px 35px; /* Adjust padding */
+            }
+
+            .Search-icon {
+              width: 18px;
+              height: 18px;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .Search-bar-container {
+              width: 50%; /* Further decrease width */
+              margin-right: 5px;
+            }
+
+            .Search-bar-input {
+              font-size: 0.85rem;
+              height: 45%; /* Reduce height further */
+              padding-left: 30px;
+            }
+
+            .Search-icon {
+              width: 16px;
+              height: 16px;
+            }
           }
         `}
       </style>
     </div>
   );
 }
-
-
-

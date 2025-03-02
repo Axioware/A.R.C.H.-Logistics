@@ -39,6 +39,7 @@ const GeneralField = ({
       text-align: ${label_position === 'left' ? 'right' : 'left'};
       white-space: ${label_position === 'left' ? 'nowrap' : 'normal'};
       min-width: ${label_position === 'left' ? '20%' : 'auto'};
+      gap: 8px;
     }
     .field-input {
       padding: 8px;
@@ -48,6 +49,8 @@ const GeneralField = ({
       width: ${width};
       height: ${height};
       transition: border-color 0.3s, box-shadow 0.3s; /* Optional: Smooth focus effect */
+      width: 100%;
+      gap: 8px;
     }
     .field-input:focus {
       border-color: #007bff; /* Change border color on focus */

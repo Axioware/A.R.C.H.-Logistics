@@ -1,75 +1,119 @@
 import { position } from "polished";
-
 const mainStyles = {
-    centerContent: (isSidebarClosed) => ({
-      flex: 1,
-      position: 'relative',
-      padding: "10px 90px 10px 10px",
-      transition: "all 0.5s ease",
-    //   background: "#e4e9f7",
-      height: '100%',
-      marginLeft: isSidebarClosed ? "8%" : "18%", // Adjust margin-left based on sidebar state
-      width: isSidebarClosed ? "calc(92%)" : "calc(82%)", // Adjust width dynamically
-    //   marginLeft: isSidebarClosed ? "78px" : "260px", // Adjust margin-left based on sidebar state
-    //   width: isSidebarClosed ? "calc(100% - 78px)" : "calc(100% - 260px)", // Adjust width dynamically
-    //   width: isSidebarClosed ? "width: calc(100% - 78px)" : "width: calc(100% - 260px)",
-      // backgroundColor: hasClosedClass ? "#f0f0f0" : "#fff", // Example additional style for closed class
-    }),
+  centerContent: (isSidebarClosed) => ({
+    flex: 1,
+    position: 'relative',
+    padding: "10px 90px 10px 10px",
+    transition: "all 0.5s ease",
+    height: '100%',
+    marginLeft: isSidebarClosed ? "8%" : "18%",
+    width: isSidebarClosed ? "calc(92%)" : "calc(82%)",
+    '@media (max-width: 1200px)': {
+      marginLeft: isSidebarClosed ? "6%" : "16%",
+      width: isSidebarClosed ? "calc(94%)" : "calc(84%)",
+    },
+    '@media (max-width: 992px)': {
+      marginLeft: isSidebarClosed ? "5%" : "15%",
+      width: isSidebarClosed ? "calc(95%)" : "calc(85%)",
+    },
+    '@media (max-width: 768px)': {
+      marginLeft: isSidebarClosed ? "4%" : "14%",
+      width: isSidebarClosed ? "calc(96%)" : "calc(86%)",
+      padding: "10px 20px 10px 10px",
+    },
+    '@media (max-width: 480px)': {
+      marginLeft: isSidebarClosed ? "2%" : "12%",
+      width: isSidebarClosed ? "calc(98%)" : "calc(88%)",
+      padding: "10px 10px 10px 10px",
+    },
+  }),
 
-    tableBackground: {
-        backgroundColor: '#F8F8F8',
-        padding: '15px 15px 20px 15px',
-        borderRadius: '8px',
-        minHeight: '10vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        // margin: '0px 0px 0px 0px',
-        boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
-      },
+  tableBackground: {
+    backgroundColor: '#F8F8F8',
+    padding: '15px 15px 20px 15px',
+    borderRadius: '8px',
+    minHeight: '10vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
+    '@media (max-width: 768px)': {
+      padding: '10px 10px 15px 10px',
+    },
+    '@media (max-width: 480px)': {
+      padding: '5px 5px 10px 5px',
+    },
+  },
 
-      tablesBackground: {
-        backgroundColor: '#F8F8F8',
-        padding: '25px 15px 20px 35px',
-        borderRadius: '8px',
-        minHeight: '10vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        margin: '40px 0px 0px 0px',
-        boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
-      },
-      AddInputBackground: {
-        backgroundColor: '#F8F8F8',
-        padding: '20px 0px 40px 60px',
-        borderRadius: '8px',
-        minHeight: '10vh',
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-        margin: '20px 0px 0px 0px',
-        boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
-      },
+  tablesBackground: {
+    backgroundColor: '#F8F8F8',
+    padding: '25px 15px 20px 35px',
+    borderRadius: '8px',
+    minHeight: '10vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    margin: '40px 0px 0px 0px',
+    boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
+    '@media (max-width: 768px)': {
+      padding: '20px 10px 15px 20px',
+      margin: '20px 0px 0px 0px',
+    },
+    '@media (max-width: 480px)': {
+      padding: '15px 5px 10px 10px',
+      margin: '10px 0px 0px 0px',
+    },
+  },
 
-      tableTopContainer: {
-            display: 'flex',
-            justifyContent: 'space-between', /* Space between heading and buttons */
-            alignItems: 'center', /* Align items vertically */
-            width: '100%',
-            margin: '0px 0px 0px 30px', /* Add margin to the right */
-            flexWrap: 'wrap' /* Allow items to wrap on smaller screens */
-          },
+  AddInputBackground: {
+    backgroundColor: '#F8F8F8',
+    padding: '20px 0px 40px 60px',
+    borderRadius: '8px',
+    minHeight: '10vh',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    margin: '20px 0px 0px 0px',
+    boxShadow: '0 5px 55px rgba(0, 0, 0, 0.1)',
+    '@media (max-width: 768px)': {
+      padding: '15px 0px 30px 40px',
+    },
+    '@media (max-width: 480px)': {
+      padding: '10px 0px 20px 20px',
+    },
+  },
 
-      rowContainer: {
-            display: 'flex',
-            justifyContent: 'flex-end', /* Align buttons to the right */
-            alignItems: 'center',
-            gap: '20px' /* Add spacing between FilterButton and SearchBar */
-      }
-  };
-  
+  tableTopContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    margin: '0px 0px 0px 30px',
+    flexWrap: 'wrap',
+    '@media (max-width: 768px)': {
+      margin: '0px 0px 0px 20px',
+    },
+    '@media (max-width: 480px)': {
+      margin: '0px 0px 0px 10px',
+    },
+  },
+
+  rowContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: '20px',
+    '@media (max-width: 768px)': {
+      gap: '10px',
+    },
+    '@media (max-width: 480px)': {
+      gap: '5px',
+    },
+  },
+};
+
 export default mainStyles;

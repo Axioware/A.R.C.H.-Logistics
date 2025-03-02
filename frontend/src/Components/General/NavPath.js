@@ -78,33 +78,76 @@ export default function NavPath({
             font-size: 13px;
             cursor: pointer;
           }
+            
+          //      @media (max-width: 1200px) {
+          //   .navpath-container {
+          //     height: 45px; /* Increase height */
+          //     padding-left: 30px;
+          //     margin-left: 40px;
+          //     font-size: 12px;
+          //   }
+
+          //   .navpath-text {
+          //     font-size: 14px;
+          //     margin-right: 10px;
+          //     font-size: 12px;
+          //   }
+
+          //   .navpath-arrow {
+          //     margin-right: 10px;
+          //   }
+          // }
+
+
+          //  @media (max-width: 992px) {
+          //   .navpath-container {
+          //     height: 45px; /* Increase height */
+          //     padding-left: 30px;
+          //     margin-left: 50px;
+          //     font-size: 12px;
+          //   }
+
+          //   .navpath-text {
+          //     font-size: 14px;
+          //     margin-right: 10px;
+          //     font-size: 12px;
+          //   }
+
+          //   .navpath-arrow {
+          //     margin-right: 10px;
+          //   }
+          // }
 
           /* Responsive styles */
           @media (max-width: 768px) {
             .navpath-container {
-              flex-direction: column; /* Stack items vertically on smaller screens */
-              margin: 30px 0px;
+              height: 65px; /* Increase height */
+              padding-left: 30px;
+              margin-left: 50px;
             }
 
-            .navpath-container p {
-              display: none; /* Hide extra space on smaller screens */
+            .navpath-text {
+              font-size: 14px;
+              margin-right: 10px;
             }
 
-            /* Make the HyperLink width more flexible */
-            .navpath-container a {
-              width: auto; /* Allow links to adjust their width */
-              font-size: 1rem; /* Adjust font size */
+            .navpath-arrow {
+              margin-right: 10px;
             }
           }
 
           @media (max-width: 480px) {
             .navpath-container {
-              margin: 20px 0px; /* Reduce the margin for very small screens */
+              height: 75px; /* Further increase height for very small screens */
+              flex-wrap: wrap;
+              padding-left: 20px;
             }
 
-            .navpath-container a {
-              font-size: 0.9rem; /* Further adjust font size */
+            .navpath-text {
+              font-size: 14px;
+              margin-bottom: 5px;
             }
+          }
           }
         `}
       </style>
