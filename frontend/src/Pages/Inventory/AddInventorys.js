@@ -157,25 +157,6 @@ export default function AddInventory() {
     }),
   };
 
-
-//   const [locationOptions, setLocationOptions] = useState([
-//     { value: "Location 1", label: "Location 1" },
-//     { value: "Location 2", label: "Location 2" }
-// ]);
-
-  
-//   const fetchLocations = async () => {
-//     const url = "https://api.example.com/api/locations/"; // Replace with the correct API URL
-//     const response = await fetchData(setLoading, setSuccess, url);
-  
-//     if (response && response.error) {
-//       setErrorCode(response.error);
-//     } else if (response) {
-//       setLocationOptions([...response, { name: "Location 1" }, { name: "Location 2" }]);
-//     }
-//   };
-  
-
   const [showModal, setShowModal] = useState(false);
 
   const fetchClients = async () => {
