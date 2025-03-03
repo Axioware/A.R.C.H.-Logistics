@@ -5,7 +5,7 @@ export default function TabLayout() {
     <Tabs>
       <Tabs.Screen
         name="dashboard" // Adjust the route name to match your file name without extension.
-        options={{ title: "Home" }}
+        options={{ title: "Home", headerShown: false}}
       />
       <Tabs.Screen
         name="placeholder1" // Adjust the route name to match your file name without extension.

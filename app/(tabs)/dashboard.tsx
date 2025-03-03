@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, ActivityIndicator } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
@@ -40,28 +49,27 @@ export default function Dashboard() {
     prepare();
   }, [fontsLoaded]);
 
+  // // Fetch data from API
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("https://your-api.com/dashboard-data");
+  //       const data = await response.json();
 
-    // // Fetch data from API
-    // useEffect(() => {
-    //   const fetchData = async () => {
-    //     try {
-    //       const response = await fetch("https://your-api.com/dashboard-data");
-    //       const data = await response.json();
-  
-    //       // ✅ Store API data into state
-    //       setOrders(data.orders || 0);
-    //       setItems(data.items || 0);
-    //       setDueToday(data.dueToday || 0);
-    //       setShippedToday(data.shippedToday || 0);
-    //     } catch (error) {
-    //       console.error("Error fetching data:", error);
-    //     } finally {
-    //       setLoading(false);
-    //     }
-    //   };
-  
-    //   fetchData();
-    // }, []);
+  //       // ✅ Store API data into state
+  //       setOrders(data.orders || 0);
+  //       setItems(data.items || 0);
+  //       setDueToday(data.dueToday || 0);
+  //       setShippedToday(data.shippedToday || 0);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   if (!fontsLoaded) {
     return null;
@@ -76,14 +84,16 @@ export default function Dashboard() {
     <SafeAreaView style={styles.container}>
       {/* Top Section */}
       <View style={styles.topSection}>
-        <Image source={require("../../assets/logo.png")} 
-        style={[styles.logo, { height: logoHeight }]}
-        resizeMode="contain" />
+        <Image
+          source={require("../../assets/logo.png")}
+          style={[styles.logo, { height: logoHeight }]}
+          resizeMode="contain"
+        />
 
         {/* Profile Button */}
         <TouchableOpacity style={styles.profileButton}>
           <Image
-            source={{ uri: "https://via.placeholder.com/50x50.png?text= " }} 
+            source={{ uri: "https://via.placeholder.com/50x50.png?text= " }}
             style={[styles.profileImage, { height: profileHeight }]}
           />
         </TouchableOpacity>
@@ -99,10 +109,12 @@ export default function Dashboard() {
           <View style={styles.overviewBox}>
             {/* Left Section */}
             <View style={styles.leftSection}>
-              <Text style={styles.bigText}>{orders}</Text>
-              <Text style={styles.smallText}>ORDERS</Text>
-              <View style={styles.greenTextContainer}>
-                <Text style={styles.greenText}>ready to ship</Text>
+              <View style={{ flexGrow: 1 }}>
+                <Text style={styles.bigText}>{orders}</Text>
+                <Text style={styles.smallText}>ORDERS</Text>
+                <View style={styles.greenTextContainer}>
+                  <Text style={styles.greenText}>ready to ship</Text>
+                </View>
               </View>
 
               <View style={styles.footerRow}>
@@ -110,7 +122,8 @@ export default function Dashboard() {
                   <Text style={styles.boldText}>{dueToday}</Text> DUE TODAY
                 </Text>
                 <Text style={styles.footerText}>
-                  <Text style={styles.boldText}>{shippedToday}</Text> SHIPPED TODAY
+                  <Text style={styles.boldText}>{shippedToday}</Text> SHIPPED
+                  TODAY
                 </Text>
               </View>
             </View>
@@ -127,35 +140,42 @@ export default function Dashboard() {
         )}
       </View>
 
-    <View style={styles.newCard}>
-            <Text style={styles.cardTitle}>How would you like to proceed?</Text>
-    
-            {/* Multi Item Orders Button */}
-            <TouchableOpacity style={[styles.buttonContainer, { borderTopWidth: 0 }]}>
-              <View style={styles.buttonContent}>
-                <FontAwesome name="cubes" size={20} color="#00000" />
-                <View style={styles.buttonTextContainer}>
-                  <Text style={styles.buttonTitle}>Multi Item Orders</Text>
-                  <Text style={styles.buttonFooter}>
-                    Pick multi SKU orders into individual totes
-                  </Text>
-                </View>
-                <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
-              </View>
-            </TouchableOpacity>
-    
-            {/* Single Order Button */}
-            <TouchableOpacity style={[styles.buttonContainer, { borderTopWidth: 1, borderTopColor: "#ddd" }]}>
-              <View style={styles.buttonContent}>
-                <FontAwesome name="shopping-bag" size={20} color="#00000" />
-                <View style={styles.buttonTextContainer}>
-                  <Text style={styles.buttonTitle}>Single Order</Text>
-                  <Text style={styles.buttonFooter}>Pick a specific order</Text>
-                </View>
-                <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
-              </View>
-            </TouchableOpacity>
+      <View style={styles.newCard}>
+        <Text style={styles.cardTitle}>How would you like to proceed?</Text>
+
+        {/* Multi Item Orders Button */}
+        <TouchableOpacity
+          style={[styles.buttonContainer, { borderTopWidth: 0 }]}
+        >
+          <View style={styles.buttonContent}>
+            <FontAwesome name="cubes" size={20} color="#00000" />
+            <View style={styles.buttonTextContainer}>
+              <Text style={styles.buttonTitle}>Multi Item Orders</Text>
+              <Text style={styles.buttonFooter}>
+                Pick multi SKU orders into individual totes
+              </Text>
+            </View>
+            <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
           </View>
+        </TouchableOpacity>
+
+        {/* Single Order Button */}
+        <TouchableOpacity
+          style={[
+            styles.buttonContainer,
+            { borderTopWidth: 1, borderTopColor: "#ddd" },
+          ]}
+        >
+          <View style={styles.buttonContent}>
+            <FontAwesome name="shopping-bag" size={20} color="#00000" />
+            <View style={styles.buttonTextContainer}>
+              <Text style={styles.buttonTitle}>Single Order</Text>
+              <Text style={styles.buttonFooter}>Pick a specific order</Text>
+            </View>
+            <MaterialIcons name="keyboard-arrow-right" size={24} color="#555" />
+          </View>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -168,13 +188,13 @@ const styles = StyleSheet.create({
   },
   topSection: {
     justifyContent: "center", // Center the logo horizontally
-    alignItems: "center",      // Center the logo vertically
+    alignItems: "center", // Center the logo vertically
     marginBottom: 5,
-    position: "relative",      // Needed for the absolute profile button
+    position: "relative", // Needed for the absolute profile button
   },
   logo: {
-    width: '40%', // Adjust the width of the logo
-    alignSelf: 'center', // Center the logo horizontally
+    width: "40%", // Adjust the width of the logo
+    alignSelf: "center", // Center the logo horizontally
     marginBottom: 10, // Space between logo and content
   },
   profileButton: {
@@ -197,18 +217,19 @@ const styles = StyleSheet.create({
   overviewContainer: {
     backgroundColor: "#ffffff",
     borderRadius: 12,
+    height: "38%",
     padding: 15,
     elevation: 4,
   },
   greenTextCard: {
-    color: "#28a745",
-    fontSize: 12,
+    color: "white",
+    fontSize: 13,
     fontWeight: "bold",
     textAlign: "center",
     fontFamily: "tahoma",
   },
   overviewTitle: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "bold",
     marginBottom: 15,
     fontFamily: "tahoma",
@@ -217,59 +238,63 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#f3f3f3",
     borderRadius: 10,
-    padding: 20,
+    padding: 18,
     position: "relative",
+    justifyContent: "space-between", // Space between left and right sections
+    height: "73%", // Ensures both sections occupy full height
   },
   leftSection: {
+    top: 4,
     flex: 1,
+    alignItems: "flex-start",
   },
   bigText: {
-    fontSize: 28,
+    fontSize: 31,
     fontWeight: "bold",
     color: "#000",
     fontFamily: "tahoma",
   },
   smallText: {
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: "bold",
     color: "#777",
     marginBottom: 5,
     fontFamily: "tahoma",
   },
   greenTextContainer: {
-    backgroundColor: "#e6f8ea",
+    backgroundColor: "black",
     borderRadius: 5,
     paddingVertical: 5,
     paddingHorizontal: 8,
     alignSelf: "flex-start",
   },
   greenText: {
-    color: "#28a745",
-    fontSize: 12,
+    color: "white",
+    fontSize: 13,
     fontWeight: "bold",
     textAlign: "center",
     fontFamily: "tahoma",
   },
   rightCard: {
     position: "absolute",
-    width: 150,
-    height: 100,
-    top: 5,
-    right: 10,
+    width: "52%",
+    height: "auto",
+    top: 8,
+    right: 8,
     backgroundColor: "#ffffff",
     padding: 13,
     borderRadius: 10,
     elevation: 4,
-    justifyContent: "center",
-    overflow: "hidden",
+    // justifyContent: "center",
+    // overflow: "hidden",
   },
   footerRow: {
     flexDirection: "row",
+    width: "90%", // Use full width to ensure no overflow
     justifyContent: "space-between",
-    marginTop: 10,
   },
   footerText: {
-    fontSize: 12,
+    fontSize: 13,
     color: "#555",
     fontFamily: "tahoma",
   },

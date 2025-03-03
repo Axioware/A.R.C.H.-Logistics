@@ -1,28 +1,71 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
-  Animated,
   FlatList,
+  ActivityIndicator,
+  TouchableOpacity,
   Image,
   StyleSheet,
+  SafeAreaView,
+  Animated,
+  Dimensions,
 } from "react-native";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { useNavigation } from "@react-navigation/native";
 
+const screenHeight = Dimensions.get("window").height;
 const OrderDetailsPage = () => {
-  const orderId = "#ORD12345";
-  const [selectedTab, setSelectedTab] = useState("products");
-  const slideAnim = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<
+    { id: number; name: string; image: any }[]
+  >([]);
+  const [filteredProducts, setFilteredProducts] = useState<
+    { id: number; name: string; image: any }[]
+  >([]);
+  const [selectedTab, setSelectedTab] = useState("product");
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const orderId = "#12345";
+  const defaultImage = require("../assets/default.png");
 
-  const products = [
-    { id: "P001", name: "Product A", quantity: 2, image: null },
-    { id: "P002", name: "Product B", quantity: 1, image: "https://via.placeholder.com/50" },
-    { id: "P003", name: "Product C", quantity: 3, image: "https://via.placeholder.com/50" },
-  ];
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
-  const handleTabPress = (tab: "product" | "location") => { 
+  const fetchProducts = () => {
+    setLoading(true);
+    setTimeout(() => {
+      const newProducts = Array.from({ length: 1 }, (_, i) => ({
+        id: i + 1,
+        name: `Product ${i + 1}`,
+        image: Math.random() > 0.5 ? `https://via.placeholder.com/150` : null,
+      }));
+      setProducts(
+        newProducts.map((product) => ({
+          ...product,
+          image: product.image ? { uri: product.image } : defaultImage,
+        }))
+      );
+      setLoading(false);
+    }, 1500);
+  };
+
+  useEffect(() => {
+    if (searchQuery) {
+      setFilteredProducts(
+        products.filter((product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredProducts(products);
+    }
+  }, [searchQuery, products]);
+
+  const handleTabPress = (tab: "product" | "details") => {
     setSelectedTab(tab);
     Animated.timing(slideAnim, {
       toValue: tab === "product" ? 0 : 1,
@@ -30,7 +73,6 @@ const OrderDetailsPage = () => {
       useNativeDriver: false,
     }).start();
   };
-  
 
   const slideInterpolation = slideAnim.interpolate({
     inputRange: [0, 1],
@@ -38,76 +80,157 @@ const OrderDetailsPage = () => {
   });
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton}>
-        <Text style={styles.backText}>← Back</Text>
-      </TouchableOpacity>
-      <Text style={styles.title}>{orderId}</Text>
+    <SafeAreaView style={styles.safeAreaContainer}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <AntDesign name="arrowleft" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.orderId}>{orderId}</Text>
+          <View style={styles.sideContainer} />
+        </View>
 
-      {/* Segmented Control */}
-      <View style={styles.segmentedControl}>
-        <Animated.View style={[styles.slider, { left: slideInterpolation }]} />
-
-        <TouchableOpacity style={styles.segmentButton} onPress={() => handleTabPress("products")}>
-          <Text style={[styles.segmentText, selectedTab === "products" && styles.activeText]}>
-            Products
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.segmentButton} onPress={() => handleTabPress("details")}>
-          <Text style={[styles.segmentText, selectedTab === "details" && styles.activeText]}>
-            Order Details
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Products Section */}
-      {selectedTab === "products" && (
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>Products</Text>
-            <Text style={styles.cardSubtitle}>Total: {products.length}</Text>
-          </View>
-          <TextInput
-            style={styles.searchBar}
-            placeholder="Search product"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
+        <View style={styles.segmentedControl}>
+          <Animated.View
+            style={[styles.slider, { left: slideInterpolation }]}
           />
-          <FlatList
-            data={products}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={styles.productItem}>
-                <Image source={{ uri: item.image }} style={styles.productImage} />
-                <View style={styles.productInfo}>
-                  <Text style={styles.productId}>{item.id}</Text>
+          <TouchableOpacity
+            style={styles.segmentButton}
+            onPress={() => handleTabPress("product")}
+          >
+            <Text
+              style={[
+                styles.segmentText,
+                selectedTab === "product" && styles.activeText,
+              ]}
+            >
+              Product
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.segmentButton}
+            onPress={() => handleTabPress("details")}
+          >
+            <Text
+              style={[
+                styles.segmentText,
+                selectedTab === "details" && styles.activeText,
+              ]}
+            >
+              Order Details
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* {selectedTab === "product" && (
+          <View style={styles.card}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>
+                Products{" "}
+                <Text style={styles.productCount}>
+                  ({filteredProducts.length})
+                </Text>
+              </Text>
+            </View>
+            <View style={styles.searchBar}>
+              <AntDesign
+                name="search1"
+                size={18}
+                color="black"
+                style={styles.searchIcon}
+              />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Find a product..."
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+              {loading && <ActivityIndicator size="small" color="#007BFF" />}
+            </View>
+          </View>
+        )} */}
+
+        {selectedTab === "product" ? (
+          <View style={styles.card}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>
+                Products{" "}
+                <Text style={styles.productCount}>
+                  ({filteredProducts.length})
+                </Text>
+              </Text>
+            </View>
+            <View style={styles.searchBar}>
+              <AntDesign
+                name="search1"
+                size={18}
+                color="black"
+                style={styles.searchIcon}
+              />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Find a product..."
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+              {loading && <ActivityIndicator size="small" color="#007BFF" />}
+            </View>
+            <FlatList
+              data={filteredProducts}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.productItem}>
+                  <Image
+                    source={item.image}
+                    style={styles.productImage}
+                    resizeMode="cover"
+                  />
                   <Text style={styles.productName}>{item.name}</Text>
                 </View>
-                <Text style={styles.productQuantity}>Qty: {item.quantity}</Text>
-              </View>
-            )}
-          />
-        </View>
-      )}
-    </View>
+              )}
+              style={styles.productList}
+            />
+          </View>
+        ) : (
+          <View style={styles.detailsContainer}>
+            <Text style={styles.detailsText}>Order Date: Feb 26, 2025</Text>
+            <Text style={styles.detailsText}>
+              Shipping Address: 123 Street, City, Country
+            </Text>
+            <Text style={styles.detailsText}>Total Price: $250.00</Text>
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F5F5F5", padding: 20 },
-  backButton: { marginBottom: 10 },
-  backText: { fontSize: 16, color: "#000" },
-  title: { fontSize: 22, fontWeight: "bold", textAlign: "center", marginBottom: 20 },
-
+  safeAreaContainer: { flex: 1, backgroundColor: "#fff" },
+  container: { flex: 1 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 16,
+  },
+  backButton: { padding: 8 },
+  orderId: { fontSize: 18, fontWeight: "bold", textAlign: "center", flex: 1 },
+  sideContainer: { width: 40 },
   segmentedControl: {
     flexDirection: "row",
     backgroundColor: "#E5E5E5",
     borderRadius: 8,
-    marginBottom: 20,
-    position: "relative",
+    marginVertical: 15,
+    width: "92%",
+    alignSelf: "center",
+    overflow: "hidden",
+    elevation: 3,
   },
-  segmentButton: { flex: 1, paddingVertical: 10, alignItems: "center", zIndex: 1 },
+  segmentButton: { flex: 1, paddingVertical: 10, alignItems: "center" },
   slider: {
     position: "absolute",
     width: "50%",
@@ -117,19 +240,48 @@ const styles = StyleSheet.create({
   },
   segmentText: { fontSize: 16, color: "#666" },
   activeText: { color: "#000", fontWeight: "bold" },
+    card: {
+    padding: 16,
+    backgroundColor: "white",
+    borderRadius: 8,
+    marginBottom: 15,
+    elevation: 3,
+    width: "92%",
+    alignSelf: "center",
+    minHeight: 120,  // Minimum height
+    maxHeight: screenHeight * 0.6, // Limit max height
+  },
 
-  card: { backgroundColor: "white", padding: 15, borderRadius: 10, elevation: 2 },
-  cardHeader: { flexDirection: "row", justifyContent: "space-between", marginBottom: 10 },
-  cardTitle: { fontSize: 18, fontWeight: "bold" },
-  cardSubtitle: { fontSize: 16, color: "#666" },
-  searchBar: { backgroundColor: "#F5F5F5", padding: 10, borderRadius: 8, marginBottom: 10 },
-
-  productItem: { flexDirection: "row", alignItems: "center", paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: "#E5E5E5" },
-  productImage: { width: 50, height: 50, borderRadius: 8, marginRight: 10 },
-  productInfo: { flex: 1 },
-  productId: { fontSize: 14, color: "#888" },
-  productName: { fontSize: 16, fontWeight: "bold" },
-  productQuantity: { fontSize: 16, fontWeight: "bold", color: "#000" },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  title: { fontSize: 18, fontWeight: "bold" },
+  productCount: { fontSize: 16, color: "gray" },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#EEE",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  productItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
+    backgroundColor: "white",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  productList: { maxHeight: 300 }, // Limits height to avoid overflow
+  searchIcon: { marginRight: 8 },
+  searchInput: { flex: 1, paddingHorizontal: 8 },
+  detailsContainer: { padding: 20, alignItems: "center" },
+  detailsText: { fontSize: 16, marginBottom: 10 },
+  productImage: { width: 100, height: 100 },
+  productName: { fontSize: 16, flex: 1 },
 });
 
 export default OrderDetailsPage;
