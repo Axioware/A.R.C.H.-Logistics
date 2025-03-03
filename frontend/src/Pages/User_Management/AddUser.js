@@ -270,6 +270,7 @@ const AddUser = () => {
     setUserData(prev => ({ ...prev, clearance_level: roleClearanceMap[selectedOption] || "" }));
   };
 
+
   return (
     <div>
       <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
@@ -288,13 +289,10 @@ const AddUser = () => {
             />
           </div>
 
-          <div id="tableBackground" style={mainStyles.tableBackground}>
-            <div id="headingcontainer" style={styles.headingcontainer}>
-              <div className="table-top-container">
-                <PageHeading text={userId ? "Edit User" : "Add User"} />
-              </div>
-            </div>
-
+          <div style={mainStyles.AddInputBackground}>
+          <div style={{ marginTop: '20px', marginLeft: '60px', marginBottom: '10px' }}>
+            <PageHeading text="Add User" text_color={[0, 0, 0]} width="100%" height="auto" />
+          </div>
             <form id="form" style={styles.form} onSubmit={handleSubmit}>
               <DropDown
                 label="Role"
@@ -322,7 +320,7 @@ const AddUser = () => {
                 height="50px"
                 value={UserData.billing_type}
               />
-              <GeneralField label="Username" name="username" field_type="text" hint="Enter Username" value={UserData.username} required={true} func={handleChange} style={{ width: '300px', height: '50px' }}/>
+              <GeneralField label="Username" name="username" field_type="text" hint="Enter Username" value={UserData.username} required={true} func={handleChange} style={{ width: 'auto', height: '50px' }}/>
               <GeneralField label="First Name" name="first_name" field_type="text" hint="First Name (e.g., John)" value={UserData.first_name} func={handleChange} required={true} style={{ width: '300px', height: '50px' }}/>
               <GeneralField label="Last Name" name="last_name" field_type="text" hint="Last Name (e.g., Doe)" value={UserData.last_name} func={handleChange} style={{ width: '300px', height: '50px' }}/>
               <GeneralField label="Password" name="password" field_type="password" hint="********" value={UserData.password} func={handleChange} required={!userId} style={{ width: '300px', height: '50px' }}/>
@@ -335,12 +333,11 @@ const AddUser = () => {
               <GeneralField label="Zip Code" name="zip" field_type="text" hint="Zip code" required={true} value={UserData.zip} func={handleChange} style={{ width: '300px', height: '50px' }}/>
               <GeneralField label="LLC Name" name="llc_name" field_type="text" hint="Enter Company name" required={true} value={UserData.llc_name} func={handleChange} style={{ width: '300px', height: '50px' }}/>
               <GeneralField label="Tax ID" name="tax_id" field_type="text" hint="Tax ID" required={true} value={UserData.tax_id} func={handleChange} style={{ width: '300px', height: '50px' }}/>
-
-              <div id="buttonContainer" style={styles.buttonContainer}>
-                <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-                <GeneralButton text={userId ? "Update" : "Add"} type="submit" width="100px" height="100%" />
-              </div>
             </form>
+            <div id="buttonContainer" style={styles.buttonContainer}>
+                <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
+                <GeneralButton text="Add" type="submit" width="100px" height="100%" />
+              </div>
           </div>
         </div>
       </div>
@@ -365,19 +362,25 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr 1fr', // 4 columns
     gap: '20px 70px',
-    marginLeft: '100px',
+    marginLeft: '60px',
     marginTop: '35px',
     marginRight: '100px',
     alignSelf: 'flex-start',
+    
   },
+
   buttonContainer: {
     alignSelf: 'flex-end',
     display: 'flex',
     flexDirection: 'row',
-    width: '250px',
+    justifyContent: 'flex-end',
+    width: '100%',
+    maxWidth: '250px',
+    textAlign: 'right', // Ensure text & inline elements align
     gap: '20px',
     lineHeight: '40px',
-    marginTop: "10px",
+    marginTop: "20px",
+    marginRight: "100px",
   },
   headingcontainer: {
     alignSelf: 'flex-start',
@@ -404,6 +407,31 @@ const styles = {
     border: '1px solid lightgrey',
     boxShadow: '1px 1px 1px 1px lightgrey',
   },
+  mainContent: {
+    padding: "10px 0px 50px 0px",
+  },
+  // form: {
+  //   display: 'grid',
+  //   gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', // Responsive grid
+  //   gap: '20px',
+  //   margin: '20px',
+  // },
+  // buttonContainer: {
+  //   display: 'flex',
+  //   justifyContent: 'flex-end',
+  //   gap: '20px',
+  //   margin: '20px',
+  // },
+  
 };
+
+
+
+// const styles = {
+ 
+// };
+
+
+
 
 export default AddUser;
