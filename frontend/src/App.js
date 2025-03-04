@@ -25,7 +25,7 @@ import AddUser from './Pages/User_Management/AddUser';
 //Warehouse Management
 import AllWarehouse from './Pages/Warehouses/AllWarehouse';
 import AddWarehouse from './Pages/Warehouses/AddWarehouse';
-import EditWarehouse from './Pages/Warehouses/EditWarehouse';
+// import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 
 //Location Management
 import AddLocation2 from './Pages/Locations/AddLocation2';
@@ -41,7 +41,6 @@ import BalanceSheet from './Pages/Balance_Sheet/BalanceSheet';
 import Transaction from './Pages/Balance_Sheet/Transaction';
 import Invoices from './Pages/Balance_Sheet/Invoices';
 import InvoicesDetails from './Pages/Balance_Sheet/Invoicedetails';
-import RatesManagement from './Pages/Custom_Rates/RatesManagement';
 
 //Modals
 import Forbidden from './Components/Error_Components/Forbidden';
@@ -64,14 +63,20 @@ import AddOrder from './Pages/Order/AddOrder';
 
 //Settings
 
-import Category from './Pages/Setting/Category';
 import Service from './Pages/Services/Service';
 import AddService from './Pages/Services/AddService';
 import Printers from './Pages/Setting/Printers';
 import LabelFormat from './Pages/Setting/LabelFormat';
 import Shopify from "./Pages/Setting/Shopify";
+// import Category from './Pages/Setting/Category';
 
+
+
+import RatesManagement from './Pages/Custom_Rates/RatesManagement';
 import SetRates from "./Pages/Custom_Rates/SetRates";
+
+
+
 import test from './Assets/Images/SearchIcon.png'
 import test2 from './Assets/Images/user-solid.svg'
 
@@ -169,6 +174,8 @@ function App() {
         <Route path="/printers" element={<Printers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/Shopify" element={<Shopify menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+
+
         {/* Warehouse Management */}
         <Route path="/warehouses" element={<AllWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-warehouses/:warehouseId?" element={<AddWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
@@ -194,7 +201,7 @@ function App() {
         {/* Orders */}
         <Route path="/active-order" element={<ActiveOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/pending-order" element={<PendingOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/completed-orders" element={<OrderHistory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/order-history" element={<OrderHistory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/order-details" element={<OrderDetails />} />
         <Route path="/add-dimension" element={<AddDimension />} />
         <Route path="/add-order" element={<AddOrder />} />

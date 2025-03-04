@@ -142,12 +142,14 @@ export default function Printers() {
       )}
       <div style={mainStyles.centerContent(isSidebarClosed)}>
 
+      <div style={{ marginBottom: '50px' }}>
         <NavPath
           text={["Home", "Printers"]}
           paths={["/home", "/printers"]}
           width="100%"
           height="50px"
         />
+        </div>
 
         <div style={mainStyles.tableBackground}>
 

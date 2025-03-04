@@ -18,7 +18,7 @@ import Dollar from "../../Components/Icons/DollarIcon";
 import { FaTrash } from "react-icons/fa";
 import FilterOptionsRatesManagement from '../../Components/Filter/FilterOptionsRatesManagement';
 
-export default function All_Users() {
+export default function RatesManagement() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);

@@ -17,7 +17,7 @@ import Pagination from '../../Components/Table_Components/Pagination';
 import Dollar from "../../Components/Icons/DollarIcon";
 import { FaTrash } from "react-icons/fa";
 
-export default function All_Users() {
+export default function Transaction() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);

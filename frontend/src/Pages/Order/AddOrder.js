@@ -8,6 +8,8 @@ import PageHeading from "../../Components/Table_Components/PageHeading";
 import { FaTrash } from "react-icons/fa";
 import DropDown from "../../Components/General/DropDown";
 
+
+
 export default function AddOrder() {
   const [Label, setLabel] = useState([
     { ProductName: "Xyz", Services: [ { service_name: "Prep", service_id: 1}, { service_name: "Bundling", service_id: 2}], BundleQuantity: 145, UnitQuantity: [{ Quantity: "78"},  {Quantity: "78"}], PackingInstruction: "Handle Carefully" }
@@ -51,10 +53,7 @@ export default function AddOrder() {
     setHeight(""); 
     setTextOnLabel(""); 
     setSelectedFile(null);
-  };
-  
-
-  
+  };  
   
 
   // Define products state and related functions
@@ -195,14 +194,131 @@ export default function AddOrder() {
     // Fetch data logic here if needed
   }, [currentPage]);
 
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [selectedWarehouse, setSelectedWarehouse] = useState(null);
+  const [clientName, setClientName] = useState("");
+  const [category, setCategory] = useState('');
+  const [warehouse, setWarehouse] = useState('');
 
-  const clientOptions = [
-    { value: "client1", label: "Client 1" },
-    { value: "client2", label: "Client 2" },
-    { value: "client3", label: "Client 3" },
-  ];
+
+  const handleClientChange = (selectedOption) => {
+    setClientName(selectedOption.value);
+  };
+
+
+
+  const handleCategoryChange = (selectedOption) => {
+    setCategory(selectedOption.value);
+  };
+
+  const handleWarehouseChange = (selectedOption) => {
+    setWarehouse(selectedOption ? selectedOption.value : ''); // Ensure warehouse is updated
+    
+    console.log("Warehouse selected:", selectedOption ? selectedOption.value : 'None'); // Debugging
+  };
+
+   const [clientOptions, setClientOptions] = useState([
+      { value: "Abdul Moiz", label: "Abdul Moiz" },
+      { value: "John", label: "John" },
+      { value: "Smith", label: "Smith" }
+    ]);
+
+   const [categoryOptions, setCategoryOptions] = useState([
+      { value: "FBA", label: "FBA" },
+      { value: "FBM", label: "FBM" },
+      { value: "Storage", label: "Storage" },
+      { value: "Other", label: "Other" },
+    ]);
+    
+
+    const [warehouseOptions, setWarehouseOptions] = useState([
+      { value: "Warehouse 1", label: "Warehouse 1" },
+      { value: "Warehouse 2", label: "Warehouse 2" }
+    ]);
+
+
+    const customStyles = {
+      control: (provided, state) => ({
+        ...provided,
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        // boxShadow: state.isFocused ? `0 0 0 1px rgb(14, 116, 144)` : 'none',
+        '&:hover': {
+          borderColor: 'rgb(14, 116, 144)',
+        },
+      }),
+      option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isSelected ? 'rgb(14, 116, 144)' : 'white',
+        color: 'black', // Always black text
+        '&:hover': {
+          backgroundColor: 'rgba(14, 116, 144, 0.8)',
+          color: 'white', // Always black text on hover
+        },
+      }),
+      // multiValue: (provided) => ({
+      //   ...provided,
+      //   backgroundColor: 'rgb(14, 116, 144)',
+      //   color: 'white',
+      // }),
+      multiValueLabel: (provided) => ({
+        ...provided,
+        color: 'black',
+      }),
+      multiValueRemove: (provided) => ({
+        ...provided,
+        color: 'white',
+        ':hover': {
+          backgroundColor: 'rgba(14, 116, 144, 0.8)',
+          color: 'white',
+        },
+      }),
+    };
+
+    <style>
+    {`
+      .table-top-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 95%;
+        margin: 30px auto 20px 50px;
+        flex-wrap: wrap;
+      }
+
+      .row-container1 {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .page-heading {
+        flex-grow: 1;
+      }
+
+      .input-field, .select-fields {
+        width: 70%;
+        padding: px;
+        margin-top: 5px;
+        border: 0px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+        position: relative;
+        margin: 20px 0px 0px 50px;
+      }
+
+      .form-grid label {
+        display: block;
+        margin-bottom: 5px;
+      }
+    `}
+  </style>
+
 
 
 
@@ -226,54 +342,47 @@ export default function AddOrder() {
             <PageHeading text='Add Order' text_color={[0, 0, 0]} width='100%' height='auto' />
           </div>
 
-          <div style={{ display: "flex", gap: "100px", alignItems: "center" }}>
- 
-          {/* Client Name Dropdown */}
-          <div style={{ marginBottom: '15px' }}>
-            <label style={styles.label}>Client Name</label>
-            <Select
-              options={clientOptions}
-              onChange={(selectedOption) => setSelectedClient(selectedOption)}
-              placeholder="Select Client"
-              isSearchable={true}
-              styles={{
-                control: (base) => ({
-                  ...base,
-                  width: "250px",
-                  height: "40px",
-                }),
-              }}
-            />
-          </div>
 
-          <div style={{ marginBottom: '20px' }}>
-          {/* Category Dropdown */}
-          <DropDown
-            label="Category"
-            data={["FBA", "FBM", "Storage", "Other"]}
-            width="250px"
-            height="40px"
-            onSelect={setSelectedCategory}
-            required={true}
-            multi={false}
-          />
-</div>
+          <form className="inventory-form">
+          <div className="form-grid">
+                <div>
+                  <label>Client Name:</label>
+                  <Select
+                    value={clientOptions.find(option => option.value === clientName)}
+                    onChange={handleClientChange}
+                    options={clientOptions}
+                    className="select-fields"
+                    placeholder="Select a client"
+                    styles={customStyles} // Apply custom styles
+                  />
+                </div>
+                <div>
+                      <label>Category:</label>
+                      <Select
+                        value={categoryOptions.find(option => option.value === category)}
+                        onChange={handleCategoryChange}
+                        options={categoryOptions}
+                        className="select-fields"
+                        placeholder="Select a category"
+                        styles={customStyles} // Apply custom styles
+                      />
+                    </div>
+                    <div>
+                      <label>Warehouse:</label>
+                      <Select
+                        value={warehouseOptions.find(option => option.value === warehouse)}
+                        onChange={handleWarehouseChange}
+                        options={warehouseOptions}
+                        className="select-fields"
+                        placeholder="Select a warehouse"
+                        styles={customStyles} // Apply custom styles
+                      />
+                    </div>
+                  </div>
 
-<div style={{ marginBottom: '20px' }}>
-          {/* Warehouse Dropdown */}
-          <DropDown
-            label="Warehouse"
-            data={["Warehouse 1", "Warehouse 2", "Warehouse 3"]}
-            width="250px"
-            height="40px"
-            onSelect={setSelectedWarehouse}
-            required={true}
-            multi={false}
-          />
-          </div>
-          </div>
+                  </form>
 
-          {selectedClient && selectedCategory && selectedWarehouse && (
+                  {clientName && category && warehouse && (
   <>
               <div style={styles.buttonWrapper}>
                 <ModalOpener 
@@ -440,6 +549,8 @@ export default function AddOrder() {
 }
 
 const styles = {
+  
+  
   headerContainer: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -595,4 +706,8 @@ const styles = {
     marginTop: "14px",
   },
   
+
+  
+  
 };
+

@@ -221,7 +221,7 @@ export default function All_Users() {
                 <FilterButton
                   text="+ Filter By"
                   content={
-                    <FilterOptionsUserManagement 
+                    <FilterOptionsUserManagement
                       setbill={setBillingType} 
                       setware={setWarehouses} 
                       billing={billingType} 

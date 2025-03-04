@@ -22,8 +22,7 @@ const roleClearanceMap = {
   4: "Client"
 };
 
-
-export default function All_Users() {
+export default function AllInventory() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(true);

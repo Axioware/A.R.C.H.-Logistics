@@ -18,7 +18,7 @@ import Dollar from "../../Components/Icons/DollarIcon";
 import { FaTrash } from "react-icons/fa";
 import FilterOptionsbalance from '../../Components/Filter/FilterOptionsBalanceSheet';
 
-export default function All_Users() {
+export default function BalanceSheet() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
