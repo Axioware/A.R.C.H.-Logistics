@@ -9,12 +9,14 @@ const mainStyles = {
     marginLeft: isSidebarClosed ? "8%" : "18%",
     width: isSidebarClosed ? "calc(92%)" : "calc(82%)",
     '@media (max-width: 1200px)': {
-      marginLeft: isSidebarClosed ? "6%" : "16%",
+      marginLeft: isSidebarClosed ? "60%" : "36%",
       width: isSidebarClosed ? "calc(94%)" : "calc(84%)",
+      padding: "10px 20px 10px 10px",
     },
     '@media (max-width: 992px)': {
       marginLeft: isSidebarClosed ? "5%" : "15%",
       width: isSidebarClosed ? "calc(95%)" : "calc(85%)",
+      padding: "10px 20px 10px 10px",
     },
     '@media (max-width: 768px)': {
       marginLeft: isSidebarClosed ? "4%" : "14%",

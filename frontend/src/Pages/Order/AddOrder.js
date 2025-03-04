@@ -316,11 +316,22 @@ export default function AddOrder() {
         display: block;
         margin-bottom: 5px;
       }
+        .form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Three equal columns */
+  gap: 10px; /* Space between columns */
+  margin-top: 20px;
+  position: relative;
+  margin: 20px 0px 0px 50px;
+}
+
+.form-grid label {
+  display: block;
+  margin-bottom: 5px;
+}
+ 
     `}
   </style>
-
-
-
 
   return (
     <div>
@@ -338,50 +349,54 @@ export default function AddOrder() {
         </div>
 
         <div style={mainStyles.AddInputBackground}>
-          <div style={{ marginBottom: '20px' }}>
-            <PageHeading text='Add Order' text_color={[0, 0, 0]} width='100%' height='auto' />
+          <div style={{ marginBottom: '20px' , marginTop: '20px'}}>
+            <PageHeading text='Add Order' text_color={[0, 0, 0]} width='20%' height='auto' />
           </div>
-
-
           <form className="inventory-form">
-          <div className="form-grid">
-                <div>
-                  <label>Client Name:</label>
-                  <Select
-                    value={clientOptions.find(option => option.value === clientName)}
-                    onChange={handleClientChange}
-                    options={clientOptions}
-                    className="select-fields"
-                    placeholder="Select a client"
-                    styles={customStyles} // Apply custom styles
-                  />
-                </div>
-                <div>
-                      <label>Category:</label>
-                      <Select
-                        value={categoryOptions.find(option => option.value === category)}
-                        onChange={handleCategoryChange}
-                        options={categoryOptions}
-                        className="select-fields"
-                        placeholder="Select a category"
-                        styles={customStyles} // Apply custom styles
-                      />
-                    </div>
-                    <div>
-                      <label>Warehouse:</label>
-                      <Select
-                        value={warehouseOptions.find(option => option.value === warehouse)}
-                        onChange={handleWarehouseChange}
-                        options={warehouseOptions}
-                        className="select-fields"
-                        placeholder="Select a warehouse"
-                        styles={customStyles} // Apply custom styles
-                      />
-                    </div>
-                  </div>
+          
+  <div className="form-grid">
+    {/* Client Name Dropdown */}
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '80px', width:'80%' }}>
+    <div>
+      <label>Client Name:</label>
+      <Select
+        value={clientOptions.find(option => option.value === clientName)}
+        onChange={handleClientChange}
+        options={clientOptions}
+        className="select-fields"
+        placeholder="Select a client"
+        styles={customStyles} // Apply custom styles
+      />
+    </div>
 
-                  </form>
+    {/* Category Dropdown */}
+    <div>
+      <label>Category:</label>
+      <Select
+        value={categoryOptions.find(option => option.value === category)}
+        onChange={handleCategoryChange}
+        options={categoryOptions}
+        className="select-fields"
+        placeholder="Select a category"
+        styles={customStyles} // Apply custom styles
+      />
+    </div>
 
+    {/* Warehouse Dropdown */}
+    <div>
+      <label>Warehouse:</label>
+      <Select
+        value={warehouseOptions.find(option => option.value === warehouse)}
+        onChange={handleWarehouseChange}
+        options={warehouseOptions}
+        className="select-fields"
+        placeholder="Select a warehouse"
+        styles={customStyles} // Apply custom styles
+      />
+    </div>
+  </div>
+  </div>
+</form>
                   {clientName && category && warehouse && (
   <>
               <div style={styles.buttonWrapper}>
@@ -705,9 +720,6 @@ const styles = {
     transition: '0.3s',
     marginTop: "14px",
   },
-  
 
-  
-  
 };
 
