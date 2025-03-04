@@ -48,7 +48,7 @@ import Forbidden from './Components/Error_Components/Forbidden';
 
 //Inventory
 import AllInventory from './Pages/Inventory/AllInventory';
-import AddInventory from "./Pages/Inventory/AddInventory";
+// import AddInventory from "./Pages/Inventory/AddInventory";
 import AddInventorys from "./Pages/Inventory/AddInventorys";
 import Shopify from "./Pages/Inventory/Shopify";
 import ByDateInventory from './Pages/Inventory/ByDateInventory';
@@ -71,7 +71,7 @@ import AddService from './Pages/Services/AddService';
 import Printers from './Pages/Setting/Printers';
 import LabelFormat from './Pages/Setting/LabelFormat';
 
-import SetRates from "./Pages/User_Management/SetRates";
+import SetRates from "./Pages/Custom_Rates/SetRates";
 import test from './Assets/Images/SearchIcon.png'
 import test2 from './Assets/Images/user-solid.svg'
 
@@ -143,6 +143,30 @@ function App() {
         <Route path="/otp" element={<Otp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
+          {/* Balance Sheet */}
+        <Route path="/balance-sheets" element={<BalanceSheet menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/transactions" element={<Transaction menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/invoices" element={<Invoices menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/invoice-details" element={<InvoicesDetails menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
+         {/* Custom Rates */}
+         <Route path="/rates-management" element={<RatesManagement menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/set-rates" element={<SetRates menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+
+        {/* Inventory  */}
+        <Route path="/all-inventory" element={<AllInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/add-inventorys" element={<AddInventorys menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/Shopify" element={<Shopify menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        {/* <Route path="/add-inventory" element={<AddInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+        {/* <Route path="/by-date-inventory" element={<ByDateInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+        {/* <Route path="/inventory-overview" element={<CombineInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+
+
+        {/* Settings */}
+        <Route path="/label-format" element={<LabelFormat menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/printers" element={<Printers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+
         {/* Warehouse Management */}
         <Route path="/warehouses" element={<AllWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-warehouses/:warehouseId?" element={<AddWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
@@ -162,32 +186,12 @@ function App() {
         {/* Components */}
         <Route path="/spinner" element={<Spinner />} />
         
-        {/* Payment Section */}
-        <Route path="/balance-sheets" element={<BalanceSheet menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/transactions" element={<Transaction menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/invoices" element={<Invoices menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/invoice-details" element={<InvoicesDetails menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-
-        {/* Settings */}
-        <Route path="/custom-rates" element={<RatesManagement menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/services" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/add-service" element={<AddService menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/printers" element={<Printers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/label-format" element={<LabelFormat menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
-        <Route path="/set-rates" element={<SetRates menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-
+      
+       
         {/* Modals */}
         <Route path="/test" element={<Forbidden />} />
 
-        {/* Inventory  */}
-        <Route path="/all-inventory" element={<AllInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/add-inventory" element={<AddInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/add-inventorys" element={<AddInventorys menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/Shopify" element={<Shopify menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        {/* <Route path="/by-date-inventory" element={<ByDateInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
-        {/* <Route path="/inventory-overview" element={<CombineInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
-
+        
 
         {/* Orders */}
         <Route path="/active-order" element={<ActiveOrder menuItems={menuItems} toggleExpand={toggleExpand}/>} />
@@ -198,6 +202,10 @@ function App() {
         <Route path="/add-order" element={<AddOrder />} />
         {/* <Route path="/boxes-to-be-shipped" element={<BoxesToBeShipped />} />      */}
         {/* <Route path="/view-tracking" element={<ViewTracking menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
+
+
+        <Route path="/services" element={<Service menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/add-service" element={<AddService menuItems={menuItems} toggleExpand={toggleExpand}/>} />
 
         
       </Routes>

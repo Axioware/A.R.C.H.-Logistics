@@ -8,13 +8,6 @@ import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
 import FilterOptionsTransaction from "../../Components/Filter/FilterOptionsTransaction"
-// import React, { useState, useEffect } from "react";
-// import { useLocation } from 'react-router-dom';
-// import NavPath from '../../Components/General/NavPath';
-// import TableContent from '../../Components/Table_Components/TableContent';
-// import AddButton from '../../Components/Table_Components/AddButton';
-// import SideBar from '../../Components/General/Sidebar';
-// import mainStyles from "../../Assets/CSS/styles";
 import EditIcon from '../../Components/Icons/EditIcon';
 import PageHeading from '../../Components/Table_Components/PageHeading';
 import SearchBar from '../../Components/Table_Components/SearchBar';
@@ -22,9 +15,7 @@ import FilterButton from '../../Components/Table_Components/FilterButton';
 import FilterOptionsUserManagement from '../../Components/Filter/FilterOptionUserManagement';
 import Pagination from '../../Components/Table_Components/Pagination';
 import Dollar from "../../Components/Icons/DollarIcon";
-// import LargeModal from "../../Components/Modals/SuccessModal";
 import { FaTrash } from "react-icons/fa";
-
 
 export default function All_Users() {
   const [data, setData] = useState([]);
@@ -36,9 +27,9 @@ export default function All_Users() {
   const [clearance, setclearance] = useState(1);
   const BASE_URL = `http://${process.env.REACT_APP_TENANT_NAME}/users/api/users/`;
   const [warehouses, setWarehouses] = useState('');
-   const [search, setSearch] = useState('');
-    const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
-  
+  const [search, setSearch] = useState('');
+  const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
+  const location = useLocation();
 
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
@@ -56,19 +47,19 @@ export default function All_Users() {
   const table_function = () => {
     return data.map((row, index) => (
       <tr key={index}>
-        <td style={tdStyle} title={row.id}>{row.id}</td>
-        <td style={tdStyle} title={row.username}>{row.username}</td>
-        <td style={tdStyle} title={row.first_name}>{row.first_name}</td>
-        <td style={tdStyle} title={row.last_name}>{row.last_name}</td>
-        <td style={tdStyle} title={row.email}>{row.email}</td>
-        <td style={tdStyle} title={row.phone}>{row.phone}</td>
-        <td style={tdStyle} title={row.state}>{row.state}</td>
-        <td style={tdStyle} title={row.city}>{row.city}</td>
-        <td style={tdStyle} title={row.zip}>{row.zip}</td>
-        <td style={tdStyle} title={row.address}>{row.address}</td>
-        <td style={tdStyle} title={row.llc_name}>{row.llc_name}</td>
-        <td style={tdStyle} title={row.billing_type}>{row.billing_type}</td>
-        <td style={tdStyle} title={row.role}>{row.role}</td>
+        <td style={tdStyle} title={row.taxid}>{row.taxid}</td>
+        <td style={tdStyle} title={row.invoiceid}>{row.invoiceid}</td>
+        <td style={tdStyle} title={row.amount}>{row.amount}</td>
+        <td style={tdStyle} title={row.date}>{row.date}</td>
+        {/* <td style={tdStyle} title={row.email}>{row.email}</td> */}
+        {/* <td style={tdStyle} title={row.phone}>{row.phone}</td> */}
+        {/* <td style={tdStyle} title={row.state}>{row.state}</td> */}
+        {/* <td style={tdStyle} title={row.city}>{row.city}</td> */}
+        {/* <td style={tdStyle} title={row.zip}>{row.zip}</td> */}
+        {/* <td style={tdStyle} title={row.address}>{row.address}</td> */}
+        {/* <td style={tdStyle} title={row.llc_name}>{row.llc_name}</td> */}
+        {/* <td style={tdStyle} title={row.billing_type}>{row.billing_type}</td> */}
+        {/* <td style={tdStyle} title={row.role}>{row.role}</td> */}
         <td style={{ display: "flex", justifyContent: "flex-end", gap: "10px", padding: "15px" }}>
           <Dollar path={`set-rates/?id=${row.id}`} />
           <EditIcon path={`add-user/${row.id}`} />
@@ -82,33 +73,20 @@ export default function All_Users() {
   };
 
   const table_width_function = () => {
-      return (
-        <colgroup>
-          <col style={{ width: "3%" }} />   {/* ID */}
-          <col style={{ width: "7%" }} />   {/* Username */}
-          <col style={{ width: "7%" }} />   {/* First Name */}
-          <col style={{ width: "7%" }} />   {/* Last Name */}
-          <col style={{ width: "10%" }} />  {/* Email */}
-          <col style={{ width: "7%" }} />   {/* Phone */}
-          <col style={{ width: "7%" }} />   {/* State */}
-          <col style={{ width: "7%" }} />   {/* City */}
-          <col style={{ width: "5%" }} />   {/* ZIP */}
-          <col style={{ width: "7%" }} />   {/* Address */}
-          <col style={{ width: "7%" }} />   {/* LLC Name */}
-          <col style={{ width: "7%" }} />   {/* Billing Type */}
-          <col style={{ width: "7%" }} />   {/* Role */}
-          <col style={{ width: "7%" }} />   {/* Actions */}
-        </colgroup>
-      );
-    };
-  
+    return (
+      <colgroup>
+        <col style={{ width: "23%" }} />   {/* ID */}
+        <col style={{ width: "23%" }} />   {/* Username */}
+        <col style={{ width: "23%" }} />   {/* First Name */}
+        <col style={{ width: "23%" }} />   {/* Last Name */}
+        <col style={{ width: "8%" }} />  {/* Email */}
+      </colgroup>
+    );
+  };
 
   const [billingType, setBillingType] = useState('All');
   const [userStatus, setUserStatus] = useState('All');
-  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const location = useLocation();
 
   const getData = async () => {
     const url = `https://api.example.com/users?page=${currentPage}&billingType=${billingType}&userStatus=${userStatus}`;
@@ -209,78 +187,77 @@ export default function All_Users() {
         <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
       )}
       <div style={mainStyles.centerContent(isSidebarClosed)}>
-        <NavPath
-          text={["Home",  "Transaction"]}
-          paths={["/home", "/transaction"]}
-          text_color={[255, 255, 255]}
-          background_color={[23, 23, 23]}
-          width="100%"
-          height="50px"
-        />
+        <div style={{ marginBottom: '60px' }}>
+          <NavPath
+            text={["Home", "Transaction"]}
+            paths={["/home", "/transactions"]}
+            text_color={[255, 255, 255]}
+            background_color={[23, 23, 23]}
+            width="100%"
+            height="50px"
+          />
+        </div>
 
         <div style={mainStyles.tableBackground}>
           <div style={styles.buttonContainer}>
+            <AddButton  
+              text="Transaction"
+              text_color={location.pathname === '/transactions' ? [0, 0, 0] : [255, 255, 255]}
+              path='/transactions'
+              background_color={location.pathname === '/transactions' ? "white" : "black"}
+            />
             <AddButton
-                         text="Transaction"
-                         text_color={[255, 255, 255]}  
-                         path='/transaction'
-                         background_color="black"     
-                       />
-                       <AddButton
-                         text="Invoice"
-                         text_color={[0, 0, 0]}       
-                         path='/invoices'
-                         background_color="white"    
-                       />
-                     
+              text="Invoice"
+              text_color={location.pathname === '/invoices' ? [0, 0, 0] : [255, 255, 255]}
+              path='/invoices'
+              background_color={location.pathname === '/invoices' ? "white" : "black"}
+            />
           </div>
 
           <div style={mainStyles.tableTopContainer}>
-              <PageHeading text={'All Users'} width="auto" />
-              <div style={mainStyles.rowContainer}>
-                <FilterButton
-                  text="+ Filter By"
-                  content={
-                    <FilterOptionsUserManagement 
-                      setbill={setBillingType} 
-                      setware={setWarehouses} 
-                      billing={billingType} 
-                      ware={warehouses}
-                    />
-                  }
-                />
-                <SearchBar hint="Search..." setSearch={setSearch} width="300px" height="53px" />
-              </div>
+            <PageHeading text={'Transaction'} width="auto" />
+            <div style={mainStyles.rowContainer}>
+              <FilterButton
+                text="+ Filter By"
+                content={
+                  <FilterOptionsTransaction
+                    setbill={setBillingType}
+                    setware={setWarehouses}
+                    billing={billingType}
+                    ware={warehouses}
+                  />
+                }
+              />
+              <SearchBar hint="Search..." setSearch={setSearch} width="300px" height="53px" />
             </div>
-            <div style={{ overflowX: "auto", width: "100%" }}>
-              <div style={{ minWidth: "1500px" }}>
-                <TableContent
-                  table_headings={[
-                    'ID', 'Username', 'First Name', 'Last Name', 'Email',
-                    'Phone', 'State', 'City', 'ZIP', 'Address', 'LLC Name', 'Billing Type', 'Role', 'Actions'
-                  ]}
-                  last_column={true}
-                  loading={loading}
-                  success={success}
-                  prev_button={handlePrev}
-                  next_button={handleNext}
-                  fetchData={getData}
-                  data={data}
-                  table_width_function={table_width_function}
-                  table_function={table_function}
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                />
-              </div>
+          </div>
+          <div style={{ overflowX: "auto", width: "100%" }}>
+            <div style={{ minWidth: "1500px" }}>
+              <TableContent
+                table_headings={[
+                  'Tax ID', 'Invoice ID', 'Amount', 'Date', ''
+                ]}
+                last_column={true}
+                loading={loading}
+                success={success}
+                prev_button={handlePrev}
+                next_button={handleNext}
+                fetchData={getData}
+                data={data}
+                table_width_function={table_width_function}
+                table_function={table_function}
+                currentPage={currentPage}
+                totalPages={totalPages}
+              />
             </div>
-            <Pagination
-              current_page={currentPage || 0}
-              total_pages={totalPages || 0}
-              success={true}
-              onNext={handleNext}
-              onPrev={handlePrev}
-            />
-          
+          </div>
+          <Pagination
+            current_page={currentPage || 0}
+            total_pages={totalPages || 0}
+            success={true}
+            onNext={handleNext}
+            onPrev={handlePrev}
+          />
         </div>
       </div>
     </div>
@@ -290,18 +267,20 @@ export default function All_Users() {
 // CSS Styles
 const styles = {
   buttonContainer: {
-    display: 'flex',            // Align children horizontally
-    gap: '10px',                // Add spacing between buttons
-    marginBottom: '20px',       // Optional margin for spacing
+    display: 'flex', // Align children horizontally
+    gap: '10px',  
+    marginTop: '15px',              // Add spacing between buttons
+    marginBottom: '10px',       // Optional margin for spacing
     justifyContent: 'flex-start', // Align buttons to the left
     width: '100%',              // Ensure it takes up the full available width
+    marginLeft: "25px",
   },
 };
 
 const addButtonStyles = {
   addButton: {
-    color: 'white', 
-    backgroundColor: 'black', 
+    color: 'white',
+    backgroundColor: 'black',
     width: 'auto',
     height: 'auto',
     border: 'none',

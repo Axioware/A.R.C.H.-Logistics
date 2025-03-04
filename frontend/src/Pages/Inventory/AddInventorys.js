@@ -510,12 +510,14 @@ export default function AddInventory() {
           <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
         )}
         <div style={mainStyles.centerContent(isSidebarClosed)}>
+        <div style={{ marginBottom: '60px' }}>
           <NavPath
             text={["Home", "Inventory", "Add Inventory"]}
             paths={["/home", "/inventory", "/add-inventorys"]}
             width="100%"
             height="50px"
           />
+          </div>
 
           <div style={mainStyles.AddInputBackground}>
             <div className="table-top-container">
