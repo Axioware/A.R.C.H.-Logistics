@@ -28,10 +28,10 @@ import AddWarehouse from './Pages/Warehouses/AddWarehouse';
 import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 
 //Location Management
-import AddLocation from './Pages/Locations/AddLocation';
 import AddLocation2 from './Pages/Locations/AddLocation2';
-import EditLocation from './Pages/Locations/EditLocation';
 import AllLocation from './Pages/Locations/AllLocation';
+// import EditLocation from './Pages/Locations/EditLocation';
+// import AddLocation from './Pages/Locations/AddLocation';
 
 //Components
 import Spinner from "./Components/General/Spinner";
@@ -48,11 +48,10 @@ import Forbidden from './Components/Error_Components/Forbidden';
 
 //Inventory
 import AllInventory from './Pages/Inventory/AllInventory';
-// import AddInventory from "./Pages/Inventory/AddInventory";
 import AddInventorys from "./Pages/Inventory/AddInventorys";
-import Shopify from "./Pages/Inventory/Shopify";
-import ByDateInventory from './Pages/Inventory/ByDateInventory';
 import CombineInventory from './Pages/Inventory/CombineInventory';
+// import AddInventory from "./Pages/Inventory/AddInventory";
+// import ByDateInventory from './Pages/Inventory/ByDateInventory';
 
 
 //Orders
@@ -70,6 +69,7 @@ import Service from './Pages/Services/Service';
 import AddService from './Pages/Services/AddService';
 import Printers from './Pages/Setting/Printers';
 import LabelFormat from './Pages/Setting/LabelFormat';
+import Shopify from "./Pages/Setting/Shopify";
 
 import SetRates from "./Pages/Custom_Rates/SetRates";
 import test from './Assets/Images/SearchIcon.png'
@@ -156,26 +156,24 @@ function App() {
         {/* Inventory  */}
         <Route path="/all-inventory" element={<AllInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-inventorys" element={<AddInventorys menuItems={menuItems} toggleExpand={toggleExpand}/>} />
-        <Route path="/Shopify" element={<Shopify menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/add-inventory" element={<AddInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
-        {/* <Route path="/by-date-inventory" element={<ByDateInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
-        {/* <Route path="/inventory-overview" element={<CombineInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
+        {/* Location Management */}
+        <Route path="/add-location2" element={<AddLocation2 menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
+        <Route path="/locations" element={<AllLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
+        {/* <Route path="/edit-location" element={<EditLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  */}
+        {/* <Route path="/add-location" element={<AddLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />   */}
 
         {/* Settings */}
         <Route path="/label-format" element={<LabelFormat menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/printers" element={<Printers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
+        <Route path="/Shopify" element={<Shopify menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         {/* <Route path="/category" element={<Category menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
-
         {/* Warehouse Management */}
         <Route path="/warehouses" element={<AllWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
         <Route path="/add-warehouses/:warehouseId?" element={<AddWarehouse menuItems={menuItems} toggleExpand={toggleExpand}/>} />
 
-        {/* Location Management */}
-        <Route path="/add-location" element={<AddLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
-        <Route path="/add-location2" element={<AddLocation2 menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
-        <Route path="/edit-location" element={<EditLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} /> 
-        <Route path="/locations" element={<AllLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />     
+           
         
         {/* User_Management */}
         <Route path="/users" element={<AllUsers menuItems={menuItems} toggleExpand={toggleExpand}/>} />
