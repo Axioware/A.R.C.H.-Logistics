@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useRouter } from 'expo-router';
 
 const AccountInfoPage = () => {
   const [userData, setUserData] = useState({
@@ -30,6 +31,7 @@ const AccountInfoPage = () => {
   const [errors, setErrors] = useState({});
   const { width, height } = Dimensions.get("window");
   const isPortrait = height > width;
+  const router = useRouter();
 
   useEffect(() => {
     fetchUserData();
@@ -119,7 +121,8 @@ const AccountInfoPage = () => {
       style={[styles.container, { paddingHorizontal: isPortrait ? 20 : 40 }]}
     >
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton}
+        onPress={() => router.back()}>
           <Text style={styles.backText}>← Back</Text>
         </TouchableOpacity>
         <Text style={styles.title}>Account Information</Text>

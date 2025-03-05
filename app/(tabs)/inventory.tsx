@@ -1,53 +1,49 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CardWithButtons from "../../components/CardWithButtons";
 import { MaterialIcons } from "@expo/vector-icons";
-import CardWithButtons from "../components/CardWithButtons"; // Assuming CardWithButtons is in the same directory
+import EvilIcons from '@expo/vector-icons/EvilIcons';
+import AntDesign from '@expo/vector-icons/AntDesign'; // Assuming CardWithButtons is in the same directory
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useRouter } from "expo-router";
 
 export default function Profile() {
+  const router = useRouter();
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Back Button */}
-        <TouchableOpacity style={styles.backButton} onPress={() => console.log("Back pressed")}>
-          <MaterialIcons name="arrow-back" size={24} color="#333" />
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <AntDesign name="arrowleft" size={24} color="#333" />
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
 
         {/* Profile Card with Reusable Component */}
         <CardWithButtons
-          title="Profile"
+          title="Inventory"
           button1={{
-            icon: "account",
+            icon: "text-search",
             iconFamily: "MaterialCommunityIcons",
-            text: "Account Info",
-            onPress: () => console.log("Search Products pressed"),
+            text: "Search Products",
+            onPress: "/product_list", // Route name
             visible: true,
           }}
           button2={{
-            icon: "settings",
-            iconFamily: "Feather",
-            text: "Settings",
-            onPress: () => console.log("Search by Location pressed"),
+            icon: "location",
+            iconFamily: "EvilIcons",
+            text: "Search by Location",
+            onPress: "/acc_info", // Route name
             visible: true,
           }}
           button3={{
-            icon: "stepforward",
-            iconFamily: "AntDesign",
+            icon: "clipboard",
+            iconFamily: "Feather",
             text: "Inventory Count",
-            onPress: () => console.log("Inventory Count pressed"),
-            visible: false,
+            onPress: "/acc_info", // Route name
+            visible: true,
           }}
         />
-
-        {/* Logout Button */}
-        <TouchableOpacity
-          style={[styles.logoutButton, styles.shadow]}
-          onPress={() => console.log("Logout pressed")}
-        >
-          <MaterialIcons name="logout" size={24} color="#333" />
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

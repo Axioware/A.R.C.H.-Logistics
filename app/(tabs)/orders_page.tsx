@@ -14,8 +14,8 @@ import {
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 
-const defaultImage = require("../assets/default.png");
-const logo = require("../assets/logo.png");
+const defaultImage = require("../../assets/default.png");
+const logo = require("../../assets/logo.png");
 
 const screenHeight = Dimensions.get("window").height;
 const logoHeight = screenHeight * 0.07;

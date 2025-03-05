@@ -12,6 +12,8 @@ import {
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { Stack } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 // Get screen dimensions for responsiveness
 const { width } = Dimensions.get("window");
@@ -23,6 +25,7 @@ export default function Dashboard() {
   const [dueToday, setDueToday] = useState(0);
   const [shippedToday, setShippedToday] = useState(0);
   const [loading, setLoading] = useState(false); // No API fetch for now
+  const router = useRouter();
 
   // export default function Dashboard() {
   //   // State variables to store fetched data
@@ -91,7 +94,8 @@ export default function Dashboard() {
         />
 
         {/* Profile Button */}
-        <TouchableOpacity style={styles.profileButton}>
+        <TouchableOpacity style={styles.profileButton}
+        onPress={() => router.push('/settings')}>
           <Image
             source={{ uri: "https://via.placeholder.com/50x50.png?text= " }}
             style={[styles.profileImage, { height: profileHeight }]}
@@ -146,6 +150,7 @@ export default function Dashboard() {
         {/* Multi Item Orders Button */}
         <TouchableOpacity
           style={[styles.buttonContainer, { borderTopWidth: 0 }]}
+          onPress={() => router.push('/multi_item')}
         >
           <View style={styles.buttonContent}>
             <FontAwesome name="cubes" size={20} color="#00000" />
@@ -165,6 +170,7 @@ export default function Dashboard() {
             styles.buttonContainer,
             { borderTopWidth: 1, borderTopColor: "#ddd" },
           ]}
+          onPress={() => router.push('/picked')}
         >
           <View style={styles.buttonContent}>
             <FontAwesome name="shopping-bag" size={20} color="#00000" />

@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from 'expo-router';
 import CardWithInputs from "../components/CardWithInputs"; // Assuming CardWithInputs is in the same directory
 
 export default function AccountChangePassowrd() {
   const [name, setNewPassword] = useState("");
   const [email, setConfirmMatch] = useState("");
+  const router = useRouter();
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Back Button */}
-        <TouchableOpacity style={styles.backButton} onPress={() => console.log("Back pressed")}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <MaterialIcons name="arrow-back" size={24} color="#333" />
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>

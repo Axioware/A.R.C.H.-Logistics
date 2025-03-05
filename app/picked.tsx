@@ -8,14 +8,17 @@ import {
   Dimensions,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useRouter } from 'expo-router';
 
 const { width, height } = Dimensions.get("window");
+const router = useRouter();
 
 const SuccessPage = () => {
   return (
     <View style={styles.container}>
       {/* Back Button */}
-      <TouchableOpacity style={styles.backButton}>
+      <TouchableOpacity style={styles.backButton}
+      onPress={() => router.back()}>
         <AntDesign name="arrowleft" size={23} color="black" />
       </TouchableOpacity>
 

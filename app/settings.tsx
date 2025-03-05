@@ -3,13 +3,18 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import CardWithButtons from "../components/CardWithButtons"; // Assuming CardWithButtons is in the same directory
+import { useRouter } from "expo-router";
 
 export default function Settings() {
+  const router = useRouter();
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Back Button */}
-        <TouchableOpacity style={styles.backButton} onPress={() => console.log("Back pressed")}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
           <MaterialIcons name="arrow-back" size={24} color="#333" />
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
@@ -21,21 +26,21 @@ export default function Settings() {
             icon: "account",
             iconFamily: "MaterialCommunityIcons",
             text: "Account Information",
-            onPress: () => console.log("Settings pressed"),
+            onPress: "/acc_info", // Route name
             visible: true,
           }}
           button2={{
             icon: "lock",
-            text: "Change Password",
             iconFamily: "Feather",
-            onPress: () => console.log("Change Password Pressed"),
+            text: "Change Password",
+            onPress: "/acc_change_password",
             visible: true,
           }}
           button3={{
             icon: "lock",
-            text: "Change Password",
             iconFamily: "Feather",
-            onPress: () => console.log("Change Password Pressed"),
+            text: "Hidden Option",
+            onPress: "/hidden_route",
             visible: false,
           }}
         />

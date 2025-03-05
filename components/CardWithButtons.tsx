@@ -1,3 +1,4 @@
+import { useRouter, usePathname } from 'expo-router'; // Import router
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -5,18 +6,15 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Feather from '@expo/vector-icons/Feather';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-type MaterialIconsName = keyof typeof MaterialIcons.glyphMap;
-type EvilIconsName = keyof typeof EvilIcons.glyphMap;
-type AntDesignName = keyof typeof AntDesign.glyphMap;
-type MaterialCommunityIconsName = keyof typeof MaterialCommunityIcons.glyphMap;
-type FeatherName = keyof typeof Feather.glyphMap;
+type IconFamilies = "MaterialIcons" | "EvilIcons" | "AntDesign" | "MaterialCommunityIcons" | "Feather" | "FontAwesome";
 
 interface ButtonProps {
-  icon: MaterialIconsName | EvilIconsName | AntDesignName | MaterialCommunityIconsName | FeatherName;
-  iconFamily: "MaterialIcons" | "EvilIcons" | "AntDesign" | "MaterialCommunityIcons" | "Feather";
+  icon: string;
+  iconFamily: IconFamilies;
   text: string;
-  onPress: () => void;
+  onPress: string; // Path as string
   visible?: boolean;
 }
 
@@ -33,27 +31,29 @@ const CardWithButtons: React.FC<CardWithButtonsProps> = ({
   button2,
   button3,
 }) => {
-  const renderIcon = (iconFamily: string, iconName: string) => {
-    switch (iconFamily) {
-      case "MaterialIcons":
-        return <MaterialIcons name={iconName as MaterialIconsName} size={24} color="#333" />;
-      case "EvilIcons":
-        return <EvilIcons name={iconName as EvilIconsName} size={24} color="#333" />;
-      case "AntDesign":
-        return <AntDesign name={iconName as AntDesignName} size={24} color="#333" />;
-      case "MaterialCommunityIcons":
-        return <MaterialCommunityIcons name={iconName as MaterialCommunityIconsName} size={24} color="black" />;
-      case "Feather":
-        return <Feather name={iconName as FeatherName} size={24} color="black" />;
-      default:
-        return null;
-    }
+  const router = useRouter();
+
+  const renderIcon = (iconFamily: IconFamilies, iconName: string) => {
+    const IconComponent = {
+      MaterialIcons,
+      EvilIcons,
+      AntDesign,
+      MaterialCommunityIcons,
+      Feather,
+      FontAwesome,
+    }[iconFamily];
+
+    return <IconComponent name={iconName as any} size={24} color="black" />;
+  };
+
+  const handlePress = (route: string) => {
+    router.push(route as any); // Trick TypeScript to accept the route
   };
 
   const renderButton = (button: ButtonProps) => {
-    if (button.visible === false) return null; // Skip rendering if visible is explicitly false
+    if (button.visible === false) return null;
     return (
-      <TouchableOpacity style={styles.button} onPress={button.onPress}>
+      <TouchableOpacity style={styles.button} onPress={() => handlePress(button.onPress)}>
         {renderIcon(button.iconFamily, button.icon)}
         <Text style={styles.buttonText}>{button.text}</Text>
         <AntDesign name="arrowright" size={24} color="#333" />
@@ -63,10 +63,7 @@ const CardWithButtons: React.FC<CardWithButtonsProps> = ({
 
   return (
     <View style={styles.card}>
-      {/* Title */}
       <Text style={styles.title}>{title}</Text>
-
-      {/* Buttons */}
       {renderButton(button1)}
       {renderButton(button2)}
       {renderButton(button3)}
@@ -79,34 +76,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 10,
     padding: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 5,
     marginBottom: 20,
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
     marginBottom: 15,
   },
   button: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f9f9f9",
     paddingVertical: 12,
     paddingHorizontal: 10,
     marginVertical: 8,
+    backgroundColor: "#f9f9f9",
     borderRadius: 8,
-    elevation: 1,
   },
   buttonText: {
     flex: 1,
     marginLeft: 10,
     fontSize: 16,
-    color: "#333",
   },
 });
 

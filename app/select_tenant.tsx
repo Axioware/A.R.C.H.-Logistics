@@ -3,11 +3,10 @@ import { View, Image, StyleSheet, Dimensions, SafeAreaView, Alert, ActivityIndic
 import Card from '../components/Card';
 import ChildCard from '../components/ChildCard';
 import Footer from '../components/Footer';
-import { useNavigation } from '@react-navigation/native';
-import {Link} from "expo-router"
+import { useRouter } from 'expo-router'; // Import router for navigation
 
 export default function SelectTenant() {
-  const navigation = useNavigation();
+  const router = useRouter(); // Use router for navigation
   const [tenantName, setTenantName] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +27,7 @@ export default function SelectTenant() {
       const data = await response.json();
       console.log(data)
       if (response.status === 200) {
-        <Link href="/login"></Link>
+        router.push('/login'); // Navigate to login page
       } else if (response.status === 400) {
         Alert.alert('Invalid Tenant', 'Entered name does not exist.');
       } else {

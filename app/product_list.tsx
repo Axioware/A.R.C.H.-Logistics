@@ -10,19 +10,21 @@ import {
 import ProductListComponent from "../components/list_component";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useRouter } from "expo-router";
 
 // Get screen height for dynamic logo sizing
 const screenHeight = Dimensions.get("window").height;
 const logoHeight = screenHeight * 0.07;
 
+
 const ProductsPage = () => {
-  const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<{ id: number; name: string; image: string }[]>([]);
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [page, setPage] = useState(1);
   const [isFetching, setIsFetching] = useState(false);
+  const router = useRouter();
 
   const defaultImage = require("../assets/default.png");
 
@@ -88,7 +90,7 @@ const ProductsPage = () => {
           <View style={styles.sideContainer}>
             <TouchableOpacity
               style={styles.backButton}
-              onPress={() => navigation.goBack()}
+              onPress={() => router.back()}
             >
               <AntDesign name="arrowleft" size={24} color="black" />
             </TouchableOpacity>
