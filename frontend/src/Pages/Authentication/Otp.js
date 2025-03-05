@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import OtpForm from "../../Components/Authentication/Otpform"; // Adjust the path if necessary
 // import PrepPrimeLogo from "../../Assets/Images/Login/PrepPrimeLogo.jpg";
 import BackgroundImage from "../../Assets/Images/Login/background.jpg";
-import arch from '../../Assets/Images/archlabs.jpg';
+import arch from '../../Assets/Images/Login/finallogo.png';
 
 const Otp = () => {
   const [email] = useState("user@example.com"); // Replace with dynamic email if needed
@@ -70,7 +70,7 @@ const Otp = () => {
             <img
               src={arch}
               alt="ARCH Logo"
-              style={{ maxWidth: "80%", height: "auto", marginBottom: "20px" }}
+              style={{ maxWidth: "60%", height: "auto", marginBottom: "20px" }}
             />
            
           </div>

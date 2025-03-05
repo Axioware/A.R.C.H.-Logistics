@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
 import BackgroundImage from '../../Assets/Images/Login/background.jpg';
-import arch from '../../Assets/Images/ARCH_Labs Logo white.png';
+import arch from '../../Assets/Images/Login/finallogo.png';
 
 const ResetPassword = () => {
     const [formData, setFormData] = useState({ newPassword: "", confirmPassword: "" });
@@ -116,7 +116,7 @@ const ResetPassword = () => {
                     <img
                         src={arch}
                         alt="ARCH Logo"
-                        style={{ maxWidth: "80%", height: "auto" }}
+                        style={{ maxWidth: "60%", height: "auto" }}
                     />
                 </div>
                 <div

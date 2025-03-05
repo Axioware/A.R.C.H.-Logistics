@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import GeneralField from '../../Components/General/GeneralField';
 import GeneralButton from '../../Components/General/GeneralButton';
 import bg from '../../Assets/Images/Login/background.jpg';
-import arch from '../../Assets/Images/ARCH_Labs Logo white.png';
+import arch from '../../Assets/Images/Login/finallogo.png';
 
 const Forgotpasspage = () => {
   const [email, setEmail] = useState('');
@@ -84,7 +84,7 @@ const Forgotpasspage = () => {
             alignItems: 'center',
           }}
         >
-          <img src={arch} alt="ARCH Logo" style={{ maxWidth: '80%', height: 'auto' }} />
+          <img src={arch} alt="ARCH Logo" style={{ maxWidth: '60%', height: 'auto' }} />
         </div>
         <div
           style={{

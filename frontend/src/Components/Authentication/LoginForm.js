@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GeneralField from '../General/GeneralField';
 import GeneralButton from '../General/GeneralButton';
-import arch from '../../Assets/Images/ARCH_Labs Logo white.png';
+import arch from '../../Assets/Images/Login/finallogo.png';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
