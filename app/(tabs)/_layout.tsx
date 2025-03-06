@@ -1,117 +1,173 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { FAB } from "react-native-paper";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
+// Import actual screens
 import Dashboard from "../../app/(tabs)/dashboard";
-import Inventory from "../../app/(tabs)/inventory";
 import OrdersPage from "../../app/(tabs)/orders_page";
-import Picking from "../../app/(tabs)/picking"; // New screen
+import Inventory from "../../app/(tabs)/inventory";
+import Picking from "../../app/(tabs)/picking";
+import Scan from "../../app/(tabs)/scan";
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
-export default function TabLayout() {
+export default function Layout() {
   return (
-    <View style={styles.container}>
-      <Tab.Navigator
-        initialRouteName="Dashboard"
-        shifting={false} // Keeps the bar simple
-        sceneAnimationEnabled={false} // Smooth transitions
-        barStyle={styles.bottomBar} // Floating black navigation bar
-        activeColor="#fff" // White icon color when active
-        inactiveColor="#666" // Gray icon when inactive
-      >
-        <Tab.Screen
-          name="Dashboard"
-          component={Dashboard}
-          options={{
-            tabBarLabel: "Home",
-            tabBarIcon: ({ color }: { color: string }) => (
-              <MaterialCommunityIcons name="home-outline" color={color} size={26} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Inventory"
-          component={Inventory}
-          options={{
-            tabBarLabel: "Products",
-            tabBarIcon: ({ color }: { color: string }) => (
-              <MaterialCommunityIcons name="package-variant" color={color} size={26} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Orders"
-          component={OrdersPage}
-          options={{
-            tabBarLabel: "Orders",
-            tabBarIcon: ({ color }: { color: string }) => (
-              <MaterialCommunityIcons name="clipboard-list-outline" color={color} size={26} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Picking"
-          component={Picking}
-          options={{
-            tabBarLabel: "Picking",
-            tabBarIcon: ({ color }: { color: string }) => (
-              <MaterialCommunityIcons name="account-circle-outline" color={color} size={26} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          position: "absolute",
+          bottom: 20,
+          marginHorizontal: 15, // Instead of left & right
+          height: 72,
+          backgroundColor: "white",
+          borderRadius: 16,
+          width: "90%", // Ensure it takes up the right width
+          alignSelf: "center", // Center it
+          
+          // Shadow for iOS
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 5 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+        
+          // Shadow for Android
+          elevation: 5,
+        },
+              
+      }}
+    >
+      {/* Dashboard */}
+      <Tab.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: "center", paddingTop: 10, width: 50, alignSelf: "center"}}>
+          <AntDesign
+              name={focused ? "appstore1" : "appstore-o"}
+              color={focused ? "#000" : "gray"}
+              size={24}
+            />
+          <Text
+            style={{
+              color: focused ? "#000" : "gray",
+              fontSize: 12,
+              marginTop: 4,
+            }}
+          >
+            Dashboard
+          </Text>
+        </View>
+          ),
+        }}
+      />
 
-      {/* Floating Action Button */}
-      {/* <View style={styles.fabContainer}>
-        <FAB icon="qrcode-scan" style={styles.fab} color="#fff" onPress={() => console.log("FAB Pressed")} />
-      </View> */}
-    </View>
+      {/* Orders */}
+      <Tab.Screen
+        name="Orders"
+        component={OrdersPage}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: "center", paddingTop: 10, width: 50,}}>
+          <MaterialCommunityIcons
+              name={focused ? "package-variant-closed" : "package-variant"}
+              color={focused ? "#000" : "gray"}
+              size={24}
+            />
+          <Text
+            style={{
+              color: focused ? "#000" : "gray",
+              fontSize: 12,
+              marginTop: 4,
+            }}
+          >
+            Orders
+          </Text>
+        </View>
+          ),
+        }}
+      />
+
+      {/* Scan */}
+      <Tab.Screen
+        name="Scan"
+        component={Scan}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: "center", justifyContent: "center", height: 56, width: 56, borderRadius: 999, backgroundColor: "#000"}}>
+          <MaterialCommunityIcons
+              name= "qrcode-scan"
+              color= "white"
+              size={27}
+            />
+        </View>
+          ),
+        }}
+      />
+
+      {/* Picking */}
+      <Tab.Screen
+        name="Picking"
+        component={Picking}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: "center", paddingTop: 10, width: 50,}}>
+          <MaterialCommunityIcons
+              name={focused ? "basket" : "basket-outline"}
+              color={focused ? "#000" : "gray"}
+              size={24}
+            />
+          <Text
+            style={{
+              color: focused ? "#000" : "gray",
+              fontSize: 12,
+              marginTop: 4,
+            }}
+          >
+            Picking
+          </Text>
+        </View>
+          ),
+        }}
+      />
+
+      {/* Inventory */}
+      <Tab.Screen
+        name="Inventory"
+        component={Inventory}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: "center", paddingTop: 10, width: 50,}}>
+          <MaterialCommunityIcons
+              name={focused ? "tag-multiple" : "tag-outline"}
+              color={focused ? "#000" : "gray"}
+              size={24}
+            />
+          <Text
+            style={{
+              color: focused ? "#000" : "gray",
+              fontSize: 12,
+              marginTop: 4,
+            }}
+          >
+            Inventory
+          </Text>
+        </View>
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000", // Full black background
-  },
-  bottomBar: {
-    backgroundColor: "#000", // Black bottom bar
-    position: "absolute",
-    left: 16,
-    right: 16,
-    bottom: 15,
-    borderRadius: 16,
-    height: 72,
-    borderTopWidth: 0,
-    elevation: 10,
-    shadowColor: "#fff", // White shadow for slight effect
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    overflow: "hidden",
-    zIndex: 1,
-    justifyContent: "center",
-    marginHorizontal: -5,
-  },
-  fabContainer: {
-    position: "absolute",
-    bottom: 50,
-    alignSelf: "center",
-    zIndex: 2,
-  },
-  fab: {
-    backgroundColor: "#000", // Black FAB
-    width: 65,
-    height: 65,
-    borderRadius: 35,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 10,
-    shadowColor: "#fff", // White subtle shadow
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-  },
-});
