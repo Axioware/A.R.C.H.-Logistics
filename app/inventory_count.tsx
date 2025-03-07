@@ -3,13 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import CardWithButtons from "../components/CardWithButtons"; // Assuming CardWithButtons is in the same directory
+import { useRouter } from "expo-router";
+
 
 export default function InventoryCount() {
+  const router = useRouter();
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Back Button */}
-        <TouchableOpacity style={styles.backButton} onPress={() => console.log("Back pressed")}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <MaterialIcons name="arrow-back" size={24} color="#333" />
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
@@ -18,24 +21,24 @@ export default function InventoryCount() {
         <CardWithButtons
           title="Inventory Count"
           button1={{
-            icon: "stepforward",
-            iconFamily: "AntDesign",
-            text: "Count Product",
-            onPress: () => console.log("Search Products pressed"),
+            icon: "stack",
+            iconFamily: "Octicons",
+            text: "Count Products",
+            onPress: "/search_by_location", // Route name
             visible: true,
           }}
           button2={{
-            icon: "location",
-            iconFamily: "EvilIcons",
+            icon: "location-pin",
+            iconFamily: "Entypo",
             text: "Count Locations",
-            onPress: () => console.log("Search by Location pressed"),
+            onPress: "/search_by_location", // Route name
             visible: true,
           }}
           button3={{
             icon: "stepforward",
             iconFamily: "AntDesign",
             text: "Inventory Count",
-            onPress: () => console.log("Inventory Count pressed"),
+            onPress: "/search_by_location", // Route name
             visible: false,
           }}
         />

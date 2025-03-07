@@ -7,8 +7,10 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Feather from '@expo/vector-icons/Feather';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Octicons from '@expo/vector-icons/Octicons';
+import Entypo from '@expo/vector-icons/Entypo';
 
-type IconFamilies = "MaterialIcons" | "EvilIcons" | "AntDesign" | "MaterialCommunityIcons" | "Feather" | "FontAwesome";
+type IconFamilies = "Entypo" | "MaterialIcons" | "EvilIcons" | "AntDesign" | "MaterialCommunityIcons" | "Feather" | "FontAwesome" | "Octicons";
 
 interface ButtonProps {
   icon: string;
@@ -41,9 +43,11 @@ const CardWithButtons: React.FC<CardWithButtonsProps> = ({
       MaterialCommunityIcons,
       Feather,
       FontAwesome,
+      Octicons,
+      Entypo,
     }[iconFamily];
 
-    return <IconComponent name={iconName as any} size={24} color="black" />;
+    return <IconComponent name={iconName as any} size={22} color="black" />;
   };
 
   const handlePress = (route: string) => {
@@ -56,7 +60,7 @@ const CardWithButtons: React.FC<CardWithButtonsProps> = ({
       <TouchableOpacity style={styles.button} onPress={() => handlePress(button.onPress)}>
         {renderIcon(button.iconFamily, button.icon)}
         <Text style={styles.buttonText}>{button.text}</Text>
-        <AntDesign name="arrowright" size={24} color="#333" />
+        <AntDesign name="arrowright" size={20} color="#333" />
       </TouchableOpacity>
     );
   };
@@ -77,11 +81,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     marginBottom: 20,
+    elevation: 5,
   },
   title: {
-    fontSize: 18,
+    fontSize: 21,
     fontWeight: "bold",
     marginBottom: 15,
+    borderLeftColor: "black",
+    borderLeftWidth: 3,
+    paddingLeft: 8,
+    
   },
   button: {
     flexDirection: "row",
@@ -91,11 +100,13 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     backgroundColor: "#f9f9f9",
     borderRadius: 8,
+    elevation: 1,
   },
   buttonText: {
     flex: 1,
-    marginLeft: 10,
+    marginLeft: 15,
     fontSize: 16,
+    fontWeight: "bold", 
   },
 });
 

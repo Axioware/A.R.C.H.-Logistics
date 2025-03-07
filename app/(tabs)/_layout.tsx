@@ -29,7 +29,7 @@ export default function Layout() {
         tabBarStyle: {
           position: "absolute",
           bottom: 20,
-          marginHorizontal: 15, // Instead of left & right
+          marginHorizontal: 20, // Instead of left & right
           height: 72,
           backgroundColor: "white",
           borderRadius: 16,
@@ -54,7 +54,7 @@ export default function Layout() {
         component={Dashboard}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: "center", paddingTop: 10, width: 50, alignSelf: "center"}}>
+            <View style={{ alignItems: "center", paddingTop: 16, width: 50, alignSelf: "center"}}>
           <AntDesign
               name={focused ? "appstore1" : "appstore-o"}
               color={focused ? "#000" : "gray"}
@@ -65,6 +65,7 @@ export default function Layout() {
               color: focused ? "#000" : "gray",
               fontSize: 12,
               marginTop: 4,
+              textAlign: "center",
             }}
           >
             Dashboard
@@ -80,7 +81,7 @@ export default function Layout() {
         component={OrdersPage}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: "center", paddingTop: 10, width: 50,}}>
+            <View style={{ alignItems: "center", paddingTop: 16, width: 50,}}>
           <MaterialCommunityIcons
               name={focused ? "package-variant-closed" : "package-variant"}
               color={focused ? "#000" : "gray"}
@@ -123,7 +124,7 @@ export default function Layout() {
         component={Picking}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: "center", paddingTop: 10, width: 50,}}>
+            <View style={{ alignItems: "center", paddingTop: 16, width: 50,}}>
           <MaterialCommunityIcons
               name={focused ? "basket" : "basket-outline"}
               color={focused ? "#000" : "gray"}
@@ -149,7 +150,7 @@ export default function Layout() {
         component={Inventory}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: "center", paddingTop: 10, width: 50,}}>
+            <View style={{ alignItems: "center", paddingTop: 16, width: 50,}}>
           <MaterialCommunityIcons
               name={focused ? "tag-multiple" : "tag-outline"}
               color={focused ? "#000" : "gray"}

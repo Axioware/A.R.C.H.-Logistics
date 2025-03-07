@@ -21,6 +21,9 @@ export default function RootLayout() {
       <Stack.Screen name="reset_password" />
       <Stack.Screen name="select_tenant" />
       <Stack.Screen name="settings" />
+      <Stack.Screen name="single_order" />
+      <Stack.Screen name="select_tote" />
+      <Stack.Screen name="search_by_location" />
     </Stack>
   );
 }

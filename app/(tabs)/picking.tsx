@@ -21,20 +21,20 @@ export default function Picking() {
 
         {/* Profile Card with Reusable Component */}
         <CardWithButtons
-          title="Multi-Item Batch Picking"
+          title= "Picking"
           button1={{
-            icon: "account",
-            iconFamily: "FontAwesome",
-            text: "Account Information",
-            onPress: "/acc_info", // Route name
+            icon: "basket",
+            iconFamily: "MaterialCommunityIcons",
+            text: "Multi-Item Batch Picking",
+            onPress: "/multi_item", // Route name
             visible: true,
           }}
           button2={{
-            icon: "lock",
+            icon: "box",
             iconFamily: "Feather",
-            text: "Change Password",
-            onPress: "/acc_change_password",
-            visible: false,
+            text: "Single-Order Batch Picking",
+            onPress: "/single_order",
+            visible: true,
           }}
           button3={{
             icon: "lock",

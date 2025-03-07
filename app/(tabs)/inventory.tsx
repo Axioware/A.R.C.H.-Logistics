@@ -30,17 +30,17 @@ export default function Profile() {
             visible: true,
           }}
           button2={{
-            icon: "location",
-            iconFamily: "EvilIcons",
+            icon: "location-pin",
+            iconFamily: "Entypo",
             text: "Search by Location",
-            onPress: "/acc_info", // Route name
+            onPress: "/search_by_location", // Route name
             visible: true,
           }}
           button3={{
             icon: "clipboard",
             iconFamily: "Feather",
             text: "Inventory Count",
-            onPress: "/acc_info", // Route name
+            onPress: "/inventory_count", // Route name
             visible: true,
           }}
         />

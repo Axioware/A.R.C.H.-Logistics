@@ -170,7 +170,7 @@ export default function Dashboard() {
             styles.buttonContainer,
             { borderTopWidth: 1, borderTopColor: "#ddd" },
           ]}
-          onPress={() => router.push('/picked')}
+          onPress={() => router.push('/single_order')}
         >
           <View style={styles.buttonContent}>
             <FontAwesome name="shopping-bag" size={20} color="#00000" />
@@ -239,6 +239,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 15,
     fontFamily: "tahoma",
+    borderLeftColor: "black",
+    borderLeftWidth: 3,
+    paddingLeft: 8,
   },
   overviewBox: {
     flexDirection: "row",
