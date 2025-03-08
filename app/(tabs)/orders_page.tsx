@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
+import { useRouter } from 'expo-router';
 
 const defaultImage = require("../../assets/default.png");
 const logo = require("../../assets/logo.png");
@@ -21,7 +22,7 @@ const screenHeight = Dimensions.get("window").height;
 const logoHeight = screenHeight * 0.07;
 
 const OrdersPage = () => {
-  const navigation = useNavigation();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [orders, setOrders] = useState<
     {
@@ -110,7 +111,7 @@ const OrdersPage = () => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <View style={styles.sideContainer}>
-          <TouchableOpacity style={styles.backButton}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <AntDesign name="arrowleft" size={24} color="black" />
           </TouchableOpacity>
         </View>
@@ -159,7 +160,7 @@ const OrdersPage = () => {
     <View style={styles.orderCard}>
       <TouchableOpacity
         activeOpacity={0.5}
-        // onPress={() => navigation.navigate("OrderDetails", { orderId: item.id })}
+        onPress={() => router.push('/order_details')}
       >
         <View style={styles.orderHeader}>
           <View style={styles.orderIdBox}>
