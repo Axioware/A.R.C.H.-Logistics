@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from 'expo-router';
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const AccountInfoPage = () => {
   const [userData, setUserData] = useState({
@@ -121,12 +122,15 @@ const AccountInfoPage = () => {
       style={[styles.container, { paddingHorizontal: isPortrait ? 20 : 40 }]}
     >
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}
-        onPress={() => router.back()}>
-          <Text style={styles.backText}>← Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>Account Information</Text>
-      </View>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+          >
+            <AntDesign name="arrowleft" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.title}>Account Information</Text>
+          <View style={styles.sideContainer} />
+        </View>
 
       <View style={[styles.card, { padding: isPortrait ? 20 : 40 }]}>
         <ScrollView contentContainerStyle={styles.cardContent}>
@@ -268,7 +272,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   saveButton: {
-    backgroundColor: "#32de84",
+    backgroundColor: "#000",
     padding: 15,
     borderRadius: 10,
     marginTop: 20,
@@ -276,6 +280,7 @@ const styles = StyleSheet.create({
   },
   saveButtonText: { color: "white", fontSize: 16, fontWeight: "bold" },
   loaderContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+  sideContainer: { width: 10 },
 });
 
 export default AccountInfoPage;

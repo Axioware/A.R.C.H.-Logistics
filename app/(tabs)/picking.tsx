@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import CardWithButtons from "../../components/CardWithButtons"; // Assuming CardWithButtons is in the same directory
 import { useRouter } from "expo-router";
 
@@ -15,8 +15,8 @@ export default function Picking() {
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <MaterialIcons name="arrow-back" size={24} color="#333" />
-          <Text style={styles.backButtonText}>Back</Text>
+          <AntDesign name="arrowleft" size={24} color="#333" />
+          <Text style={styles.backButtonText}></Text>
         </TouchableOpacity>
 
         {/* Profile Card with Reusable Component */}

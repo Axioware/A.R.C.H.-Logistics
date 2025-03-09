@@ -16,7 +16,7 @@ export default function Profile() {
         {/* Back Button */}
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <AntDesign name="arrowleft" size={24} color="#333" />
-          <Text style={styles.backButtonText}>Back</Text>
+          <Text style={styles.backButtonText}></Text>
         </TouchableOpacity>
 
         {/* Profile Card with Reusable Component */}

@@ -271,12 +271,13 @@ const styles = StyleSheet.create({
     fontFamily: "tahoma",
   },
   greenTextContainer: {
-    backgroundColor: "black",
-    borderRadius: 5,
+    backgroundColor: "rgba(0, 0, 0, 0.8)", // Black with 50% transparency
+    borderRadius: 8,
     paddingVertical: 5,
     paddingHorizontal: 8,
     alignSelf: "flex-start",
   },
+  
   greenText: {
     color: "white",
     fontSize: 13,

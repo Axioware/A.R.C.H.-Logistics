@@ -42,7 +42,7 @@ const SingleOrderBatchPicking = () => {
     return (
       <View style={styles.container}>
         {/* Back Button */}
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <AntDesign name="arrowleft" size={23} color="black" />
         </TouchableOpacity>
 

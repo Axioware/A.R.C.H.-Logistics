@@ -107,11 +107,11 @@ export default function Layout() {
         component={Scan}
         options={{
           tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: "center", justifyContent: "center", height: 56, width: 56, borderRadius: 999, backgroundColor: "#000"}}>
+            <View style={{ alignItems: "center", justifyContent: "center", height: 66, width: 66, borderRadius: 999, backgroundColor: "#000"}}>
           <MaterialCommunityIcons
               name= "qrcode-scan"
               color= "white"
-              size={27}
+              size={30}
             />
         </View>
           ),
