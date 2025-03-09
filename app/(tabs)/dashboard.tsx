@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.8)", // Black with 50% transparency
     borderRadius: 8,
     paddingVertical: 5,
-    paddingHorizontal: 8,
+    paddingHorizontal: 8, 
     alignSelf: "flex-start",
   },
   

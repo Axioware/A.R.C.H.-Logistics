@@ -23,6 +23,7 @@ export default function RootLayout() {
       <Stack.Screen name="settings" />
       <Stack.Screen name="single_order" />
       <Stack.Screen name="select_tote" />
+      <Stack.Screen name="count_product" />
       <Stack.Screen name="search_by_location" />
     </Stack>
   );

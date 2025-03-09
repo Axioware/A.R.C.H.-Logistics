@@ -24,7 +24,7 @@ export default function InventoryCount() {
             icon: "stack",
             iconFamily: "Octicons",
             text: "Count Products",
-            onPress: "/search_by_location", // Route name
+            onPress: "/existing_count_product", // Route name
             visible: true,
           }}
           button2={{
