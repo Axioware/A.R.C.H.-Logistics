@@ -1,5 +1,5 @@
 from django.db import models
-from Inventory.models import Item
+from Inventory.models import Item, Inventory
 from Structures.models import Locations, Services, Warehouse
 from django.utils import timezone
 from django.conf import settings
@@ -95,7 +95,8 @@ class PalletDimension(models.Model):
     shipped_date = models.DateTimeField(default=None, null=True, blank=True)
 
 class Box(models.Model):
-    sub_order_id = models.ForeignKey(SubOrders, on_delete=models.CASCADE, null=True, blank=True)
+    sub_order_id = models.ForeignKey(SubOrders, on_delete=models.CASCADE, null=True, blank=True, related_name="sub_order_id_box")
+    inventory_id = models.ForeignKey(Inventory, on_delete=models.CASCADE, null=True, blank=True, related_name="inventory_id_box")
     # pallet = models.ForeignKey(PalletDimension, null=True, blank=True, default=None, on_delete=models.SET_NULL)
     length = models.DecimalField(max_digits=10, decimal_places=3)
     width = models.DecimalField(max_digits=10, decimal_places=3)

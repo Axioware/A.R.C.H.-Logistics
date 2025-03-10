@@ -1,28 +1,19 @@
-from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
-from django.core.mail import send_mail
-from django.utils import timezone
-from datetime import timedelta
 from django.contrib.auth.models import User
 from .models import *
 from rest_framework import status, pagination
-from django.contrib.auth.hashers import make_password
-from django.db.models import Q, Sum, F
+from django.db.models import Q
 from django.db import transaction
 from Arch_Logistics.helpers import *
-from django.core.validators import validate_email
+from Orders.models import Box
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
-from django.utils.dateparse import parse_datetime
-import pytz, logging, random
+import logging
+from django.core import serializers
 from .helpers import authenticate_client
-import re
 
-from django.db.models import Sum, F
-from django.db.models.functions import Concat
 
 logger = logging.getLogger(__name__)
 
@@ -33,47 +24,18 @@ def items(request):
 
     if request.method == 'GET':
         try:
-            # Get request parameters for filtering and searching
-            all_data = request.query_params.get('all', 'false').lower() == 'true'
-            client_id = request.query_params.get('client_id')
-            search = request.query_params.get('search')
-
-            # Retrieve items based on the authenticated user
-            if authenticate_client(user):
-                items = Item.objects.filter(client_id=user)
-            else:
-                items = Item.objects.all()
-
-            # Apply filtering by client_id if provided
-            if client_id:
-                items = items.filter(client_id=client_id)
-
-            # Apply search filtering if a search term is provided
-            if search:
-                items = items.filter(
-                    Q(item_name__icontains=search) |
-                    Q(description__icontains=search) |
-                    Q(client_id__extended__llc_name__icontains=search)
-                )
-
-
-            # Prepare the response data
-            items_data = [{
-                'item_id': item.item_id,
-                'item_name': item.item_name,
-                'user_id': item.client_id.id,
-                'llc_name': item.client_id.extended.llc_name, 
-                'description': item.description
-            } for item in items]
             
-            if all_data:
-                return Response({'user_data': items_data, 'count': len(items_data)}, status=status.HTTP_200_OK)
+            user_id = request.GET.get('user_id')  # Retrieve user_id from the query parameters
+            if authenticate_clearance_level(user, [4]):
+                items = Item.objects.filter(user_id=user)
+            if authenticate_clearance_level(user, [1, 2, 3]):
+                if user_id:
+                    items = Item.objects.filter(user_id=user_id)  # Retrieve items for the specific user
+                else:
+                    items = Item.objects.all()
 
-            paginator = UserPagination()
-            page = paginator.paginate_queryset(items_data, request)
-            if page is not None:
-                return paginator.get_paginated_response(page)
-            return Response({'user_data': items_data}, status=status.HTTP_200_OK)
+            data = serializers.serialize('json', items)
+            return JsonResponse(data, safe=False)
 
         except ObjectDoesNotExist:
             return Response({'error': 'No items found.'}, status=status.HTTP_404_NOT_FOUND)
@@ -83,57 +45,20 @@ def items(request):
             return Response({'error': 'Something went wrong.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     elif request.method == 'POST':
-        try:
-            error = {}
-            data = request.data
-            item_name = data.get('item_name', '')
-            description = data.get('description', '')
+        if authenticate_clearance_level(user, [1, 2, 3]):
+            try:
+                # Load data from request body assuming JSON
+                data = request.json()
 
-            if not item_name:
-                error['item_name'] = "item name is required"
-
-            if authenticate_client(user):
-                client = user
-            else:
-                client_id = data.get('client_id')
-                try:
-                    client = User.objects.get(id=client_id)
-                except ObjectDoesNotExist:
-                    return Response({'error': 'Invalid client_id'}, status=status.HTTP_400_BAD_REQUEST)
-
-            # Ensure that extended and llc_name are not None
-            if client.extended and client.extended.llc_name: #TODO add condition and only users with client role can have items
-                item_id_prefix = client.extended.llc_name[:3].lower()
-            else:
-                return Response({'error': 'Client does not have an LLC name or extended profile.'}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Auto-generate the item_id
-            items = Item.objects.filter(client_id=client)
-
-            # Extract the numeric peaart from each item_id, sort by it, and find the largest number
-            max_number = max([int(re.search(r'\d+', item.item_id).group()) for item in items], 
-                default=0  # Use 0 as the default if the list is empty
-            )
-            next_id = max_number + 1
-            # next_id = 1 if not last_item else str(int(last_item.item_id.split('_')[1]) + 1)
-            item_id = f"{item_id_prefix}_{next_id}"
-
-            # Create and save the item
-            item = Item.objects.create(
-                item_id=item_id,
-                item_name=item_name,
-                client_id=client,
-                description=description
-            )
-            return Response({'message': 'Item created successfully.', 'item_id': item.item_id}, status=status.HTTP_201_CREATED)
-
-        except ValidationError as e:
-            logger.error(f"Validation error in POST /items: {str(e)}")
-            return Response({'error': 'Validation error', 'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-        except Exception as e:
-            logger.error(f"Error in POST /items: {str(e)}")
-            return Response({'error': 'Failed to create item.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                new_item = Item.objects.create(
+                    item_sku=data['item_sku'],
+                    item_name=data['item_name'],
+                    user_id=data['user_id'],  # Assume user_id is directly provided; adjust based on your auth system
+                    item_description=data.get('item_description', '')  # Optional field with default
+                )
+                return JsonResponse({'status': 'success', 'message': 'Item created successfully.', 'item_id': new_item.pk}, status=201)
+            except Exception as e:
+                return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
     else:
         return Response({'error': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
@@ -143,77 +68,49 @@ def items(request):
 @permission_classes([IsAuthenticated])
 def single_item(request, pk):
     try:
+        # Retrieve the item, or return a 404 if it doesn't exist
         item = Item.objects.get(pk=pk)
-        print(item.item_id)
+        user = request.user
+
 
         if request.method == 'GET':
-            if authenticate_client(request.user) and item.client_id != request.user:
-                return Response({'error': 'Unauthorized to view this item'}, status=status.HTTP_403_FORBIDDEN)
+            if authenticate_clearance_level(user, [4]):
+                if user != item.user_id.id:
+                    return Response({'error': 'Unauthorized to access this item'}, status=status.HTTP_403_FORBIDDEN)
 
+            # Return a simplified item representation
             return Response({
-                'item_id': item.item_id,
+                'item_id': item.id,  # Assuming `item_id` is just the primary key
+                'item_sku': item.item_sku,
                 'item_name': item.item_name,
-                'item_description': item.description,
-                'client_id': item.client_id.id,
-                'llc_name': item.client_id.extended.llc_name
+                'item_description': item.item_description,
+                'user_id': item.user_id.id  # Assuming `user_id` is a foreign key to User
             }, status=status.HTTP_200_OK)
 
+
         elif request.method == 'PUT':
-            if authenticate_client(request.user) and item.client_id != request.user:
-                return Response({'error': 'Unauthorized to edit this item'}, status=status.HTTP_403_FORBIDDEN)
-            if authenticate_prep(request.user):
-                return Response({'error': 'Unauthorized to edit this item'}, status=status.HTTP_403_FORBIDDEN)
+            if not authenticate_clearance_level(user, [1, 2, 3]):
+                return Response({'error': 'Unauthorized to access this item'}, status=status.HTTP_403_FORBIDDEN)
 
             data = request.data
-            client_id = data.get('client_id')
-            if client_id:
-                try:
-                    client = User.objects.get(id=client_id)
-                except User.DoesNotExist:
-                    return Response({'error': 'Invalid client_id'}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                client = item.client_id
+            item.item_name = data.get('item_name', item.item_name)
+            item.item_description = data.get('item_description', item.item_description)
+            item.save()
 
-            
-            item_id = data.get('item_id', None)
-            item_name = data.get('item_name', item.item_name)
-            description = data.get('item_description', item.description)
-
-            if item_id is None:
-                item.client_id = client
-                item.item_name = item_name
-                item.description = description
-                item.save()
-            else:
-                item.item_id = item_id
-                item.client_id = client
-                item.item_name = item_name
-                item.description = description
-                item.save()
-                item = Item.objects.get(pk=pk)
-                item.delete()
-            
-
-            
             return Response({'message': 'Item updated successfully'}, status=status.HTTP_200_OK)
 
         elif request.method == 'DELETE':
-            if authenticate_client(request.user) and item.client_id != request.user:
+            if not authenticate_clearance_level(user, [1, 2, 3]):
                 return Response({'error': 'Unauthorized to delete this item'}, status=status.HTTP_403_FORBIDDEN)
 
             item.delete()
             return Response({'message': 'Item deleted successfully'}, status=status.HTTP_200_OK)
 
-    except ObjectDoesNotExist:
+    except Item.DoesNotExist:
         return Response({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    except ValidationError as e:
-        logger.error(f"Validation error in single_item {pk}: {str(e)}")
-        return Response({'error': 'Validation error', 'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
     except Exception as e:
-        logger.error(f"Error in single_item {pk}: {str(e)}")
-        return Response({'error': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'error': 'Something went wrong', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET', 'POST'])
@@ -222,160 +119,154 @@ def inventory(request):
     user = request.user
 
     if request.method == "GET":
-
-        # Filter and search parameters
-        user_param = request.query_params.get('user')
-        qty = request.query_params.get('qty')
-        bin = request.query_params.get('bin')
-        category = request.query_params.get('category')
-        date_start = request.query_params.get('date_start')  # Start of date range
-        date_end = request.query_params.get('date_end')      # End of date range
-        search = request.query_params.get('search')
-
-        try:
-            # If the requester is a client, return only their inventory
-            if authenticate_client(user):
-                queryset = Inventory.objects.filter(user_id=user.id).select_related('item_id')
-            else:
-                queryset = Inventory.objects.all().select_related('item_id')
-
-            if user_param:
-                queryset = queryset.filter(user_id=user_param)
-            if qty:
-                queryset = queryset.filter(quantity__gte=qty)
-            if bin:
-                queryset = queryset.filter(bin_id=bin)
-            if category:
-                queryset = queryset.filter(category_id=category)
-            if date_start and date_end:
-                queryset = queryset.filter(date_added__range=[date_start, date_end])
-
-            if search:
-                queryset = queryset.filter(
-                    Q(item__name__icontains=search) |
-                    Q(item__description__icontains=search) |
-                    Q(user__extended__llc_name__icontains=search)
-                )
-
-            # Construct result data
-            result = []
-            for inventory in queryset:
-                # dimensions = Dimension.objects.filter(inventory_id=inventory.id)
-                result.append({
-                    'id': inventory.id,
-                    'item_name': inventory.item_id.item_name,
-                    'item_description': inventory.item_id.description,
-                    'client_name': inventory.item_id.client_id.extended.llc_name if inventory.item_id.client_id else "N/A",
-                    'quantity': inventory.quantity,
-                    'bin': inventory.bin_id.bin_name if inventory.bin_id else 'N/A',
-                    'category': inventory.category_id.category_name if inventory.category_id else 'N/A',
-                    'date_added': inventory.date_added,
-                    'boxes': inventory.boxes,
-                    'charge_by': inventory.charge_by,
-                    # 'dimensions': list(dimensions.values())  # Fetch dimensions related to the inventory
-                })
-                
-
-            # Pagination
-            paginator = UserPagination()
-            page = paginator.paginate_queryset(result, request)
-            if page is not None:
-                return paginator.get_paginated_response(page)
-            return Response({'data': result}, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response({"error": str(e), "status": "error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        # Extract query parameters
+        user_id = request.GET.get('user_id')
+        date_from = request.GET.get('date_from')
+        date_to = request.GET.get('date_to')
+        quantity_filter = request.GET.get('quantity_filter')
+        search = request.GET.get('search')  # Unified search parameter
+        # Start building the query
+        query = Q()
+        # Filter by user_id if provided
+        if authenticate_clearance_level(user, [4]):
+            query &= Q(user_id=user)
+        elif authenticate_clearance_level(user, [1, 2, 3]):
+            if user_id:
+                query &= Q(user_id=user_id)
+        # Filter by date range if both dates are provided
+        if date_from and date_to:
+            date_from = datetime.datetime.strptime(date_from, '%Y-%m-%d')
+            date_to = datetime.datetime.strptime(date_to, '%Y-%m-%d')
+            query &= Q(date_added__range=(date_from, date_to))
+        # Filter by quantity ranges
+        if quantity_filter:
+            if quantity_filter == 'less10':
+                query &= Q(quantity__lt=10)
+            elif quantity_filter == 'less50':
+                query &= Q(quantity__lt=50)
+            elif quantity_filter == 'less100':
+                query &= Q(quantity__lt=100)
+            elif quantity_filter == 'less500':
+                query &= Q(quantity__lt=500)
+            elif quantity_filter == 'more500':
+                query &= Q(quantity__gt=500)
+        # Filter by item SKU or name through related InventoryItem using a unified search parameter
+        if search:
+            item_query = Q(item_id__item_sku__icontains=search) | Q(item_id__item_name__icontains=search)
+            query &= Q(inventory_id_inventory_item__in=InventoryItem.objects.filter(item_query))
+        # Execute the query
+        inventory_list = Inventory.objects.filter(query).distinct()
+        # Serialize the queryset
+        data = serializers.serialize('json', inventory_list)
+        return JsonResponse(data, safe=False)
 
     if request.method == 'POST':
-        if authenticate_owner(user) or authenticate_manager(user) or authenticate_VA(user):
-            try:
-                data = request.data
-                # client_id = data.get('client_id', None)
-                item_ids = data.get('item_ids', None)
-                print(item_ids)
-                category_id = data.get('category_id', None)
-                bin_no = data.get('bin_no', None)
-                quantities = data.get('quantities', None)
-                pack_size = data.get('pack_size', None)
-                no_bundles = data.get('no_bundles', None)
-                pallet = data.get('pallet', False)
-                charge_by = data.get('charge_by', None)
-                boxes = data.get('boxes', None)
-                dims = data.get('physics', None)
-                date_added = data.get('date_added', None)
+        if authenticate_clearance_level(user, [1, 2]):
+            return Response({'errors': "Unauthorized - Insufficient clearance level"}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            data = request.json()
+            
+            user_id = data.get('user_id')
+            category = data.get('category')
+            charge_by = data.get('charge_by')
+            custom_charge = data.get('custom_charge')
+            custom_charge_value = data.get('custom_charge_value')
+            date_added = datetime.datetime.strptime(data.get('date_added'), '%m/%d/%Y')
+            warehouse_id = data.get('warehouse_id')
+            locations = data.get('locations')
+            bundle_quantity = data.get('bundle_quantity')
+            warehouse = Warehouse.objects.get(pk=warehouse_id)
 
-                # Input Validation
-                if not (len(item_ids) == len(quantities)):
-                    return Response({'error': 'Length of item_ids must match quantities'}, status=status.HTTP_400_BAD_REQUEST)
-                if not (len(dims) == boxes):
-                    return Response({'error': 'Length of physics must match boxes'}, status=status.HTTP_400_BAD_REQUEST)
+            with transaction.atomic():
 
-                with transaction.atomic():
-                    # Create the first Inventory entry
-                    first_item_id = item_ids[0]
-                    item = Item.objects.get(pk=first_item_id)
-                    first_quantity = quantities[0]
-                    inventory = Inventory.objects.create(
-                        item_id_id=item,
-                        bin_id_id=bin_no,
-                        quantity=first_quantity,
-                        category_id_id=category_id,
-                        pack_size=pack_size,
-                        no_bundles=no_bundles,
-                        date_added=date_added,
-                        boxes=boxes,
-                        charge_by=charge_by,
-                        pallet=pallet
-                    )
+                inventory = Inventory.objects.create(
+                    user_id=user_id,
+                    category=category,
+                    charge_by=charge_by,
+                    date_added=date_added,
+                    warehouse_id=warehouse,
+                    bundle_quantity=bundle_quantity,
+                    custom_charge=custom_charge,
+                    custom_charge_value=custom_charge_value
+                )
 
-                    # Add remaining items to BundleInventory
-                    for i in range(1, len(item_ids)):
-                        item = Item.objects.get(pk=item_ids[i])
-                        BundleInventory.objects.create(
-                            other_item_id=item,
-                            quantity=quantities[i],
-                            inventory_id=inventory
-                        )
-                    print('done')
-                    # Create PalletDimension or Dimension based on pallet value
-                    for dimension in dims:
-                        if pallet:
-                            PalletDimension.objects.create(
-                                service_id=None,
-                                item_id=None,
-                                service_code=None,
-                                category_id=None,
-                                length=dimension['length'],
-                                width=dimension['width'],
-                                height=dimension['height'],
-                                weight=dimension['weight'],
-                                shipped=False,
-                                shipped_date=None,
-                                pallet_label=None,
-                                inventory_id=inventory
-                            )
-                        else:
-                            Dimension.objects.create(
-                                service_id=None,
-                                item_id=None,
-                                service_code=None,
-                                category_id=None,
-                                length=dimension['length'],
-                                width=dimension['width'],
-                                height=dimension['height'],
-                                weight=dimension['weight'],
-                                quantity=dimension['quantity'],
-                                shipped=False,
-                                shipped_date=None,
-                                box_label=None,
-                                pallet=None,
-                                inventory_id=inventory
-                            )
+                # Create InventoryItem records for each product
+                product_data = data.get('products')
+                inventory_items = []
+                total_quantity = 0
+                for product in product_data:
+                    total_quantity += product['quantity']
+                    item = Item.objects.get(pk=product['id'])  # Ensure item exists
+                    inventory_items.append(InventoryItem(
+                        inventory_id=inventory,
+                        item_id=item,
+                        quantity=product['quantity']
+                    ))
+                InventoryItem.objects.bulk_create(inventory_items)
 
-                return Response({'message': 'Inventory and associated records created successfully'}, status=status.HTTP_201_CREATED)
+                
+                inventory_locations = []
+                for location in locations:
+                    location = Locations.objects.get(pk=location['id'])  # Ensure item exists
+                    inventory_locations.append(InventoryLocation(
+                        inventory_id=inventory,
+                        location_id=location,
+                    ))
+                InventoryLocation.objects.bulk_create(inventory_locations)
 
-            except Exception as e:
-                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                # Create Box records
+                dimension_data = data.get('dimensions')
+                boxes = []
+                for dimension in dimension_data:
+                    no_boxes += dimension['quantity']
+                    boxes.append(Box(
+                        inventory_id=inventory,
+                        length=dimension['length'],
+                        width=dimension['width'],
+                        height=dimension['height'],
+                        weight=dimension['weight'],
+                        box_quantity=dimension['quantity'],  
+                        # item_quantity=sum(product['quantity'] for product in product_data)  # Total quantity of items across all boxes
+                    ))
+                Box.objects.bulk_create(boxes)
+
+                
+
+                if bundle_quantity:
+                    record_quantity = bundle_quantity
+                else:
+                    record_quantity = total_quantity
+
+
+                inventory_record = InventoryRecord.objects.create(
+                    inventory_id=inventory,
+                    charge_from=date_added,
+                    quantity=record_quantity
+                )
+
+                boxes = []
+                for dimension in dimension_data:
+                    boxes.append(BoxRecord(
+                        inventory_id=inventory_record,
+                        length=dimension['length'],
+                        width=dimension['width'],
+                        height=dimension['height'],
+                        weight=dimension['weight'],
+                        box_quantity=dimension['quantity'],  
+                        # item_quantity=sum(product['quantity'] for product in product_data)  # Total quantity of items across all boxes
+                    ))
+                BoxRecord.objects.bulk_create(boxes)
+
+
+
+            return JsonResponse({'status': 'success', 'message': 'Inventory and related entities created successfully.'}, status=201)
+
+        except Warehouse.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Warehouse not found.'}, status=404)
+        except Item.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'One or more items not found.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -385,116 +276,194 @@ def single_inventory(request, inventory_id):
 
     # Check if the user has access
     try:
-        # Fetch the inventory item
-        inventory = Inventory.objects.select_related('item_id', 'bin_id', 'category_id').get(id=inventory_id)
-
-        # Check access permissions for the client user
-        if user.extended.role == UsersExtended.RoleChoices.CLIENT and inventory.item_id.client_id != user.id:
-            return Response({'errors': "Unauthorized to access this inventory"}, status=status.HTTP_401_UNAUTHORIZED)
-
+        inventory = Inventory.objects.get(pk=inventory_id)
     except Inventory.DoesNotExist:
-        return Response({'error': 'Inventory not found'}, status=status.HTTP_404_NOT_FOUND)
+        return JsonResponse({'error': 'Inventory not found'}, status=404)
 
-    # GET method: Retrieve single inventory details
-    if request.method == "GET":
-        dimensions = Dimension.objects.filter(inventory_id=inventory_id)
-        inventory_data = {
-            'id': inventory.id,
-            'item_name': inventory.item_id.item_name if inventory.item_id else 'Item does not exist',
-            'item_description': inventory.item_id.description if inventory.item_id else 'Item does not exist',
-            'client_name': inventory.item_id.client_id.extended.llc_name if inventory.item_id.client_id else 'User does not exist',
-            'quantity': inventory.quantity,
-            'bin': inventory.bin_id.bin_name if inventory.bin_id else 'Bin does not exist',
-            'category': inventory.category_id.category_name if inventory.category_id else 'Category does not exist',
-            'date_added': inventory.date_added,
-            'boxes': inventory.boxes,
-            'charge_by': inventory.charge_by,
-            'dimensions': dimensions
+
+    if request.method == 'GET':
+        # Assuming InventoryItem has a relation to a Product model through item_id
+        products_data = [
+            {
+                "product_id": item.item_id.item_sku,  # or any identifier
+                "quantity": item.quantity
+            }
+            for item in InventoryItem.objects.filter(inventory_id=inventory)
+        ]
+
+        locations_data = [
+            {
+                "location": location.location_id  # Example field from the Locations model
+            }
+            for location in InventoryLocation.objects.filter(inventory_id=inventory)
+        ]
+
+        dimensions_data = [
+            {
+                "length": dimension.length,
+                "width": dimension.width,
+                "height": dimension.height,
+                "weight": dimension.weight,
+                "quantity": dimension.quantity
+            }
+            # Assuming you have a dimensions model or similar; adjust as necessary
+            for dimension in inventory.dimensions.all()  # This line depends on your model relations
+        ]
+
+        data = {
+            "user_id": inventory.user_id.id if inventory.user_id else None,  # Update based on your user relationship
+            "products": products_data,
+            "category": inventory.category,
+            "charge_by": inventory.charge_by,
+            "date_added": inventory.date_added.strftime("%m/%d/%Y"),  # Format date
+            "warehouse_id": inventory.warehouse_id.id if inventory.warehouse_id else None,
+            "locations": locations_data,
+            "dimensions": dimensions_data
         }
-        return Response({'data': inventory_data}, status=status.HTTP_200_OK)
+        return JsonResponse(data)
+
 
     # PUT method: Update single inventory record
-    elif request.method == "PUT":
-        if authenticate_prep(user) or authenticate_client(user):
-            return Response({'errors': "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-        
-        if authenticate_owner(user) or authenticate_manager(user) or authenticate_VA(user):
-            data = request.data
-            errors = {}
+    elif request.method == 'PUT':
+        if authenticate_clearance_level(user, [1, 2]):
+            return Response({'errors': "Unauthorized - Insufficient clearance level"}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            data = request.json()
+            inventory = Inventory.objects.get(pk=inventory_id)
+            inventory_record = InventoryRecord.objects.filter(inventory_id=inventory, charge_to__isnull=True).first()
 
-            # Retrieve updated data
-            item_id = data.get('item_id', inventory.item_id if inventory.item_id else '')
-            item_name = data.get('item_name', inventory.item_id.item_name if inventory.item_id else '')
-            description = data.get('description', inventory.item_id.description if inventory.item_id else '')
-            bin_id = data.get('bin_id', inventory.bin_id.id if inventory.bin_id else '')
-            quantity = data.get('quantity', inventory.quantity)
-            category_id = data.get('category_id', inventory.category_id.id if inventory.category_id else '')
-            boxes = data.get('boxes', inventory.boxes)
+            
+            category = data.get('category', inventory.category)
             charge_by = data.get('charge_by', inventory.charge_by)
-            date_added = data.get('date_added', inventory.date_added)
-            dimensions_record = Dimension.objects.filter(inventory_id=inventory_id)
-            dimensions = data.get('dimensions', '')
+            custom_charge = data.get('custom_charge', inventory.custom_charge)
+            custom_charge_value = data.get('custom_charge_value', inventory.custom_charge_value)
+            date_added = datetime.datetime.strptime(data.get('date_added', inventory.date_added.strftime('%m/%d/%Y')), '%m/%d/%Y')
+            warehouse_id = data.get('warehouse_id', inventory.warehouse_id.id)
+            locations = data.get('locations')
+            bundle_quantity = data.get('bundle_quantity', inventory.bundle_quantity)
+            warehouse = Warehouse.objects.get(pk=warehouse_id)
 
+            with transaction.atomic():
+                inventory.category = category
+                inventory.charge_by = charge_by
+                inventory.custom_charge = custom_charge
+                inventory.custom_charge_value = custom_charge_value
+                inventory.date_added = date_added
+                inventory.warehouse_id = warehouse
+                inventory.no_bundles = bundle_quantity
+                inventory.save()
 
-            if dimensions:
-                with transaction.atomic():
-                    for x in dimensions:
-                        pass
+                # Update InventoryItem records for each product
+                InventoryItem.objects.filter(inventory_id=inventory).delete()
+                product_data = data.get('products')
+                inventory_items = []
+                total_quantity = 0
+                for product in product_data:
+                    total_quantity += product['quantity']
+                    item = Item.objects.get(pk=product['id'])  # Ensure item exists
+                    inventory_items.append(InventoryItem(
+                        inventory_id=inventory,
+                        item_id=item,
+                        quantity=product['quantity']
+                    ))
+                InventoryItem.objects.bulk_create(inventory_items)
 
+                # Update InventoryLocation records
+                InventoryLocation.objects.filter(inventory_id=inventory).delete()
+                inventory_locations = []
+                for location in locations:
+                    location = Locations.objects.get(pk=location['id'])  # Ensure location exists
+                    inventory_locations.append(InventoryLocation(
+                        inventory_id=inventory,
+                        location_id=location,
+                    ))
+                InventoryLocation.objects.bulk_create(inventory_locations)
 
+                # Update Box records
+                Box.objects.filter(inventory_id=inventory).delete()
+                dimension_data = data.get('dimensions')
+                boxes = []
+                for dimension in dimension_data:
+                    boxes.append(Box(
+                        inventory_id=inventory,
+                        length=dimension['length'],
+                        width=dimension['width'],
+                        height=dimension['height'],
+                        weight=dimension['weight'],
+                        box_quantity=dimension['quantity'],
+                    ))
+                Box.objects.bulk_create(boxes)
 
-            # Validation checks
-            if not bin_id:
-                errors['bin'] = "Bin is required."
-            if not quantity:
-                errors['quantity'] = "Quantity is required."
-            if not category_id:
-                errors['category'] = "Category is required."
-            if not charge_by:
-                errors['charge_by'] = "Charge by is required."
+                if bundle_quantity:
+                    record_quantity = bundle_quantity
+                else:
+                    record_quantity = total_quantity
 
-            if errors:
-                return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
+                inventory_record.charge_from = date_added
+                inventory_record.quantity = record_quantity
+                inventory_record.save()
 
-            try:
-                with transaction.atomic():
-                    # Update the inventory object
-                    inventory.item_id.item_name = item_name
-                    inventory.item_id.description = description
-                    inventory.item_id.save()
+                BoxRecord.objects.filter(inventory_record_id=inventory_record).delete()
 
-                    inventory.bin_id = bin_id
-                    inventory.quantity = quantity
-                    inventory.category_id = category_id
-                    inventory.boxes = boxes
-                    inventory.charge_by = charge_by
-                    inventory.dimensions = dimensions
-                    inventory.date_added = date_added
+                boxes = []
+                for dimension in dimension_data:
+                    boxes.append(BoxRecord(
+                        inventory_id=inventory_record,
+                        length=dimension['length'],
+                        width=dimension['width'],
+                        height=dimension['height'],
+                        weight=dimension['weight'],
+                        box_quantity=dimension['quantity'],
+                    ))
+                BoxRecord.objects.bulk_create(boxes)
 
-                    inventory.save()
+            return JsonResponse({'status': 'success', 'message': 'Inventory updated successfully.'}, status=200)
 
-                    return Response({"success": "Inventory updated successfully"}, status=status.HTTP_200_OK)
+        except Warehouse.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Warehouse not found.'}, status=404)
+        except Item.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'One or more items not found.'}, status=404)
+        except Inventory.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Inventory record not found.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
-            except Exception as e:
-                return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        return Response({"error": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     # DELETE method: Delete single inventory record
-    elif request.method == "DELETE":
-        if authenticate_prep(user) or authenticate_client(user):
-            return Response({'errors': "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
-        
-        if authenticate_owner(user) or authenticate_manager(user) or authenticate_VA(user):
-            try:
-                with transaction.atomic():
-                    inventory.delete()
-                    return Response({"success": "Inventory deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    elif request.method == 'DELETE':
+        if authenticate_clearance_level(user, [1, 2]):
+            return Response({'errors': "Unauthorized - Insufficient clearance level"}, status=status.HTTP_403_FORBIDDEN)
+        try:
 
-            except Exception as e:
-                return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response({"error": "Method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            with transaction.atomic():
+                # Retrieve the inventory to delete
+                inventory = Inventory.objects.get(pk=inventory_id)
+
+                # Delete related InventoryItem records
+                InventoryItem.objects.filter(inventory_id=inventory).delete()
+
+                # Delete related InventoryLocation records
+                InventoryLocation.objects.filter(inventory_id=inventory).delete()
+
+                # Delete related Box records
+                Box.objects.filter(inventory_id=inventory).delete()
+
+                # Delete related BoxRecord records via InventoryRecord
+                inventory_records = InventoryRecord.objects.filter(inventory_id=inventory, charge_to__isnull=True).first()
+                for ir in inventory_records:
+                    BoxRecord.objects.filter(inventory_id=ir).delete()
+                inventory_records.delete()
+
+                # Finally, delete the inventory record itself
+                inventory.delete()
+
+                return JsonResponse({'status': 'success', 'message': 'Inventory and related entities deleted successfully.'}, status=200)
+
+        except Inventory.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Inventory not found.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
 @api_view(['GET']) #TODO test after dummy data
