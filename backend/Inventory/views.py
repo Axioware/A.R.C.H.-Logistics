@@ -466,3 +466,117 @@ def single_inventory(request, inventory_id):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def modify_inventory(request, inventory_id):
+    user = request.user
+
+    # Check if the user has access
+    try:
+        inventory = Inventory.objects.get(pk=inventory_id)
+    except Inventory.DoesNotExist:
+        return JsonResponse({'error': 'Inventory not found'}, status=404)
+
+
+    
+    if request.method == 'PUT':
+        if authenticate_clearance_level(user, [1, 2]):
+            return Response({'errors': "Unauthorized - Insufficient clearance level"}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            data = request.json()
+            inventory = Inventory.objects.get(pk=inventory_id)
+            inventory_record = InventoryRecord.objects.filter(inventory_id=inventory, charge_to__isnull=True).first()
+
+            
+            # ONLY THESE FIELDS ARE EDITABLE IN MODIFY (PRDUCTS, DIMENSIONS AS WELL SEE BELOW)
+            date_added = datetime.datetime.strptime(data.get('date_added', inventory.date_added.strftime('%m/%d/%Y')), '%m/%d/%Y')
+            locations = data.get('locations')
+            bundle_quantity = data.get('bundle_quantity', inventory.bundle_quantity)
+
+
+            with transaction.atomic():
+                inventory.date_added = date_added
+                inventory.no_bundles = bundle_quantity
+                inventory.save()
+
+                # Update InventoryItem records for each product
+                InventoryItem.objects.filter(inventory_id=inventory).delete()
+                product_data = data.get('products')
+                inventory_items = []
+                total_quantity = 0
+                for product in product_data:
+                    total_quantity += product['quantity']
+                    item = Item.objects.get(pk=product['id'])  
+                    inventory_items.append(InventoryItem(
+                        inventory_id=inventory,
+                        item_id=item,
+                        quantity=product['quantity']
+                    ))
+                InventoryItem.objects.bulk_create(inventory_items)
+
+                # Update InventoryLocation records
+                InventoryLocation.objects.filter(inventory_id=inventory).delete()
+                inventory_locations = []
+                for location in locations:
+                    location = Locations.objects.get(pk=location['id']) 
+                    inventory_locations.append(InventoryLocation(
+                        inventory_id=inventory,
+                        location_id=location,
+                    ))
+                InventoryLocation.objects.bulk_create(inventory_locations)
+
+                # Update Box records
+                Box.objects.filter(inventory_id=inventory).delete()
+                dimension_data = data.get('dimensions')
+                boxes = []
+                for dimension in dimension_data:
+                    boxes.append(Box(
+                        inventory_id=inventory,
+                        length=dimension['length'],
+                        width=dimension['width'],
+                        height=dimension['height'],
+                        weight=dimension['weight'],
+                        box_quantity=dimension['quantity'],
+                    ))
+                Box.objects.bulk_create(boxes)
+
+                if bundle_quantity:
+                    record_quantity = bundle_quantity
+                else:
+                    record_quantity = total_quantity
+
+                inventory_record.charge_to = date_added
+                inventory_record.save()
+
+
+                new_inventory_record = InventoryRecord.objects.create(
+                    inventory_id=inventory,
+                    charge_from=date_added,
+                    quantity=record_quantity
+                )
+
+                boxes = []
+                for dimension in dimension_data:
+                    boxes.append(BoxRecord(
+                        inventory_id=new_inventory_record,
+                        length=dimension['length'],
+                        width=dimension['width'],
+                        height=dimension['height'],
+                        weight=dimension['weight'],
+                        box_quantity=dimension['quantity'],  
+                    ))
+                BoxRecord.objects.bulk_create(boxes)
+
+            return JsonResponse({'status': 'success', 'message': 'Inventory updated successfully.'}, status=200)
+
+        except Warehouse.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Warehouse not found.'}, status=404)
+        except Item.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'One or more items not found.'}, status=404)
+        except Inventory.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Inventory record not found.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+
+    
