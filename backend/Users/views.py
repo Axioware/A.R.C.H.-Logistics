@@ -28,13 +28,11 @@ def users(request):
     with schema_context(tenant.schema_name):
         if request.method == "GET":
             # Generate a cache key based on request parameters
-            print('1234', request.query_params.urlencode()) 
             cache_key = f"users_{request.query_params.urlencode()}"
 
             cached_data = cache.get(cache_key)
 
             if cached_data:
-                print('c', cached_data)
                 return Response(cached_data, status=status.HTTP_200_OK)
 
             clearance_level = request.query_params.get('clearance_level')
@@ -164,7 +162,6 @@ def users(request):
                     errors['email'] = "Invalid email format."
 
             if errors:
-                print(errors)
                 return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
 
             try:

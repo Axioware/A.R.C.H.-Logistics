@@ -53,7 +53,8 @@ def locations(request):
                         'location_id': loc.location_id,
                         'location_type': loc.location_type,
                         'location_name': loc.location_name,
-                        'warehouse_id': loc.warehouse_id.id,
+                        'warehouse_id': loc.warehouse_id.warehouse_id,
+                        'warehouse_name': loc.warehouse_id.warehouse_name
                     }
                     for loc in queryset
                 ]
@@ -93,7 +94,7 @@ def locations(request):
                 errors['warehouse_id'] = 'This field is required.'
             else:
                 try:
-                    warehouse = Warehouse.objects.get(id=warehouse_id)
+                    warehouse = Warehouse.objects.get(warehouse_id=warehouse_id)
                 except Warehouse.DoesNotExist:
                     errors['warehouse_id'] = 'Warehouse not found.'
 
@@ -139,7 +140,7 @@ def single_location(request, location_id):
                     'location_id': location.location_id,
                     'location_name': location.location_name,
                     'location_type': location.location_type,
-                    'warehouse_id': location.warehouse_id.id  # Foreign key serialization
+                    'warehouse_id': location.warehouse_id.warehouse_id  # Foreign key serialization
                 }
 
                 return Response(location_data, status=status.HTTP_200_OK)
