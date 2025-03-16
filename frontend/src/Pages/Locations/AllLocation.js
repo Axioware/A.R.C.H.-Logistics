@@ -8,6 +8,7 @@ import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
 import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement";
 import { FaTrash } from "react-icons/fa";
+import LargeModal from "../../Components/Modals/SuccessModal";
 import EditIcon from '../../Components/Icons/EditIcon';
 
 export default function All_Locations() {
@@ -18,6 +19,7 @@ export default function All_Locations() {
   const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
   const [clearance, setClearance] = useState(1);
+  const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
 
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
@@ -76,11 +78,14 @@ export default function All_Locations() {
     });
 
     if (response.ok) {
-      const newData = [...data];
-      newData.splice(index, 1);
-      setData(newData);
+      setData(prevData => prevData.filter((_, i) => i !== index));
+      setModalData({
+        isOpen: true,
+        title: "Success",
+        content: `Location with ID ${id} deleted successfully! :)`,
+      });
     }
-  }
+  };
 
   useEffect(() => {
     getData();
@@ -175,6 +180,15 @@ export default function All_Locations() {
           />
         </div>
       </div>
+      {modalData.isOpen && (
+        <LargeModal
+          isOpen={modalData.isOpen}
+          title={modalData.title}
+          content={modalData.content}
+          onClose={() => setModalData({ isOpen: false, title: "", content: "" })}
+          onSave={() => setModalData({ isOpen: false, title: "", content: "" })}
+        />
+      )}
     </div>
   );
 }  
