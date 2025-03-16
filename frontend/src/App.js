@@ -164,7 +164,7 @@ function App() {
         {/* <Route path="/add-inventory" element={<AddInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
         {/* Location Management */}
-        <Route path="/add-location2" element={<AddLocation2 menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
+        <Route path="/add-location" element={<AddLocation2 menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
         <Route path="/locations" element={<AllLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
         {/* <Route path="/edit-location" element={<EditLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  */}
         {/* <Route path="/add-location" element={<AddLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />   */}

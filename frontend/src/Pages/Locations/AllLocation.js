@@ -6,67 +6,83 @@ import fetchData from '../../utils/fetch_data';
 import AddButton from '../../Components/Table_Components/AddButton';
 import SideBar from '../../Components/General/Sidebar';
 import mainStyles from "../../Assets/CSS/styles";
-import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement"
+import filterOptionUser from "../../Components/Filter/FilterOptionUserManagement";
+import { FaTrash } from "react-icons/fa";
+import EditIcon from '../../Components/Icons/EditIcon';
 
-export default function All_Users() {
-
+export default function All_Locations() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [errorCode, setErrorCode] = useState(null);
-  const [clearance, setclearance] = useState(1);
+  const [clearance, setClearance] = useState(1);
 
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
     return storedState === null ? true : JSON.parse(storedState);
   });
 
-  // State for filters
-  const [billingType, setBillingType] = useState('All');
-  const [userStatus, setUserStatus] = useState('All');
-  
-  // State to toggle the dropdown visibility
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const token = localStorage.getItem("access_token");
 
   const getData = async () => {
-    const url = `https://api.example.com/users?page=${currentPage}&billingType=${billingType}&userStatus=${userStatus}`;
-    const response = await fetchData(setLoading, setSuccess, url);
+    const url = `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/locations/?page=${currentPage}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    if (response && response.error) {
-      switch (response.error) {
-        case 400:
-          setErrorCode(401);
-          break;
-        case 401:
-          setErrorCode(401);
-          break;
-        case 403:
-          setErrorCode(403);
-          break;
-        case 500:
-          setErrorCode(500);
-          break;
-        default:
-          setErrorCode(response.error);
-          break;
+    setLoading(true);
+    try {
+      if (!response.ok) {
+        setErrorCode(response.status);
+        setSuccess(false);
+      } else {
+        const json = await response.json();
+        console.log("Fetched data from API:", json);
+        const formatted = (json.results || json).map(loc => ({
+          id: loc.location_id,
+          name: loc.location_name,
+          type: loc.location_type,
+          warehouse: loc.warehouse_name || (loc.warehouse?.warehouse_name ?? "N/A"),
+        }));
+        console.log("Formatted data:", formatted);
+        setData(formatted);
+        setTotalPages(json.total_pages || 1);
+        setSuccess(true);
+        setErrorCode(null);
       }
-    } else if (response) {
-      setData(response);
-      setErrorCode(null);
+    } catch (err) {
+      console.error("Error fetching locations:", err);
+      setErrorCode(500);
+      setSuccess(false);
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    // if (!mainFunctions.generalValidate()) {
-      
-    // } 
-    // if (!mainFunctions.employeeValidate()) {
+  const handleDelete = async (id, index) => {
+    const url = `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/locations/${id}/`;
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    // }
-    // var data = mainFunctions.getUserData();
-    // setclearance(data.clearance);
+    if (response.ok) {
+      const newData = [...data];
+      newData.splice(index, 1);
+      setData(newData);
+    }
+  }
+
+  useEffect(() => {
     getData();
   }, [currentPage]);
 
@@ -82,21 +98,34 @@ export default function All_Users() {
     }
   };
 
-  // Handle Reset and Apply for filters
-  const handleReset = () => {
-    setBillingType('All');
-    setUserStatus('All');
+  const renderTableRows = () => {
+    return data.map((row, index) => (
+      <tr key={index}>
+        <td>{row.id}</td>
+        <td>{row.name}</td>
+        <td>{row.type}</td>
+        <td>{row.warehouse}</td>
+        <td>
+        <EditIcon path={`add-location/${row.id}`} />
+            <FaTrash
+              style={{ color: "red", cursor: "pointer" }}
+              onClick={() => handleDelete(row.id, index)}
+            />
+          </td>
+      </tr>
+    ));
+  };
+  const getTableWidth = () => {
+    // return (
+    //   <colgroup>
+    //     <col style={{ width: "7%" }} />
+    //     <col style={{ width: "9%" }} />
+    //     <col style={{ width: "11%" }} />
+    //     <col style={{ width: "7%" }} />
+    //   </colgroup>
+    // );
   };
 
-  const handleApply = () => {
-    console.log("Filters applied:", { billingType, userStatus });
-  };
-
-  // Toggle dropdown visibility on filter button click
-  const toggleDropdown = () => {
-    console.log("Dropdown toggled");
-    setIsDropdownOpen(!isDropdownOpen);
-  };
 
   return (
     <div>
@@ -131,7 +160,7 @@ export default function All_Users() {
           />
 
           <TableContent
-            table_headings={['ID', 'Name', 'Ware House', 'Actions', 'Actions']}
+            table_headings={['ID', 'Name', 'Type', 'Warehouse', 'Actions']}
             last_column={true}
             loading={loading}
             success={success}
@@ -141,6 +170,8 @@ export default function All_Users() {
             data={data}
             currentPage={currentPage}
             totalPages={totalPages}
+            table_function={renderTableRows}
+            table_width_function={getTableWidth}      
           />
         </div>
       </div>

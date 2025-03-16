@@ -64,7 +64,7 @@ const AddLocation = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!locationName.trim() || !locationType.trim() || !selectedWarehouseId) {
       setModalData({
         isOpen: true,
@@ -79,6 +79,7 @@ const AddLocation = () => {
       location_type: locationType.trim(),
       warehouse_id: selectedWarehouseId,
     };
+    console.log("Submitting payload:", payload);
 
     try {
       const response = await fetch(
@@ -118,11 +119,6 @@ const AddLocation = () => {
       });
     }
   };
-
-  const [quantity, setQuantity] = useState("");
-  const [category, setCategory] = useState("");
-  const [chargeBy, setChargeBy] = useState("");
-
 
   return (
     <>
@@ -291,102 +287,57 @@ const AddLocation = () => {
               />
             </div>
 
-          <form className="inventory-form">
+          <form className="inventory-form" >
           <div className="form-grid">
                 <div>
                   <label>Name</label>
                   <input
                     type="text"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
+                    value={locationName}
+                    onChange={(e) => setLocationName(e.target.value)}
                     className="input-field"
                     placeholder="Enter Name"
                   />
                 </div>
                 <div>
                   <label>Type</label>
-                  <input
-                    type="text"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    className="input-field"
-                    placeholder="Enter quantity"
-                  />
-                </div>
-                <div>
-                  <label>Warehouse</label>
-                  <select 
-                    value={chargeBy} 
-                    onChange={(e) => setChargeBy(e.target.value)}
+                  <select
+                    value={locationType}
+                    onChange={(e) => setLocationType(e.target.value)}
                     className="select-field"
                   >
-                    <option value="">Select </option>
-                    <option value="weight">Option 1</option>
-                    <option value="unit">Option 2</option>
+                    <option value="">Select a type</option>
+                    <option value="Bin">Bin</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
+                <div>
+                <label>Warehouse</label>
+                <select
+                  value={selectedWarehouseId || ""}
+                  onChange={(e) => {
+                    const warehouseId = parseInt(e.target.value);
+                    const warehouse = warehouses.find(w => w.warehouse_id === warehouseId);
+                    setSelectedWarehouseId(warehouseId);
+                    setSelectedWarehouseName(warehouse ? { label: warehouse.warehouse_name, value: warehouse.warehouse_name } : null);
+                  }}
+                  className="select-field"
+                >
+                  <option value="">Select a warehouse</option>
+                  {warehouses.map((warehouse) => (
+                    <option key={warehouse.warehouse_id} value={warehouse.warehouse_id}>
+                      {warehouse.warehouse_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               </div>
 
           </form>
           <div id="buttonContainer" style={styles.buttonContainer}>
                 <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-                <GeneralButton text="Add" type="submit" width="100px" height="100%" />
+                <GeneralButton text="Add" type="button" width="100px" height="100%" func={handleSubmit} />
               </div>
-
-            {/* <form
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr 1fr",
-                gap: "20px",
-                marginLeft: "20px",
-                marginRight: "30px",
-                marginTop: "35px",
-              }}
-              onSubmit={handleSubmit}
-            >
-              <GeneralField
-                label="Name"
-                field_type="text"
-                hint="Enter location name"
-                required={true}
-                func={(e) => setLocationName(e.target.value)}
-              />
-              <GeneralField
-                label="Type"
-                field_type="text"
-                hint="Select the type of location"
-                required={true}
-                func={(e) => setLocationType(e.target.value)}
-              />
-              <DropDown
-                data={warehouses.map((w) => w.warehouse_name)}
-                multi={false}
-                label="Warehouse"
-                required={true}
-                width="230px"
-                onSelect={setSelectedWarehouseName}
-              />
-              <div
-                style={{
-                  alignSelf: "flex-end",
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "250px",
-                  gap: "20px",
-                  marginTop: "100px",
-                  lineHeight: "40px",
-                }}
-              >
-                <GeneralButton
-                  text="Cancel"
-                  width="100px"
-                  height="100%"
-                  button_color={["230", "230", "230"]}
-                  text_color={["0", "0", "0"]}
-                />
-                <GeneralButton text="Add" type="submit" width="100px" height="100%" />
-              </div>
-            </form> */}
           </div>
         </div>
       </div>
