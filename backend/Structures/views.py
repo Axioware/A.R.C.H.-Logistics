@@ -177,10 +177,10 @@ def single_location(request, location_id):
                 # Fetch the Location by ID
                 location = Locations.objects.get(pk=location_id)
 
-                if location.warehouse_id:
-                    # Check if any user is assigned to this location
-                    if location.users.exists():  # If users are assigned
-                        return Response({"error": "Location cannot be deleted while users are assigned to it."}, status=status.HTTP_400_BAD_REQUEST)
+                # if location.warehouse_id:
+                #     # Check if any user is assigned to this location
+                #     if location.users.exists(): 
+                #         return Response({"error": "Location cannot be deleted while users are assigned to it."}, status=status.HTTP_400_BAD_REQUEST)
 
                 # Delete the Location
                 location.delete()
@@ -190,8 +190,8 @@ def single_location(request, location_id):
     except Locations.DoesNotExist:
         return Response({'error': 'Location not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # except Exception as e:
+    #     return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 @csrf_exempt
 @api_view(['GET', 'POST'])
