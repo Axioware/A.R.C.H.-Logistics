@@ -28,7 +28,7 @@ import AddWarehouse from './Pages/Warehouses/AddWarehouse';
 // import EditWarehouse from './Pages/Warehouses/EditWarehouse';
 
 //Location Management
-import AddLocation2 from './Pages/Locations/AddLocation2';
+import AddLocation from './Pages/Locations/AddLocation';
 import AllLocation from './Pages/Locations/AllLocation';
 // import EditLocation from './Pages/Locations/EditLocation';
 // import AddLocation from './Pages/Locations/AddLocation';
@@ -164,7 +164,7 @@ function App() {
         {/* <Route path="/add-inventory" element={<AddInventory menuItems={menuItems} toggleExpand={toggleExpand}/>} /> */}
 
         {/* Location Management */}
-        <Route path="/add-location" element={<AddLocation2 menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
+        <Route path="/add-location/:locationId" element={<AddLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
         <Route path="/locations" element={<AllLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  
         {/* <Route path="/edit-location" element={<EditLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />  */}
         {/* <Route path="/add-location" element={<AddLocation menuItems={menuItems} toggleExpand={toggleExpand}/>} />   */}

@@ -7,32 +7,53 @@ import mainStyles from "../../Assets/CSS/styles";
 import SideBar from "../../Components/General/Sidebar";
 import DropDown from "../../Components/General/DropDown";
 import LargeModal from "../../Components/Modals/SuccessModal";
+import { useParams, useNavigate } from "react-router-dom";
 
 const AddLocation = () => {
+  const { locationId } = useParams();  // Get locationId from URL
+  const navigate = useNavigate();
+
+  const [locationName, setLocationName] = useState("");  
+  const [locationType, setLocationType] = useState("");  
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState(null);  
+  const [selectedWarehouseName, setSelectedWarehouseName] = useState(null);  
+  const [warehouses, setWarehouses] = useState([]);  
+  const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
   const [isSidebarClosed, setIsSidebarClosed] = useState(() => {
     const storedState = localStorage.getItem("sidebarclosed");
     return storedState === null ? true : JSON.parse(storedState);
-  });
+  });  
 
-  const [warehouses, setWarehouses] = useState([]);
-  const [selectedWarehouseId, setSelectedWarehouseId] = useState(null);
-  const [selectedWarehouseName, setSelectedWarehouseName] = useState(null);
-  const [locationName, setLocationName] = useState("");
-  const [locationType, setLocationType] = useState("");
-  const [modalData, setModalData] = useState({ isOpen: false, title: "", content: "" });
 
-  useEffect(() => {
-    if (selectedWarehouseName) {
-      const selectedWarehouse = warehouses.find(
-        (w) => w.warehouse_name === selectedWarehouseName.value
-      );
-      if (selectedWarehouse) {
-        setSelectedWarehouseId(selectedWarehouse.warehouse_id);
-      } else {
-        setSelectedWarehouseId(null);
-      }
+useEffect(() => {
+    if (locationId) {
+      // If editing, fetch the existing location details
+      const fetchLocationDetails = async () => {
+        try {
+          const response = await fetch(
+            `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/locations/${locationId}/`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+              },
+            }
+          );
+          if (!response.ok) throw new Error("Failed to fetch location details");
+          const data = await response.json();
+          setLocationName(data.location_name);
+          setLocationType(data.location_type);
+          setSelectedWarehouseId(data.warehouse_id);
+          setSelectedWarehouseName({ label: data.warehouse_name, value: data.warehouse_name });
+        } catch (error) {
+          console.error("Error fetching location details:", error);
+        }
+      };
+
+      fetchLocationDetails();
     }
-  }, [selectedWarehouseName, warehouses]);
+  }, [locationId]);
 
   const token = localStorage.getItem("access_token");
 
@@ -61,7 +82,7 @@ const AddLocation = () => {
     fetchWarehouses();
   }, [token]);
 
-  // Handle form submission
+  // Handle form submission (Add or Edit)
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -82,40 +103,63 @@ const AddLocation = () => {
     console.log("Submitting payload:", payload);
 
     try {
-      const response = await fetch(
-        `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/locations/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      let response;
+      if (locationId) {
+        // Edit existing location
+        response = await fetch(
+          `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/locations/${locationId}/`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+      } else {
+        // Add new location
+        response = await fetch(
+          `http://${process.env.REACT_APP_TENANT_NAME}/structures/api/locations/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+      }
 
       if (response.ok) {
         setModalData({
           isOpen: true,
           title: "Success",
-          content: "Location added successfully!",
+          content: locationId ? "Location updated successfully!" : "Location added successfully!",
         });
         setLocationName("");
         setLocationType("");
         setSelectedWarehouseId(null);
+        setSelectedWarehouseName(null);
+
+        if (!locationId) {
+          // Redirect to locations page after adding
+          navigate("/all-location");
+        }
       } else {
         setModalData({
           isOpen: true,
           title: "Error",
-          content: "Failed to add location!",
+          content: locationId ? "Failed to update location!" : "Failed to add location!",
         });
       }
     } catch (error) {
-      console.error("Error adding location:", error);
+      console.error("Error handling location submission:", error);
       setModalData({
         isOpen: true,
         title: "Error",
-        content: "Error adding location. Please try again.",
+        content: "Error processing location. Please try again.",
       });
     }
   };
@@ -255,16 +299,11 @@ const AddLocation = () => {
         `}
       </style>
     <div>
-      <SideBar
-        sidebar_state={isSidebarClosed}
-        set_sidebar_state={setIsSidebarClosed}
-      />
-      <div style={mainStyles.centerContent(isSidebarClosed)}>
-
-      <div style={{ marginBottom: '60px' }}>
+        <SideBar sidebar_state={isSidebarClosed} set_sidebar_state={setIsSidebarClosed} />
+        <div style={mainStyles.centerContent(isSidebarClosed)}>
           <NavPath
-            text={["Home", "All Locations", "Add Location"]}
-            paths={["/home", "/all-location", "/add-location"]}
+            text={["Home", "All Locations", locationId ? "Edit Location" : "Add Location"]}
+            paths={["/home", "/locations", locationId ? "/edit-location" : "/add-location"]}
             text_color={[255, 255, 255]}
             background_color={[23, 23, 23]}
             hyperlink_size={[
@@ -276,19 +315,19 @@ const AddLocation = () => {
             height="50px"
           />
 
-        <div style={mainStyles.AddInputBackground}>
+          <div style={mainStyles.AddInputBackground}>
             <div className="table-top-container">
               <PageHeading
-                text={'Add Location'}
-                width="auto" 
+                text={locationId ? 'Edit Location' : 'Add Location'}
+                width="auto"
                 height="auto"
                 sidebar_width="5px"
                 sidebar_height="35px"
               />
             </div>
 
-          <form className="inventory-form" >
-          <div className="form-grid">
+            <form className="inventory-form">
+              <div className="form-grid">
                 <div>
                   <label>Name</label>
                   <input
@@ -312,35 +351,36 @@ const AddLocation = () => {
                   </select>
                 </div>
                 <div>
-                <label>Warehouse</label>
-                <select
-                  value={selectedWarehouseId || ""}
-                  onChange={(e) => {
-                    const warehouseId = parseInt(e.target.value);
-                    const warehouse = warehouses.find(w => w.warehouse_id === warehouseId);
-                    setSelectedWarehouseId(warehouseId);
-                    setSelectedWarehouseName(warehouse ? { label: warehouse.warehouse_name, value: warehouse.warehouse_name } : null);
-                  }}
-                  className="select-field"
-                >
-                  <option value="">Select a warehouse</option>
-                  {warehouses.map((warehouse) => (
-                    <option key={warehouse.warehouse_id} value={warehouse.warehouse_id}>
-                      {warehouse.warehouse_name}
-                    </option>
-                  ))}
-                </select>
+                  <label>Warehouse</label>
+                  <select
+                    value={selectedWarehouseId || ""}
+                    onChange={(e) => {
+                      const warehouseId = parseInt(e.target.value);
+                      const warehouse = warehouses.find(w => w.warehouse_id === warehouseId);
+                      setSelectedWarehouseId(warehouseId);
+                      setSelectedWarehouseName(warehouse ? { label: warehouse.warehouse_name, value: warehouse.warehouse_name } : null);
+                    }}
+                    className="select-field"
+                  >
+                    <option value="">Select a warehouse</option>
+                    {warehouses.map((warehouse) => (
+                      <option key={warehouse.warehouse_id} value={warehouse.warehouse_id}>
+                        {warehouse.warehouse_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              </div>
+            </form>
 
-          </form>
-          <div id="buttonContainer" style={styles.buttonContainer}>
-                <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
-                <GeneralButton text="Add" type="button" width="100px" height="100%" func={handleSubmit} />
-              </div>
+            <div id="buttonContainer" style={styles.buttonContainer}>
+              <GeneralButton text="Cancel" width="100px" height="100%" button_color={["230", "230", "230"]} text_color={["0", "0", "0"]} />
+              <GeneralButton text={locationId ? "Update" : "Add"} type="button" width="100px" height="100%" func={handleSubmit} />
+            </div>
           </div>
         </div>
       </div>
+
       {modalData.isOpen && (
         <LargeModal
           isOpen={modalData.isOpen}
@@ -350,10 +390,10 @@ const AddLocation = () => {
           onSave={() => setModalData({ isOpen: false, title: "", content: "" })}
         />
       )}
-    </div>
     </>
   );
 };
+
 
 
 const styles = {

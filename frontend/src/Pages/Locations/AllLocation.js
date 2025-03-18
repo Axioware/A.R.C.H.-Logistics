@@ -143,7 +143,7 @@ export default function All_Locations() {
 
         <NavPath
           text={["Home", "All Location"]}
-          paths={["/home", "/all-location"]}
+          paths={["/home", "/locations"]}
           text_color={[255, 255, 255]}
           background_color={[23, 23, 23]}
           width="100%"
