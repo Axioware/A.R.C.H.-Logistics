@@ -6,13 +6,12 @@ from django.contrib.auth.models import User
 from .models import *
 from rest_framework import status, pagination
 from django.db.models import Q
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from Arch_Logistics.helpers import *
 from Orders.models import Box
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
-import logging
+from django.core.exceptions import ObjectDoesNotExist
+import logging, json
 from django.core import serializers
-from .helpers import authenticate_client
 
 
 logger = logging.getLogger(__name__)
@@ -22,47 +21,74 @@ logger = logging.getLogger(__name__)
 def items(request):
     user = request.user
 
+    # Handle GET request
     if request.method == 'GET':
-        try:
-            
-            user_id = request.GET.get('user_id')  # Retrieve user_id from the query parameters
-            if authenticate_clearance_level(user, [4]):
-                items = Item.objects.filter(user_id=user)
-            if authenticate_clearance_level(user, [1, 2, 3]):
-                if user_id:
-                    items = Item.objects.filter(user_id=user_id)  # Retrieve items for the specific user
-                else:
-                    items = Item.objects.all()
+        user_id = request.GET.get('user_id')  # Retrieve user_id from query parameters
+        items = None
 
-            data = serializers.serialize('json', items)
-            return JsonResponse(data, safe=False)
+        # Check for clearance level and filter items accordingly
+        if authenticate_clearance_level(user, [4]):
+            items = Item.objects.filter(user_id=user.id)  # Filter items for the current logged-in user
 
-        except ObjectDoesNotExist:
-            return Response({'error': 'No items found.'}, status=status.HTTP_404_NOT_FOUND)
+        elif authenticate_clearance_level(user, [1, 2, 3]):
+            if user_id:
+                items = Item.objects.filter(user_id=user_id)  # Filter by specific user_id
+            else:
+                items = Item.objects.all()  # Retrieve all items for clearance levels 1, 2, or 3
+        else:
+            return Response({'error': 'Unauthorized - Insufficient clearance level'}, status=status.HTTP_403_FORBIDDEN)
 
-        except Exception as e:
-            logger.error(f"Error in GET /items: {str(e)}")
-            return Response({'error': 'Something went wrong.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        # Manually convert queryset to list of dictionaries for JSON response
+        items_list = [{'item_sku': item.item_sku, 'item_name': item.item_name, 'item_description': item.item_description} for item in items]
+        return JsonResponse(items_list, safe=False, status=status.HTTP_200_OK)
 
+    # Handle POST request
     elif request.method == 'POST':
         if authenticate_clearance_level(user, [1, 2, 3]):
-            try:
-                # Load data from request body assuming JSON
-                data = request.json()
+            return Response({'errors': "Unauthorized - Insufficient clearance level"}, status=status.HTTP_403_FORBIDDEN)
 
-                new_item = Item.objects.create(
-                    item_sku=data['item_sku'],
-                    item_name=data['item_name'],
-                    user_id=data['user_id'],  # Assume user_id is directly provided; adjust based on your auth system
-                    item_description=data.get('item_description', '')  # Optional field with default
-                )
-                return JsonResponse({'status': 'success', 'message': 'Item created successfully.', 'item_id': new_item.pk}, status=201)
-            except Exception as e:
-                return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        try:
+            data = json.loads(request.body)
+            logger.debug(f"Received data: {data}")  # Log the incoming request body for debugging
 
-    else:
-        return Response({'error': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            # Validate required fields
+            if 'item_sku' not in data or 'item_name' not in data or 'user_id' not in data:
+                logger.error("Missing required fields: item_sku, item_name, user_id")
+                return JsonResponse({'status': 'error', 'message': 'Missing required fields: item_sku, item_name, user_id'}, status=400)
 
+            # Get the user instance using the user_id
+            user_instance = User.objects.get(id=data['user_id'])
+
+            # Create the new item
+            new_item = Item.objects.create(
+                item_sku=data['item_sku'],
+                item_name=data['item_name'],
+                user_id=user_instance,  # Assign the User instance, not just the ID
+                item_description=data.get('item_description', '')  # Optional field
+            )
+
+            logger.info(f"Item created successfully with ID: {new_item.pk}")
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Item created successfully.',
+                'item_id': new_item.pk,
+            }, status=201)
+
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON format: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON format'}, status=400)
+
+        except User.DoesNotExist:
+            logger.error(f"User with ID {data['user_id']} does not exist.")
+            return JsonResponse({'status': 'error', 'message': 'User does not exist'}, status=400)
+
+        except IntegrityError as e:
+            logger.error(f"Database Integrity Error: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': 'Database integrity error, likely duplicate entry'}, status=400)
+
+        except Exception as e:
+            logger.error(f"Error creating item: {str(e)}")
+            return JsonResponse({'status': 'error', 'message': 'Failed to create item due to an unexpected error'}, status=400)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
